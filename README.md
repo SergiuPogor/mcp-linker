@@ -3,6 +3,13 @@
 </p>
 
 <p align="center">
+  📘 Available languages: 
+  <strong>English</strong> | 
+  <a href="./docs/README.zh-CN.md">简体中文</a> | 
+  <a href="./docs/README.ja-JP.md">日本語</a>
+</p>
+
+<p align="center">
   <a href="https://github.com/milisp/mcp-linker/stargazers">
     ⭐ If you find this project useful, please consider giving it a star!
   </a>
@@ -15,16 +22,12 @@
 
 # MCP Linker
 
-👉 [查看中文版本（简体中文）](./README.zh-CN.md)
-
 >Easily add a **Model Context Protocol (MCP) server** to your MCP client (**Claude Cursor windsurf...**) with just two clicks: **Get** and **Add**. Support macos win
 
 ## 🔽 Download MCP Linker
 
-👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)  
-app to manage Claude MCP servers easily.
-
-👉 [Download on github release](https://github.com/milisp/mcp-linker/releases)
+👉 [点此在 🐙Gumroad 下载](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
+👉 [点此在 GitHub 发布页下载](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ Features
 
@@ -78,7 +81,7 @@ We welcome contributions! To add your own MCP server:
 
 Thanks to the following contributors for improving this project:
 
-- [@eltociear](https://github.com/eltociear) — Japanese translation ([README.ja-JP.md](./README.ja-JP.md))
+- [@eltociear](https://github.com/eltociear) — Japanese translation
 
 ## License
 

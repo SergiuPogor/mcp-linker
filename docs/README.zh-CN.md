@@ -1,5 +1,12 @@
 <p align="center">
-  <img src="src/assets/logo.png" alt="Project Logo" width="200" />
+  <img src="../src/assets/logo.png" alt="Project Logo" width="200" />
+</p>
+
+<p align="center">
+  📘 语言切换：
+  <a href="../README.md">English</a> |
+  <strong>简体中文</strong> |
+  <a href="./README.ja-JP.md">日本語</a>
 </p>
 
 <p align="center">
@@ -19,10 +26,8 @@
 
 ## 🔽 Download MCP Linker
 
-👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)  
-app to manage Claude MCP servers easily.
-
-👉 [Download on github release](https://github.com/milisp/mcp-linker/releases)
+👉 [🐙Gumroad下载](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
+👉 [github release下载](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ 功能特色
 
@@ -55,13 +60,13 @@ bun tauri dev
 ## 🖼️ 截图演示
 
 ### 服务器发现
-![发现截图](./images/home.png)
+![发现截图](../images/home.png)
 
 ### 配置示例
-![配置截图](./images/config.png)
+![配置截图](../images/config.png)
 
 ### 管理示例
-![管理截图](./images/manager.png)
+![管理截图](../images/manager.png)
 
 ## 🤝 参与贡献
 

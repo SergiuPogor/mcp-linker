@@ -1,5 +1,12 @@
 <p align="center">
-  <img src="src/assets/logo.png" alt="Project Logo" width="200" />
+  <img src="../src/assets/logo.png" alt="Project Logo" width="200" />
+</p>
+
+<p align="center">
+  📘 言語を選択：
+  <a href="../README.md">English</a> |
+  <a href="./README.zh-CN.md">简体中文</a> |
+  <strong>日本語</strong>
 </p>
 
 <p align="center">
@@ -21,9 +28,7 @@
 
 ## 🔽 MCP Linkerをダウンロード
 
-👉 [🐙Gumroadでダウンロード](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)  
-Claude MCP サーバーを簡単に管理するアプリ。
-
+👉 [🐙Gumroadでダウンロード](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
 👉 [GitHubリリースでダウンロード](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ 特徴
@@ -57,13 +62,13 @@ bun tauri dev
 ## 🖼️ スクリーンショット
 
 ### サーバーの発見
-![発見スクリーンショット](./images/home.png)
+![発見スクリーンショット](../images/home.png)
 
 ### 構成例
-![構成スクリーンショット](./images/config.png)
+![構成スクリーンショット](../images/config.png)
 
 ### 管理例
-![管理スクリーンショット](./images/manager.png)
+![管理スクリーンショット](../images/manager.png)
 
 ---
 
