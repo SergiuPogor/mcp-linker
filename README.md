@@ -78,7 +78,7 @@ We welcome contributions! To add your own MCP server:
 
 Thanks to the following contributors for improving this project:
 
-- [@eltociar](https://github.com/eltociar) — Japanese translation ([README.ja-JP.md](./README.ja-JP.md))
+- [@eltociear](https://github.com/eltociear) — Japanese translation ([README.ja-JP.md](./README.ja-JP.md))
 
 ## License
 
