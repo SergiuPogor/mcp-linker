@@ -74,6 +74,12 @@ We welcome contributions! To add your own MCP server:
 1. **Fork & Clone** this repository.
 2. **Submit a Pull Request** with your changes.
 
+## 🎉 Contributors
+
+Thanks to the following contributors for improving this project:
+
+- [@eltociar](https://github.com/eltociar) — Japanese translation ([README.ja-JP.md](./README.ja-JP.md))
+
 ## License
 
 BSD
