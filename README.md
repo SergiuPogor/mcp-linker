@@ -26,8 +26,8 @@
 
 ## 🔽 Download MCP Linker
 
-👉 [点此在 🐙Gumroad 下载](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
-👉 [点此在 GitHub 发布页下载](https://github.com/milisp/mcp-linker/releases)
+👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
+👉 [Download on github release](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ Features
 

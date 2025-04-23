@@ -22,8 +22,6 @@
 
 # MCP Linker
 
-👉 [简体中文版本を表示する](./README.zh-CN.md)
-
 > **Model Context Protocol (MCP) サーバー** を MCP クライアント（**Claude Cursor windsurf...**）に簡単に追加できます。操作は2クリックだけ：**取得** と **追加**。macos win をサポート
 
 ## 🔽 MCP Linkerをダウンロード
