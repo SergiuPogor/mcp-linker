@@ -77,6 +77,16 @@ bun tauri dev
 1. **このリポジトリをフォーク＆クローン** します。
 2. **プルリクエストを送信** して変更を提出します。
 
+## 🎉 貢献者
+
+このプロジェクトを改善してくれた貢献者の皆様、ありがとうございます：
+
+- [@eltociear](https://github.com/eltociear) — 日本語翻訳
+
+---
+
+[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
+
 ## ライセンス
 
 BSD

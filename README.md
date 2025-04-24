@@ -83,6 +83,10 @@ Thanks to the following contributors for improving this project:
 
 - [@eltociear](https://github.com/eltociear) — Japanese translation
 
+---
+
+[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
+
 ## License
 
 BSD

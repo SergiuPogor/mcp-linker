@@ -26,6 +26,7 @@ export default function LangSelect() {
         <SelectItem value="en">English</SelectItem>
         <SelectItem value="zh">中文</SelectItem>
         <SelectItem value="es">es</SelectItem>
+        <SelectItem value="ja">日本語</SelectItem>
       </SelectContent>
     </Select>
   );

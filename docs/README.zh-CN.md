@@ -75,6 +75,16 @@ bun tauri dev
 1. **Fork 并克隆** 此仓库。  
 2. **提交 Pull Request** 提交你的更改。  
 
+## 🎉 贡献者
+
+感谢以下贡献者对本项目的改进：
+
+- [@eltociear](https://github.com/eltociear) — 日文翻译
+
+---
+
+[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
+
 ## 许可协议
 
 BSD
