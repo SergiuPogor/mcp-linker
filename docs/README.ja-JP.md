@@ -35,6 +35,8 @@
 ✅ 複数の MCP サーバー構成をサポート  
 ✅ オープンソースでコミュニティ主導  
 
+🗨 [フィードバックまたは質問](https://github.com/milisp/mcp-linker/discussions)
+
 ## インストール
 
 ```bash

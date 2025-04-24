@@ -31,9 +31,11 @@
 
 ## ✨ 功能特色
 
-✅ 一键添加 MCP 服务器  
+✅ 一键添加 MCP 服务器
 ✅ 支持多个 MCP 服务器配置  
 ✅ 开源并由社区驱动  
+
+🗨 [反馈或提问](https://github.com/milisp/mcp-linker/discussions)
 
 ## 安装
 
