@@ -37,6 +37,14 @@
 
 🗨 [Feedback or Questions](https://github.com/milisp/mcp-linker/discussions)
 
+## Requirements
+
+Before running this project, ensure you have the following installed:
+
+- Node.js 
+- bun 
+- Rust toolchain (stable) for Tauri
+
 ## Install
 
 ```bash
@@ -48,6 +56,12 @@ bun tauri dev
 # pnpm install
 # pnpm tauri dev
 ```
+
+> **Disclaimer:** If you face any issues, delete the `package-lock.json` file and the `node_modules` directory, then run:
+> ```bash
+> npm install --legacy-peer-deps
+> ```
+>
 
 ## 🚀 Quick Start
 

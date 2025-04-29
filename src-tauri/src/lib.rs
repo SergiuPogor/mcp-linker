@@ -31,7 +31,8 @@ fn update_env_path() {
     #[cfg(target_os = "windows")]
     let new_paths = [&local_bin];
 
-    let updated_path = format!("{}:{}", new_paths.join(":"), current_path);
+    let updated_path = format!("{}:{}", new_paths.iter().map(|s| s.as_str()).collect::<Vec<_>>().join(":")
+    , current_path);
     env::set_var("PATH", &updated_path);
 }
 
