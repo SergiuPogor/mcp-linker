@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ConfigType } from "@/types/config";
+import { ServerConfig } from "@/types";
 
 const envSchema = z.object({
   key: z.string().min(1, "Key is required"),
@@ -22,24 +22,32 @@ const formSchema = z.object({
   command: z.string().min(1, "Command is required"),
   args: z.string(),
   env: z.array(envSchema).optional(),
+  disabled: z.boolean().optional(),
+  autoApprove: z.array(z.string()).optional(),
 });
 
 interface ServerFormProps {
-  config: ConfigType["mcpServers"][string];
-  onSubmit: (values: ConfigType["mcpServers"][string]) => void;
+  config: ServerConfig;
+  onSubmit: (values: ServerConfig) => void;
+  buttonName: string;
 }
 
-export function ServerForm({ config, onSubmit }: ServerFormProps) {
+export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
   const envArray = config.env
-    ? Object.entries(config.env).map(([key, value]) => ({ key, value }))
+    ? Object.entries(config.env).map(([key, value]) => ({
+        key,
+        value: String(value),
+      }))
     : [];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       command: config.command,
-      args: config.args.join(" "),
+      args: config.args?.join(" ") || "",
       env: envArray,
+      disabled: config.disabled,
+      autoApprove: config.autoApprove || [],
     },
   });
 
@@ -49,7 +57,7 @@ export function ServerForm({ config, onSubmit }: ServerFormProps) {
   });
 
   function handleSubmit(values: z.infer<typeof formSchema>) {
-    const updatedConfig = {
+    const updatedConfig: ServerConfig = {
       command: values.command,
       args: values.args.split(" ").filter(Boolean),
       env: values.env?.reduce(
@@ -59,6 +67,8 @@ export function ServerForm({ config, onSubmit }: ServerFormProps) {
         },
         {} as Record<string, string>,
       ),
+      disabled: values.disabled,
+      autoApprove: values.autoApprove,
     };
     onSubmit(updatedConfig);
   }
@@ -124,7 +134,7 @@ export function ServerForm({ config, onSubmit }: ServerFormProps) {
           ))}
         </div>
         <Button type="submit" className="w-full sm:w-auto">
-          Save
+          {buttonName}
         </Button>
       </form>
     </Form>

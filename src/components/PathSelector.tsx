@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ interface PathSelectorProps {
 
 export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handleBrowse = async () => {
     try {
       setIsLoading(true);
@@ -23,7 +23,7 @@ export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
         onChange(selectedPath);
       }
     } catch (error) {
-      console.error('Failed to select directory:', error);
+      console.error("Failed to select directory:", error);
     } finally {
       setIsLoading(false);
     }
@@ -39,11 +39,8 @@ export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
           placeholder="Select a directory..."
           readOnly
         />
-        <Button
-          onClick={handleBrowse}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Loading...' : 'Browse'}
+        <Button onClick={handleBrowse} disabled={isLoading}>
+          {isLoading ? "Loading..." : "Browse"}
         </Button>
       </div>
     </div>

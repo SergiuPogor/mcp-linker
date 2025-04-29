@@ -9,7 +9,11 @@ interface SidebarProps {
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
 }
 
-export const Sidebar = ({ appCategories, selectedCategory, setSelectedCategory }: SidebarProps) => {
+export const Sidebar = ({
+  appCategories,
+  selectedCategory,
+  setSelectedCategory,
+}: SidebarProps) => {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +24,11 @@ export const Sidebar = ({ appCategories, selectedCategory, setSelectedCategory }
             onClick={() => open("https://github.com/milisp/mcp-linker")}
             className="flex text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
           >
-            <img src="../src/assets/logo.png" alt="Logo" style={{ width: 32, height: 32 }} />
+            <img
+              src="../src/assets/logo.png"
+              alt="Logo"
+              style={{ width: 32, height: 32 }}
+            />
             {t("appStore")}
           </a>
         </div>
@@ -31,10 +39,11 @@ export const Sidebar = ({ appCategories, selectedCategory, setSelectedCategory }
               <li key={category.id}>
                 <button
                   onClick={() => setSelectedCategory(category)}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${selectedCategory.id === category.id
-                    ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                    }`}
+                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
+                    selectedCategory.id === category.id
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
                 >
                   <span className="mr-3">{category.icon}</span>
                   <span className="font-medium">{category.name}</span>

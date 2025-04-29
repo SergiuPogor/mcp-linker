@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useState, useEffect } from "react";
-import { ServerCard } from "@/components/ServerCard";
+import { ServerCard } from "@/components/manage/ServerCard";
 import { ConfigType } from "@/types/config";
 import { toast } from "sonner";
 // import { needspathClient } from "@/lib/data";
@@ -31,8 +31,7 @@ export default function McpManage({
       if (data) {
         setConfig(data);
       } else {
-        setConfig({mcpServers: {}});
-
+        setConfig({ mcpServers: {} });
       }
     } catch (error) {
       console.error(`Error loading config: ${error}`);
@@ -51,6 +50,7 @@ export default function McpManage({
         serverName: key,
         serverConfig: updatedConfig,
       });
+      await loadConfig();
       toast.success("Configuration updated successfully");
     } catch (error) {
       console.error(`Error updating config: ${error}`);
@@ -82,11 +82,11 @@ export default function McpManage({
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 p-2">
-      {Object.entries(config.mcpServers).map(([key, serverConfig]) => (
+      {Object.entries(config.mcpServers).map(([key, serverConfigs]) => (
         <ServerCard
           key={key}
           serverKey={key}
-          config={serverConfig}
+          config={serverConfigs}
           onUpdate={handleUpdate}
           onDelete={deleteConfigKey}
         />

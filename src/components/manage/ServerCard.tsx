@@ -56,6 +56,7 @@ export function ServerCard({
                   onUpdate(serverKey, values);
                   setOpen(false);
                 }}
+                buttonName={"Save"}
               />
             </DialogContent>
           </Dialog>

@@ -1,20 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 import useAppCategories from "./categories";
 
-import Discovery from "@/views/discovery";
-import McpManage from "@/views/manager";
-import OtherPage from "@/views/other";
-import LangSelect from "./LangSelect";
 import { PathSelector } from "./PathSelector";
 import { AppSelector } from "./client-selector";
 import { Toaster } from "sonner";
 import { Sidebar } from "./Sidebar";
 import { Category } from "@/types";
 import { needspathClient } from "@/lib/data";
-import { ServerList } from "@/components/server-list";
-import mcpServers from "@/lib/servers.json"
-
+import { fetchServers } from "@/lib/api";
+import { Pages } from "@/pages-map";
+import LangSelect from "./LangSelect";
 interface ContentAreaProps {
   selectedCategory: Category;
   selectedApp: string;
@@ -26,25 +22,28 @@ const ContentArea: React.FC<ContentAreaProps> = ({
   selectedApp,
   selectedPath,
 }) => {
-  switch (selectedCategory.id) {
-    case "discover":
-      return <Discovery selectedApp={selectedApp} selectedPath={selectedPath} />;
-    case "manage":
-      return <McpManage selectedApp={selectedApp} selectedPath={selectedPath} />;
-    case "recentlyAdded":
-      return (
-        <ServerList
-          selectedApp={selectedApp}
-          selectedPath={selectedPath}
-          mcpServers={mcpServers.servers}
-        />
-      );
-    default:
-      return (
-        <OtherPage
-          selectedCategory={selectedCategory}
-        ></OtherPage>);
-  }
+  const [mcpServers, setMcpServers] = useState<{ servers: any[] }>({
+    servers: [],
+  });
+
+  useEffect(() => {
+    fetchServers()
+      .then((data) => setMcpServers(data))
+      .catch((err) => console.error("Failed to load servers", err));
+  }, []);
+
+  const PageComponent = Pages[selectedCategory.id] || Pages["other"];
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageComponent
+        selectedApp={selectedApp}
+        selectedPath={selectedPath}
+        selectedCategory={selectedCategory}
+        mcpServers={mcpServers.servers}
+      />
+    </Suspense>
+  );
 };
 
 interface DashboardProps {

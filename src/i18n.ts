@@ -20,6 +20,7 @@ declare module "i18next" {
           work: string;
           manage: string;
           updates: string;
+          favs: string;
           recentlyAdded: string;
         };
         content: {
@@ -27,6 +28,7 @@ declare module "i18next" {
           arcade: string;
           create: string;
           work: string;
+          favs: string;
           manage: string;
           updates: string;
           recentlyAdded: string;
@@ -57,6 +59,7 @@ const resources = {
         discover: "Discover",
         arcade: "Arcade",
         create: "Create",
+        favs: "Favorites",
         work: "Work",
         manage: "Manage",
         updates: "Updates",
@@ -68,6 +71,7 @@ const resources = {
         create: "Creative apps",
         work: "Productivity apps",
         manage: "Manage",
+        favs: "Favorites",
         updates: "App updates",
         recentlyAdded: "Recently added apps",
       },
@@ -192,6 +196,7 @@ i18n
   .use(initReactI18next) // Passes i18n to React
   .init({
     resources,
+    lng: "en", // Force English as default language
     fallbackLng: "en", // Default language if detection fails
     interpolation: {
       escapeValue: false, // React already escapes values

@@ -1,7 +1,7 @@
 // src/App.tsx
 import { useState } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import CommandChecker from "@/components/CommandChecker";
 import Layout from "./components/Layout";
@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-})
+});
 
 function App() {
   const [selectedApp, setSelectedApp] = useState<string>("claude");
