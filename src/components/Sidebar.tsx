@@ -14,7 +14,7 @@ export const Sidebar = ({
   selectedCategory,
   setSelectedCategory,
 }: SidebarProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation<"translation">();
 
   return (
     <div className="w-64 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
