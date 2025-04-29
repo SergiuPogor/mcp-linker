@@ -70,7 +70,8 @@ pub fn install_command(
     {
         let result = Command::new("powershell")
             .args(&["-Command", &format!("winget install {}", package_name)])
-            .output()?;
+            .output().map_err(|e| e.to_string())?;
+
 
         if result.status.success() {
             return Ok("installed successfully".to_string());
