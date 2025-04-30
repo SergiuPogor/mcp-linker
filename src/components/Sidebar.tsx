@@ -25,7 +25,7 @@ export const Sidebar = ({
             className="flex text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
           >
             <img
-              src="../src/assets/logo.png"
+              src="/logo.png"
               alt="Logo"
               style={{ width: 32, height: 32 }}
             />

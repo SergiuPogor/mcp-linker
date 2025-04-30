@@ -1,18 +1,18 @@
 {
   "$schema": "https://schema.tauri.app/v2/config.json",
   "productName": "MCP Linker",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "identifier": "com.milisp.mcplinker",
   "build": {
-    "beforeDevCommand": "bun run dev",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "app": {
     "windows": [
       {
-        "title": "mcp-linker",
+        "title": "MCP Linker",
         "width": 1280,
         "height": 960
       }
@@ -30,6 +30,10 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "../public/servers.json",
+      "../public/logo.png"
     ]
   }
 }

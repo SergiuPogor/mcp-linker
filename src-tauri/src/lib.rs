@@ -25,14 +25,25 @@ fn update_env_path() {
     let local_bin = format!("{}/.local/bin", home);
     let current_path = env::var("PATH").unwrap_or_default();
 
-    #[cfg(not(target_os = "windows"))]
-    let new_paths = ["/opt/homebrew/bin", "/usr/local/bin", &local_bin];
-
-    #[cfg(target_os = "windows")]
-    let new_paths = [&local_bin];
-
-    let updated_path = format!("{}:{}", new_paths.iter().map(|s| s.as_str()).collect::<Vec<_>>().join(":")
-    , current_path);
+    let new_paths: Vec<String> = if cfg!(target_os = "windows") {
+        vec![local_bin]
+    } else {
+        vec![
+            "/opt/homebrew/bin".into(),
+            "/usr/local/bin".into(),
+            local_bin,
+        ]
+    };
+    
+    let separator = if cfg!(target_os = "windows") { ";" } else { ":" };
+    
+    let updated_path = format!(
+        "{}{}{}",
+        new_paths.join(separator),
+        separator,
+        current_path
+    );
+    
     env::set_var("PATH", &updated_path);
 }
 

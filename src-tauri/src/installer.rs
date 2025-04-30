@@ -134,11 +134,8 @@ pub fn install_command(
 #[tauri::command]
 pub fn check_command_exists(command: String) -> Result<bool, String> {
     let exists = match std::env::consts::OS {
-        "windows" => Command::new("powershell")
-            .args(&[
-                "-Command",
-                &format!("Get-Command {} -ErrorAction SilentlyContinue", command),
-            ])
+        "windows" => Command::new("cmd")
+            .args(&["/C", "where", &command])
             .output()
             .map(|output| output.status.success())
             .unwrap_or(false),
@@ -151,4 +148,3 @@ pub fn check_command_exists(command: String) -> Result<bool, String> {
 
     Ok(exists)
 }
-

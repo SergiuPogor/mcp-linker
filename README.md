@@ -34,6 +34,10 @@
 ✅ One-click to add MCP servers  
 ✅ Supports multiple MCP server configurations  
 ✅ Open-source and community-driven  
+✅ Favorites: Mark servers as favorites for quick access  
+✅ Recently Used: Automatically save and display recently added servers  
+✅ Windows Support: Now also works on Windows (experimental)  
+✅ Improved error handling and installation guide
 
 🗨 [Feedback or Questions](https://github.com/milisp/mcp-linker/discussions)
 
@@ -42,13 +46,14 @@
 Before running this project, ensure you have the following installed:
 
 - Node.js 
-- bun 
+- bun (or pnpm)
 - Rust toolchain (stable) for Tauri
 
 ## Install
 
 ```bash
 git clone https://github.com/milisp/mcp-linker
+cd mcp-linker
 bun install
 bun tauri dev
 # yarn install
@@ -67,7 +72,8 @@ bun tauri dev
 
 1. **Browse & Select**: Choose an MCP server from the available list.  
 2. **Install**: Click **"Get"** to show configure of server.  
-3. **Activate**: Click **"Add"** to integrate it with your MCP client.  
+3. **Activate**: Click **"Add"** to integrate it with your MCP client.
+> **Tip:** Favorites and recently used servers are saved locally for your convenience!
 
 ## 🌐 Official Servers
 
@@ -88,7 +94,7 @@ Check out the list of [official MCP servers](https://github.com/modelcontextprot
 
 ## 🤝 Contributing
 
-We welcome contributions! To add your own MCP server:
+We welcome contributions!:
 
 1. **Fork & Clone** this repository.
 2. **Submit a Pull Request** with your changes.
@@ -98,11 +104,8 @@ We welcome contributions! To add your own MCP server:
 Thanks to the following contributors for improving this project:
 
 - [@eltociear](https://github.com/eltociear) — Japanese translation
+- [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions
 
 ---
 
 [![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
-
-## License
-
-BSD

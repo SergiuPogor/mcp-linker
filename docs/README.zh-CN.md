@@ -24,6 +24,14 @@
 
 >轻松将 **Model Context Protocol (MCP) 服务器** 添加到你的 MCP 客户端（例如 Claude Cursor windsurf...），只需两步操作：**获取** 与 **添加**。支持 macos win
 
+## 🔧 环境要求
+
+在运行本项目之前，请确保已安装以下工具：
+
+- Node.js
+- bun（或 pnpm）
+- Rust 工具链（稳定版），用于构建 Tauri 应用
+
 ## 🔽 Download MCP Linker
 
 👉 [在 🐙Gumroad 下载](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
@@ -34,6 +42,10 @@
 ✅ 一键添加 MCP 服务器
 ✅ 支持多个 MCP 服务器配置  
 ✅ 开源并由社区驱动  
+✅ 收藏夹功能：可将服务器加入收藏，便于快速访问  
+✅ 最近使用：自动保存并展示最近添加的服务器  
+✅ 支持 Windows：现已支持 Windows 平台（实验性）  
+✅ 更好的错误处理与安装指南  
 
 🗨 [反馈或提问](https://github.com/milisp/mcp-linker/discussions)
 
@@ -41,6 +53,7 @@
 
 ```bash
 git clone https://github.com/milisp/mcp-linker
+cd mcp-linker
 bun install
 bun tauri dev
 # yarn install
@@ -49,11 +62,18 @@ bun tauri dev
 # pnpm tauri dev
 ```
 
+> **注意：** 如遇安装问题，可尝试删除 `package-lock.json` 和 `node_modules` 目录，然后执行以下命令：
+> ```bash
+> npm install --legacy-peer-deps
+> ```
+
 ## 🚀 快速开始
 
 1. **浏览与选择**：从可用服务器列表中选择一个 MCP 服务器。  
 2. **安装**：点击 **“获取”** 查看服务器配置。  
 3. **激活**：点击 **“添加”** 将其集成到你的 MCP 客户端。  
+
+> 💡 提示：收藏与最近使用的服务器会被保存在本地，方便下次使用！
 
 ## 🌐 官方服务器
 
@@ -82,11 +102,8 @@ bun tauri dev
 感谢以下贡献者对本项目的改进：
 
 - [@eltociear](https://github.com/eltociear) — 日文翻译
+- [@devilcoder01](https://github.com/devilcoder01) — 改进了 Windows 兼容性与项目安装说明
 
 ---
 
 [![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
-
-## 许可协议
-
-BSD
