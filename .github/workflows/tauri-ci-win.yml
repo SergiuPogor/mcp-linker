@@ -1,0 +1,33 @@
+name: Build Tauri App for Windows
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual trigger in GitHub UI
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies with npm
+        run: npm install --legacy-peer-deps
+
+      - name: Install Tauri CLI
+        run: npx tauri --version
+
+      - name: Build Tauri app
+        run: npx tauri build
