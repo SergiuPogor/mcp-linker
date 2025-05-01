@@ -81,6 +81,25 @@ bun tauri dev
 3. **Activate**: Click **"Add"** to integrate it with your MCP client.
 > **Tip:** Favorites and recently used servers are saved locally for your convenience!
 
+## 🛠️ How It Works
+
+When you click **"Add"**, MCP Linker directly modifies your MCP configuration file to include the selected server.
+
+> ⚠️ Warning: This will overwrite existing MCP configuration for that client. Please back up your config file if needed.
+
+### 📂 Configuration File Paths
+
+**Claude Desktop**  
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+- **Windows**: `~/AppData/Roaming/Claude/claude_desktop_config.json`  
+
+**Cursor**  
+- **Global config**: `~/.cursor/mcp.json`  
+- **Project config**: `.cursor/mcp.json`  
+
+**Windsurf**  
+- `~/.codeium/windsurf/mcp_config.json`
+
 ## 🌐 Official Servers
 
 Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).

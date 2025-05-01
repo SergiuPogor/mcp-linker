@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allow manual trigger in GitHub UI
+    paths:
+      - 'src/**'
+      - 'src-tauri/**'
+      - 'package.json'
+  workflow_dispatch:
 
 jobs:
   build:
