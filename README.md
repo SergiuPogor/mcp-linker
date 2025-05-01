@@ -22,12 +22,37 @@
 
 # MCP Linker
 
->Easily add a **Model Context Protocol (MCP) server** to your MCP client (**Claude Cursor windsurf...**) with just two clicks: **Get** and **Add**. Support macos win
+> Easily add a **Model Context Protocol (MCP) server** to your MCP client (**Claude, Cursor, Windsurf...**) with just two clicks: **Get** and **Add**. Supports macOS and Windows.
+
+---
+
+## 📋 Table of Contents
+
+- [For Users](#-for-users)
+  - [Download](#-download-mcp-linker)
+  - [Features](#-features)
+  - [Quick Start Guide](#-quick-start-guide)
+  - [How It Works](#-how-it-works)
+  - [Configuration File Paths](#-configuration-file-paths)
+  - [Screenshots](#-screenshots)
+- [For Developers](#-for-developers)
+  - [System Requirements](#-system-requirements)
+  - [Installation Steps](#-installation-steps)
+  - [Troubleshooting](#-troubleshooting)
+  - [Contributing](#-contributing)
+- [Resources](#-resources)
+  - [Official Servers](#-official-servers)
+  - [Feedback & Support](#-feedback--support)
+  - [Contributors](#-contributors)
+
+---
+
+# 👤 For Users
 
 ## 🔽 Download MCP Linker
 
-👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
-👉 [Download on github release](https://github.com/milisp/mcp-linker/releases)
+👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)  
+👉 [Download on GitHub Releases](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ Features
 
@@ -39,46 +64,12 @@
 ✅ Windows Support: Now also works on Windows (experimental)  
 ✅ Improved error handling and installation guide
 
-🗨 [Feedback or Questions](https://github.com/milisp/mcp-linker/discussions)
-
-## Requirements
-
-Before running this project, ensure you have the following installed:
-
-- Node.js 
-- bun (or pnpm)
-- Rust toolchain (stable) for Tauri
-
-## Install
-
-```bash
-git clone https://github.com/milisp/mcp-linker
-cd mcp-linker
-bun install
-bun tauri dev
-# yarn install
-# yarn tauri dev
-# pnpm install
-# pnpm tauri dev
-```
-
-> **Disclaimer:** If you face any issues, delete the `package-lock.json` file and the `node_modules` directory, then run:
-> ```bash
-> npm cache clean --force
-> npm install
-> ```
-> Again, if you face any errors, remove the `package-lock.json` file and the `node_modules` directory again, then run:
-> ```
-> npm cache clean --force
-> npm install --legacy-peer-deps
-> ```
->
-
-## 🚀 Quick Start
+## 🚀 Quick Start Guide
 
 1. **Browse & Select**: Choose an MCP server from the available list.  
-2. **Install**: Click **"Get"** to show configure of server.  
+2. **Install**: Click **"Get"** to show configuration of server.  
 3. **Activate**: Click **"Add"** to integrate it with your MCP client.
+
 > **Tip:** Favorites and recently used servers are saved locally for your convenience!
 
 ## 🛠️ How It Works
@@ -87,7 +78,7 @@ When you click **"Add"**, MCP Linker directly modifies your MCP configuration fi
 
 > ⚠️ Warning: This will overwrite existing MCP configuration for that client. Please back up your config file if needed.
 
-### 📂 Configuration File Paths
+## 📂 Configuration File Paths
 
 **Claude Desktop**  
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
@@ -99,10 +90,6 @@ When you click **"Add"**, MCP Linker directly modifies your MCP configuration fi
 
 **Windsurf**  
 - `~/.codeium/windsurf/mcp_config.json`
-
-## 🌐 Official Servers
-
-Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
 
 ## 🖼️ Screenshots
 
@@ -117,12 +104,81 @@ Check out the list of [official MCP servers](https://github.com/modelcontextprot
 
 ---
 
+# 👨‍💻 For Developers
+
+## 💻 System Requirements
+
+Before working on this project, ensure you have the following installed:
+
+- Node.js 
+- bun (or pnpm/yarn/npm)
+- Rust toolchain (stable) for Tauri
+
+## 🔧 Installation Steps
+
+```bash
+git clone https://github.com/milisp/mcp-linker
+cd mcp-linker
+bun install
+bun tauri dev
+```
+
+Alternative package managers:
+```bash
+# Using yarn
+yarn install
+yarn tauri dev
+
+# Using pnpm
+pnpm install
+pnpm tauri dev
+
+# Using npm
+npm install
+npm run tauri dev
+```
+
+## 🔍 Troubleshooting
+
+If you encounter installation issues:
+
+1. Remove dependency lock files:
+   ```bash
+   rm package-lock.json
+   rm -rf node_modules
+   ```
+
+2. Clean npm cache and reinstall:
+   ```bash
+   npm cache clean --force
+   npm install
+   ```
+
+3. If errors persist, try with legacy peer deps:
+   ```bash
+   npm cache clean --force
+   npm install --legacy-peer-deps
+   ```
+
 ## 🤝 Contributing
 
-We welcome contributions!:
+We welcome contributions from the community:
 
-1. **Fork & Clone** this repository.
-2. **Submit a Pull Request** with your changes.
+1. **Fork & Clone** this repository
+2. **Create a branch** for your feature or fix
+3. **Submit a Pull Request** with your changes
+
+---
+
+# 📚 Resources
+
+## 🌐 Official Servers
+
+Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
+
+## 💬 Feedback & Support
+
+Have questions or suggestions? Join our [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
 
 ## 🎉 Contributors
 
