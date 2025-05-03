@@ -39,8 +39,8 @@ impl AppConfig {
                     .join(".codeium/windsurf/mcp_config.json")
             }
             (_, Some(path)) => {
-                // For any other app, use the provided path directly
-                PathBuf::from(path)
+                // For any other app, use the provided path + mcp.json
+                PathBuf::from(path).join("mcp.json")
             }
             _ => {
                 // Default case

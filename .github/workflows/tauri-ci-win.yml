@@ -27,8 +27,13 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies with npm
-        run: npm install --legacy-peer-deps
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          setx PATH "$env:USERPROFILE\.bun\bin;$env:PATH"
+
+      - name: Install dependencies with bun
+        run: bun install
 
       - name: Install Tauri CLI
         run: npx tauri --version

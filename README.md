@@ -22,7 +22,7 @@
 
 # MCP Linker
 
-> Easily add a **Model Context Protocol (MCP) server** to your MCP client (**Claude, Cursor, Windsurf...**) with just two clicks: **Get** and **Add**. Supports macOS and Windows.
+> A simple yet powerful tool to manage **Model Context Protocol (MCP) servers** for clients like **Claude, Cursor, Windsurf**. With just two clicks—**Get** and **Add**—you can connect to a server. Supports macOS and Windows via a Tauri GUI. Linux comming soon.
 
 ---
 
@@ -57,20 +57,23 @@
 ## ✨ Features
 
 ✅ One-click to add MCP servers  
-✅ Supports multiple MCP server configurations  
+✅ Manage multiple server configurations (add, delete, favorite)  
 ✅ Open-source and community-driven  
-✅ Favorites: Mark servers as favorites for quick access  
-✅ Recently Used: Automatically save and display recently added servers  
-✅ Windows Support: Now also works on Windows (experimental)  
-✅ Improved error handling and installation guide
+✅ Favorites & Recently Used: Quickly access your go-to servers  
+✅ Cross-platform: macOS and experimental Windows support  
+✅ Multi-language: English, 中文, 日本語  
+✅ Improved error handling and user-friendly setup
 
-## 🚀 Quick Start Guide
+> 🛠️ *Coming Soon:* One-click server install, status monitoring, and more!
 
-1. **Browse & Select**: Choose an MCP server from the available list.  
-2. **Install**: Click **"Get"** to show configuration of server.  
-3. **Activate**: Click **"Add"** to integrate it with your MCP client.
+## 🚀 Quick Start
 
-> **Tip:** Favorites and recently used servers are saved locally for your convenience!
+1. **Select** an MCP server from the list.  
+2. Click **Get** to view its configuration.  
+3. Click **Add** to integrate it with your MCP client.  
+4. Manage servers from your favorites or history.
+
+> 💡 Favorites and recently used servers are saved locally to enhance your workflow.
 
 ## 🛠️ How It Works
 
@@ -174,7 +177,7 @@ We welcome contributions from the community:
 
 ## 🌐 Official Servers
 
-Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
+Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers?from=mcp-linker).
 
 ## 💬 Feedback & Support
 
@@ -185,7 +188,7 @@ Have questions or suggestions? Join our [GitHub Discussions](https://github.com/
 Thanks to the following contributors for improving this project:
 
 - [@eltociear](https://github.com/eltociear) — Japanese translation
-- [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions
+- [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions, Github workflow, UI improved, design
 
 ---
 

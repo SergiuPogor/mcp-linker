@@ -1,5 +1,12 @@
 {
   "name": "mcp-linker",
+  "description": "A cross-platform desktop manager for MCP servers and client using Tauri + React.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/milisp/mcp-linker"
+  },
+  "author": "milisp",
+  "license": "MIT",
   "private": true,
   "version": "1.2.0",
   "type": "module",
@@ -18,12 +25,8 @@
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.3",
-    "@rollup/rollup-win32-x64-msvc": "^4.40.1",
-    "@tailwindcss/oxide-win32-x64-msvc": "^4.1.4",
-    "@tailwindcss/vite": "^4.0.14",
     "@tanstack/react-query": "^5.69.0",
     "@tauri-apps/api": "^2.5.0",
-    "@tauri-apps/cli-win32-x64-msvc": "^2.5.0",
     "@tauri-apps/plugin-dialog": "^2.2.0",
     "@tauri-apps/plugin-os": "^2.2.1",
     "@tauri-apps/plugin-shell": "^2.2.0",
@@ -40,8 +43,6 @@
     "react-router-dom": "^7.3.0",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss": "^4.0.14",
-    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
@@ -53,6 +54,12 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.6.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.3",
+    "@tailwindcss/vite": "^4.0.14",
+    "tailwindcss": "^4.0.14",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { open } from "@tauri-apps/plugin-dialog";
+import { useState } from "react";
 
 interface PathSelectorProps {
   selectedPath: string;
@@ -36,7 +36,7 @@ export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
           value={selectedPath}
           onChange={(e) => onChange(e.target.value)}
           className="flex-1"
-          placeholder="Select a directory..."
+          placeholder="Select a project root or a directory containing mcp.json"
           readOnly
         />
         <Button onClick={handleBrowse} disabled={isLoading}>
