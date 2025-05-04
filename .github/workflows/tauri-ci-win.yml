@@ -57,3 +57,11 @@ jobs:
 
       - name: Build Rust app with bun
         run: bun tauri build
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MCP-Linker-Windows-CI
+          path: |
+            src-tauri/target/release/bundle/**/*.exe
+            src-tauri/target/release/bundle/**/*.msi

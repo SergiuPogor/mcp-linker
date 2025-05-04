@@ -2,7 +2,7 @@ name: Tauri Release Windows
 
 on:
   push:
-    branches:
+    tags:
       - 'v*'
     paths:
       - '.github/workflows/tauri-release-win.yml'
