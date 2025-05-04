@@ -1,76 +1,82 @@
-import { useTranslation } from "react-i18next";
-import { open } from "@tauri-apps/plugin-shell";
-import { ModeToggle } from "./mode-toggle";
+import { Button } from "@/components/ui/button";
 import { Category } from "@/types";
+import { open } from "@tauri-apps/plugin-shell";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   appCategories: Category[];
-  selectedCategory: Category;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
 }
 
-export const Sidebar = ({
-  appCategories,
-  selectedCategory,
-  setSelectedCategory,
-}: SidebarProps) => {
+export const Sidebar = ({ appCategories }: SidebarProps) => {
   const { t } = useTranslation<"translation">();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
 
   return (
-    <div className="w-64 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
-      <div className="p-4">
-        <div className="flex gap-2 cursor-pointer hover:text-blue-500 hover:underline">
-          <a
-            onClick={() => open("https://github.com/milisp/mcp-linker")}
-            className="flex text-xl font-bold text-gray-800 dark:text-gray-100 mb-2"
+    <div
+      className={`flex flex-col justify-between h-screen bg-background border-r p-2 transition-all duration-300 ${isCollapsed ? "w-16" : "w-56"}`}
+    >
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div
+            onClick={() =>
+              open("https://github.com/milisp/mcp-linker?from=mcp-linker")
+            }
+            className="flex items-center gap-2 cursor-pointer"
           >
-            <img src="/logo.png" alt="Logo" style={{ width: 32, height: 32 }} />
-            {t("appStore")}
-          </a>
-        </div>
-
-        <nav>
-          <ul>
-            {appCategories.map((category) => (
-              <li key={category.id}>
-                <button
-                  onClick={() => setSelectedCategory(category)}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg text-left ${
-                    selectedCategory.id === category.id
-                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  <span className="mr-3">{category.icon}</span>
-                  <span className="font-medium">{category.name}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-
-      {/* User section */}
-      <div className="absolute bottom-0 w-64 p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <span className="text-white font-medium text-lg">
-                {t("username")[0].toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100">
-                {t("username")}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 cursor-pointer transition-colors">
-                {t("viewProfile")}
-              </p>
-            </div>
+            <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+            {!isCollapsed && (
+              <span className="text-xl font-bold">{t("mcpLinker")}</span>
+            )}
           </div>
-          <ModeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="h-8 w-8"
+          >
+            {isCollapsed ? "→" : "←"}
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          {appCategories.map((category) => (
+            <Link key={category.id} to={`/${category.id}`} className="w-full">
+              <Button
+                variant={
+                  location.pathname === `/${category.id}`
+                    ? "secondary"
+                    : "ghost"
+                }
+                className={`w-full justify-start p-2 ${isCollapsed ? "justify-center" : ""}`}
+              >
+                <span className="text-xl">{category.icon}</span>
+                {!isCollapsed && <span className="ml-2">{category.name}</span>}
+              </Button>
+            </Link>
+          ))}
         </div>
       </div>
+
+      <Link to="/recently" className="w-full">
+        <div
+          className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : ""}`}
+        >
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-lg">
+            {t("username")[0].toUpperCase()}
+          </div>
+          {!isCollapsed && (
+            <div>
+              <p className="font-medium">{t("username")}</p>
+              <p className="text-sm text-muted-foreground cursor-pointer hover:text-blue-500 transition-colors">
+                0.00
+              </p>
+            </div>
+          )}
+        </div>
+      </Link>
     </div>
   );
 };

@@ -8,5 +8,5 @@ export function openUrl(url: string, branch = "main") {
     const path = parts[1] ? `/src/${parts[1]}` : "";
     url = `${baseUrl}/tree/${branch}${path}`;
   }
-  open(url);
+  open(url + "?from=mcp-linker");
 }

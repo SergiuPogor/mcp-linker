@@ -8,9 +8,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ServerConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -33,6 +35,8 @@ interface ServerFormProps {
 }
 
 export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
+  const { t } = useTranslation();
+
   const envArray = config.env
     ? Object.entries(config.env).map(([key, value]) => ({
         key,
@@ -84,7 +88,9 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="command"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" dark:text-gray-200">Command</FormLabel>
+              <FormLabel className=" dark:text-gray-200">
+                {t("serverForm.command")}
+              </FormLabel>
               <FormControl>
                 <Input
                   className={
@@ -102,15 +108,17 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="args"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" dark:text-gray-200">Arguments</FormLabel>
+              <FormLabel className=" dark:text-gray-200">
+                {t("serverForm.arguments")}
+              </FormLabel>
               <FormControl>
-                <Input
+                <Textarea
                   className={
-                    "dark:bg-gray-800 dark:border-gray-500 dark:text-white"
+                    "dark:bg-gray-800 dark:border-gray-500 dark:text-white w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 border-gray-300"
                   }
                   {...field}
                   placeholder="space-separated args"
-                />
+                ></Textarea>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,7 +126,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
         />
         <div className="space-y-2">
           <FormLabel className=" dark:text-gray-200">
-            Environment Variables
+            {t("serverForm.env")}
           </FormLabel>
           {fields.map((field, index) => (
             <div key={field.id} className="flex items-center gap-2">

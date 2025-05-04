@@ -2,7 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-### [1.1.0] - 2025-04-29
+## [1.2.2] - 2025-05-04
+
+chore: update dependencies and enhance UI components
+
+- Upgraded @radix-ui/react-dialog from version 1.1.6 to 1.1.11 for improved functionality.
+- Updated Node.js engine requirement from version 18 to 20 in package.json.
+- Enhanced README with a new section inviting feedback for a Linux version.
+- Refactored client selection logic in various components to improve clarity and maintainability.
+- Improved UI consistency across components, including ServerCard and Sidebar.
+- Added multi-language support for new UI elements and server management features.
+
+## [1.2.1] - 2025-05-01
+
+Fix: get server
+
+## [1.2.0] - 2025-04-30
+
+- Support Windows
+- better ui
+- Added new MIT License
+
+## [1.1.0] - 2025-04-29
 
 ### Added
 - Introduced a favorites feature for server management.

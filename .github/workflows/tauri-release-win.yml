@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - 'v*'
+    paths:
+      - '.github/workflows/tauri-release-win.yml'
+      - 'src/**'
+      - 'src-tauri/**'
+      - 'package.json'
   workflow_dispatch: # Allow manual trigger in GitHub UI
 
 jobs:
@@ -21,21 +26,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install Bun
         run: |
-          curl -fsSL https://bun.sh/install | bash
+          powershell -c "irm bun.sh/install.ps1 | iex"
           setx PATH "$env:USERPROFILE\.bun\bin;$env:PATH"
 
       - name: Install dependencies with bun
         run: bun install
 
       - name: Install Tauri CLI
-        run: npx tauri --version
+        run: bun tauri --version
 
       - name: Build Tauri app
-        run: npx tauri build
+        run: bun tauri build
 
       - name: Rename MSI file (optional)
         run: |

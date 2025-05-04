@@ -1,7 +1,5 @@
 // ServerConfigDialog.tsx
-import { useState, useEffect, forwardRef } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { needspathClient } from "@/lib/data";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,11 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import type { ServerType, ServerConfig } from "@/types";
+import { Textarea } from "@/components/ui/textarea";
+import { needspathClient } from "@/lib/data";
+import type { ServerConfig, ServerType } from "@/types";
+import capitalizeFirstLetter from '@/utils/title';
+import { invoke } from "@tauri-apps/api/core";
+import { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -21,7 +22,7 @@ interface ServerConfigDialogProps {
   isOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
   currentServer: ServerType;
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
   mcpServers: any;
 }
@@ -34,7 +35,7 @@ export const ServerConfigDialog = forwardRef<
     isOpen,
     setIsDialogOpen,
     currentServer,
-    selectedApp,
+    selectedClient,
     selectedPath,
     mcpServers,
   }) => {
@@ -112,7 +113,7 @@ export const ServerConfigDialog = forwardRef<
     async function updateConfig(selectedServer: string, value: ServerConfig) {
       try {
         const server = {
-          appName: selectedApp,
+          appName: selectedClient,
           path: selectedPath,
           serverName: selectedServer,
           serverConfig: value,
@@ -125,7 +126,7 @@ export const ServerConfigDialog = forwardRef<
     }
 
     const handleSubmit = async () => {
-      if (needspathClient.includes(selectedApp) && !selectedPath) {
+      if (needspathClient.includes(selectedClient) && !selectedPath) {
         toast.error("Path is required");
         return;
       }
@@ -302,7 +303,7 @@ export const ServerConfigDialog = forwardRef<
               handleSubmit();
             }}
           >
-            {t("addTo")} {selectedApp}
+            {t("addTo")} {capitalizeFirstLetter(selectedClient)}
           </Button>
         </DialogContent>
       </Dialog>

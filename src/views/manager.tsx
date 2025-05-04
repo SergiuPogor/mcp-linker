@@ -1,17 +1,17 @@
-import { invoke } from "@tauri-apps/api/core";
-import { useState, useEffect } from "react";
 import { ServerCard } from "@/components/manage/ServerCard";
 import { ConfigType } from "@/types/config";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 // import { needspathClient } from "@/lib/data";
 
 interface McpServerProps {
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
 }
 
 export default function McpManage({
-  selectedApp,
+  selectedClient,
   selectedPath,
 }: McpServerProps) {
   const [config, setConfig] = useState<ConfigType>({
@@ -20,12 +20,12 @@ export default function McpManage({
 
   useEffect(() => {
     loadConfig();
-  }, [selectedApp, selectedPath]);
+  }, [selectedClient, selectedPath]);
 
   async function loadConfig() {
     try {
       const data = await invoke<ConfigType>("read_json_file", {
-        appName: selectedApp,
+        appName: selectedClient,
         path: selectedPath || undefined,
       });
       if (data) {
@@ -45,7 +45,7 @@ export default function McpManage({
   ) => {
     try {
       await invoke("update_mcp_server", {
-        appName: selectedApp,
+        appName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
         serverConfig: updatedConfig,
@@ -59,7 +59,7 @@ export default function McpManage({
   };
 
   async function deleteConfigKey(key: string) {
-    if (selectedApp === "cursor" && !selectedPath) {
+    if (selectedClient === "cursor" && !selectedPath) {
       toast.error(
         "Cannot delete config: selectedPath is required for cursor app",
       );
@@ -67,7 +67,7 @@ export default function McpManage({
     }
     try {
       await invoke("remove_mcp_server", {
-        appName: selectedApp,
+        appName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
       });

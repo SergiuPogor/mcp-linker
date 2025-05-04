@@ -6,32 +6,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface AppOption {
+interface ClientOption {
   id: string;
   name: string;
 }
 
-const appOptions: AppOption[] = [
+const clientOptions: ClientOption[] = [
   { id: "claude", name: "Claude" },
   { id: "cursor", name: "Cursor" },
   { id: "windsurf", name: "Windsurf" },
   { id: "custom", name: "Custom" },
 ];
 
-interface AppSelectorProps {
-  selectedApp: string;
+interface ClientSelectorProps {
+  selectedClient: string;
   onChange: (app: string) => void;
 }
 
-export function AppSelector({ selectedApp, onChange }: AppSelectorProps) {
+export function ClientSelector({
+  selectedClient,
+  onChange,
+}: ClientSelectorProps) {
   return (
-    <div className="w-64 z-50">
-      <Select value={selectedApp} onValueChange={onChange}>
+    <div className="z-50">
+      <Select value={selectedClient} onValueChange={onChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select an application" />
         </SelectTrigger>
         <SelectContent>
-          {appOptions.map((option) => (
+          {clientOptions.map((option) => (
             <SelectItem key={option.id} value={option.id}>
               {option.name}
             </SelectItem>

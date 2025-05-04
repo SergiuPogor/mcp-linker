@@ -3,9 +3,13 @@ import { TranslationSchema } from "../schema";
 const ja: { translation: TranslationSchema } = {
   translation: {
     get: "取得",
+    confirmDeletion: "Confirm Deletion",
+    deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
+    cancel: "Cancel",
+    delete: "Delete",
     install: "インストール",
     addTo: "追加",
-    appStore: "MCPストア",
+    mcpLinker: "MCP Linker",
     categories: {
       discover: "発見",
       arcade: "アーケード",
@@ -19,11 +23,11 @@ const ja: { translation: TranslationSchema } = {
     content: {
       discover: "注目のコンテンツを発見",
       arcade: "Apple Arcadeのゲーム",
-      create: "クリエイティブアプリ",
-      work: "生産性向上アプリ",
+      create: "クリエイティブサーバー",
+      work: "生産性向上サーバー",
       manage: "管理",
-      updates: "アプリの更新",
-      recentlyAdded: "最近追加されたアプリ",
+      updates: "サーバーの更新",
+      recentlyAdded: "最近追加されたサーバー",
       favs: "お気に入り", // <-- 新增
     },
     featured: {
@@ -31,10 +35,18 @@ const ja: { translation: TranslationSchema } = {
       description: "編集者が厳選したアプリをチェック",
       button: "詳細を見る",
     },
-    featuredApps: "注目アプリ",
+    featuredServers: "注目サーバー",
     username: "ユーザー名",
     viewProfile: "プロフィールを見る",
     selectFolder: "フォルダを選択",
+    search: {
+      placeholder: "名前でサーバーを検索...",
+    },
+    serverForm: {
+      command: "Command",
+      arguments: "Arguments",
+      env: "Environment Variables",
+    },
   },
 };
 

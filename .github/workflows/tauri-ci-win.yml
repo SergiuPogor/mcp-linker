@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/tauri-ci-win.yml'
       - 'src/**'
       - 'src-tauri/**'
       - 'package.json'
@@ -16,6 +17,21 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # set BUILD_KEY auto run 
+      - name: Set build type
+        id: build-type
+        run: |
+          if (Test-Path env:BUILD_KEY) {
+            echo "Using signing key"
+            echo "HAS_KEY=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "Building without signing key"
+            echo "HAS_KEY=false" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
+        env:
+          BUILD_KEY: ${{ secrets.BUILD_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -25,18 +41,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Install Bun
+      - name: Install Bun on Windows
+        shell: pwsh
         run: |
-          curl -fsSL https://bun.sh/install | bash
-          setx PATH "$env:USERPROFILE\.bun\bin;$env:PATH"
+          irm https://bun.sh/install.ps1 | iex
+          echo "$HOME\.bun\bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
-      - name: Install dependencies with bun
+      - name: Install dependencies bun
         run: bun install
 
-      - name: Install Tauri CLI
-        run: npx tauri --version
+      - name: Check Tauri version
+        run: bun tauri --version
 
-      - name: Build Tauri app
-        run: npx tauri build
+      - name: Build Rust app with bun
+        run: bun tauri build

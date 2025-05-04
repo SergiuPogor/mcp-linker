@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { ServerForm } from "@/components/manage/ServerForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { ServerForm } from "@/components/manage/ServerForm";
 import { ConfigType } from "@/types/config";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ServerCardProps {
   serverKey: string;
@@ -28,6 +29,7 @@ export function ServerCard({
 }: ServerCardProps) {
   const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleDeleteConfirm = () => {
     onDelete(serverKey);
@@ -44,13 +46,13 @@ export function ServerCard({
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>
-                <span>Get</span>
+                <span>{t("get")}</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md bg-background dark:bg-gray-800">
               <DialogHeader>
                 <DialogTitle className="dark:text-white">
-                  Get {serverKey}
+                  {t("get")} {serverKey}
                 </DialogTitle>
               </DialogHeader>
               <ServerForm
@@ -71,17 +73,17 @@ export function ServerCard({
                 className="h-8 w-8 hover:bg-muted"
               >
                 <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Delete</span>
+                <span className="sr-only">{t("delete")}</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md bg-background dark:bg-gray-800">
               <DialogHeader>
                 <DialogTitle className="dark:text-white">
-                  Confirm Deletion
+                  {t("confirmDeletion")}
                 </DialogTitle>
               </DialogHeader>
               <p className="text-sm text-muted-foreground">
-                Are you sure you want to delete {serverKey}?
+                {t("deleteConfirmation", { serverKey })}
               </p>
               <DialogFooter className="mt-4 sm:justify-end">
                 <Button
@@ -89,10 +91,10 @@ export function ServerCard({
                   onClick={() => setDeleteDialogOpen(false)}
                   className="mr-2"
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button variant="destructive" onClick={handleDeleteConfirm}>
-                  Delete
+                  {t("delete")}
                 </Button>
               </DialogFooter>
             </DialogContent>

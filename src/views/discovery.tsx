@@ -1,14 +1,14 @@
-import { useTranslation } from "react-i18next";
 import { ServerList } from "@/components/server/server-list";
 import { fetchServers } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 interface Props {
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
 }
 
-export default function Discovery({ selectedApp, selectedPath }: Props) {
+export default function Discovery({ selectedClient, selectedPath }: Props) {
   const { t } = useTranslation();
 
   const { data, isLoading } = useQuery({
@@ -25,7 +25,7 @@ export default function Discovery({ selectedApp, selectedPath }: Props) {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">
+      <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100 sr-only">
         {t("categories.discover")}
       </h1>
       {/* Hero banner */}
@@ -41,14 +41,14 @@ export default function Discovery({ selectedApp, selectedPath }: Props) {
       </div>
       {/* Featured apps */}
       <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-        {t("featuredApps")}
+        {t("featuredServers")}
       </h2>
 
       {!data?.servers ? (
         <div className="p-8">No servers available</div>
       ) : (
         <ServerList
-          selectedApp={selectedApp}
+          selectedClient={selectedClient}
           selectedPath={selectedPath}
           mcpServers={data.servers}
         />

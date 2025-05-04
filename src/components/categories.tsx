@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { Home, Download, Clock, Star } from "lucide-react";
 import { Category } from "@/types";
+import { Clock, Download, Home, Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const useAppCategories = (): Category[] => {
   const { t } = useTranslation();

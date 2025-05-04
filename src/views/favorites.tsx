@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { ServerList } from "@/components/server/server-list";
 import { fetchServers } from "@/lib/api";
 import type { ServerType } from "@/types";
-import { ServerList } from "@/components/server/server-list";
+import { useEffect, useState } from "react";
 
 interface Props {
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
 }
 
@@ -13,7 +13,7 @@ let cachedServerList: { servers: ServerType[] } | null = null;
 let lastFetchTime = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export default function FavoritesPage({ selectedApp, selectedPath }: Props) {
+export default function FavoritesPage({ selectedClient, selectedPath }: Props) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [serverList, setServerList] = useState<{ servers: ServerType[] }>({
     servers: [],
@@ -55,7 +55,7 @@ export default function FavoritesPage({ selectedApp, selectedPath }: Props) {
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Favorites</h1>
       <ServerList
-        selectedApp={selectedApp}
+        selectedClient={selectedClient}
         selectedPath={selectedPath}
         mcpServers={favoriteServers}
       />

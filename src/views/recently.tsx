@@ -1,15 +1,15 @@
-import { invoke } from "@tauri-apps/api/core";
-import { useState, useEffect } from "react";
 import { ServerCard } from "@/components/recently/ServerCard";
 import { type ServerConfig } from "@/types";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
 }
 
-export default function Recently({ selectedApp, selectedPath }: Props) {
+export default function Recently({ selectedClient, selectedPath }: Props) {
   const [serverList, setServerList] = useState<
     { name: string; config: ServerConfig }[]
   >([]);
@@ -23,7 +23,6 @@ export default function Recently({ selectedApp, selectedPath }: Props) {
           config: ServerConfig;
         }[];
         setServerList(parsed);
-        console.log("Set serverList for Recently page:", parsed);
       } catch (error) {
         console.error("Failed to load myservers:", error);
       }
@@ -33,7 +32,7 @@ export default function Recently({ selectedApp, selectedPath }: Props) {
   const handleAdd = async (key: string, updatedConfig: ServerConfig) => {
     try {
       await invoke("add_mcp_server", {
-        appName: selectedApp,
+        appName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
         serverConfig: updatedConfig,

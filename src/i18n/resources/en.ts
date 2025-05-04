@@ -3,9 +3,13 @@ import { TranslationSchema } from "../schema";
 const en: { translation: TranslationSchema } = {
   translation: {
     get: "Get",
+    confirmDeletion: "Confirm Deletion",
+    deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
+    cancel: "Cancel",
+    delete: "Delete",
     install: "Install",
     addTo: "Add to",
-    appStore: "MCP Linker",
+    mcpLinker: "MCP Linker",
     categories: {
       discover: "Discover",
       arcade: "Arcade",
@@ -19,22 +23,30 @@ const en: { translation: TranslationSchema } = {
     content: {
       discover: "Discover featured content",
       arcade: "Apple Arcade games",
-      create: "Creative apps",
-      work: "Productivity apps",
+      create: "Creative servers",
+      work: "Productivity servers",
       manage: "Manage",
       favs: "Favorites",
-      updates: "App updates",
-      recentlyAdded: "Recently added apps",
+      updates: "Server updates",
+      recentlyAdded: "Recently added servers",
     },
     featured: {
-      title: "Featured App of the Week",
-      description: "Explore apps handpicked by our editors",
+      title: "Featured Server of the Week",
+      description: "Explore servers handpicked by our editors",
       button: "View Details",
     },
-    featuredApps: "Featured Apps",
+    featuredServers: "Featured Servers",
     username: "Username",
     viewProfile: "View Profile",
     selectFolder: "Select Folder",
+    search: {
+      placeholder: "Search servers by name...",
+    },
+    serverForm: {
+      command: "Command",
+      arguments: "Arguments",
+      env: "Environment Variables",
+    },
   },
 };
 

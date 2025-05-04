@@ -2,20 +2,22 @@
 import { Input } from "@/components/ui/input";
 import type { ServerType } from "@/types";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ServerConfigDialog } from "./ServerConfigDialog";
 import { ServerCard } from "./server-card";
 
 interface AppListProps {
-  selectedApp: string;
+  selectedClient: string;
   selectedPath: string;
   mcpServers: ServerType[];
 }
 
 export function ServerList({
-  selectedApp,
+  selectedClient,
   selectedPath,
   mcpServers,
 }: AppListProps) {
+  const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentServer, setCurrentServer] = useState<ServerType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,12 +60,12 @@ export function ServerList({
     <div ref={containerRef} className="h-full">
       <Input
         type="text"
-        placeholder="Search servers by name..."
+        placeholder={t("search.placeholder")}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4"
       />
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {mcpServers
           .filter(
             (server) =>
@@ -88,7 +90,7 @@ export function ServerList({
           isOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           currentServer={currentServer}
-          selectedApp={selectedApp}
+          selectedClient={selectedClient}
           selectedPath={selectedPath}
           mcpServers={mcpServers}
         />

@@ -19,14 +19,13 @@ export default function LangSelect() {
 
   return (
     <Select value={currentLang} onValueChange={changeLanguage}>
-      <SelectTrigger className="w-24">
+      <SelectTrigger>
         <SelectValue placeholder="Select a lang" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="en">English</SelectItem>
         <SelectItem value="zh">中文</SelectItem>
-        <SelectItem value="es">es</SelectItem>
-        <SelectItem value="ja">日本語</SelectItem>
+        <SelectItem value="ja">日本语</SelectItem>
       </SelectContent>
     </Select>
   );

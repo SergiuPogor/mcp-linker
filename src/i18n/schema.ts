@@ -1,8 +1,12 @@
 export interface TranslationSchema {
   get: string;
+  confirmDeletion: string;
+  deleteConfirmation: string;
+  cancel: string;
+  delete: string;
   install: string;
   addTo: string;
-  appStore: string;
+  mcpLinker: string;
   categories: {
     discover: string;
     arcade: string;
@@ -28,8 +32,16 @@ export interface TranslationSchema {
     description: string;
     button: string;
   };
-  featuredApps: string;
+  featuredServers: string;
   username: string;
   viewProfile: string;
   selectFolder: string;
+  search: {
+    placeholder: string;
+  };
+  serverForm: {
+    command: string;
+    arguments: string;
+    env: string;
+  };
 }

@@ -22,7 +22,9 @@
 
 # MCP Linker
 
-> A simple yet powerful tool to manage **Model Context Protocol (MCP) servers** for clients like **Claude, Cursor, Windsurf**. With just two clicks—**Get** and **Add**—you can connect to a server. Supports macOS and Windows via a Tauri GUI. Linux comming soon.
+> A simple yet powerful tool to manage **Model Context Protocol (MCP) servers** for clients like **Claude, Cursor, Windsurf**. With just two clicks—**Get** and **Add**—you can connect to a server. Supports macOS and Windows via a Tauri GUI.
+
+> Want a Linux version? Let us know on [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
 
 ---
 
@@ -58,6 +60,7 @@
 
 ✅ One-click to add MCP servers  
 ✅ Manage multiple server configurations (add, delete, favorite)  
+✅ No technical skills required — just click and go!  
 ✅ Open-source and community-driven  
 ✅ Favorites & Recently Used: Quickly access your go-to servers  
 ✅ Cross-platform: macOS and experimental Windows support  
@@ -126,21 +129,6 @@ bun install
 bun tauri dev
 ```
 
-Alternative package managers:
-```bash
-# Using yarn
-yarn install
-yarn tauri dev
-
-# Using pnpm
-pnpm install
-pnpm tauri dev
-
-# Using npm
-npm install
-npm run tauri dev
-```
-
 ## 🔍 Troubleshooting
 
 If you encounter installation issues:
@@ -182,6 +170,10 @@ Check out the list of [official MCP servers](https://github.com/modelcontextprot
 ## 💬 Feedback & Support
 
 Have questions or suggestions? Join our [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
+
+## ⏱️ GitHub Last Commit
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 
 ## 🎉 Contributors
 
