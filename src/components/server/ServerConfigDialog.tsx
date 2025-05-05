@@ -7,16 +7,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { needspathClient } from "@/lib/data";
 import type { ServerConfig, ServerType } from "@/types";
 import capitalizeFirstLetter from '@/utils/title';
-import { invoke } from "@tauri-apps/api/core";
 import { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+
+import { ArgsTextarea } from "./ArgsTextarea";
+import { CommandInput } from "./CommandInput";
+import { ConfigTabs } from "./ConfigTabs";
+import { EnvEditor } from "./EnvEditor";
+import { ServerNameInput } from "./ServerNameInput";
+import { useLocalDraft } from "./useLocalDraft";
+import { useSaveServerConfig } from "./useSaveServerConfig";
 
 interface ServerConfigDialogProps {
   isOpen: boolean;
@@ -39,20 +41,28 @@ export const ServerConfigDialog = forwardRef<
     selectedPath,
     mcpServers,
   }) => {
-    const LOCAL_STORAGE_KEY = "server_config_dialog_draft";
-
     const [serverName, setServerName] = useState<string>("");
     const [config, setConfig] = useState<ServerConfig | null>(null);
     const [curIndex, setCurIndex] = useState<number>(0);
     const [configs, setConfigs] = useState<ServerConfig[] | null>(null);
-    const { t } = useTranslation();
-
-    // Add this near the other useState declarations
     const [envValues, setEnvValues] = useState<Record<string, string>>({});
+    const { t } = useTranslation();
+    
+    const { clearDraft } = useLocalDraft({
+      isOpen,
+      serverName,
+      setServerName,
+      config,
+      setConfig,
+      envValues,
+      setEnvValues,
+    });
+    
+    const { saveServerConfig } = useSaveServerConfig();
 
-    // Update useEffect to initialize envValues when config changes
+    // Initialize server data
     useEffect(() => {
-      if (currentServer) {
+      if (isOpen && currentServer) {
         setServerName(currentServer.name);
         setConfigs(currentServer.configs);
 
@@ -60,6 +70,7 @@ export const ServerConfigDialog = forwardRef<
           setConfig(currentServer.configs[0]);
           setCurIndex(0);
         }
+
         // Initialize envValues with empty strings
         if (currentServer.configs?.[0]?.env) {
           const initialEnvValues = Object.keys(
@@ -75,115 +86,9 @@ export const ServerConfigDialog = forwardRef<
         }
 
         // Clear saved draft when server changes
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        clearDraft();
       }
-    }, [currentServer]);
-
-    // Load saved draft when dialog opens
-    useEffect(() => {
-      if (isOpen) {
-        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (parsed.serverName) setServerName(parsed.serverName);
-            if (parsed.config) setConfig(parsed.config);
-            if (parsed.envValues) setEnvValues(parsed.envValues);
-          } catch {
-            // ignore parse errors
-          }
-        }
-      }
-    }, [isOpen]);
-
-    // Save draft to localStorage on changes
-    useEffect(() => {
-      if (serverName && config) {
-        localStorage.setItem(
-          LOCAL_STORAGE_KEY,
-          JSON.stringify({ serverName, config, envValues }),
-        );
-      }
-    }, [serverName, config, envValues]);
-
-    function handleServerNameChange(value: string) {
-      setServerName(value);
-    }
-
-    async function updateConfig(selectedServer: string, value: ServerConfig) {
-      try {
-        const server = {
-          appName: selectedClient,
-          path: selectedPath,
-          serverName: selectedServer,
-          serverConfig: value,
-        };
-        await invoke("add_mcp_server", server);
-        console.log("add server", new Date());
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    const handleSubmit = async () => {
-      if (needspathClient.includes(selectedClient) && !selectedPath) {
-        toast.error("Path is required");
-        return;
-      }
-      if (!currentServer) {
-        toast.error("Please select a server");
-        return;
-      }
-
-      const client = mcpServers.find(
-        (s: ServerType) => s.source === currentServer.source,
-      );
-      if (!client) {
-        toast.error("Client not found");
-        return;
-      }
-
-      if (client && config) {
-        try {
-          await updateConfig(client.name, config);
-          try {
-            console.log("Saving to myservers:", serverName, config);
-            const savedMyServers = localStorage.getItem("myservers");
-            console.log("Current myservers:", savedMyServers);
-            const parsedMyServers = savedMyServers
-              ? JSON.parse(savedMyServers)
-              : [];
-
-            const newServer = {
-              name: serverName,
-              config: config,
-            };
-
-            const index = parsedMyServers.findIndex(
-              (s: any) => s.name === serverName,
-            );
-            if (index !== -1) {
-              parsedMyServers[index] = newServer;
-              console.log(`Updated existing server with name: ${serverName}`);
-            } else {
-              parsedMyServers.push(newServer);
-              console.log(`Added new server with name: ${serverName}`);
-            }
-
-            localStorage.setItem("myservers", JSON.stringify(parsedMyServers));
-            console.log("Updated myservers:", parsedMyServers);
-          } catch (error) {
-            console.error("Failed to save to myservers:", error);
-          }
-          setIsDialogOpen(false);
-          toast.success("Configuration updated successfully");
-          localStorage.removeItem(LOCAL_STORAGE_KEY);
-        } catch (error) {
-          console.error("Failed to update config:", error);
-          toast.error("Failed to update configuration");
-        }
-      }
-    };
+    }, [isOpen, currentServer?.name]);
 
     const handleArgsChange = (value: string) => {
       if (config) {
@@ -207,10 +112,23 @@ export const ServerConfigDialog = forwardRef<
       }
     };
 
-    function changeCurrentConfig(c: ServerConfig, index: number) {
+    const handleConfigChange = (c: ServerConfig, index: number) => {
       setConfig(c);
       setCurIndex(index);
-    }
+    };
+
+    const handleSubmit = async () => {
+      await saveServerConfig({
+        selectedClient,
+        selectedPath,
+        currentServer,
+        mcpServers,
+        serverName,
+        config,
+        setIsDialogOpen,
+      });
+    };
+
     return (
       <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
@@ -218,88 +136,48 @@ export const ServerConfigDialog = forwardRef<
             <DialogTitle className="dark:text-white">config</DialogTitle>
             <DialogDescription>server config</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-2">
-            <Label className="text-foreground dark:text-gray-200">
-              Server Name
-            </Label>
-            <Input
-              value={serverName || ""}
-              onChange={(e) => handleServerNameChange(e.target.value)}
-              className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-            />
-          </div>
+          
+          <ServerNameInput 
+            serverName={serverName}
+            onChange={setServerName}
+          />
 
-          <div className="flex gap-2">
-            {currentServer &&
-              configs &&
-              configs.map((c, index) => (
-                <Button
-                  key={`${c.command}-${index}-${Math.random()}`}
-                  onClick={() => changeCurrentConfig(c, index)}
-                  variant={`${curIndex == index ? "default" : "outline"}`}
-                  aria-label={`Select ${c.command} configuration`}
-                >
-                  {c.command}
-                </Button>
-              ))}
-          </div>
+          {configs && configs.length > 0 && (
+            <ConfigTabs 
+              configs={configs}
+              curIndex={curIndex}
+              onConfigChange={handleConfigChange}
+            />
+          )}
+          
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label className="text-foreground dark:text-gray-200">
-                Command
-              </Label>
-              <Input
-                value={config?.command || ""}
-                onChange={(e) => handleCommandChange(e.target.value)}
-                className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
+            {config && (
+              <CommandInput 
+                command={config.command}
+                onChange={handleCommandChange}
               />
-            </div>
-            {config && config.args && (
-              <div className="grid gap-2">
-                <Label className="text-foreground dark:text-gray-200">
-                  args
-                </Label>
-                <Textarea
-                  value={config.args.join(" ")}
-                  onChange={(e) => handleArgsChange(e.target.value)}
-                  className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-                />
-              </div>
             )}
+            
+            {config && config.args && (
+              <ArgsTextarea 
+                args={config.args}
+                onChange={handleArgsChange}
+              />
+            )}
+            
             {config && config.env && (
-              <div className="grid gap-2">
-                <h2 className="text-foreground dark:text-gray-200">env</h2>
-                <div className="space-y-2">
-                  {Object.entries(config.env).map(([key, value], envIndex) => (
-                    <div
-                      key={envIndex}
-                      className="grid grid-cols-2 items-center gap-2"
-                    >
-                      <Label className="col-span-1 text-foreground dark:text-gray-200">
-                        {key}
-                      </Label>
-                      <Input
-                        className="col-span-3 dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-                        value={envValues[key] || ""}
-                        placeholder={value}
-                        onChange={(e) => {
-                          setEnvValues((prev) => ({
-                            ...prev,
-                            [key]: e.target.value,
-                          }));
-                          handleEnvChange(key, e.target.value || value);
-                        }}
-                        required
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <EnvEditor 
+                env={config.env}
+                envValues={envValues}
+                setEnvValues={setEnvValues}
+                onEnvChange={handleEnvChange}
+              />
             )}
           </div>
+          
           <Button
             onClick={(e) => {
-              e.preventDefault(); // Prevent default form submission behavior
+              e.preventDefault();
               handleSubmit();
             }}
           >

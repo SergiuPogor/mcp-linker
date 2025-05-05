@@ -15,7 +15,7 @@ struct Config {
     mcp_servers: Value, // 允许动态 JSON 结构
 }
 
-mod app;
+mod client;
 mod cmd;
 mod installer;
 mod json_manager;

@@ -2,12 +2,12 @@ use std::path::{Path, PathBuf};
 use dirs::home_dir;
 
 #[allow(dead_code)]
-pub struct AppConfig {
+pub struct ClientConfig {
     pub name: String,
     pub path: PathBuf,
 }
 
-impl AppConfig {
+impl ClientConfig {
     pub fn new(name: &str, path: Option<&str>) -> Self {
         let home = home_dir().unwrap().to_str().unwrap().to_string();
         let path = match (name, path) {

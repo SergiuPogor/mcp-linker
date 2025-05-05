@@ -25,7 +25,7 @@ export default function McpManage({
   async function loadConfig() {
     try {
       const data = await invoke<ConfigType>("read_json_file", {
-        appName: selectedClient,
+        clientName: selectedClient,
         path: selectedPath || undefined,
       });
       if (data) {
@@ -45,7 +45,7 @@ export default function McpManage({
   ) => {
     try {
       await invoke("update_mcp_server", {
-        appName: selectedClient,
+        clientName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
         serverConfig: updatedConfig,
@@ -59,15 +59,15 @@ export default function McpManage({
   };
 
   async function deleteConfigKey(key: string) {
-    if (selectedClient === "cursor" && !selectedPath) {
+    if (selectedClient === "custom" && !selectedPath) {
       toast.error(
-        "Cannot delete config: selectedPath is required for cursor app",
+        "Cannot delete config: selectedPath is required for custom app",
       );
       return;
     }
     try {
       await invoke("remove_mcp_server", {
-        appName: selectedClient,
+        clientName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
       });

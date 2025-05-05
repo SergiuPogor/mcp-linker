@@ -32,7 +32,7 @@ export default function Recently({ selectedClient, selectedPath }: Props) {
   const handleAdd = async (key: string, updatedConfig: ServerConfig) => {
     try {
       await invoke("add_mcp_server", {
-        appName: selectedClient,
+        clientName: selectedClient,
         path: selectedPath || undefined,
         serverName: key,
         serverConfig: updatedConfig,
