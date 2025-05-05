@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  📘 Available languages: 
+  📘 
   <strong>English</strong> | 
   <a href="./docs/README.zh-CN.md">简体中文</a> | 
   <a href="./docs/README.ja-JP.md">日本語</a>
@@ -22,9 +22,10 @@
 
 # MCP Linker
 
-> A simple yet powerful tool to manage **Model Context Protocol (MCP) servers** for clients like **Claude, Cursor, Windsurf**. With just two clicks—**Get** and **Add**—you can connect to a server. Supports macOS and Windows via a Tauri GUI.
+[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
+![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
-> Want a Linux version? Let us know on [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
+> Add MCP servers to Claude Desktop, Cursor, and Windsurf in two clicks. Cross-platform. Tauri GUI. Server management included.
 
 ---
 
@@ -63,7 +64,7 @@
 ✅ No technical skills required — just click and go!  
 ✅ Open-source and community-driven  
 ✅ Favorites & Recently Used: Quickly access your go-to servers  
-✅ Cross-platform: macOS and experimental Windows support  
+✅ Cross-platform: macOS, Windows, Linux support  
 ✅ Multi-language: English, 中文, 日本語  
 ✅ Improved error handling and user-friendly setup
 
@@ -80,22 +81,7 @@
 
 ## 🛠️ How It Works
 
-When you click **"Add"**, MCP Linker directly modifies your MCP configuration file to include the selected server.
-
-> ⚠️ Warning: This will overwrite existing MCP configuration for that client. Please back up your config file if needed.
-
-## 📂 Configuration File Paths
-
-**Claude Desktop**  
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
-- **Windows**: `~/AppData/Roaming/Claude/claude_desktop_config.json`  
-
-**Cursor**  
-- **Global config**: `~/.cursor/mcp.json`  
-- **Project config**: `.cursor/mcp.json`  
-
-**Windsurf**  
-- `~/.codeium/windsurf/mcp_config.json`
+[Wiki](https://github.com/milisp/mcp-linker/wiki#-how-it-works)
 
 ## 🖼️ Screenshots
 
@@ -116,8 +102,8 @@ When you click **"Add"**, MCP Linker directly modifies your MCP configuration fi
 
 Before working on this project, ensure you have the following installed:
 
-- Node.js 
-- bun (or pnpm/yarn/npm)
+- Node.js >= 20
+- bun
 - Rust toolchain (stable) for Tauri
 
 ## 🔧 Installation Steps
@@ -131,25 +117,7 @@ bun tauri dev
 
 ## 🔍 Troubleshooting
 
-If you encounter installation issues:
-
-1. Remove dependency lock files:
-   ```bash
-   rm package-lock.json
-   rm -rf node_modules
-   ```
-
-2. Clean npm cache and reinstall:
-   ```bash
-   npm cache clean --force
-   npm install
-   ```
-
-3. If errors persist, try with legacy peer deps:
-   ```bash
-   npm cache clean --force
-   npm install --legacy-peer-deps
-   ```
+[Wiki](https://github.com/milisp/mcp-linker/wiki#-troubleshooting)
 
 ## 🤝 Contributing
 
@@ -171,9 +139,6 @@ Check out the list of [official MCP servers](https://github.com/modelcontextprot
 
 Have questions or suggestions? Join our [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
 
-## ⏱️ GitHub Last Commit
-
-[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 
 ## 🎉 Contributors
 

@@ -4,9 +4,9 @@
   "version": "1.2.2",
   "identifier": "com.milisp.mcplinker",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "bun run build",
     "frontendDist": "../dist"
   },
   "app": {
@@ -14,7 +14,7 @@
       {
         "title": "MCP Linker",
         "width": 1064,
-        "height": 720,
+        "height": 768,
         "minWidth": 800,
         "minHeight": 600
       }

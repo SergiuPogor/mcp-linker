@@ -4,6 +4,7 @@ import { open } from "@tauri-apps/plugin-shell";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+import { ModeToggle } from "./mode-toggle";
 
 interface SidebarProps {
   appCategories: Category[];
@@ -60,9 +61,10 @@ export const Sidebar = ({ appCategories }: SidebarProps) => {
         </div>
       </div>
 
-      <Link to="/recently" className="w-full">
-        <div
-          className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : ""}`}
+      <div className="w-full flex items-center gap-3">
+        <Link
+          to="/recently"
+          className={`flex items-center gap-3 flex-grow ${isCollapsed ? "justify-center" : ""}`}
         >
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-lg">
             {t("username")[0].toUpperCase()}
@@ -70,13 +72,14 @@ export const Sidebar = ({ appCategories }: SidebarProps) => {
           {!isCollapsed && (
             <div>
               <p className="font-medium">{t("username")}</p>
-              <p className="text-sm text-muted-foreground cursor-pointer hover:text-blue-500 transition-colors">
+              <p className="text-sm text-muted-foreground hover:text-blue-500 transition-colors">
                 0.00
               </p>
             </div>
           )}
-        </div>
-      </Link>
+        </Link>
+        {!isCollapsed && <ModeToggle />}
+      </div>
     </div>
   );
 };
