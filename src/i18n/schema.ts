@@ -1,5 +1,6 @@
 export interface TranslationSchema {
   get: string;
+  addCustomServer: string;
   confirmDeletion: string;
   deleteConfirmation: string;
   cancel: string;
@@ -43,5 +44,8 @@ export interface TranslationSchema {
     command: string;
     arguments: string;
     env: string;
+    addEnv: string;
+    headers: string;
+    url: string;
   };
 }

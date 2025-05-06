@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConfigType } from "@/types/config";
+import { SseConfig, StdioServerConfig } from "@/types";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -34,6 +35,36 @@ export function ServerCard({
   const handleDeleteConfirm = () => {
     onDelete(serverKey);
     setDeleteDialogOpen(false);
+  };
+
+  // Display appropriate information based on the server config type
+  const getServerDetails = () => {
+    if ("command" in config) {
+      // It's a StdioServerConfig
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">Command:</span>
+          <span className="text-muted-foreground break-words">
+            {(config as StdioServerConfig).command}
+          </span>
+        </div>
+      );
+    } else if ("url" in config) {
+      // It's an SseConfig
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">URL:</span>
+          <span className="text-muted-foreground break-words">
+            {(config as SseConfig).url}
+          </span>
+          <span className="font-medium mt-1">Type:</span>
+          <span className="text-muted-foreground break-words">
+            {(config as SseConfig).type}
+          </span>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -103,12 +134,7 @@ export function ServerCard({
       </CardHeader>
       <CardContent className="px-3 pb-3">
         <div className="space-y-2 text-sm">
-          <div className="flex flex-col">
-            <span className="font-medium">Command:</span>
-            <span className="text-muted-foreground break-words">
-              {config.command}
-            </span>
-          </div>
+          {getServerDetails()}
         </div>
       </CardContent>
     </Card>

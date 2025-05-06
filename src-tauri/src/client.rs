@@ -9,6 +9,7 @@ pub struct ClientConfig {
 
 impl ClientConfig {
     pub fn new(name: &str, path: Option<&str>) -> Self {
+        println!("name: {}, path: {:?}", name, path);
         let home = home_dir().unwrap().to_str().unwrap().to_string();
         let path = match (name, path) {
             ("claude", _) => {
@@ -39,15 +40,25 @@ impl ClientConfig {
                 }
             }
             ("vscode", Some(base_path)) => {
-                // For Cursor, we use the provided path + .cursor/mcp.json
-                PathBuf::from(base_path).join(".vscode/mcp.json")
+                // For VSCode, we use the provided path + .vscode/mcp.json
+                // If base_path is empty, use home directory
+                if base_path.is_empty() {
+                    PathBuf::from(&home).join(".vscode/mcp.json")
+                } else {
+                    PathBuf::from(base_path).join(".vscode/mcp.json")
+                }
+            }
+            ("cursor", None) => {
+                PathBuf::from(&home).join(".cursor/mcp.json")
             }
             ("cursor", Some(base_path)) => {
                 // For Cursor, we use the provided path + .cursor/mcp.json
-                PathBuf::from(base_path).join(".cursor/mcp.json")
-            }
-            ("cursor", None) => {
-                PathBuf::from(home).join(".cursor/mcp.json") // 修复：添加默认路径
+                // If base_path is empty, use home directory
+                if base_path.is_empty() {
+                    PathBuf::from(&home).join(".cursor/mcp.json")
+                } else {
+                    PathBuf::from(base_path).join(".cursor/mcp.json")
+                }
             }
             ("mcphub", None) => {
                 PathBuf::from(home).join(".config/mcphub/servers.json")
@@ -56,16 +67,21 @@ impl ClientConfig {
                 PathBuf::from(home)
                     .join(".codeium/windsurf/mcp_config.json")
             }
-            (_, Some(path)) => {
+            (_, Some(path_str)) => {
                 // For any other app, use the provided path + mcp.json
-                PathBuf::from(path).join("mcp.json")
+                // If path is empty, use home directory
+                if path_str.is_empty() {
+                    PathBuf::from(&home).join("mcp.json")
+                } else {
+                    PathBuf::from(path_str).join("mcp.json")
+                }
             }
             _ => {
                 // Default case
                 PathBuf::from("")
             }
         };
-
+        println!("Creating ClientConfig with name: {}, path: {:?}", name, path);
         Self {
             name: name.to_string(),
             path,

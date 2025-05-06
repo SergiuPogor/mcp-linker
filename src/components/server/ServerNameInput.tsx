@@ -7,12 +7,13 @@ interface ServerNameInputProps {
   onChange: (value: string) => void;
 }
 
-export const ServerNameInput = ({ serverName, onChange }: ServerNameInputProps) => {
+export const ServerNameInput = ({
+  serverName,
+  onChange,
+}: ServerNameInputProps) => {
   return (
     <div className="grid gap-2">
-      <Label className="text-foreground dark:text-gray-200">
-        Server Name
-      </Label>
+      <Label className="text-foreground dark:text-gray-200">Server Name</Label>
       <Input
         value={serverName || ""}
         onChange={(e) => onChange(e.target.value)}

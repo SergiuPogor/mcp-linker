@@ -25,36 +25,43 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
-> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, MCPHub.nvim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included.
+> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included.
+
+## News
+
+- [2025-05-08] Support add custom server
 
 ---
 
 ## 📋 Table of Contents
-
-- [For Users](#-for-users)
-  - [Download](#-download-mcp-linker)
-  - [Features](#-features)
-  - [Quick Start Guide](#-quick-start-guide)
-  - [How It Works](#-how-it-works)
-  - [Configuration File Paths](#-configuration-file-paths)
-  - [Screenshots](#-screenshots)
-- [For Developers](#-for-developers)
-  - [System Requirements](#-system-requirements)
-  - [Installation Steps](#-installation-steps)
-  - [Troubleshooting](#-troubleshooting)
-  - [Contributing](#-contributing)
-- [Resources](#-resources)
-  - [Official Servers](#-official-servers)
-  - [Feedback & Support](#-feedback--support)
-  - [Contributors](#-contributors)
+- [MCP Linker](#mcp-linker)
+  - [News](#news)
+  - [📋 Table of Contents](#-table-of-contents)
+- [👤 For Users](#-for-users)
+  - [🔽 Download](#-download)
+  - [✨ Features](#-features)
+  - [🚀 Quick Start](#-quick-start)
+  - [🛠️ How It Works](#️-how-it-works)
+  - [🖼️ Screenshots](#️-screenshots)
+    - [Server Discovery](#server-discovery)
+    - [Configuration Example](#configuration-example)
+    - [Manage Example](#manage-example)
+- [👨‍💻 For Developers](#-for-developers)
+  - [💻 System Requirements](#-system-requirements)
+  - [🔧 Installation Steps](#-installation-steps)
+  - [🔍 Troubleshooting](#-troubleshooting)
+  - [🤝 Contributing](#-contributing)
+- [📚 Resources](#-resources)
+  - [🌐 Official Servers](#-official-servers)
+  - [💬 Feedback \& Support](#-feedback--support)
+  - [🎉 Contributors](#-contributors)
 
 ---
 
 # 👤 For Users
 
-## 🔽 Download MCP Linker
+## 🔽 Download
 
-👉 [Download on 🐙Gumroad](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)  
 👉 [Download on GitHub Releases](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ Features

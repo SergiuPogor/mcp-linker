@@ -1,64 +1,33 @@
 name: Tauri Release Windows
 
 on:
-  push:
-    tags:
-      - 'v*'
-    paths:
-      - '.github/workflows/tauri-release-win.yml'
-      - 'src/**'
-      - 'src-tauri/**'
-      - 'package.json'
-  workflow_dispatch: # Allow manual trigger in GitHub UI
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. v1.0.0)'
+        required: true
+        type: string
 
 jobs:
-  build:
-    name: Build on Windows
+  release:
+    name: Release on Windows
     runs-on: windows-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install Bun
-        run: |
-          powershell -c "irm bun.sh/install.ps1 | iex"
-          setx PATH "$env:USERPROFILE\.bun\bin;$env:PATH"
-
-      - name: Install dependencies with bun
-        run: bun install
-
-      - name: Install Tauri CLI
-        run: bun tauri --version
-
-      - name: Build Tauri app
-        run: bun tauri build
-
-      - name: Rename MSI file (optional)
-        run: |
-          mv src-tauri/target/release/bundle/msi/*_en-US.msi src-tauri/target/release/bundle/msi/*.msi
-
-      - name: Upload build artifacts (EXE,msi)
-        uses: actions/upload-artifact@v4
+      - name: Download build artifact from CI
+        uses: actions/download-artifact@v4
         with:
           name: MCP-Linker-Windows
-          path: |
-            src-tauri/target/release/bundle/**/*.exe
-            src-tauri/target/release/bundle/**/*.msi
+          path: dist
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            src-tauri/target/release/bundle/**/*.exe
-            src-tauri/target/release/bundle/**/*.msi
+          name: ${{ inputs.version }}
+          tag_name: ${{ inputs.version }}
+          files: dist/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
