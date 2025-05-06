@@ -20,6 +20,7 @@ export type ServerType = {
   is_official?: boolean;
   is_hot?: boolean;
   is_featured?: boolean;
+  hasViewed?: boolean;
   configs: ServerConfig[];
 };
 

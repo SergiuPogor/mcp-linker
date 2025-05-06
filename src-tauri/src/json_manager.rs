@@ -6,6 +6,24 @@ use std::path::Path;
 pub struct JsonManager;
 
 impl JsonManager {
+    // Normalize response key to mcpServers for consistent client API
+    fn normalize_response_key(mut json: Value, client: &str) -> Result<Value, String> {
+        if client == "vscode" && json.is_object() {
+            let servers_key = "servers";
+            let mcp_servers_key = "mcpServers";
+            
+            // If json has "servers" key but not "mcpServers"
+            if json.as_object().unwrap().contains_key(servers_key) && 
+               !json.as_object().unwrap().contains_key(mcp_servers_key) {
+                // Clone the content from servers to mcpServers
+                let servers_value = json[servers_key].clone();
+                json[mcp_servers_key] = servers_value;
+            }
+        }
+        
+        Ok(json)
+    }
+
     pub fn read_json_file(path: &Path) -> Result<Value, String> {
         match fs::read_to_string(path) {
             Ok(content) => match serde_json::from_str(&content) {
@@ -45,64 +63,67 @@ impl JsonManager {
         }
     }
 
-    pub fn add_mcp_server(path: &Path, name: &str, config: Value) -> Result<Value, String> {
-        let mut json = Self::read_json_file(path)?;
+    fn get_key_by_client(client: &str) -> &str {
+        if client == "vscode" {
+            "servers"
+        } else {
+            "mcpServers"
+        }
+    }
 
-        // Ensure mcpServers exists
+    pub fn add_mcp_server(path: &Path, client: &str, name: &str, config: Value) -> Result<Value, String> {
+        let mut json = Self::read_json_file(path)?;
+        let key = Self::get_key_by_client(client);
+
         if !json.is_object() {
             json = json!({});
         }
 
-        if !json.as_object().unwrap().contains_key("mcpServers") {
-            json["mcpServers"] = json!({});
+        if !json.as_object().unwrap().contains_key(key) {
+            json[key] = json!({});
         }
 
-        // Add new server
-        json["mcpServers"][name] = config;
+        json[key][name] = config;
 
-        // Write back to file
         Self::write_json_file(path, &json)?;
-
-        Ok(json)
+        
+        // Normalize response key to mcpServers for client
+        Self::normalize_response_key(json, client)
     }
 
-    pub fn remove_mcp_server(path: &Path, name: &str) -> Result<Value, String> {
+    pub fn remove_mcp_server(path: &Path, client: &str, name: &str) -> Result<Value, String> {
         let mut json = Self::read_json_file(path)?;
+        let key = Self::get_key_by_client(client);
 
-        // Check if mcpServers exists
-        if json.is_object() && json.as_object().unwrap().contains_key("mcpServers") {
-            if json["mcpServers"].is_object()
-                && json["mcpServers"].as_object().unwrap().contains_key(name)
-            {
-                json["mcpServers"].as_object_mut().unwrap().remove(name);
+        if json.is_object() && json.as_object().unwrap().contains_key(key) {
+            if json[key].is_object() && json[key].as_object().unwrap().contains_key(name) {
+                json[key].as_object_mut().unwrap().remove(name);
             }
         }
 
-        // Write back to file
         Self::write_json_file(path, &json)?;
-
-        Ok(json)
+        
+        // Normalize response key to mcpServers for client
+        Self::normalize_response_key(json, client)
     }
 
-    pub fn update_mcp_server(path: &Path, name: &str, config: Value) -> Result<Value, String> {
+    pub fn update_mcp_server(path: &Path, client: &str, name: &str, config: Value) -> Result<Value, String> {
         let mut json = Self::read_json_file(path)?;
+        let key = Self::get_key_by_client(client);
 
-        // Check if mcpServers exists
-        if json.is_object() && json.as_object().unwrap().contains_key("mcpServers") {
-            if json["mcpServers"].is_object()
-                && json["mcpServers"].as_object().unwrap().contains_key(name)
-            {
-                json["mcpServers"][name] = config;
+        if json.is_object() && json.as_object().unwrap().contains_key(key) {
+            if json[key].is_object() && json[key].as_object().unwrap().contains_key(name) {
+                json[key][name] = config;
             } else {
-                return Self::add_mcp_server(path, name, config);
+                return Self::add_mcp_server(path, client, name, config);
             }
         } else {
-            return Self::add_mcp_server(path, name, config);
+            return Self::add_mcp_server(path, client, name, config);
         }
 
-        // Write back to file
         Self::write_json_file(path, &json)?;
-
-        Ok(json)
+        
+        // Normalize response key to mcpServers for client
+        Self::normalize_response_key(json, client)
     }
 }

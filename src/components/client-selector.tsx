@@ -15,6 +15,9 @@ const clientOptions: ClientOption[] = [
   { id: "claude", name: "Claude" },
   { id: "cursor", name: "Cursor" },
   { id: "windsurf", name: "Windsurf" },
+  { id: "cline", name: "Cline" },
+  { id: "vscode", name: "Vscode" },
+  { id: "mcphub", name: "mcphub.nvim" },
   { id: "custom", name: "Custom" },
 ];
 

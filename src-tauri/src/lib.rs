@@ -11,8 +11,8 @@ use std::env;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
-    #[serde(rename = "mcpServers")]
-    mcp_servers: Value, // 允许动态 JSON 结构
+    #[serde(rename = "mcpServers", alias = "servers")]
+    mcp_servers: Value,
 }
 
 mod client;

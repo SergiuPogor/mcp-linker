@@ -27,12 +27,30 @@ impl ClientConfig {
                     PathBuf::from("")
                 }
             }
+            ("cline", _) => {
+                #[cfg(target_os = "macos")]
+                {
+                    PathBuf::from(home)
+                        .join("Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+                }
+                #[cfg(not(any(target_os = "macos")))]
+                {
+                    PathBuf::from("")
+                }
+            }
+            ("vscode", Some(base_path)) => {
+                // For Cursor, we use the provided path + .cursor/mcp.json
+                PathBuf::from(base_path).join(".vscode/mcp.json")
+            }
             ("cursor", Some(base_path)) => {
                 // For Cursor, we use the provided path + .cursor/mcp.json
                 PathBuf::from(base_path).join(".cursor/mcp.json")
             }
             ("cursor", None) => {
                 PathBuf::from(home).join(".cursor/mcp.json") // 修复：添加默认路径
+            }
+            ("mcphub", None) => {
+                PathBuf::from(home).join(".config/mcphub/servers.json")
             }
             ("windsurf", _) => {
                 PathBuf::from(home)

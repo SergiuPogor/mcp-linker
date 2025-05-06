@@ -25,7 +25,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
-> Add MCP servers to Claude Desktop, Cursor, and Windsurf in two clicks. Cross-platform. Tauri GUI. Server management included.
+> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, MCPHub.nvim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included.
 
 ---
 

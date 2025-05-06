@@ -32,10 +32,10 @@ export const EnvEditor = ({
               value={envValues[key] || ""}
               placeholder={value}
               onChange={(e) => {
-                setEnvValues((prev) => ({
-                  ...prev,
+                setEnvValues({
+                  ...envValues,
                   [key]: e.target.value,
-                }));
+                });
                 onEnvChange(key, e.target.value || value);
               }}
               required

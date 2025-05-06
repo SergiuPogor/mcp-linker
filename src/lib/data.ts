@@ -1,1 +1,1 @@
-export const needspathClient = ["cursor", "custom"];
+export const needspathClient = ["cursor", "custom", "vscode"];
