@@ -8,17 +8,21 @@ interface ConfigTabsProps {
   onConfigChange: (config: ServerConfig, index: number) => void;
 }
 
-export const ConfigTabs = ({ configs, curIndex, onConfigChange }: ConfigTabsProps) => {
+export const ConfigTabs = ({
+  configs,
+  curIndex,
+  onConfigChange,
+}: ConfigTabsProps) => {
   return (
     <div className="flex gap-2">
       {configs.map((c, index) => (
         <Button
-          key={`${c.command}-${index}-${Math.random()}`}
+          key={`config-${index}-${Math.random()}`}
           onClick={() => onConfigChange(c, index)}
           variant={`${curIndex == index ? "default" : "outline"}`}
-          aria-label={`Select ${c.command} configuration`}
+          aria-label={`Select configuration ${index + 1}`}
         >
-          {c.command}
+          {"command" in c ? c.command : c.type || "Network"}
         </Button>
       ))}
     </div>

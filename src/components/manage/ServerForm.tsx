@@ -9,23 +9,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ServerConfig } from "@/types";
+import { ServerConfig, StdioServerConfig } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { SSEForm } from "./sse-form";
 
 const envSchema = z.object({
   key: z.string().min(1, "Key is required"),
   value: z.string().min(1, "Value is required"),
 });
 
-const formSchema = z.object({
+const stdioFormSchema = z.object({
   command: z.string().min(1, "Command is required"),
   args: z.string(),
   env: z.array(envSchema).optional(),
-  disabled: z.boolean().optional(),
-  autoApprove: z.array(z.string()).optional(),
 });
 
 interface ServerFormProps {
@@ -37,46 +36,55 @@ interface ServerFormProps {
 export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
   const { t } = useTranslation();
 
-  const envArray = config.env
-    ? Object.entries(config.env).map(([key, value]) => ({
-        key,
-        value: String(value),
-      }))
+  // Check if this is a StdioServerConfig by checking for command property
+  const isStdio = "command" in config;
+
+  // If it's not a stdio server, use the SSEForm component
+  if (!isStdio) {
+    return (
+      <SSEForm config={config} onSubmit={onSubmit} buttonName={buttonName} />
+    );
+  }
+
+  const envArray = (config as StdioServerConfig).env
+    ? Object.entries((config as StdioServerConfig).env!).map(
+        ([key, value]) => ({
+          key,
+          value: String(value),
+        }),
+      )
     : [];
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
+    resolver: zodResolver(stdioFormSchema),
     defaultValues: {
-      command: config.command,
-      args: config.args?.join(" ") || "",
+      command: (config as StdioServerConfig).command || "",
+      args: (config as StdioServerConfig).args?.join(" ") || "",
       env: envArray,
-      disabled: config.disabled,
-      autoApprove: config.autoApprove || [],
     },
   });
 
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "env",
   });
 
-  function handleSubmit(values: z.infer<typeof formSchema>) {
-    const updatedConfig: ServerConfig = {
+  function handleSubmit(values: any) {
+    const envRecord = values.env?.reduce(
+      (acc: Record<string, string>, item: { key: string; value: string }) => {
+        acc[item.key] = item.value;
+        return acc;
+      },
+      {},
+    );
+
+    const updatedConfig = {
+      ...config,
       command: values.command,
       args: values.args.split(" ").filter(Boolean),
-      env: values.env?.reduce(
-        (acc, item) => {
-          acc[item.key] = item.value;
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
-      disabled: values.disabled,
-      autoApprove: values.autoApprove,
-      type: config.type,
-      url: config.url,
-      headers: config.headers,
-    };
+      env: envRecord,
+    } as StdioServerConfig;
+
     onSubmit(updatedConfig);
   }
 
@@ -125,9 +133,19 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           )}
         />
         <div className="space-y-2">
-          <FormLabel className=" dark:text-gray-200">
-            {t("serverForm.env")}
-          </FormLabel>
+          <div className="flex justify-between items-center">
+            <FormLabel className="dark:text-gray-200">
+              {t("serverForm.env")}
+            </FormLabel>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => append({ key: "", value: "" })}
+            >
+              {t("serverForm.addEnv")}
+            </Button>
+          </div>
           {fields.map((field, index) => (
             <div key={field.id} className="flex items-center gap-2">
               <FormField
@@ -166,6 +184,15 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                   </FormItem>
                 )}
               />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => remove(index)}
+                className="text-red-500"
+              >
+                ×
+              </Button>
             </div>
           ))}
         </div>

@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { ServerConfig, ServerType } from "@/types";
-import capitalizeFirstLetter from '@/utils/title';
+import { ServerConfig, ServerType, SseConfig, StdioServerConfig } from "@/types";
+import capitalizeFirstLetter from "@/utils/title";
 import { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -47,7 +47,7 @@ export const ServerConfigDialog = forwardRef<
     const [configs, setConfigs] = useState<ServerConfig[] | null>(null);
     const [envValues, setEnvValues] = useState<Record<string, string>>({});
     const { t } = useTranslation();
-    
+
     const { clearDraft } = useLocalDraft({
       isOpen,
       serverName,
@@ -57,7 +57,7 @@ export const ServerConfigDialog = forwardRef<
       envValues,
       setEnvValues,
     });
-    
+
     const { saveServerConfig } = useSaveServerConfig();
 
     // Initialize server data
@@ -72,17 +72,20 @@ export const ServerConfigDialog = forwardRef<
         }
 
         // Initialize envValues with empty strings
-        if (currentServer.configs?.[0]?.env) {
-          const initialEnvValues = Object.keys(
-            currentServer.configs[0].env,
-          ).reduce(
-            (acc, key) => {
-              acc[key] = "";
-              return acc;
-            },
-            {} as Record<string, string>,
-          );
-          setEnvValues(initialEnvValues);
+        if (currentServer.configs?.[0] && "env" in currentServer.configs[0]) {
+          const stdioConfig = currentServer.configs[0] as StdioServerConfig;
+          if (stdioConfig.env) {
+            const initialEnvValues = Object.keys(
+              stdioConfig.env
+            ).reduce(
+              (acc, key) => {
+                acc[key] = "";
+                return acc;
+              },
+              {} as Record<string, string>,
+            );
+            setEnvValues(initialEnvValues);
+          }
         }
 
         // Clear saved draft when server changes
@@ -91,7 +94,7 @@ export const ServerConfigDialog = forwardRef<
     }, [isOpen, currentServer?.name]);
 
     const handleArgsChange = (value: string) => {
-      if (config) {
+      if (config && "command" in config) {
         // Only update if the value has actually changed
         const newArgs = value.split(" ").filter((arg) => arg !== "");
         if (JSON.stringify(newArgs) !== JSON.stringify(config.args)) {
@@ -101,14 +104,18 @@ export const ServerConfigDialog = forwardRef<
     };
 
     const handleCommandChange = (value: string) => {
-      if (config) {
+      if (config && "command" in config) {
         setConfig({ ...config, command: value });
       }
     };
 
     const handleEnvChange = (key: string, value: string) => {
-      if (config) {
-        setConfig({ ...config, env: { ...config.env, [key]: value } });
+      if (config && "command" in config) {
+        const stdioConfig = config as StdioServerConfig;
+        setConfig({ 
+          ...config, 
+          env: { ...(stdioConfig.env || {}), [key]: value } 
+        });
       }
     };
 
@@ -118,7 +125,7 @@ export const ServerConfigDialog = forwardRef<
     };
 
     const handleSubmit = async () => {
-      await saveServerConfig({
+      const serverConfig = {
         selectedClient,
         selectedPath,
         currentServer,
@@ -126,7 +133,9 @@ export const ServerConfigDialog = forwardRef<
         serverName,
         config,
         setIsDialogOpen,
-      });
+      }
+      console.log(serverConfig)
+      await saveServerConfig(serverConfig);
     };
 
     return (
@@ -136,45 +145,97 @@ export const ServerConfigDialog = forwardRef<
             <DialogTitle className="dark:text-white">config</DialogTitle>
             <DialogDescription>server config</DialogDescription>
           </DialogHeader>
-          
-          <ServerNameInput 
-            serverName={serverName}
-            onChange={setServerName}
-          />
+
+          <ServerNameInput serverName={serverName} onChange={setServerName} />
 
           {configs && configs.length > 0 && (
-            <ConfigTabs 
+            <ConfigTabs
               configs={configs}
               curIndex={curIndex}
               onConfigChange={handleConfigChange}
             />
           )}
-          
+
           <div className="grid gap-4 py-4">
-            {config && (
-              <CommandInput 
-                command={config.command}
-                onChange={handleCommandChange}
-              />
+            {/* StdioServerConfig specific fields */}
+            {config && "command" in config && (
+              <>
+                <CommandInput
+                  command={config.command}
+                  onChange={handleCommandChange}
+                />
+                <ArgsTextarea args={config.args} onChange={handleArgsChange} />
+                <EnvEditor
+                  env={config.env || {}}
+                  envValues={envValues}
+                  setEnvValues={setEnvValues}
+                  onEnvChange={handleEnvChange}
+                  isEdit={false}
+                />
+              </>
             )}
-            
-            {config && config.args && (
-              <ArgsTextarea 
-                args={config.args}
-                onChange={handleArgsChange}
-              />
-            )}
-            
-            {config && config.env && (
-              <EnvEditor 
-                env={config.env}
-                envValues={envValues}
-                setEnvValues={setEnvValues}
-                onEnvChange={handleEnvChange}
-              />
+
+            {/* SseConfig specific fields */}
+            {config && "url" in config && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="url" className="text-sm font-medium">
+                      URL
+                    </label>
+                    <input
+                      id="url"
+                      value={config.url || ""}
+                      onChange={(e) =>
+                        setConfig({ ...config, url: e.target.value } as SseConfig)
+                      }
+                      className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="type" className="text-sm font-medium">
+                      Type
+                    </label>
+                    <select
+                      id="type"
+                      value={config.type}
+                      onChange={(e) =>
+                        setConfig({ 
+                          ...config, 
+                          type: e.target.value as "http" | "sse" 
+                        } as SseConfig)
+                      }
+                      className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                    >
+                      <option value="http">HTTP</option>
+                      <option value="sse">SSE</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Headers</label>
+                  <textarea
+                    value={
+                      config.headers
+                        ? JSON.stringify(config.headers, null, 2)
+                        : "{}"
+                    }
+                    onChange={(e) => {
+                      try {
+                        const headers = JSON.parse(e.target.value);
+                        setConfig({ ...config, headers } as SseConfig);
+                      } catch (err) {
+                        // Handle parsing error
+                      }
+                    }}
+                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                  />
+                </div>
+              </>
             )}
           </div>
-          
+
           <Button
             onClick={(e) => {
               e.preventDefault();

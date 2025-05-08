@@ -3,10 +3,11 @@ import { TranslationSchema } from "../schema";
 const ja: { translation: TranslationSchema } = {
   translation: {
     get: "取得",
-    confirmDeletion: "Confirm Deletion",
-    deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
-    cancel: "Cancel",
-    delete: "Delete",
+    addCustomServer: "カスタムサーバーを追加",
+    confirmDeletion: "削除の確認",
+    deleteConfirmation: "{{serverKey}} を削除してもよろしいですか？",
+    cancel: "キャンセル",
+    delete: "削除",
     install: "インストール",
     addTo: "追加",
     mcpLinker: "MCP Linker",
@@ -45,7 +46,10 @@ const ja: { translation: TranslationSchema } = {
     serverForm: {
       command: "Command",
       arguments: "Arguments",
+      addEnv: "環境変数を追加",
       env: "Environment Variables",
+      headers: "headers",
+      url: "url",
     },
   },
 };

@@ -1,6 +1,6 @@
 // useLocalDraft.ts
-import { useEffect } from "react";
 import type { ServerConfig } from "@/types";
+import { useEffect } from "react";
 
 export const LOCAL_STORAGE_KEY = "server_config_dialog_draft";
 

@@ -1,8 +1,8 @@
 // useSaveServerConfig.ts
+import type { ServerConfig, ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import { LOCAL_STORAGE_KEY } from "./useLocalDraft";
-import type { ServerConfig, ServerType } from "@/types";
 
 interface SaveServerConfigParams {
   selectedClient: string;
@@ -19,7 +19,7 @@ export function useSaveServerConfig() {
     selectedClient: string,
     selectedPath: string,
     selectedServer: string,
-    value: ServerConfig
+    value: ServerConfig,
   ) {
     try {
       const server = {
@@ -29,7 +29,7 @@ export function useSaveServerConfig() {
         serverConfig: value,
       };
       await invoke("add_mcp_server", server);
-      console.log("add server", new Date());
+      console.log("add server", new Date(), server);
     } catch (error) {
       console.error(error);
       throw error;
@@ -45,7 +45,7 @@ export function useSaveServerConfig() {
     config,
     setIsDialogOpen,
   }: SaveServerConfigParams) => {
-    if (selectedClient === 'custom' && !selectedPath) {
+    if (selectedClient === "custom" && !selectedPath) {
       toast.error("Path is required");
       return;
     }

@@ -26,7 +26,6 @@
 
 ## 🔽 MCP Linkerをダウンロード
 
-👉 [🐙Gumroadでダウンロード](https://wei40680.gumroad.com/l/jdbuvc?wanted=true)
 👉 [GitHubリリースでダウンロード](https://github.com/milisp/mcp-linker/releases)
 
 ## ✨ 特徴
