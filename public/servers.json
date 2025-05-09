@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2025.05.08",
   "servers": [
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/aws-kb-retrieval-server",
@@ -7,41 +7,8 @@
       "description": "Retrieval from AWS Knowledge Base using Bedrock Agent Runtime",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "AWS_ACCESS_KEY_ID",
-            "-e",
-            "AWS_SECRET_ACCESS_KEY",
-            "-e",
-            "AWS_REGION",
-            "mcp/aws-kb-retrieval-server"
-          ],
-          "env": {
-            "AWS_ACCESS_KEY_ID": "YOUR_ACCESS_KEY_HERE",
-            "AWS_SECRET_ACCESS_KEY": "YOUR_SECRET_ACCESS_KEY_HERE",
-            "AWS_REGION": "YOUR_AWS_REGION_HERE"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-aws-kb-retrieval"
-          ],
-          "env": {
-            "AWS_ACCESS_KEY_ID": "YOUR_ACCESS_KEY_HERE",
-            "AWS_SECRET_ACCESS_KEY": "YOUR_SECRET_ACCESS_KEY_HERE",
-            "AWS_REGION": "YOUR_AWS_REGION_HERE"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/aws-kb-retrieval-server"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/brave-search",
@@ -49,33 +16,8 @@
       "description": "Web and local search using Brave's Search API",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "BRAVE_API_KEY",
-            "mcp/brave-search"
-          ],
-          "env": {
-            "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-brave-search"
-          ],
-          "env": {
-            "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/brave-search"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/everart",
@@ -83,33 +25,8 @@
       "description": "AI image generation using various models",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "EVERART_API_KEY",
-            "mcp/everart"
-          ],
-          "env": {
-            "EVERART_API_KEY": "your_key_here"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-everart"
-          ],
-          "env": {
-            "EVERART_API_KEY": "your_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/everart"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/everything",
@@ -117,16 +34,8 @@
       "description": "Reference / test server with prompts, resources, and tools",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-everything"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/everything"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/fetch",
@@ -134,31 +43,8 @@
       "description": "Web content fetching and conversion for efficient LLM usage",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-fetch"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/fetch"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_fetch"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/fetch"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/filesystem",
@@ -166,34 +52,8 @@
       "description": "Secure file operations with configurable access controls",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "--mount",
-            "type=bind,src=/Users/username/Desktop,dst=/projects/Desktop",
-            "--mount",
-            "type=bind,src=/path/to/other/allowed/dir,dst=/projects/other/allowed/dir,ro",
-            "--mount",
-            "type=bind,src=/path/to/file.txt,dst=/projects/path/to/file.txt",
-            "mcp/filesystem",
-            "/projects"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-filesystem",
-            "/Users/username/Desktop",
-            "/path/to/other/allowed/dir"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/filesystem"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/git",
@@ -201,61 +61,8 @@
       "description": "Tools to read, search, and manipulate Git repositories",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-git",
-            "--repository",
-            "path/to/git/repo"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "--mount",
-            "type=bind,src=/Users/username,dst=/Users/username",
-            "mcp/git"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_git",
-            "--repository",
-            "path/to/git/repo"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "--mount",
-            "type=bind,src=/Users/username/Desktop,dst=/projects/Desktop",
-            "--mount",
-            "type=bind,src=/path/to/other/allowed/dir,dst=/projects/other/allowed/dir,ro",
-            "--mount",
-            "type=bind,src=/path/to/file.txt,dst=/projects/path/to/file.txt",
-            "mcp/git"
-          ]
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/<path to mcp-servers>/mcp-servers/src/git",
-            "run",
-            "mcp-server-git"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/git"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/github",
@@ -263,33 +70,8 @@
       "description": "Repository management, file operations, and GitHub API integration",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "GITHUB_PERSONAL_ACCESS_TOKEN",
-            "mcp/github"
-          ],
-          "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-github"
-          ],
-          "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/github"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/gdrive",
@@ -297,29 +79,8 @@
       "description": "File access and search capabilities for Google Drive",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-v",
-            "mcp-gdrive:/gdrive-server",
-            "-e",
-            "GDRIVE_CREDENTIALS_PATH=/gdrive-server/credentials.json",
-            "mcp/gdrive"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-gdrive"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/gdrive"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/google-maps",
@@ -327,33 +88,8 @@
       "description": "Location services, directions, and place details",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "GOOGLE_MAPS_API_KEY",
-            "mcp/google-maps"
-          ],
-          "env": {
-            "GOOGLE_MAPS_API_KEY": "<YOUR_API_KEY>"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-google-maps"
-          ],
-          "env": {
-            "GOOGLE_MAPS_API_KEY": "<YOUR_API_KEY>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/google-maps"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/memory",
@@ -361,37 +97,8 @@
       "description": "Knowledge graph-based persistent memory system",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "-v",
-            "claude-memory:/app/dist",
-            "--rm",
-            "mcp/memory"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-memory"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-memory"
-          ],
-          "env": {
-            "MEMORY_FILE_PATH": "/path/to/custom/memory.json"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/memory"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/postgres",
@@ -399,27 +106,8 @@
       "description": "Read-only database access with schema inspection",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/postgres",
-            "postgresql://host.docker.internal:5432/mydb"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-postgres",
-            "postgresql://localhost/mydb"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/postgres"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/puppeteer",
@@ -427,28 +115,8 @@
       "description": "Browser automation and web scraping",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "--init",
-            "-e",
-            "DOCKER_CONTAINER=true",
-            "mcp/puppeteer"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-puppeteer"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/puppeteer"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/redis",
@@ -456,27 +124,8 @@
       "description": "Interact with Redis key-value stores",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/redis",
-            "redis://host.docker.internal:6379"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-redis",
-            "redis://localhost:6379"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/redis"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/sentry",
@@ -484,37 +133,8 @@
       "description": "Retrieving and analyzing issues from Sentry.io",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-sentry",
-            "--auth-token",
-            "YOUR_SENTRY_TOKEN"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/sentry",
-            "--auth-token",
-            "YOUR_SENTRY_TOKEN"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_sentry",
-            "--auth-token",
-            "YOUR_SENTRY_TOKEN"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/sentry"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/sequentialthinking",
@@ -522,25 +142,8 @@
       "description": "Dynamic and reflective problem-solving through thought sequences",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-sequential-thinking"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "mcp/sequentialthinking"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/sequentialthinking"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/slack",
@@ -548,37 +151,8 @@
       "description": "Channel management and messaging capabilities",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-slack"
-          ],
-          "env": {
-            "SLACK_BOT_TOKEN": "xoxb-your-bot-token",
-            "SLACK_TEAM_ID": "T01234567"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "SLACK_BOT_TOKEN",
-            "-e",
-            "SLACK_TEAM_ID",
-            "mcp/slack"
-          ],
-          "env": {
-            "SLACK_BOT_TOKEN": "xoxb-your-bot-token",
-            "SLACK_TEAM_ID": "T01234567"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/slack"
     },
     {
       "source": "https://github.com/modelcontextprotocol/servers/src/time",
@@ -586,31 +160,8 @@
       "description": "Time and timezone conversion capabilities",
       "developer": "modelcontextprotocol",
       "is_official": true,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-time"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/time"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_time"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "modelcontextprotocol/time"
     },
     {
       "source": "https://github.com/21st-dev/magic-mcp",
@@ -618,37 +169,8 @@
       "description": "Create crafted UI components inspired by the best 21st.dev design engineers.",
       "developer": "21st-dev",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@smithery/cli@latest",
-            "install",
-            "@21st-dev/magic-mcp",
-            "--client",
-            "windsurf"
-          ],
-          "env": {
-            "TWENTY_FIRST_API_KEY": "your-api-key"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@smithery/cli@latest",
-            "install",
-            "@21st-dev/magic-mcp",
-            "--client",
-            "cline"
-          ],
-          "env": {
-            "TWENTY_FIRST_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "21st-dev/magic-mcp"
     },
     {
       "source": "https://github.com/Adfin-Engineering/mcp-server-adfin",
@@ -656,22 +178,8 @@
       "description": "The only platform you need to get paid - all payments in one place, invoicing and accounting reconciliations with [Adfin](https://www.adfin.com/).",
       "developer": "Adfin-Engineering",
       "is_official": false,
-      "configs": [
-        {
-          "command": "<home_path>/.local/bin/uv",
-          "args": [
-            "--directory",
-            "<absolute_path_to_adfin_mcp_folder>",
-            "run",
-            "main_adfin_mcp.py"
-          ],
-          "env": {
-            "ADFIN_EMAIL": "<email>",
-            "ADFIN_PASSWORD": "<password>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Adfin-Engineering/mcp-server-adfin"
     },
     {
       "source": "https://github.com/tinyfish-io/agentql-mcp",
@@ -679,15 +187,8 @@
       "description": "Enable AI agents to get structured data from unstructured web with [AgentQL](https://www.agentql.com/).",
       "developer": "tinyfish-io",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/agentql-mcp/dist/index.js",
-          "env": {
-            "AGENTQL_API_KEY": "YOUR_API_KEY"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "tinyfish-io/agentql-mcp"
     },
     {
       "source": "https://github.com/agentrpc/agentrpc",
@@ -695,31 +196,8 @@
       "description": "Connect to any function, any language, across network boundaries using [AgentRPC](https://www.agentrpc.com/).",
       "developer": "agentrpc",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "agentrpc",
-            "mcp"
-          ],
-          "env": {
-            "AGENTRPC_API_SECRET": "<YOUR_API_SECRET>"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "agentrpc",
-            "mcp"
-          ],
-          "env": {
-            "AGENTRPC_API_SECRET": "<YOUR_API_SECRET>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "agentrpc/agentrpc"
     },
     {
       "source": "https://github.com/Aiven-Open/mcp-aiven",
@@ -727,26 +205,8 @@
       "description": "Navigate your [Aiven projects](https://go.aiven.io/mcp-server) and interact with the PostgreSQL®, Apache Kafka®, ClickHouse® and OpenSearch® services",
       "developer": "Aiven-Open",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "$REPOSITORY_DIRECTORY",
-            "run",
-            "--with-editable",
-            "$REPOSITORY_DIRECTORY",
-            "--python",
-            "3.13",
-            "mcp-aiven"
-          ],
-          "env": {
-            "AIVEN_BASE_URL": "https://api.aiven.io",
-            "AIVEN_TOKEN": "$AIVEN_TOKEN"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Aiven-Open/mcp-aiven"
     },
     {
       "source": "https://github.com/bankless/onchain-mcp",
@@ -754,18 +214,8 @@
       "description": "Query Onchain data, like ERC20 tokens, transaction history, smart contract state.",
       "developer": "bankless",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@bankless/onchain-mcp"
-          ],
-          "env": {
-            "BANKLESS_API_TOKEN": "your_api_token_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "bankless/onchain-mcp"
     },
     {
       "source": "https://github.com/box-community/mcp-server-box",
@@ -773,18 +223,8 @@
       "description": "Interact with the Intelligent Content Management platform through Box AI.",
       "developer": "box-community",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path-to-your-project/mcp-server-box",
-            "run",
-            "src/mcp_server_box.py"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "box-community/mcp-server-box"
     },
     {
       "source": "https://github.com/chroma-core/chroma-mcp",
@@ -792,55 +232,8 @@
       "description": "Embeddings, vector search, document storage, and full-text search with the open-source AI application database",
       "developer": "chroma-core",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "chroma-mcp"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "chroma-mcp",
-            "--client-type",
-            "persistent",
-            "--data-dir",
-            "/full/path/to/your/data/directory"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "chroma-mcp",
-            "--client-type",
-            "cloud",
-            "--tenant",
-            "your-tenant-id",
-            "--database",
-            "your-database-name",
-            "--api-key",
-            "your-api-key"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "chroma-mcp",
-            "--client-type",
-            "http",
-            "--host",
-            "your-host",
-            "--port",
-            "your-port",
-            "--custom-auth-credentials",
-            "your-custom-auth-credentials",
-            "--ssl",
-            "true"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "chroma-core/chroma-mcp"
     },
     {
       "source": "https://github.com/ClickHouse/mcp-clickhouse",
@@ -848,68 +241,8 @@
       "description": "Query your [ClickHouse](https://clickhouse.com/) database server.",
       "developer": "ClickHouse",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "mcp-clickhouse",
-            "--python",
-            "3.13",
-            "mcp-clickhouse"
-          ],
-          "env": {
-            "CLICKHOUSE_HOST": "<clickhouse-host>",
-            "CLICKHOUSE_PORT": "<clickhouse-port>",
-            "CLICKHOUSE_USER": "<clickhouse-user>",
-            "CLICKHOUSE_PASSWORD": "<clickhouse-password>",
-            "CLICKHOUSE_SECURE": "true",
-            "CLICKHOUSE_VERIFY": "true",
-            "CLICKHOUSE_CONNECT_TIMEOUT": "30",
-            "CLICKHOUSE_SEND_RECEIVE_TIMEOUT": "30"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "mcp-clickhouse",
-            "--python",
-            "3.13",
-            "mcp-clickhouse"
-          ],
-          "env": {
-            "CLICKHOUSE_HOST": "sql-clickhouse.clickhouse.com",
-            "CLICKHOUSE_PORT": "8443",
-            "CLICKHOUSE_USER": "demo",
-            "CLICKHOUSE_PASSWORD": "",
-            "CLICKHOUSE_SECURE": "true",
-            "CLICKHOUSE_VERIFY": "true",
-            "CLICKHOUSE_CONNECT_TIMEOUT": "30",
-            "CLICKHOUSE_SEND_RECEIVE_TIMEOUT": "30"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "mcp-clickhouse",
-            "--python",
-            "3.13",
-            "mcp-clickhouse"
-          ],
-          "env": {
-            "CLICKHOUSE_HOST": "<clickhouse-host>",
-            "CLICKHOUSE_USER": "<clickhouse-user>",
-            "CLICKHOUSE_PASSWORD": "<clickhouse-password>",
-            "CLICKHOUSE_DATABASE": "<optional-database>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ClickHouse/mcp-clickhouse"
     },
     {
       "source": "https://github.com/EduBase/MCP",
@@ -917,40 +250,8 @@
       "description": "Interact with [EduBase](https://www.edubase.net), a comprehensive e-learning platform with advanced quizzing, exam management, and content organization capabilities",
       "developer": "EduBase",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/dist/index.js"
-          ],
-          "env": {
-            "EDUBASE_API_URL": "https://domain.edubase.net/api",
-            "EDUBASE_API_APP": "your_integration_app_id",
-            "EDUBASE_API_KEY": "your_integration_secret_key"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "EDUBASE_API_URL",
-            "-e",
-            "EDUBASE_API_APP",
-            "-e",
-            "EDUBASE_API_KEY",
-            "edubase/mcp"
-          ],
-          "env": {
-            "EDUBASE_API_URL": "https://domain.edubase.net/api",
-            "EDUBASE_API_APP": "your_integration_app_id",
-            "EDUBASE_API_KEY": "your_integration_secret_key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "EduBase/MCP"
     },
     {
       "source": "https://github.com/exa-labs/exa-mcp-server",
@@ -958,18 +259,8 @@
       "description": "Search Engine made for AIs by [Exa](https://exa.ai)",
       "developer": "exa-labs",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "/path/to/exa-mcp-server/build/index.js"
-          ],
-          "env": {
-            "EXA_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "exa-labs/exa-mcp-server"
     },
     {
       "source": "https://github.com/Fewsats/fewsats-mcp",
@@ -977,18 +268,8 @@
       "description": "Enable AI Agents to purchase anything in a secure way using [Fewsats](https://fewsats.com)",
       "developer": "Fewsats",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "fewsats-mcp"
-          ],
-          "env": {
-            "FEWSATS_API_KEY": "YOUR_FEWSATS_API_KEY"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Fewsats/fewsats-mcp"
     },
     {
       "source": "https://github.com/Fibery-inc/fibery-mcp-server",
@@ -996,34 +277,8 @@
       "description": "Perform queries and entity operations in your [Fibery](https://fibery.io) workspace.",
       "developer": "Fibery-inc",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "tool",
-            "run",
-            "fibery-mcp-server",
-            "--fibery-host",
-            "your-domain.fibery.io",
-            "--fibery-api-token",
-            "your-api-token"
-          ]
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/cloned/fibery-mcp-server",
-            "run",
-            "fibery-mcp-server",
-            "--fibery-host",
-            "your-domain.fibery.io",
-            "--fibery-api-token",
-            "your-api-token"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Fibery-inc/fibery-mcp-server"
     },
     {
       "source": "https://github.com/mendableai/firecrawl-mcp-server",
@@ -1031,35 +286,8 @@
       "description": "Extract web data with [Firecrawl](https://firecrawl.dev)",
       "developer": "mendableai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "firecrawl-mcp"
-          ],
-          "env": {
-            "FIRECRAWL_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "firecrawl-mcp"
-          ],
-          "env": {
-            "FIRECRAWL_API_KEY": "YOUR_API_KEY_HERE",
-            "FIRECRAWL_RETRY_MAX_ATTEMPTS": "5",
-            "FIRECRAWL_RETRY_INITIAL_DELAY": "2000",
-            "FIRECRAWL_RETRY_MAX_DELAY": "30000",
-            "FIRECRAWL_RETRY_BACKOFF_FACTOR": "3",
-            "FIRECRAWL_CREDIT_WARNING_THRESHOLD": "2000",
-            "FIRECRAWL_CREDIT_CRITICAL_THRESHOLD": "500"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mendableai/firecrawl-mcp-server"
     },
     {
       "source": "https://github.com/fireproof-storage/mcp-database-server",
@@ -1067,12 +295,8 @@
       "description": "Immutable ledger database with live synchronization",
       "developer": "fireproof-storage",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/fireproof-mcp/build/index.js"
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "fireproof-storage/mcp-database-server"
     },
     {
       "source": "https://github.com/oschina/mcp-gitee",
@@ -1080,16 +304,8 @@
       "description": "Gitee API integration, repository, issue, and pull request management, and more.",
       "developer": "oschina",
       "is_official": false,
-      "configs": [
-        {
-          "command": "mcp-gitee",
-          "env": {
-            "GITEE_API_BASE": "https://gitee.com/api/v5",
-            "GITEE_ACCESS_TOKEN": "<your personal access token>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "oschina/mcp-gitee"
     },
     {
       "source": "https://github.com/aliyun/alibabacloud-hologres-mcp-server",
@@ -1097,41 +313,8 @@
       "description": "Connect to a [Hologres](https://www.alibabacloud.com/en/product/hologres) instance, get table metadata, query and analyze data.",
       "developer": "aliyun",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/alibabacloud-hologres-mcp-server",
-            "run",
-            "hologres-mcp-server"
-          ],
-          "env": {
-            "HOLOGRES_HOST": "host",
-            "HOLOGRES_PORT": "port",
-            "HOLOGRES_USER": "access_id",
-            "HOLOGRES_PASSWORD": "access_key",
-            "HOLOGRES_DATABASE": "database"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "hologres-mcp-server",
-            "hologres-mcp-server"
-          ],
-          "env": {
-            "HOLOGRES_HOST": "host",
-            "HOLOGRES_PORT": "port",
-            "HOLOGRES_USER": "access_id",
-            "HOLOGRES_PASSWORD": "access_key",
-            "HOLOGRES_DATABASE": "database"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "aliyun/alibabacloud-hologres-mcp-server"
     },
     {
       "source": "https://github.com/hyperbrowserai/mcp",
@@ -1139,39 +322,8 @@
       "description": "[Hyperbrowser](https://www.hyperbrowser.ai/) is the next-generation platform empowering AI agents and enabling effortless, scalable browser automation.",
       "developer": "hyperbrowserai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "hyperbrowser-mcp"
-          ],
-          "env": {
-            "HYPERBROWSER_API_KEY": "YOUR-API-KEY"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "hyperbrowser-mcp"
-          ],
-          "env": {
-            "HYPERBROWSER_API_KEY": "YOUR-API-KEY"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "--yes",
-            "hyperbrowser-mcp"
-          ],
-          "env": {
-            "HYPERBROWSER_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "hyperbrowserai/mcp"
     },
     {
       "source": "https://github.com/integration-app/mcp-server",
@@ -1179,20 +331,8 @@
       "description": "Interact with any other SaaS applications on behalf of your customers.",
       "developer": "integration-app",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@integration-app/mcp-server"
-          ],
-          "env": {
-            "INTEGRATION_APP_TOKEN": "<your-integration-app-token>",
-            "INTEGRATION_KEY": "hubspot"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "integration-app/mcp-server"
     },
     {
       "source": "https://github.com/pydantic/logfire-mcp",
@@ -1200,27 +340,8 @@
       "description": "Provides access to OpenTelemetry traces and metrics through Logfire.",
       "developer": "pydantic",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "logfire-mcp",
-            "--read-token=YOUR-TOKEN"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "logfire-mcp"
-          ],
-          "env": {
-            "LOGFIRE_READ_TOKEN": "YOUR_TOKEN"
-          },
-          "disabled": false,
-          "autoApprove": []
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "pydantic/logfire-mcp"
     },
     {
       "source": "https://github.com/langfuse/mcp-server-langfuse",
@@ -1228,20 +349,8 @@
       "description": "Open-source tool for collaborative editing, versioning, evaluating, and releasing prompts.",
       "developer": "langfuse",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "<absolute-path>/build/index.js"
-          ],
-          "env": {
-            "LANGFUSE_PUBLIC_KEY": "your-public-key",
-            "LANGFUSE_SECRET_KEY": "your-secret-key",
-            "LANGFUSE_BASEURL": "https://cloud.langfuse.com"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "langfuse/mcp-server-langfuse"
     },
     {
       "source": "https://github.com/integromat/make-mcp-server",
@@ -1249,21 +358,8 @@
       "description": "Turn your [Make](https://www.make.com/) scenarios into callable tools for AI assistants.",
       "developer": "integromat",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@makehq/mcp-server"
-          ],
-          "env": {
-            "MAKE_API_KEY": "<your-api-key>",
-            "MAKE_ZONE": "<your-zone>",
-            "MAKE_TEAM": "<your-team-id>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "integromat/make-mcp-server"
     },
     {
       "source": "https://github.com/meilisearch/meilisearch-mcp",
@@ -1271,16 +367,8 @@
       "description": "Interact & query with Meilisearch (Full-text & semantic search API)",
       "developer": "meilisearch",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "-n",
-            "meilisearch-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "meilisearch/meilisearch-mcp"
     },
     {
       "source": "https://github.com/metoro-io/metoro-mcp-server",
@@ -1288,25 +376,8 @@
       "description": "Query and interact with kubernetes environments monitored by Metoro",
       "developer": "metoro-io",
       "is_official": false,
-      "configs": [
-        {
-          "command": "<your path to Metoro MCP server go executable>/metoro-mcp-server",
-          "args": [],
-          "env": {
-            "METORO_AUTH_TOKEN": "<your auth token>",
-            "METORO_API_URL": "https://us-east.metoro.io"
-          }
-        },
-        {
-          "command": "<your path to Metoro MCP server go executable>/metoro-mcp-server",
-          "args": [],
-          "env": {
-            "METORO_AUTH_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcklkIjoiOThlZDU1M2QtYzY4ZC00MDRhLWFhZjItNDM2ODllNWJiMGUzIiwiZW1haWwiOiJ0ZXN0QGNocmlzYmF0dGFyYmVlLmNvbSIsImV4cCI6MTgyMTI0NzIzN30.7G6alDpcZh_OThYj293Jce5rjeOBqAhOlANR_Fl5auw",
-            "METORO_API_URL": "https://demo.us-east.metoro.io"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "metoro-io/metoro-mcp-server"
     },
     {
       "source": "https://github.com/zilliztech/mcp-server-milvus",
@@ -1314,20 +385,8 @@
       "description": "Search, Query and interact with data in your Milvus Vector Database.",
       "developer": "zilliztech",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/PATH/TO/uv",
-          "args": [
-            "--directory",
-            "/path/to/mcp-server-milvus/src/mcp_server_milvus",
-            "run",
-            "server.py",
-            "--milvus-uri",
-            "http://localhost:19530"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "zilliztech/mcp-server-milvus"
     },
     {
       "source": "https://github.com/motherduckdb/mcp-server-motherduck",
@@ -1335,19 +394,8 @@
       "description": "Query and analyze data with MotherDuck and local DuckDB",
       "developer": "motherduckdb",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-motherduck",
-            "--db-path",
-            "md:",
-            "--motherduck-token",
-            "<YOUR_MOTHERDUCK_TOKEN_HERE>"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "motherduckdb/mcp-server-motherduck"
     },
     {
       "source": "https://github.com/needle-ai/needle-mcp",
@@ -1355,21 +403,8 @@
       "description": "Production-ready RAG out of the box to search and retrieve data from your own documents.",
       "developer": "needle-ai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/needle-mcp",
-            "run",
-            "needle-mcp"
-          ],
-          "env": {
-            "NEEDLE_API_KEY": "your_needle_api_key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "needle-ai/needle-mcp"
     },
     {
       "source": "https://github.com/ppl-ai/modelcontextprotocol",
@@ -1377,33 +412,8 @@
       "description": "An MCP server that connects to Perplexity's Sonar API, enabling real-time web-wide research in conversational AI.",
       "developer": "ppl-ai",
       "is_official": true,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "PERPLEXITY_API_KEY",
-            "mcp/perplexity-ask"
-          ],
-          "env": {
-            "PERPLEXITY_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-perplexity-ask"
-          ],
-          "env": {
-            "PERPLEXITY_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ppl-ai/modelcontextprotocol"
     },
     {
       "source": "https://github.com/qdrant/mcp-server-qdrant/",
@@ -1411,32 +421,8 @@
       "description": "Implement semantic memory layer on top of the Qdrant vector search engine",
       "developer": "qdrant",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-qdrant"
-          ],
-          "env": {
-            "QDRANT_URL": "https://xyz-example.eu-central.aws.cloud.qdrant.io:6333",
-            "QDRANT_API_KEY": "your_api_key",
-            "COLLECTION_NAME": "your-collection-name",
-            "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2"
-          }
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-qdrant"
-          ],
-          "env": {
-            "QDRANT_LOCAL_PATH": "/path/to/qdrant/database",
-            "COLLECTION_NAME": "your-collection-name",
-            "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "qdrant/mcp-server-qdrant/"
     },
     {
       "source": "https://github.com/ramp-public/ramp-mcp",
@@ -1444,25 +430,8 @@
       "description": "Interact with [Ramp](https://ramp.com)'s Developer API to run analysis on your spend and gain insights leveraging LLMs",
       "developer": "ramp-public",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/<ABSOLUTE-PATH-TO>/ramp-mcp",
-            "run",
-            "ramp-mcp",
-            "-s",
-            "transactions:read,reimbursements:read"
-          ],
-          "env": {
-            "RAMP_CLIENT_ID": "<CLIENT_ID>",
-            "RAMP_CLIENT_SECRET": "<CLIENT_SECRET>",
-            "RAMP_ENV": "<demo|qa|prd>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ramp-public/ramp-mcp"
     },
     {
       "source": "https://github.com/MindscapeHQ/mcp-server-raygun",
@@ -1470,25 +439,8 @@
       "description": "Interact with your crash reporting and real using monitoring data on your Raygun account",
       "developer": "MindscapeHQ",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@raygun.io/mcp-server-raygun"
-          ],
-          "env": {
-            "RAYGUN_PAT_TOKEN": "your-pat-token-here"
-          }
-        },
-        {
-          "command": "/path/to/server-raygun/build/index.js",
-          "env": {
-            "RAYGUN_PAT_TOKEN": "your-pat-token-ken"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "MindscapeHQ/mcp-server-raygun"
     },
     {
       "source": "https://github.com/rember/rember-mcp",
@@ -1496,17 +448,8 @@
       "description": "Create spaced repetition flashcards in [Rember](https://rember.com) to remember anything you learn in your chats",
       "developer": "rember",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@getrember/mcp",
-            "--api-key=YOUR_REMBER_API_KEY"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "rember/rember-mcp"
     },
     {
       "source": "https://github.com/riza-io/riza-mcp",
@@ -1514,18 +457,8 @@
       "description": "Arbitrary code execution and tool-use platform for LLMs by [Riza](https://riza.io)",
       "developer": "riza-io",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@riza-io/riza-mcp"
-          ],
-          "env": {
-            "RIZA_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "riza-io/riza-mcp"
     },
     {
       "source": "https://github.com/fatwang2/search1api-mcp",
@@ -1533,19 +466,8 @@
       "description": "One API for Search, Crawling, and Sitemaps",
       "developer": "fatwang2",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "search1api-mcp"
-          ],
-          "env": {
-            "SEARCH1API_KEY": "YOUR_SEARCH1API_KEY"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "fatwang2/search1api-mcp"
     },
     {
       "source": "https://github.com/screenshotone/mcp/",
@@ -1553,18 +475,8 @@
       "description": "Render website screenshots with [ScreenshotOne](https://screenshotone.com/)",
       "developer": "screenshotone",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "path/to/screenshotone/mcp/build/index.js"
-          ],
-          "env": {
-            "SCREENSHOTONE_API_KEY": "<your api key>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "screenshotone/mcp/"
     },
     {
       "source": "https://github.com/StarRocks/mcp-server-starrocks",
@@ -1572,39 +484,8 @@
       "description": "Interact with [StarRocks](https://www.starrocks.io/)",
       "developer": "StarRocks",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "mcp-server-starrocks",
-            "mcp-server-starrocks"
-          ],
-          "env": {
-            "STARROCKS_HOST": "default localhost",
-            "STARROCKS_PORT": "default 9030",
-            "STARROCKS_USER": "default root",
-            "STARROCKS_PASSWORD": "default empty"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/mcp-server-starrocks",
-            "run",
-            "mcp-server-starrocks"
-          ],
-          "env": {
-            "STARROCKS_HOST": "default localhost",
-            "STARROCKS_PORT": "default 9030",
-            "STARROCKS_USER": "default root",
-            "STARROCKS_PASSWORD": "default empty"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "StarRocks/mcp-server-starrocks"
     },
     {
       "source": "https://github.com/tavily-ai/tavily-mcp",
@@ -1612,28 +493,8 @@
       "description": "Search engine for AI agents (search + extract) powered by [Tavily](https://tavily.com/)",
       "developer": "tavily-ai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "tavily-mcp@0.1.2"
-          ],
-          "env": {
-            "TAVILY_API_KEY": "your-api-key-here"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "/path/to/tavily-mcp/build/index.js"
-          ],
-          "env": {
-            "TAVILY_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "tavily-ai/tavily-mcp"
     },
     {
       "source": "https://github.com/tinybirdco/mcp-tinybird",
@@ -1641,30 +502,8 @@
       "description": "Interact with Tinybird serverless ClickHouse platform",
       "developer": "tinybirdco",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-tinybird",
-            "stdio"
-          ],
-          "env": {
-            "TB_API_URL": "<TINYBIRD_API_URL>",
-            "TB_ADMIN_TOKEN": "<TINYBIRD_ADMIN_TOKEN>"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/your/mcp-tinybird",
-            "run",
-            "mcp-tinybird",
-            "stdio"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "tinybirdco/mcp-tinybird"
     },
     {
       "source": "https://github.com/vectorize-io/vectorize-mcp-server/",
@@ -1672,20 +511,8 @@
       "description": "[Vectorize](https://vectorize.io) MCP server for advanced retrieval, Private Deep Research, Anything-to-Markdown file extraction and text chunking.",
       "developer": "vectorize-io",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@vectorize-io/vectorize-mcp-server"
-          ],
-          "env": {
-            "VECTORIZE_ORG_ID": "your-org-id",
-            "VECTORIZE_TOKEN": "your-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "vectorize-io/vectorize-mcp-server/"
     },
     {
       "source": "https://github.com/zenml-io/mcp-zenml",
@@ -1693,24 +520,8 @@
       "description": "Interact with your MLOps and LLMOps pipelines through your [ZenML](https://www.zenml.io) MCP server",
       "developer": "zenml-io",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/usr/local/bin/uv",
-          "args": [
-            "run",
-            "path/to/zenml_server.py"
-          ],
-          "env": {
-            "LOGLEVEL": "INFO",
-            "NO_COLOR": "1",
-            "PYTHONUNBUFFERED": "1",
-            "PYTHONIOENCODING": "UTF-8",
-            "ZENML_STORE_URL": "https://your-zenml-server-goes-here.com",
-            "ZENML_STORE_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "zenml-io/mcp-zenml"
     },
     {
       "source": "https://github.com/Simon-Kansara/ableton-live-mcp-server",
@@ -1718,22 +529,8 @@
       "description": "an MCP server to control Ableton Live.",
       "developer": "Simon-Kansara",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "--with",
-            "mcp[cli]",
-            "--with",
-            "python-osc",
-            "mcp",
-            "run",
-            "/Users/simonkansara/Desktop/mcp-ableton-server/mcp-ableton-server.py"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Simon-Kansara/ableton-live-mcp-server"
     },
     {
       "source": "https://github.com/openbnb-org/mcp-server-airbnb",
@@ -1741,24 +538,8 @@
       "description": "Provides tools to search Airbnb and get listing details.",
       "developer": "openbnb-org",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@openbnb/mcp-server-airbnb"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@openbnb/mcp-server-airbnb",
-            "--ignore-robots-txt"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "openbnb-org/mcp-server-airbnb"
     },
     {
       "source": "https://github.com/yangkyeongmo/mcp-server-apache-airflow",
@@ -1766,34 +547,8 @@
       "description": "A MCP Server that connects to [Apache Airflow](https://airflow.apache.org/) using official python client.",
       "developer": "yangkyeongmo",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-apache-airflow"
-          ],
-          "env": {
-            "AIRFLOW_HOST": "https://your-airflow-host",
-            "AIRFLOW_USERNAME": "your-username",
-            "AIRFLOW_PASSWORD": "your-password"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/mcp-server-apache-airflow",
-            "run",
-            "mcp-server-apache-airflow"
-          ],
-          "env": {
-            "AIRFLOW_HOST": "https://your-airflow-host",
-            "AIRFLOW_USERNAME": "your-username",
-            "AIRFLOW_PASSWORD": "your-password"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "yangkyeongmo/mcp-server-apache-airflow"
     },
     {
       "source": "https://github.com/domdomegg/airtable-mcp-server",
@@ -1801,19 +556,8 @@
       "description": "Read and write access to [Airtable](https://airtable.com/) databases, with schema inspection.",
       "developer": "domdomegg",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "airtable-mcp-server"
-          ],
-          "env": {
-            "AIRTABLE_API_KEY": "pat123.abc123"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "domdomegg/airtable-mcp-server"
     },
     {
       "source": "https://github.com/felores/airtable-mcp",
@@ -1821,27 +565,8 @@
       "description": "Airtable Model Context Protocol Server.",
       "developer": "felores",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@felores/airtable-mcp-server"
-          ],
-          "env": {
-            "AIRTABLE_API_KEY": "your_api_key_here"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/airtable-mcp/build/index.js"
-          ],
-          "env": {
-            "AIRTABLE_API_KEY": "your_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "felores/airtable-mcp"
     },
     {
       "source": "https://github.com/scorzeth/anki-mcp-server",
@@ -1849,12 +574,8 @@
       "description": "An MCP server for interacting with your [Anki](https://apps.ankiweb.net) decks and cards.",
       "developer": "scorzeth",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/anki-mcp-server/build/index.js"
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "scorzeth/anki-mcp-server"
     },
     {
       "source": "https://github.com/ravenwits/mcp-server-arangodb",
@@ -1862,21 +583,8 @@
       "description": "MCP Server that provides database interaction capabilities through [ArangoDB](https://arangodb.com/).",
       "developer": "ravenwits",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/arango-server/build/index.js"
-          ],
-          "env": {
-            "ARANGO_URL": "your_database_url",
-            "ARANGO_DATABASE": "your_database_name",
-            "ARANGO_USERNAME": "your_username",
-            "ARANGO_PASSWORD": "your_password"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ravenwits/mcp-server-arangodb"
     },
     {
       "source": "https://github.com/sooperset/mcp-atlassian",
@@ -1884,93 +592,8 @@
       "description": "Interact with Atlassian Cloud products (Confluence and Jira) including searching/reading Confluence spaces/pages, accessing Jira issues, and project metadata.",
       "developer": "sooperset",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-atlassian"
-          ],
-          "env": {
-            "CONFLUENCE_URL": "https://your-domain.atlassian.net/wiki",
-            "CONFLUENCE_USERNAME": "your.email@domain.com",
-            "CONFLUENCE_API_TOKEN": "your_api_token",
-            "JIRA_URL": "https://your-domain.atlassian.net",
-            "JIRA_USERNAME": "your.email@domain.com",
-            "JIRA_API_TOKEN": "your_api_token"
-          }
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-atlassian"
-          ],
-          "env": {
-            "CONFLUENCE_URL": "https://confluence.your-company.com",
-            "CONFLUENCE_PERSONAL_TOKEN": "your_personal_access_token",
-            "JIRA_URL": "https://jira.your-company.com",
-            "JIRA_PERSONAL_TOKEN": "your_personal_access_token"
-          }
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp-atlassian"
-          ],
-          "env": {
-            "CONFLUENCE_URL": "https://your-domain.atlassian.net/wiki",
-            "CONFLUENCE_USERNAME": "your.email@domain.com",
-            "CONFLUENCE_API_TOKEN": "your_api_token",
-            "JIRA_URL": "https://your-domain.atlassian.net",
-            "JIRA_USERNAME": "your.email@domain.com",
-            "JIRA_API_TOKEN": "your_api_token"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "mcp/atlassian"
-          ],
-          "env": {
-            "CONFLUENCE_URL": "https://your-domain.atlassian.net/wiki",
-            "CONFLUENCE_USERNAME": "your.email@domain.com",
-            "CONFLUENCE_API_TOKEN": "your_api_token",
-            "JIRA_URL": "https://your-domain.atlassian.net",
-            "JIRA_USERNAME": "your.email@domain.com",
-            "JIRA_API_TOKEN": "your_api_token"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "--env-file",
-            "/path/to/your/.env",
-            "mcp/atlassian"
-          ]
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/your/mcp-atlassian",
-            "run",
-            "mcp-atlassian",
-            "--confluence-url=https://your-domain.atlassian.net/wiki",
-            "--confluence-username=your.email@domain.com",
-            "--confluence-token=your_api_token",
-            "--jira-url=https://your-domain.atlassian.net",
-            "--jira-username=your.email@domain.com",
-            "--jira-token=your_api_token"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "sooperset/mcp-atlassian"
     },
     {
       "source": "https://github.com/aarora79/aws-cost-explorer-mcp-server",
@@ -1978,51 +601,8 @@
       "description": "Optimize your AWS spend (including Amazon Bedrock spend) with this MCP server by examining spend across regions, services, instance types and foundation models ([demo video](https://www.youtube.com/watch?v=WuVOmYLRFmI&feature=youtu.be)).",
       "developer": "aarora79",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "AWS_ACCESS_KEY_ID",
-            "-e",
-            "AWS_SECRET_ACCESS_KEY",
-            "-e",
-            "AWS_REGION",
-            "-e",
-            "BEDROCK_LOG_GROUP_NAME",
-            "-e",
-            "MCP_TRANSPORT",
-            "aws-cost-explorer-mcp:latest"
-          ],
-          "env": {
-            "AWS_ACCESS_KEY_ID": "YOUR_ACCESS_KEY_ID",
-            "AWS_SECRET_ACCESS_KEY": "YOUR_SECRET_ACCESS_KEY",
-            "AWS_REGION": "us-east-1",
-            "BEDROCK_LOG_GROUP_NAME": "YOUR_CLOUDWATCH_BEDROCK_MODEL_INVOCATION_LOG_GROUP_NAME",
-            "MCP_TRANSPORT": "stdio"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/aws-cost-explorer-mcp-server",
-            "run",
-            "server.py"
-          ],
-          "env": {
-            "AWS_ACCESS_KEY_ID": "YOUR_ACCESS_KEY_ID",
-            "AWS_SECRET_ACCESS_KEY": "YOUR_SECRET_ACCESS_KEY",
-            "AWS_REGION": "us-east-1",
-            "BEDROCK_LOG_GROUP_NAME": "YOUR_CLOUDWATCH_BEDROCK_MODEL_INVOCATION_LOG_GROUP_NAME",
-            "MCP_TRANSPORT": "stdio"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "aarora79/aws-cost-explorer-mcp-server"
     },
     {
       "source": "https://github.com/baryhuang/mcp-server-aws-resources-python",
@@ -2030,37 +610,8 @@
       "description": "Run generated python code to securely query or modify any AWS resources supported by boto3.",
       "developer": "baryhuang",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "AWS_ACCESS_KEY_ID=your_access_key_id_here",
-            "-e",
-            "AWS_SECRET_ACCESS_KEY=your_secret_access_key_here",
-            "-e",
-            "AWS_DEFAULT_REGION=us-east-1",
-            "buryhuang/mcp-server-aws-resources:latest"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "AWS_PROFILE=default",
-            "-v",
-            "~/.aws:/root/.aws",
-            "buryhuang/mcp-server-aws-resources:latest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "baryhuang/mcp-server-aws-resources-python"
     },
     {
       "source": "https://github.com/aws-samples/sample-mcp-server-s3",
@@ -2068,18 +619,8 @@
       "description": "A sample MCP server for AWS S3 that flexibly fetches objects from S3 such as PDF documents.",
       "developer": "aws-samples",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/Users/user/generative_ai/model_context_protocol/s3-mcp-server",
-            "run",
-            "s3-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "aws-samples/sample-mcp-server-s3"
     },
     {
       "source": "https://github.com/pab1it0/adx-mcp-server",
@@ -2087,51 +628,8 @@
       "description": "Query and analyze Azure Data Explorer databases.",
       "developer": "pab1it0",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "<full path to adx-mcp-server directory>",
-            "run",
-            "src/adx_mcp_server/main.py"
-          ],
-          "env": {
-            "ADX_CLUSTER_URL": "https://yourcluster.region.kusto.windows.net",
-            "ADX_DATABASE": "your_database",
-            "AZURE_TENANT_ID": "your_tenant_id",
-            "AZURE_CLIENT_ID": "your_client_id",
-            "AZURE_CLIENT_SECRET": "your_client_secret"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "-e",
-            "ADX_CLUSTER_URL",
-            "-e",
-            "ADX_DATABASE",
-            "-e",
-            "AZURE_TENANT_ID",
-            "-e",
-            "AZURE_CLIENT_ID",
-            "-e",
-            "AZURE_CLIENT_SECRET",
-            "adx-mcp-server"
-          ],
-          "env": {
-            "ADX_CLUSTER_URL": "https://yourcluster.region.kusto.windows.net",
-            "ADX_DATABASE": "your_database",
-            "AZURE_TENANT_ID": "your_tenant_id",
-            "AZURE_CLIENT_ID": "your_client_id",
-            "AZURE_CLIENT_SECRET": "your_client_secret"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "pab1it0/adx-mcp-server"
     },
     {
       "source": "https://github.com/magnetai/mcp-free-usdc-transfer",
@@ -2139,20 +637,8 @@
       "description": "Send USDC on [Base](https://base.org) for free using Claude AI! Built with [Coinbase CDP](https://docs.cdp.coinbase.com/mpc-wallet/docs/welcome).",
       "developer": "magnetai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@magnetai/free-usdc-transfer"
-          ],
-          "env": {
-            "COINBASE_CDP_API_KEY_NAME": "YOUR_COINBASE_CDP_API_KEY_NAME",
-            "COINBASE_CDP_PRIVATE_KEY": "YOUR_COINBASE_CDP_PRIVATE_KEY"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "magnetai/mcp-free-usdc-transfer"
     },
     {
       "source": "https://github.com/basicmachines-co/basic-memory",
@@ -2160,25 +646,8 @@
       "description": "Local-first knowledge management system that builds a semantic graph from Markdown files, enabling persistent memory across conversations with LLMs.",
       "developer": "basicmachines-co",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "basic-memory",
-            "mcp"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "basic-memory",
-            "mcp",
-            "--project",
-            "your-project-name"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "basicmachines-co/basic-memory"
     },
     {
       "source": "https://github.com/LucasHild/mcp-server-bigquery",
@@ -2186,32 +655,8 @@
       "description": "This server enables LLMs to inspect database schemas and execute queries on BigQuery.",
       "developer": "LucasHild",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "{{PATH_TO_REPO}}",
-            "run",
-            "mcp-server-bigquery",
-            "--project",
-            "{{GCP_PROJECT_ID}}",
-            "--location",
-            "{{GCP_LOCATION}}"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-bigquery",
-            "--project",
-            "{{GCP_PROJECT_ID}}",
-            "--location",
-            "{{GCP_LOCATION}}"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "LucasHild/mcp-server-bigquery"
     },
     {
       "source": "https://github.com/ergut/mcp-bigquery-server",
@@ -2219,21 +664,8 @@
       "description": "Server implementation for Google BigQuery integration that enables direct BigQuery database access and querying capabilities",
       "developer": "ergut",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/your/clone/mcp-bigquery-server/dist/index.js",
-            "--project-id",
-            "your-project-id",
-            "--location",
-            "us-central1",
-            "--key-file",
-            "/path/to/service-account-key.json"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ergut/mcp-bigquery-server"
     },
     {
       "source": "https://github.com/leehanchung/bing-search-mcp",
@@ -2241,22 +673,8 @@
       "description": "Server implementation for Microsoft Bing Web Search API.",
       "developer": "leehanchung",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/your/folder",
-            "run",
-            "-m",
-            "mcp_server_bin_search"
-          ],
-          "env": {
-            "BING_API_KEY": "your-bing-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "leehanchung/bing-search-mcp"
     },
     {
       "source": "https://github.com/lloydzhou/bitable-mcp",
@@ -2264,30 +682,8 @@
       "description": "MCP server provides access to Lark Bitable through the Model Context Protocol. It allows users to interact with Bitable tables using predefined tools.",
       "developer": "lloydzhou",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "bitable-mcp"
-          ],
-          "env": {
-            "PERSONAL_BASE_TOKEN": "your-personal-base-token",
-            "APP_TOKEN": "your-app-token"
-          }
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "bitable_mcp"
-          ],
-          "env": {
-            "PERSONAL_BASE_TOKEN": "your-personal-base-token",
-            "APP_TOKEN": "your-app-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "lloydzhou/bitable-mcp"
     },
     {
       "source": "https://github.com/ahujasid/blender-mcp",
@@ -2295,15 +691,8 @@
       "description": "Blender integration allowing prompt enabled 3D scene creation, modeling and manipulation.",
       "developer": "ahujasid",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "blender-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ahujasid/blender-mcp"
     },
     {
       "source": "https://github.com/lenwood/cfbd-mcp-server",
@@ -2311,22 +700,8 @@
       "description": "An MCP server for the [College Football Data API](https://collegefootballdata.com/).",
       "developer": "lenwood",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/full/path/to/cfbd-mcp-server",
-            "run",
-            "cfbd-mcp-server"
-          ],
-          "env": {
-            "CFB_API_KEY": "xxx",
-            "PATH": "/full/path/to/python"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "lenwood/cfbd-mcp-server"
     },
     {
       "source": "https://github.com/mcpso/mcp-server-chatsum",
@@ -2334,18 +709,8 @@
       "description": "Query and Summarize chat messages with LLM. by [mcpso](https://mcp.so)",
       "developer": "mcpso",
       "is_official": false,
-      "configs": [
-        {
-          "command": "path-to/bin/node",
-          "args": [
-            "path-to/mcp-server-chatsum/build/index.js"
-          ],
-          "env": {
-            "CHAT_DB_PATH": "path-to/mcp-server-chatsum/chatbot/data/chat.db"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mcpso/mcp-server-chatsum"
     },
     {
       "source": "https://github.com/privetin/chroma",
@@ -2353,18 +718,8 @@
       "description": "Vector database server for semantic document search and metadata filtering, built on Chroma",
       "developer": "privetin",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "C:/MCP/server/community/chroma",
-            "run",
-            "chroma"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "privetin/chroma"
     },
     {
       "source": "https://github.com/felores/cloudinary-mcp-server",
@@ -2372,31 +727,8 @@
       "description": "Cloudinary Model Context Protocol Server to upload media to Cloudinary and get back the media link and details.",
       "developer": "felores",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@felores/cloudinary-mcp-server@latest"
-          ],
-          "env": {
-            "CLOUDINARY_CLOUD_NAME": "your_cloud_name",
-            "CLOUDINARY_API_KEY": "your_api_key",
-            "CLOUDINARY_API_SECRET": "your_api_secret"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "c:/path/to/cloudinary-mcp-server/dist/index.js"
-          ],
-          "env": {
-            "CLOUDINARY_CLOUD_NAME": "your_cloud_name",
-            "CLOUDINARY_API_KEY": "your_api_key",
-            "CLOUDINARY_API_SECRET": "your_api_secret"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "felores/cloudinary-mcp-server"
     },
     {
       "source": "https://github.com/stippi/code-assistant",
@@ -2404,15 +736,8 @@
       "description": "A coding assistant MCP server that allows to explore a code-base and make changes to code. Should be used with trusted repos only (insufficient protection against prompt injections).",
       "developer": "stippi",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/Users/<username>/workspace/code-assistant/target/release/code-assistant",
-          "args": [
-            "server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "stippi/code-assistant"
     },
     {
       "source": "https://github.com/bazinga012/mcp_code_executor",
@@ -2420,19 +745,8 @@
       "description": "An MCP server that allows LLMs to execute Python code within a specified Conda environment.",
       "developer": "bazinga012",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/mcp_code_executor/build/index.js"
-          ],
-          "env": {
-            "CODE_STORAGE_DIR": "/path/to/code/storage",
-            "CONDA_ENV_NAME": "your-conda-env"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "bazinga012/mcp_code_executor"
     },
     {
       "source": "https://github.com/longmans/coin_api_mcp",
@@ -2440,16 +754,8 @@
       "description": "Provides access to [coinmarketcap](https://coinmarketcap.com/) cryptocurrency data.",
       "developer": "longmans",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "coin_api_mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "longmans/coin_api_mcp"
     },
     {
       "source": "https://github.com/ivo-toby/contentful-mcp",
@@ -2457,19 +763,8 @@
       "description": "Read, update, delete, publish content in your [Contentful](https://contentful.com) space(s) from this MCP Server.",
       "developer": "ivo-toby",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@ivotoby/contentful-management-mcp-server"
-          ],
-          "env": {
-            "CONTENTFUL_MANAGEMENT_ACCESS_TOKEN": "<Your CMA token>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ivo-toby/contentful-mcp"
     },
     {
       "source": "https://github.com/DappierAI/dappier-mcp",
@@ -2477,18 +772,8 @@
       "description": "Connect LLMs to real-time, rights-cleared, proprietary data from trusted sources. Access specialized models for Real-Time Web Search, News, Sports, Financial Data, Crypto, and premium publisher content. Explore data models at [marketplace.dappier.com](https://marketplace.dappier.com/marketplace).",
       "developer": "DappierAI",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "dappier-mcp"
-          ],
-          "env": {
-            "DAPPIER_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "DappierAI/dappier-mcp"
     },
     {
       "source": "https://github.com/reading-plus-ai/mcp-server-data-exploration",
@@ -2496,24 +781,8 @@
       "description": "MCP server for autonomous data exploration on .csv-based datasets, providing intelligent insights with minimal effort. NOTE: Will execute arbitrary Python code on your machine, please use with caution!",
       "developer": "reading-plus-ai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/Users/username/src/mcp-server-ds",
-            "run",
-            "mcp-server-ds"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-ds"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "reading-plus-ai/mcp-server-data-exploration"
     },
     {
       "source": "https://github.com/privetin/dataset-viewer",
@@ -2521,16 +790,8 @@
       "description": "Browse and analyze Hugging Face datasets with features like search, filtering, statistics, and data export",
       "developer": "privetin",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "run",
-            "dataset-viewer"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "privetin/dataset-viewer"
     },
     {
       "source": "https://github.com/DMontgomery40/deepseek-mcp-server",
@@ -2538,19 +799,8 @@
       "description": "Model Context Protocol server integrating DeepSeek's advanced language models, in addition to [other useful API endpoints](https://github.com/DMontgomery40/deepseek-mcp-server?tab=readme-ov-file#features)",
       "developer": "DMontgomery40",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "deepseek-mcp-server"
-          ],
-          "env": {
-            "DEEPSEEK_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "DMontgomery40/deepseek-mcp-server"
     },
     {
       "source": "https://github.com/66julienmartin/MCP-server-Deepseek_R1",
@@ -2558,18 +808,8 @@
       "description": "A Model Context Protocol (MCP) server implementation connecting Claude Desktop with DeepSeek's language models (R1/V3)",
       "developer": "66julienmartin",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/deepseek-r1-mcp/build/index.js"
-          ],
-          "env": {
-            "DEEPSEEK_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "66julienmartin/MCP-server-Deepseek_R1"
     },
     {
       "source": "https://github.com/ruixingshi/deepseek-thinker-mcp",
@@ -2577,40 +817,8 @@
       "description": "A MCP (Model Context Protocol) provider Deepseek reasoning content to MCP-enabled AI Clients, like Claude Desktop. Supports access to Deepseek's thought processes from the Deepseek API service or from a local Ollama server.",
       "developer": "ruixingshi",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "deepseek-thinker-mcp"
-          ],
-          "env": {
-            "API_KEY": "<Your API Key>",
-            "BASE_URL": "<Your Base URL>"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "deepseek-thinker-mcp"
-          ],
-          "env": {
-            "USE_OLLAMA": "true"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "/your-path/deepseek-thinker-mcp/build/index.js"
-          ],
-          "env": {
-            "API_KEY": "<Your API Key>",
-            "BASE_URL": "<Your Base URL>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ruixingshi/deepseek-thinker-mcp"
     },
     {
       "source": "https://github.com/descope-sample-apps/descope-mcp-server",
@@ -2618,19 +826,8 @@
       "description": "An MCP server to integrate with [Descope](https://descope.com) to search audit logs, manage users, and more.",
       "developer": "descope-sample-apps",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/descope-mcp-server/build/index.js"
-          ],
-          "env": {
-            "DESCOPE_PROJECT_ID": "your-descope-project-id-here",
-            "DESCOPE_MANAGEMENT_KEY": "your-descope-management-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "descope-sample-apps/descope-mcp-server"
     },
     {
       "source": "https://github.com/ChristianHinge/dicom-mcp",
@@ -2638,19 +835,8 @@
       "description": "An MCP server to query and retrieve medical images and for parsing and reading dicom-encapsulated documents (pdf etc.).",
       "developer": "ChristianHinge",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/dicom-mcp",
-            "run",
-            "dicom-mcp",
-            "/path/to/configuration.yaml"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ChristianHinge/dicom-mcp"
     },
     {
       "source": "https://github.com/YanxingLiu/dify-mcp-server",
@@ -2658,33 +844,8 @@
       "description": "A simple implementation of an MCP server for dify workflows.",
       "developer": "YanxingLiu",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "${DIFY_MCP_SERVER_PATH}",
-            "run",
-            "dify_mcp_server"
-          ],
-          "env": {
-            "CONFIG_PATH": "$CONFIG_PATH"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/Users/lyx/Downloads/dify-mcp-server",
-            "run",
-            "dify_mcp_server"
-          ],
-          "env": {
-            "CONFIG_PATH": "/Users/lyx/Downloads/config.yaml"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "YanxingLiu/dify-mcp-server"
     },
     {
       "source": "https://github.com/v-3/discordmcp",
@@ -2692,18 +853,8 @@
       "description": "A MCP server to connect to Discord guilds through a bot and read and write messages in channels",
       "developer": "v-3",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "path/to/discordmcp/build/index.js"
-          ],
-          "env": {
-            "DISCORD_TOKEN": "your_discord_bot_token_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "v-3/discordmcp"
     },
     {
       "source": "https://github.com/AshDevFr/discourse-mcp-server",
@@ -2711,36 +862,8 @@
       "description": "A MCP server to search Discourse posts on a Discourse forum.",
       "developer": "AshDevFr",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "DISCOURSE_API_URL=https://try.discourse.org",
-            "-e",
-            "DISCOURSE_API_KEY=1234",
-            "-e",
-            "DISCOURSE_API_USERNAME=ash",
-            "ashdev/discourse-mcp-server"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@ashdev/discourse-mcp-server"
-          ],
-          "env": {
-            "DISCOURSE_API_URL": "https://try.discourse.org",
-            "DISCOURSE_API_KEY": "1234",
-            "DISCOURSE_API_USERNAME": "ash"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "AshDevFr/discourse-mcp-server"
     },
     {
       "source": "https://github.com/Omedia/mcp-server-drupal",
@@ -2748,30 +871,8 @@
       "description": "Server for interacting with [Drupal](https://www.drupal.org/project/mcp) using STDIO transport layer.",
       "developer": "Omedia",
       "is_official": false,
-      "configs": [
-        {
-          "command": "__BINARY_PATH__",
-          "args": [
-            "--drupal-url",
-            "__DRUPAL_BASE_URL__"
-          ],
-          "env": {
-            "DRUPAL_AUTH_TOKEN": "<AUTH_TOKEN>"
-          }
-        },
-        {
-          "command": "__BINARY_PATH__",
-          "args": [
-            "--drupal-url",
-            "__DRUPAL_BASE_URL__"
-          ],
-          "env": {
-            "DRUPAL_AUTH_USER": "<BASIC_AUTH_USERNAME>",
-            "DRUPAL_AUTH_PASSWORD": "<BASIC_AUTH_PASSWORD>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Omedia/mcp-server-drupal"
     },
     {
       "source": "https://github.com/cr7258/elasticsearch-mcp-server",
@@ -2779,34 +880,8 @@
       "description": "MCP server implementation that provides Elasticsearch interaction.",
       "developer": "cr7258",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "elasticsearch-mcp-server"
-          ],
-          "env": {
-            "ELASTIC_HOST": "https://localhost:9200",
-            "ELASTIC_USERNAME": "elastic",
-            "ELASTIC_PASSWORD": "test123"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/src/elasticsearch_mcp_server",
-            "run",
-            "elasticsearch-mcp-server"
-          ],
-          "env": {
-            "ELASTIC_HOST": "https://localhost:9200",
-            "ELASTIC_USERNAME": "elastic",
-            "ELASTIC_PASSWORD": "test123"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "cr7258/elasticsearch-mcp-server"
     },
     {
       "source": "https://github.com/mamertofabian/elevenlabs-mcp-server",
@@ -2814,42 +889,8 @@
       "description": "A server that integrates with ElevenLabs text-to-speech API capable of generating full voiceovers with multiple voices.",
       "developer": "mamertofabian",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "elevenlabs-mcp-server"
-          ],
-          "env": {
-            "ELEVENLABS_API_KEY": "your-api-key",
-            "ELEVENLABS_VOICE_ID": "your-voice-id",
-            "ELEVENLABS_MODEL_ID": "eleven_flash_v2",
-            "ELEVENLABS_STABILITY": "0.5",
-            "ELEVENLABS_SIMILARITY_BOOST": "0.75",
-            "ELEVENLABS_STYLE": "0.1",
-            "ELEVENLABS_OUTPUT_DIR": "output"
-          }
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/elevenlabs-mcp-server",
-            "run",
-            "elevenlabs-mcp-server"
-          ],
-          "env": {
-            "ELEVENLABS_API_KEY": "your-api-key",
-            "ELEVENLABS_VOICE_ID": "your-voice-id",
-            "ELEVENLABS_MODEL_ID": "eleven_flash_v2",
-            "ELEVENLABS_STABILITY": "0.5",
-            "ELEVENLABS_SIMILARITY_BOOST": "0.75",
-            "ELEVENLABS_STYLE": "0.1",
-            "ELEVENLABS_OUTPUT_DIR": "output"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mamertofabian/elevenlabs-mcp-server"
     },
     {
       "source": "https://github.com/marctheshark3/ergo-mcp",
@@ -2857,20 +898,8 @@
       "description": "An MCP server to integrate Ergo Blockchain Node and Explorer APIs for checking address balances, analyzing transactions, viewing transaction history, performing forensic analysis of addresses, searching for tokens, and monitoring network status.",
       "developer": "marctheshark3",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/your/project/.venv/bin/python",
-          "args": [
-            "-m",
-            "ergo_explorer"
-          ]
-        },
-        {
-          "command": "/path/to/your/project/.venv/bin/ergo-mcp",
-          "args": []
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "marctheshark3/ergo-mcp"
     },
     {
       "source": "https://github.com/mcpdotdirect/evm-mcp-server",
@@ -2878,16 +907,8 @@
       "description": "Comprehensive blockchain services for 30+ EVM networks, supporting native tokens, ERC20, NFTs, smart contracts, transactions, and ENS resolution.",
       "developer": "mcpdotdirect",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@mcpdotdirect/evm-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mcpdotdirect/evm-mcp-server"
     },
     {
       "source": "https://github.com/mamertofabian/mcp-everything-search",
@@ -2895,53 +916,8 @@
       "description": "Fast file searching capabilities across Windows (using [Everything SDK](https://www.voidtools.com/support/everything/sdk/)), macOS (using mdfind command), and Linux (using locate/plocate command).",
       "developer": "mamertofabian",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-everything-search"
-          ],
-          "env": {
-            "EVERYTHING_SDK_PATH": "path/to/Everything-SDK/dll/Everything64.dll"
-          }
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_everything_search"
-          ],
-          "env": {
-            "EVERYTHING_SDK_PATH": "path/to/Everything-SDK/dll/Everything64.dll"
-          }
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-everything-search"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_everything_search"
-          ]
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/mcp-everything-search/src/mcp_server_everything_search",
-            "run",
-            "mcp-server-everything-search"
-          ],
-          "env": {
-            "EVERYTHING_SDK_PATH": "path/to/Everything-SDK/dll/Everything64.dll"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mamertofabian/mcp-everything-search"
     },
     {
       "source": "https://github.com/haris-musa/excel-mcp-server",
@@ -2949,16 +925,8 @@
       "description": "Excel manipulation including data reading/writing, worksheet management, formatting, charts, and pivot table.",
       "developer": "haris-musa",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv run excel-mcp-server",
-          "transport": "sse",
-          "env": {
-            "EXCEL_FILES_PATH": "/path/to/excel/files"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "haris-musa/excel-mcp-server"
     },
     {
       "source": "https://github.com/rishijatia/fantasy-pl-mcp",
@@ -2966,19 +934,8 @@
       "description": "Give your coding agent direct access to up-to date Fantasy Premier League data",
       "developer": "rishijatia",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "fpl_mcp"
-          ]
-        },
-        {
-          "command": "/full/path/to/your/venv/bin/fpl-mcp"
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "rishijatia/fantasy-pl-mcp"
     },
     {
       "source": "https://github.com/fastnai/mcp-fastn",
@@ -2986,22 +943,8 @@
       "description": "A remote, dynamic MCP server with a unified API that connects to 1,000+ tools, actions, and workflows, featuring built-in authentication and monitoring.",
       "developer": "fastnai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/your/uv",
-          "args": [
-            "--directory",
-            "/path/to/your/fastn-server",
-            "run",
-            "fastn-server.py",
-            "--api_key",
-            "YOUR_API_KEY",
-            "--space_id",
-            "YOUR_WORKSPACE_ID"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "fastnai/mcp-fastn"
     },
     {
       "source": "https://github.com/zcaceres/fetch-mcp",
@@ -3009,15 +952,8 @@
       "description": "A server that flexibly fetches HTML, JSON, Markdown, or plaintext.",
       "developer": "zcaceres",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "{ABSOLUTE PATH TO FILE HERE}/dist/index.js"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "zcaceres/fetch-mcp"
     },
     {
       "source": "https://github.com/GLips/Figma-Context-MCP",
@@ -3025,18 +961,8 @@
       "description": "Give your coding agent direct access to Figma file data, helping it one-shot design implementation.",
       "developer": "GLips",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "figma-developer-mcp",
-            "--figma-api-key=<your-figma-api-key>",
-            "--stdio"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GLips/Figma-Context-MCP"
     },
     {
       "source": "https://github.com/vrknetha/mcp-server-firecrawl",
@@ -3044,35 +970,8 @@
       "description": "Advanced web scraping with JavaScript rendering, PDF support, and smart rate limiting",
       "developer": "vrknetha",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "firecrawl-mcp"
-          ],
-          "env": {
-            "FIRECRAWL_API_KEY": "YOUR_API_KEY_HERE"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "firecrawl-mcp"
-          ],
-          "env": {
-            "FIRECRAWL_API_KEY": "YOUR_API_KEY_HERE",
-            "FIRECRAWL_RETRY_MAX_ATTEMPTS": "5",
-            "FIRECRAWL_RETRY_INITIAL_DELAY": "2000",
-            "FIRECRAWL_RETRY_MAX_DELAY": "30000",
-            "FIRECRAWL_RETRY_BACKOFF_FACTOR": "3",
-            "FIRECRAWL_CREDIT_WARNING_THRESHOLD": "2000",
-            "FIRECRAWL_CREDIT_CRITICAL_THRESHOLD": "500"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "vrknetha/mcp-server-firecrawl"
     },
     {
       "source": "https://github.com/MFYDev/ghost-mcp",
@@ -3080,22 +979,8 @@
       "description": "A Model Context Protocol (MCP) server for interacting with Ghost CMS through LLM interfaces like Claude.",
       "developer": "MFYDev",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/Users/username/.local/bin/uv",
-          "args": [
-            "--directory",
-            "/path/to/ghost-mcp",
-            "run",
-            "src/main.py"
-          ],
-          "env": {
-            "GHOST_API_URL": "your_ghost_api_url",
-            "GHOST_STAFF_API_KEY": "your_staff_api_key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "MFYDev/ghost-mcp"
     },
     {
       "source": "https://github.com/ko1ynnky/github-actions-mcp-server",
@@ -3103,18 +988,8 @@
       "description": "A Model Context Protocol (MCP) server for interacting with Github Actions.",
       "developer": "ko1ynnky",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "<path-to-your-project>/dist/index.js"
-          ],
-          "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ko1ynnky/github-actions-mcp-server"
     },
     {
       "source": "https://github.com/GongRzhe/Gmail-MCP-Server",
@@ -3122,28 +997,8 @@
       "description": "A Model Context Protocol (MCP) server for Gmail integration in Claude Desktop with auto authentication support.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@gongrzhe/server-gmail-autoauth-mcp"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-v",
-            "mcp-gmail:/gmail-server",
-            "-e",
-            "GMAIL_CREDENTIALS_PATH=/gmail-server/credentials.json",
-            "mcp/gmail"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/Gmail-MCP-Server"
     },
     {
       "source": "https://github.com/baryhuang/mcp-headless-gmail",
@@ -3151,18 +1006,8 @@
       "description": "Remote hostable MCP server that can get and send Gmail messages without local credential or file system setup.",
       "developer": "baryhuang",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "buryhuang/mcp-headless-gmail:latest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "baryhuang/mcp-headless-gmail"
     },
     {
       "source": "https://github.com/Coding-Solo/godot-mcp",
@@ -3170,44 +1015,8 @@
       "description": "A MCP server providing comprehensive Godot engine integration for project editing, debugging, and scene management.",
       "developer": "Coding-Solo",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/absolute/path/to/godot-mcp/build/index.js"
-          ],
-          "env": {
-            "DEBUG": "true"
-          },
-          "disabled": false,
-          "autoApprove": [
-            "launch_editor",
-            "run_project",
-            "get_debug_output",
-            "stop_project",
-            "get_godot_version",
-            "list_projects",
-            "get_project_info",
-            "create_scene",
-            "add_node",
-            "load_sprite",
-            "export_mesh_library",
-            "save_scene",
-            "get_uid",
-            "update_project_uids"
-          ]
-        },
-        {
-          "command": "node",
-          "args": [
-            "/absolute/path/to/godot-mcp/build/index.js"
-          ],
-          "env": {
-            "DEBUG": "true"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Coding-Solo/godot-mcp"
     },
     {
       "source": "https://github.com/mark3labs/mcp-filesystem-server",
@@ -3215,16 +1024,8 @@
       "description": "Secure file operations with configurable access controls built with Go!",
       "developer": "mark3labs",
       "is_official": false,
-      "configs": [
-        {
-          "command": "mcp-filesystem-server",
-          "args": [
-            "/Users/username/Desktop",
-            "/path/to/other/allowed/dir"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mark3labs/mcp-filesystem-server"
     },
     {
       "source": "https://github.com/v-3/google-calendar",
@@ -3232,21 +1033,8 @@
       "description": "Integration with Google Calendar to check schedules, find time, and add/delete events",
       "developer": "v-3",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/ABSOLUTE/PATH/TO/YOUR/build/index.js"
-          ],
-          "env": {
-            "GOOGLE_CLIENT_ID": "your_client_id_here",
-            "GOOGLE_CLIENT_SECRET": "your_client_secret_here",
-            "GOOGLE_REDIRECT_URI": "http://localhost",
-            "GOOGLE_REFRESH_TOKEN": "your_refresh_token_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "v-3/google-calendar"
     },
     {
       "source": "https://github.com/adenot/mcp-google-search",
@@ -3254,20 +1042,8 @@
       "description": "Provides Google Search results via the Google Custom Search API",
       "developer": "adenot",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@adenot/mcp-google-search"
-          ],
-          "env": {
-            "GOOGLE_API_KEY": "your-api-key-here",
-            "GOOGLE_SEARCH_ENGINE_ID": "your-search-engine-id-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "adenot/mcp-google-search"
     },
     {
       "source": "https://github.com/zcaceres/gtasks-mcp",
@@ -3275,15 +1051,8 @@
       "description": "Google Tasks API Model Context Protocol Server.",
       "developer": "zcaceres",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/opt/homebrew/bin/node",
-          "args": [
-            "{ABSOLUTE PATH TO FILE HERE}/dist/index.js"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "zcaceres/gtasks-mcp"
     },
     {
       "source": "https://github.com/hannesj/mcp-graphql-schema",
@@ -3291,17 +1060,8 @@
       "description": "Allow LLMs to explore large GraphQL schemas without bloating the context.",
       "developer": "hannesj",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-graphql-schema",
-            "/ABSOLUTE/PATH/TO/schema.graphqls"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "hannesj/mcp-graphql-schema"
     },
     {
       "source": "https://github.com/horizondatawave/hdw-mcp-server",
@@ -3309,39 +1069,8 @@
       "description": "Access to profile data and management of user account with [HorizonDataWave.ai](https://horizondatawave.ai/).",
       "developer": "horizondatawave",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@horizondatawave/mcp"
-          ],
-          "env": {
-            "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-            "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "/path/to/your/build/index.js"
-          ],
-          "env": {
-            "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-            "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            ""
-          ],
-          "env": {
-            "HDW_ACCESS_TOKEN": "YOUR_HD_W_ACCESS_TOKEN",
-            "HDW_ACCOUNT_ID": "YOUR_HD_W_ACCOUNT_ID"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "horizondatawave/hdw-mcp-server"
     },
     {
       "source": "https://github.com/buryhuang/mcp-hubspot",
@@ -3349,31 +1078,8 @@
       "description": "HubSpot CRM integration for managing contacts and companies. Create and retrieve CRM data directly through Claude chat.",
       "developer": "buryhuang",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "HUBSPOT_ACCESS_TOKEN=your_access_token_here",
-            "buryhuang/mcp-hubspot:latest"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "buryhuang/mcp-hubspot:latest",
-            "--access-token",
-            "your_access_token_here"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "buryhuang/mcp-hubspot"
     },
     {
       "source": "https://github.com/evalstate/mcp-hfspace",
@@ -3381,27 +1087,8 @@
       "description": "Server for using HuggingFace Spaces, supporting Open Source Image, Audio, Text Models and more. Claude Desktop mode for easy integration.",
       "developer": "evalstate",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@llmindset/mcp-hfspace"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@llmindset/mcp-hfspace",
-            "--work-dir=/Users/evalstate/mcp-store",
-            "shuttleai/shuttle-jaguar",
-            "styletts2/styletts2",
-            "Qwen/QVQ-72B-preview"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "evalstate/mcp-hfspace"
     },
     {
       "source": "https://github.com/mektigboy/server-hyperliquid",
@@ -3409,16 +1096,8 @@
       "description": "An MCP server implementation that integrates the Hyperliquid SDK for exchange data.",
       "developer": "mektigboy",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@mektigboy/server-hyperliquid"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mektigboy/server-hyperliquid"
     },
     {
       "source": "https://github.com/GongRzhe/Image-Generation-MCP-Server",
@@ -3426,21 +1105,8 @@
       "description": "This MCP server provides image generation capabilities using the Replicate Flux model.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/image-gen-server/build/index.js"
-          ],
-          "env": {
-            "REPLICATE_API_TOKEN": "your-replicate-api-token",
-            "MODEL": "alternative-model-name"
-          },
-          "disabled": false,
-          "autoApprove": []
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/Image-Generation-MCP-Server"
     },
     {
       "source": "https://github.com/idoru/influxdb-mcp-server",
@@ -3448,31 +1114,8 @@
       "description": "Run queries against InfluxDB OSS API v2.",
       "developer": "idoru",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "influxdb-mcp-server"
-          ],
-          "env": {
-            "INFLUXDB_TOKEN": "your_token",
-            "INFLUXDB_URL": "http://localhost:8086",
-            "INFLUXDB_ORG": "your_org"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "/path/to/influxdb-mcp-server/src/index.js"
-          ],
-          "env": {
-            "INFLUXDB_TOKEN": "your_token",
-            "INFLUXDB_URL": "http://localhost:8086",
-            "INFLUXDB_ORG": "your_org"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "idoru/influxdb-mcp-server"
     },
     {
       "source": "https://github.com/sergehuber/inoyu-mcp-unomi-server",
@@ -3480,16 +1123,8 @@
       "description": "Interact with an Apache Unomi CDP customer data platform to retrieve and update customer profiles",
       "developer": "sergehuber",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/local/mcp-unomi-server/build/index.js"
-          ],
-          "env": {}
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "sergehuber/inoyu-mcp-unomi-server"
     },
     {
       "source": "https://github.com/ferrislucas/iterm-mcp",
@@ -3497,16 +1132,8 @@
       "description": "Integration with iTerm2 terminal emulator for macOS, enabling LLMs to execute and monitor terminal commands.",
       "developer": "ferrislucas",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "iterm-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ferrislucas/iterm-mcp"
     },
     {
       "source": "https://github.com/GongRzhe/JSON-MCP-Server",
@@ -3514,21 +1141,8 @@
       "description": "JSON handling and processing server with advanced query capabilities using JSONPath syntax and support for array, string, numeric, and date operations.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@gongrzhe/server-json-mcp@1.0.3"
-          ]
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/build/index.js"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/JSON-MCP-Server"
     },
     {
       "source": "https://github.com/ChristophEnglisch/keycloak-model-context-protocol",
@@ -3536,32 +1150,8 @@
       "description": "This MCP server enables natural language interaction with Keycloak for user and realm management including creating, deleting, and listing users and realms.",
       "developer": "ChristophEnglisch",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "keycloak-model-context-protocol"
-          ],
-          "env": {
-            "KEYCLOAK_URL": "http://localhost:8080",
-            "KEYCLOAK_ADMIN": "admin",
-            "KEYCLOAK_ADMIN_PASSWORD": "admin"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/dist/index.js"
-          ],
-          "env": {
-            "KEYCLOAK_URL": "http://localhost:8080",
-            "KEYCLOAK_ADMIN": "admin",
-            "KEYCLOAK_ADMIN_PASSWORD": "admin"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ChristophEnglisch/keycloak-model-context-protocol"
     },
     {
       "source": "https://github.com/kiwamizamurai/mcp-kibela-server",
@@ -3569,20 +1159,8 @@
       "description": "Interact with Kibela API.",
       "developer": "kiwamizamurai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@kiwamizamurai/mcp-kibela-server"
-          ],
-          "env": {
-            "KIBELA_TEAM": "your-team",
-            "KIBELA_TOKEN": "your-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "kiwamizamurai/mcp-kibela-server"
     },
     {
       "source": "https://github.com/macrat/mcp-server-kintone",
@@ -3590,20 +1168,8 @@
       "description": "Manage records and apps in [kintone](https://kintone.com) through LLM tools.",
       "developer": "macrat",
       "is_official": false,
-      "configs": [
-        {
-          "command": "C:\\path\\to\\mcp-server-kintone.exe",
-          "env": {
-            "KINTONE_BASE_URL": "https://<domain>.cybozu.com",
-            "KINTONE_USERNAME": "<your username>",
-            "KINTONE_PASSWORD": "<your password>",
-            "KINTONE_API_TOKEN": "<your api token>, <another api token>, ...",
-            "KINTONE_ALLOW_APPS": "1, 2, 3, ...",
-            "KINTONE_DENY_APPS": "4, 5, ..."
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "macrat/mcp-server-kintone"
     },
     {
       "source": "https://github.com/Flux159/mcp-server-kubernetes",
@@ -3611,21 +1177,8 @@
       "description": "Connect to Kubernetes cluster and manage pods, deployments, and services.",
       "developer": "Flux159",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "mcp-server-kubernetes"
-          ]
-        },
-        {
-          "command": "node",
-          "args": [
-            "/path/to/your/mcp-server-kubernetes/dist/index.js"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Flux159/mcp-server-kubernetes"
     },
     {
       "source": "https://github.com/GongRzhe/Langflow-DOC-QA-SERVER",
@@ -3633,18 +1186,8 @@
       "description": "A Model Context Protocol server for document Q&A powered by Langflow. It demonstrates core MCP concepts by providing a simple interface to query documents through a Langflow backend.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/doc-qa-server/build/index.js"
-          ],
-          "env": {
-            "API_ENDPOINT": "http://127.0.0.1:7860/api/v1/run/480ec7b3-29d2-4caa-b03b-e74118f35fac"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/Langflow-DOC-QA-SERVER"
     },
     {
       "source": "https://github.com/jerhadf/linear-mcp-server",
@@ -3652,19 +1195,8 @@
       "description": "Allows LLM to interact with Linear's API for project management, including searching, creating, and updating issues.",
       "developer": "jerhadf",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "linear-mcp-server"
-          ],
-          "env": {
-            "LINEAR_API_KEY": "your_linear_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "jerhadf/linear-mcp-server"
     },
     {
       "source": "https://github.com/amornpan/py-mcp-line",
@@ -3672,21 +1204,8 @@
       "description": "Implementation for LINE Bot integration that enables Language Models to read and analyze LINE conversations through a standardized interface. Features asynchronous operation, comprehensive logging, webhook event handling, and support for various message types.",
       "developer": "amornpan",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "server.py"
-          ],
-          "env": {
-            "LINE_CHANNEL_SECRET": "your_channel_secret",
-            "LINE_ACCESS_TOKEN": "your_access_token",
-            "SERVER_PORT": "8000",
-            "MESSAGES_FILE": "data/messages.json"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "amornpan/py-mcp-line"
     },
     {
       "source": "https://github.com/run-llama/mcp-server-llamacloud",
@@ -3694,20 +1213,8 @@
       "description": "Integrate the data stored in a managed index on [LlamaCloud](https://cloud.llamaindex.ai/)",
       "developer": "run-llama",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/llamacloud/build/index.js"
-          ],
-          "env": {
-            "LLAMA_CLOUD_INDEX_NAME": "<YOUR_INDEX_NAME>",
-            "LLAMA_CLOUD_PROJECT_NAME": "<YOUR_PROJECT_NAME>",
-            "LLAMA_CLOUD_API_KEY": "<YOUR_API_KEY>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "run-llama/mcp-server-llamacloud"
     },
     {
       "source": "https://github.com/carterlasalle/mac_messages_mcp",
@@ -3715,15 +1222,8 @@
       "description": "An MCP server that securely interfaces with your iMessage database via the Model Context Protocol (MCP), allowing LLMs to query and analyze iMessage conversations. It includes robust phone number validation, attachment processing, contact management, group chat handling, and full support for sending and receiving messages.",
       "developer": "carterlasalle",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mac-messages-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "carterlasalle/mac_messages_mcp"
     },
     {
       "source": "https://github.com/abel9851/mcp-server-mariadb",
@@ -3731,25 +1231,8 @@
       "description": "MariaDB database integration with configurable access controls in Python.",
       "developer": "abel9851",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/PATH/TO/uv",
-          "args": [
-            "--directory",
-            "/YOUR/SOURCE/PATH/mcp-server-mariadb/src/mcp_server_mariadb",
-            "run",
-            "server.py"
-          ],
-          "env": {
-            "MARIADB_HOST": "127.0.0.1",
-            "MARIADB_USER": "USER",
-            "MARIADB_PASSWORD": "PASSWORD",
-            "MARIADB_DATABASE": "DATABASE",
-            "MARIADB_PORT": "3306"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "abel9851/mcp-server-mariadb"
     },
     {
       "source": "https://github.com/tesla0225/mcp-create",
@@ -3757,18 +1240,8 @@
       "description": "A dynamic MCP server management service that creates, runs, and manages Model Context Protocol servers on-the-fly.",
       "developer": "tesla0225",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp-create"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "tesla0225/mcp-create"
     },
     {
       "source": "https://github.com/anaisbetts/mcp-installer",
@@ -3776,15 +1249,8 @@
       "description": "This server is a server that installs other MCP servers for you.",
       "developer": "anaisbetts",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@anaisbetts/mcp-installer"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "anaisbetts/mcp-installer"
     },
     {
       "source": "https://github.com/nkapila6/mcp-local-rag",
@@ -3792,27 +1258,8 @@
       "description": "\"primitive\" RAG-like web search model context protocol (MCP) server that runs locally using Google's MediaPipe Text Embedder and DuckDuckGo Search. ✨ no APIs required ✨.",
       "developer": "nkapila6",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "--python=3.10",
-            "--from",
-            "git+https://github.com/nkapila6/mcp-local-rag",
-            "mcp-local-rag"
-          ]
-        },
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "<path where this folder is located>/mcp-local-rag/",
-            "run",
-            "src/mcp_local_rag/main.py"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "nkapila6/mcp-local-rag"
     },
     {
       "source": "https://github.com/sparfenyuk/mcp-proxy",
@@ -3820,18 +1267,8 @@
       "description": "Connect to MCP servers that run on SSE transport, or expose stdio servers as an SSE server.",
       "developer": "sparfenyuk",
       "is_official": false,
-      "configs": [
-        {
-          "command": "mcp-proxy",
-          "args": [
-            "http://example.io/sse"
-          ],
-          "env": {
-            "API_ACCESS_TOKEN": "access-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "sparfenyuk/mcp-proxy"
     },
     {
       "source": "https://github.com/JexinSam/mssql_mcp_server",
@@ -3839,25 +1276,8 @@
       "description": "MCP Server for MSSQL database in Python",
       "developer": "JexinSam",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/mssql_mcp_server",
-            "run",
-            "mssql_mcp_server"
-          ],
-          "env": {
-            "MSSQL_DRIVER": "mssql_driver",
-            "MSSQL_HOST": "localhost",
-            "MSSQL_USER": "your_username",
-            "MSSQL_PASSWORD": "your_password",
-            "MSSQL_DATABASE": "your_database"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "JexinSam/mssql_mcp_server"
     },
     {
       "source": "https://github.com/amornpan/py-mcp-mssql",
@@ -3865,22 +1285,8 @@
       "description": "A read-only Python implementation for MSSQL database access with enhanced security features, configurable access controls, and schema inspection capabilities. Focuses on safe database interaction through Python ecosystem.",
       "developer": "amornpan",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "server.py"
-          ],
-          "env": {
-            "MSSQL_SERVER": "your_server",
-            "MSSQL_DATABASE": "your_database",
-            "MSSQL_USER": "your_username",
-            "MSSQL_PASSWORD": "your_password",
-            "MSSQL_DRIVER": "{ODBC Driver 17 for SQL Server}"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "amornpan/py-mcp-mssql"
     },
     {
       "source": "https://github.com/YuChenSSR/mindmap-mcp-server",
@@ -3888,52 +1294,8 @@
       "description": "A server that generates mindmaps from input containing markdown code.",
       "developer": "YuChenSSR",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mindmap-mcp-server",
-            "--return-type",
-            "html"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "mindmap-mcp-server",
-            "--return-type",
-            "filePath"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "/path/to/your/mindmap_mcp_server/server.py",
-            "--return-type",
-            "html"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "/path/to/your/mindmap_mcp_server/server.py",
-            "--return-type",
-            "filePath"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "-v",
-            "/path/to/output/folder:/output",
-            "ychen94/mindmap-converter-mcp:latest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "YuChenSSR/mindmap-mcp-server"
     },
     {
       "source": "https://github.com/kiliczsh/mcp-mongo-server",
@@ -3941,24 +1303,8 @@
       "description": "A Model Context Protocol Server for MongoDB.",
       "developer": "kiliczsh",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "~/mcp-mongo-server/build/index.js",
-            "mongodb://muhammed:kilic@mongodb.localhost/namespace"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-mongo-server",
-            "mongodb://muhammed:kilic@mongodb.localhost/sample_namespace"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "kiliczsh/mcp-mongo-server"
     },
     {
       "source": "https://github.com/furey/mongodb-lens",
@@ -3966,46 +1312,8 @@
       "description": "Full Featured MCP Server for MongoDB Databases.",
       "developer": "furey",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "--network=host",
-            "--pull=always",
-            "furey/mongodb-lens",
-            "mongodb://your-connection-string"
-          ]
-        },
-        {
-          "command": "/path/to/node",
-          "args": [
-            "/path/to/mongodb-lens.js",
-            "mongodb://your-connection-string"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "--network=host",
-            "mongodb-lens",
-            "mongodb://your-connection-string"
-          ]
-        },
-        {
-          "command": "/path/to/npx",
-          "args": [
-            "-y",
-            "mongodb-lens@latest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "furey/mongodb-lens"
     },
     {
       "source": "https://github.com/yanmxa/multicluster-mcp-server",
@@ -4013,12 +1321,8 @@
       "description": "The gateway for GenAI systems to interact with multiple Kubernetes clusters.",
       "developer": "yanmxa",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/path/to/multicluster-mcp-server/build/index.js"
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "yanmxa/multicluster-mcp-server"
     },
     {
       "source": "https://github.com/benborla/mcp-server-mysql",
@@ -4026,47 +1330,8 @@
       "description": "MySQL database integration in NodeJS with configurable access controls and schema inspection",
       "developer": "benborla",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@benborla29/mcp-server-mysql"
-          ],
-          "env": {
-            "MYSQL_HOST": "127.0.0.1",
-            "MYSQL_PORT": "3306",
-            "MYSQL_USER": "root",
-            "MYSQL_PASS": "",
-            "MYSQL_DB": "db_name"
-          }
-        },
-        {
-          "command": "/path/to/npx/binary/npx",
-          "args": [
-            "-y",
-            "@benborla29/mcp-server-mysql"
-          ],
-          "env": {
-            "MYSQL_HOST": "127.0.0.1",
-            "MYSQL_PORT": "3306",
-            "MYSQL_USER": "root",
-            "MYSQL_PASS": "",
-            "MYSQL_DB": "db_name",
-            "PATH": "/path/to/node/bin:/usr/bin:/bin",
-            "MYSQL_POOL_SIZE": "10",
-            "MYSQL_QUERY_TIMEOUT": "30000",
-            "MYSQL_CACHE_TTL": "60000",
-            "MYSQL_RATE_LIMIT": "100",
-            "MYSQL_MAX_QUERY_COMPLEXITY": "1000",
-            "MYSQL_SSL": "true",
-            "MYSQL_ENABLE_LOGGING": "true",
-            "MYSQL_LOG_LEVEL": "info",
-            "MYSQL_METRICS_ENABLED": "true"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "benborla/mcp-server-mysql"
     },
     {
       "source": "https://github.com/designcomputer/mysql_mcp_server",
@@ -4074,25 +1339,8 @@
       "description": "MySQL database integration in Python with configurable access controls and schema inspection",
       "developer": "designcomputer",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/mysql_mcp_server",
-            "run",
-            "mysql_mcp_server"
-          ],
-          "env": {
-            "MYSQL_HOST": "localhost",
-            "MYSQL_PORT": "3306",
-            "MYSQL_USER": "your_username",
-            "MYSQL_PASSWORD": "your_password",
-            "MYSQL_DATABASE": "your_database"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "designcomputer/mysql_mcp_server"
     },
     {
       "source": "https://github.com/ProgramComputer/NASA-MCP-server",
@@ -4100,19 +1348,8 @@
       "description": "Access to a unified gateway of NASA's data sources including but not limited to APOD, NEO, EPIC, GIBS.",
       "developer": "ProgramComputer",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@programcomputer/nasa-mcp-server"
-          ],
-          "env": {
-            "NASA_API_KEY": "your-api-key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ProgramComputer/NASA-MCP-server"
     },
     {
       "source": "https://github.com/r-huijts/ns-mcp-server",
@@ -4120,28 +1357,8 @@
       "description": "Access Dutch Railways (NS) real-time train travel information and disruptions through the official NS API.",
       "developer": "r-huijts",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "ns-mcp-server"
-          ],
-          "env": {
-            "NS_API_KEY": "your_api_key_here"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "/path/to/ns-server/build/index.js"
-          ],
-          "env": {
-            "NS_API_KEY": "your_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "r-huijts/ns-mcp-server"
     },
     {
       "source": "https://github.com/da-okazaki/mcp-neo4j-server",
@@ -4149,20 +1366,8 @@
       "description": "A community built server that interacts with Neo4j Graph Database.",
       "developer": "da-okazaki",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@alanse/mcp-neo4j-server"
-          ],
-          "env": {
-            "NEO4J_URI": "bolt://localhost:7687",
-            "NEO4J_USERNAME": "neo4j",
-            "NEO4J_PASSWORD": "your-password"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "da-okazaki/mcp-neo4j-server"
     },
     {
       "source": "https://github.com/bigcodegen/mcp-neovim-server",
@@ -4170,20 +1375,8 @@
       "description": "An MCP Server for your Neovim session.",
       "developer": "bigcodegen",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-neovim-server"
-          ],
-          "env": {
-            "ALLOW_SHELL_COMMANDS": "true",
-            "NVIM_SOCKET_PATH": "/tmp/nvim"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "bigcodegen/mcp-neovim-server"
     },
     {
       "source": "https://github.com/suekou/mcp-notion-server",
@@ -4191,28 +1384,8 @@
       "description": "Interact with Notion API.",
       "developer": "suekou",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@suekou/mcp-notion-server"
-          ],
-          "env": {
-            "NOTION_API_TOKEN": "your-integration-token"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "your-built-file-path"
-          ],
-          "env": {
-            "NOTION_API_TOKEN": "your-integration-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "suekou/mcp-notion-server"
     },
     {
       "source": "https://github.com/v-3/notion-server",
@@ -4220,18 +1393,8 @@
       "description": "3) - Notion MCP integration. Search, Read, Update, and Create pages through Claude chat.",
       "developer": "v-3",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/absolute/path/to/notion-server/build/index.js"
-          ],
-          "env": {
-            "NOTION_API_KEY": "your_notion_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "v-3/notion-server"
     },
     {
       "source": "https://github.com/teddyzxcv/ntfy-mcp",
@@ -4239,21 +1402,8 @@
       "description": "The MCP server that keeps you informed by sending the notification on phone using ntfy",
       "developer": "teddyzxcv",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/ntfy-mcp/build/index.js"
-          ],
-          "env": {
-            "NTFY_TOPIC": "<your topic name>"
-          },
-          "autoApprove": [
-            "notify_user"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "teddyzxcv/ntfy-mcp"
     },
     {
       "source": "https://github.com/StevenStavrakis/obsidian-mcp",
@@ -4261,26 +1411,8 @@
       "description": "(by Steven Stavrakis) An MCP server for Obsidian.md with tools for searching, reading, writing, and organizing notes.",
       "developer": "StevenStavrakis",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "obsidian-mcp",
-            "/path/to/your/vault",
-            "/path/to/your/vault2"
-          ]
-        },
-        {
-          "command": "node",
-          "args": [
-            "<absolute-path-to-obsidian-mcp>/build/main.js",
-            "/path/to/your/vault",
-            "/path/to/your/vault2"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "StevenStavrakis/obsidian-mcp"
     },
     {
       "source": "https://github.com/yuanoOo/oceanbase_mcp_server",
@@ -4288,25 +1420,8 @@
       "description": "(by yuanoOo) A Model Context Protocol (MCP) server that enables secure interaction with OceanBase databases.",
       "developer": "yuanoOo",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/oceanbase_mcp_server",
-            "run",
-            "oceanbase_mcp_server"
-          ],
-          "env": {
-            "OB_HOST": "localhost",
-            "OB_PORT": "2881",
-            "OB_USER": "your_username",
-            "OB_PASSWORD": "your_password",
-            "OB_DATABASE": "your_database"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "yuanoOo/oceanbase_mcp_server"
     },
     {
       "source": "https://github.com/kapilduraphe/okta-mcp-server",
@@ -4314,19 +1429,8 @@
       "description": "Interact with Okta API.",
       "developer": "kapilduraphe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "PATH_TO_PROJECT_DIRECTORY/dist/index.js"
-          ],
-          "env": {
-            "OKTA_ORG_URL": "https://your-domain.okta.com",
-            "OKTA_API_TOKEN": "your-api-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "kapilduraphe/okta-mcp-server"
     },
     {
       "source": "https://github.com/ConechoAI/openai-websearch-mcp",
@@ -4334,28 +1438,8 @@
       "description": "This is a Python-based MCP server that provides OpenAI `web_search` build-in tool.",
       "developer": "ConechoAI",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "openai-websearch-mcp"
-          ],
-          "env": {
-            "OPENAI_API_KEY": "your-api-key-here"
-          }
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "openai_websearch_mcp"
-          ],
-          "env": {
-            "OPENAI_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ConechoAI/openai-websearch-mcp"
     },
     {
       "source": "https://github.com/baryhuang/mcp-server-any-openapi",
@@ -4363,50 +1447,8 @@
       "description": "Interact with large [OpenAPI](https://www.openapis.org/) docs using built-in semantic search for endpoints. Allows for customizing the MCP server prefix.",
       "developer": "baryhuang",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "OPENAPI_JSON_DOCS_URL=https://api.finance.com/openapi.json",
-            "-e",
-            "MCP_API_PREFIX=finance",
-            "buryhuang/mcp-server-any-openapi:latest"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "OPENAPI_JSON_DOCS_URL=https://api.finance.com/openapi.json",
-            "-e",
-            "API_REQUEST_BASE_URL=https://api.finance.staging.com",
-            "-e",
-            "MCP_API_PREFIX=finance",
-            "buryhuang/mcp-server-any-openapi:latest"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "OPENAPI_JSON_DOCS_URL=https://api.example.com/openapi.json",
-            "-e",
-            "MCP_API_PREFIX=finance",
-            "buryhuang/mcp-server-any-openapi:latest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "baryhuang/mcp-server-any-openapi"
     },
     {
       "source": "https://github.com/hannesj/mcp-openapi-schema",
@@ -4414,17 +1456,8 @@
       "description": "Allow LLMs to explore large [OpenAPI](https://www.openapis.org/) schemas without bloating the context.",
       "developer": "hannesj",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-openapi-schema",
-            "/ABSOLUTE/PATH/TO/openapi.yaml"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "hannesj/mcp-openapi-schema"
     },
     {
       "source": "https://github.com/Spathodea-Network/opencti-mcp",
@@ -4432,19 +1465,8 @@
       "description": "Interact with OpenCTI platform to retrieve threat intelligence data including reports, indicators, malware and threat actors.",
       "developer": "Spathodea-Network",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "path/to/opencti-server/build/index.js"
-          ],
-          "env": {
-            "OPENCTI_URL": "${OPENCTI_URL}",
-            "OPENCTI_TOKEN": "${OPENCTI_TOKEN}"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Spathodea-Network/opencti-mcp"
     },
     {
       "source": "https://github.com/asusevski/opendota-mcp-server",
@@ -4452,18 +1474,8 @@
       "description": "Interact with OpenDota API to retrieve Dota 2 match data, player statistics, and more.",
       "developer": "asusevski",
       "is_official": false,
-      "configs": [
-        {
-          "command": "wsl.exe",
-          "args": [
-            "--",
-            "bash",
-            "-c",
-            "cd ~/opendota-mcp-server && source .venv/bin/activate && python src/opendota_server/server.py"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "asusevski/opendota-mcp-server"
     },
     {
       "source": "https://github.com/shanejonas/openrpc-mpc-server",
@@ -4471,16 +1483,8 @@
       "description": "Interact with and discover JSON-RPC APIs via [OpenRPC](https://open-rpc.org).",
       "developer": "shanejonas",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "openrpc-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "shanejonas/openrpc-mpc-server"
     },
     {
       "source": "https://github.com/open-strategy-partners/osp_marketing_tools",
@@ -4488,17 +1492,8 @@
       "description": "Content editing codes, value map, and positioning tools for product marketing.",
       "developer": "open-strategy-partners",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "--from",
-            "git+https://github.com/open-strategy-partners/osp_marketing_tools@main",
-            "osp_marketing_tools"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "open-strategy-partners/osp_marketing_tools"
     },
     {
       "source": "https://github.com/sirmews/mcp-pinecone",
@@ -4506,28 +1501,8 @@
       "description": "MCP server for searching and uploading records to Pinecone. Allows for simple RAG features, leveraging Pinecone's Inference API.",
       "developer": "sirmews",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "{project_dir}",
-            "run",
-            "mcp-pinecone"
-          ]
-        },
-        {
-          "command": "uvx",
-          "args": [
-            "--index-name",
-            "{your-index-name}",
-            "--api-key",
-            "{your-secret-api-key}",
-            "mcp-pinecone"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "sirmews/mcp-pinecone"
     },
     {
       "source": "https://github.com/felores/placid-mcp-server",
@@ -4535,27 +1510,8 @@
       "description": "Generate image and video creatives using Placid.app templates",
       "developer": "felores",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@felores/placid-mcp-server"
-          ],
-          "env": {
-            "PLACID_API_TOKEN": "your-api-token"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/placid-mcp-server/build/index.js"
-          ],
-          "env": {
-            "PLACID_API_TOKEN": "your-api-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "felores/placid-mcp-server"
     },
     {
       "source": "https://github.com/executeautomation/mcp-playwright",
@@ -4563,16 +1519,8 @@
       "description": "This MCP Server will help you run browser automation and webscraping using Playwright",
       "developer": "executeautomation",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@executeautomation/playwright-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "executeautomation/mcp-playwright"
     },
     {
       "source": "https://github.com/shannonlal/mcp-postman",
@@ -4580,15 +1528,8 @@
       "description": "MCP server for running Postman Collections locally via Newman. Allows for simple execution of Postman Server and returns the results of whether the collection passed all the tests.",
       "developer": "shannonlal",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/absolute/path/to/mcp-postman/build/index.js"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "shannonlal/mcp-postman"
     },
     {
       "source": "https://github.com/kenjihikmatullah/productboard-mcp",
@@ -4596,19 +1537,8 @@
       "description": "Integrate the Productboard API into agentic workflows via MCP.",
       "developer": "kenjihikmatullah",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "productboard-mcp"
-          ],
-          "env": {
-            "PRODUCTBOARD_ACCESS_TOKEN": "<YOUR_TOKEN>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "kenjihikmatullah/productboard-mcp"
     },
     {
       "source": "https://github.com/pab1it0/prometheus-mcp-server",
@@ -4616,43 +1546,8 @@
       "description": "Query and analyze Prometheus - open-source monitoring system.",
       "developer": "pab1it0",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "<full path to prometheus-mcp-server directory>",
-            "run",
-            "src/prometheus_mcp_server/main.py"
-          ],
-          "env": {
-            "PROMETHEUS_URL": "http://your-prometheus-server:9090",
-            "PROMETHEUS_USERNAME": "your_username",
-            "PROMETHEUS_PASSWORD": "your_password"
-          }
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "-e",
-            "PROMETHEUS_URL",
-            "-e",
-            "PROMETHEUS_USERNAME",
-            "-e",
-            "PROMETHEUS_PASSWORD",
-            "prometheus-mcp-server"
-          ],
-          "env": {
-            "PROMETHEUS_URL": "http://your-prometheus-server:9090",
-            "PROMETHEUS_USERNAME": "your_username",
-            "PROMETHEUS_PASSWORD": "your_password"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "pab1it0/prometheus-mcp-server"
     },
     {
       "source": "https://github.com/ashiknesin/pushover-mcp",
@@ -4660,33 +1555,8 @@
       "description": "Send instant notifications to your devices using [Pushover.net](https://pushover.net/)",
       "developer": "ashiknesin",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "pushover-mcp@latest",
-            "start",
-            "--token",
-            "YOUR_TOKEN",
-            "--user",
-            "YOUR_USER"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "pushover-mcp@latest",
-            "start",
-            "--token",
-            "YOUR_TOKEN",
-            "--user",
-            "YOUR_USER"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ashiknesin/pushover-mcp"
     },
     {
       "source": "https://github.com/jjsantos01/qgis_mcp",
@@ -4694,18 +1564,8 @@
       "description": "connects QGIS to Claude AI through the MCP. This integration enables prompt-assisted project creation, layer loading, code execution, and more.",
       "developer": "jjsantos01",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/ABSOLUTE/PATH/TO/PARENT/REPO/FOLDER/qgis_mcp/src/qgis_mcp",
-            "run",
-            "qgis_mcp_server.py"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "jjsantos01/qgis_mcp"
     },
     {
       "source": "https://github.com/GongRzhe/Quickchart-MCP-Server",
@@ -4713,22 +1573,8 @@
       "description": "A Model Context Protocol server for generating charts using QuickChart.io",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/quickchart-server/build/index.js"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@gongrzhe/quickchart-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/Quickchart-MCP-Server"
     },
     {
       "source": "https://github.com/66julienmartin/MCP-server-Qwen_Max",
@@ -4736,18 +1582,8 @@
       "description": "A Model Context Protocol (MCP) server implementation for the Qwen models.",
       "developer": "66julienmartin",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/path/to/Qwen_Max/build/index.js"
-          ],
-          "env": {
-            "DASHSCOPE_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "66julienmartin/MCP-server-Qwen_Max"
     },
     {
       "source": "https://github.com/GongRzhe/REDIS-MCP-Server",
@@ -4755,33 +1591,8 @@
       "description": "Redis database operations and caching microservice server with support for key-value operations, expiration management, and pattern-based key listing.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@gongrzhe/server-redis-mcp@1.0.0",
-            "redis://localhost:6379"
-          ]
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/build/index.js",
-            "redis://10.1.210.223:6379"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "mcp/redis",
-            "redis://host.docker.internal:6379"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/REDIS-MCP-Server"
     },
     {
       "source": "https://github.com/skydeckai/mcp-server-rememberizer",
@@ -4789,18 +1600,8 @@
       "description": "An MCP server designed for interacting with the Rememberizer data source, facilitating enhanced knowledge retrieval.",
       "developer": "skydeckai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-server-rememberizer"
-          ],
-          "env": {
-            "REMEMBERIZER_API_TOKEN": "your_rememberizer_api_token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "skydeckai/mcp-server-rememberizer"
     },
     {
       "source": "https://github.com/deepfates/mcp-replicate",
@@ -4808,21 +1609,8 @@
       "description": "Search, run and manage machine learning models on Replicate through a simple tool-based interface. Browse models, create predictions, track their status, and handle generated images.",
       "developer": "deepfates",
       "is_official": false,
-      "configs": [
-        {
-          "command": "mcp-replicate",
-          "env": {
-            "REPLICATE_API_TOKEN": "your_token_here"
-          }
-        },
-        {
-          "command": "mcp-replicate",
-          "env": {
-            "REPLICATE_API_TOKEN": "your_token_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "deepfates/mcp-replicate"
     },
     {
       "source": "https://github.com/xxxbrian/mcp-rquest",
@@ -4830,29 +1618,8 @@
       "description": "An MCP server providing realistic browser-like HTTP request capabilities with accurate TLS/JA3/JA4 fingerprints for bypassing anti-bot measures.",
       "developer": "xxxbrian",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcp-rquest"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_rquest"
-          ]
-        },
-        {
-          "command": "pipx",
-          "args": [
-            "run",
-            "mcp-rquest"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "xxxbrian/mcp-rquest"
     },
     {
       "source": "https://github.com/r-huijts/rijksmuseum-mcp",
@@ -4860,19 +1627,8 @@
       "description": "Interface with the Rijksmuseum API to search artworks, retrieve artwork details, access image tiles, and explore user collections.",
       "developer": "r-huijts",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "mcp-server-rijksmuseum"
-          ],
-          "env": {
-            "RIJKSMUSEUM_API_KEY": "your_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "r-huijts/rijksmuseum-mcp"
     },
     {
       "source": "https://github.com/cyberchitta/scrapling-fetch-mcp",
@@ -4880,15 +1636,8 @@
       "description": "Access text content from bot-protected websites. Fetches HTML/markdown from sites with anti-automation measures using Scrapling.",
       "developer": "cyberchitta",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "scrapling-fetch-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "cyberchitta/scrapling-fetch-mcp"
     },
     {
       "source": "https://github.com/ihor-sokoliuk/mcp-searxng",
@@ -4896,23 +1645,8 @@
       "description": "A Model Context Protocol Server for [SearXNG](https://docs.searxng.org)",
       "developer": "ihor-sokoliuk",
       "is_official": false,
-      "configs": [
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "-i",
-            "--rm",
-            "-e",
-            "SEARXNG_URL",
-            "mcp-server-searxng:latest"
-          ],
-          "env": {
-            "SEARXNG_URL": "YOUR_SEARXNG_INSTANCE_URL"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ihor-sokoliuk/mcp-searxng"
     },
     {
       "source": "https://github.com/osomai/servicenow-mcp",
@@ -4920,22 +1654,8 @@
       "description": "A MCP server to interact with a ServiceNow instance",
       "developer": "osomai",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/Users/yourusername/dev/servicenow-mcp/.venv/bin/python",
-          "args": [
-            "-m",
-            "servicenow_mcp.cli"
-          ],
-          "env": {
-            "SERVICENOW_INSTANCE_URL": "https://your-instance.service-now.com",
-            "SERVICENOW_USERNAME": "your-username",
-            "SERVICENOW_PASSWORD": "your-password",
-            "SERVICENOW_AUTH_TYPE": "basic"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "osomai/servicenow-mcp"
     },
     {
       "source": "https://github.com/Laksh-star/mcp-server-tmdb",
@@ -4943,15 +1663,8 @@
       "description": "This MCP server integrates with The Movie Database (TMDB) API to provide movie information, search capabilities, and recommendations.",
       "developer": "Laksh-star",
       "is_official": false,
-      "configs": [
-        {
-          "command": "/full/path/to/dist/index.js",
-          "env": {
-            "TMDB_API_KEY": "your_api_key_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "Laksh-star/mcp-server-tmdb"
     },
     {
       "source": "https://github.com/RamXX/mcp-tavily",
@@ -4959,16 +1672,8 @@
       "description": "An MCP server for Tavily's search & news API, with explicit site inclusions/exclusions",
       "developer": "RamXX",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcp_server_tavily"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "RamXX/mcp-tavily"
     },
     {
       "source": "https://github.com/GongRzhe/terminal-controller-mcp",
@@ -4976,22 +1681,8 @@
       "description": "A MCP server that enables secure terminal command execution, directory navigation, and file system operations through a standardized interface.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "terminal_controller"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "terminal_controller"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/terminal-controller-mcp"
     },
     {
       "source": "https://github.com/delorenj/mcp-server-ticketmaster",
@@ -4999,19 +1690,8 @@
       "description": "Search for events, venues, and attractions through the Ticketmaster Discovery API",
       "developer": "delorenj",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@delorenj/mcp-server-ticketmaster"
-          ],
-          "env": {
-            "TICKETMASTER_API_KEY": "your-api-key-here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "delorenj/mcp-server-ticketmaster"
     },
     {
       "source": "https://github.com/abhiz123/todoist-mcp-server",
@@ -5019,19 +1699,8 @@
       "description": "Interact with Todoist to manage your tasks.",
       "developer": "abhiz123",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@abhiz123/todoist-mcp-server"
-          ],
-          "env": {
-            "TODOIST_API_TOKEN": "your_api_token_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "abhiz123/todoist-mcp-server"
     },
     {
       "source": "https://github.com/suhail-ak-s/mcp-typesense-server",
@@ -5039,38 +1708,8 @@
       "description": "A Model Context Protocol (MCP) server implementation that provides AI models with access to Typesense search capabilities. This server enables LLMs to discover, search, and analyze data stored in Typesense collections.",
       "developer": "suhail-ak-s",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "~/typesense-mcp-server/dist/index.js",
-            "--host",
-            "your-typesense-host",
-            "--port",
-            "8108",
-            "--protocol",
-            "http",
-            "--api-key",
-            "your-api-key"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "typesense-mcp-server",
-            "--host",
-            "your-typesense-host",
-            "--port",
-            "8108",
-            "--protocol",
-            "http",
-            "--api-key",
-            "your-api-key"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "suhail-ak-s/mcp-typesense-server"
     },
     {
       "source": "https://github.com/GongRzhe/TRAVEL-PLANNER-MCP-Server",
@@ -5078,27 +1717,8 @@
       "description": "Travel planning and itinerary management server integrating with Google Maps API for location search, place details, and route calculations.",
       "developer": "GongRzhe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "@gongrzhe/server-travelplanner-mcp"
-          ],
-          "env": {
-            "GOOGLE_MAPS_API_KEY": "your_google_maps_api_key"
-          }
-        },
-        {
-          "command": "node",
-          "args": [
-            "path/to/dist/index.js"
-          ],
-          "env": {
-            "GOOGLE_MAPS_API_KEY": "your_google_maps_api_key"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "GongRzhe/TRAVEL-PLANNER-MCP-Server"
     },
     {
       "source": "https://github.com/ognis1205/mcp-server-unitycatalog",
@@ -5106,39 +1726,8 @@
       "description": "An MCP server that enables LLMs to interact with Unity Catalog AI, supporting CRUD operations on Unity Catalog Functions and executing them as MCP tools.",
       "developer": "ognis1205",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/<path to your local git repository>/mcp-server-unitycatalog",
-            "run",
-            "mcp-server-unitycatalog",
-            "--uc_server",
-            "<your unity catalog url>",
-            "--uc_catalog",
-            "<your catalog name>",
-            "--uc_schema",
-            "<your schema name>"
-          ]
-        },
-        {
-          "command": "docker",
-          "args": [
-            "run",
-            "--rm",
-            "-i",
-            "mcp/unitycatalog",
-            "--uc_server",
-            "<your unity catalog url>",
-            "--uc_catalog",
-            "<your catalog name>",
-            "--uc_schema",
-            "<your schema name>"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ognis1205/mcp-server-unitycatalog"
     },
     {
       "source": "https://github.com/CoderGamester/mcp-unity",
@@ -5146,18 +1735,8 @@
       "description": "An MCP server that enables LLMs to interact with Unity3d Game Engine, supporting access to a variety of the Unit's Editor engine tools (e.g. Console Logs, Test Runner logs, Editor functions, hierarchy state, etc) and executing them as MCP tools or gather them as resources.",
       "developer": "CoderGamester",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "ABSOLUTE/PATH/TO/mcp-unity/Server/build/index.js"
-          ],
-          "env": {
-            "UNITY_PORT": "8090"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "CoderGamester/mcp-unity"
     },
     {
       "source": "https://github.com/mfukushim/map-traveler-mcp",
@@ -5165,49 +1744,8 @@
       "description": "Integrates Google Map, Google Street View, PixAI, Stability.ai, ComfyUI API and Bluesky to provide a virtual location simulation in LLM (written in Effect.ts)",
       "developer": "mfukushim",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@mfukushim/map-traveler-mcp"
-          ],
-          "env": {
-            "GoogleMapApi_key": "(Google Map API key)",
-            "mapApi_url": "(Optional: Map API custom endpoint. Example: direction=https://xxxx,places=https://yyyy )",
-            "time_scale": "(Optional:Scale of travel time on real roads duration. default 4)",
-            "sqlite_path": "(db save path: e.g. %USERPROFILE%/Desktop/traveler.sqlite ,$HOME/traveler.sqlite )",
-            "rembg_path": "(absolute path of the installed rembg cli)",
-            "remBgUrl": "(rembg API URL)",
-            "pixAi_key": "(pixAi API key)",
-            "sd_key": "(or Stability.ai image generation API key",
-            "pixAi_modelId": "(Optional: pixAi ModelId, if not set use default model 1648918127446573124 ",
-            "comfy_url": "(Option: Generate image using ComfyUI API at specified URL. Example: http://192.168.1.100:8188)",
-            "comfy_workflow_t2i": "(Optional: Path to API workflow file when using text to image with ComfyUI. If not specified: assets/comfy/t2i_sample.json)",
-            "comfy_workflow_i2i": "(Optional: Path of API workflow file when image to image in ComfyUI. If not specified: assets/comfy/i2i_sample.json)",
-            "comfy_params": "(Optional: Variable values to send to the workflow via comfyUI API)",
-            "fixed_model_prompt": "(Optional: Fixed avatar generation prompt. You will no longer be able to change your avatar during conversations.)",
-            "bodyAreaRatio": "(Optional: Acceptable avatar image area ratio. default 0.042)",
-            "bodyHWRatio": "(Optional: Acceptable avatar image aspect ratios. default 1.5~2.3)",
-            "bodyWindowRatioW": "(Optional: Avatar composite window horizontal ratio. default 0.5)",
-            "bodyWindowRatioH": "(Optional: Avatar composite window aspect ratio. default 0.75)",
-            "bs_id": "(Bluesky sns registration address)",
-            "bs_pass": "(bluesky sns password)",
-            "bs_handle": "(bluesky sns handle name: e.g. xxxxxxxx.bsky.social )",
-            "filter_tools": "(Optional: Directly filter the tools to be used. All are available if not specified. e.g. tips,set_traveler_location)",
-            "moveMode": "(Option: Specify whether the movement mode is realtime or skip. default realtime)",
-            "image_width": "(Option: Output image width (pixels) Default is 512)"
-          }
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@mfukushim/map-traveler-mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "mfukushim/map-traveler-mcp"
     },
     {
       "source": "https://github.com/dinghuazhou/sample-mcp-server-tos",
@@ -5215,18 +1753,8 @@
       "description": "A sample MCP server for VolcEngine TOS that flexibly get objects from TOS.",
       "developer": "dinghuazhou",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/Users/user/generative_ai/model_context_protocol/tos-mcp-server",
-            "run",
-            "tos-mcp-server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "dinghuazhou/sample-mcp-server-tos"
     },
     {
       "source": "https://github.com/kapilduraphe/webflow-mcp-server",
@@ -5234,18 +1762,8 @@
       "description": "Interfact with the Webflow APIs",
       "developer": "kapilduraphe",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/ABSOLUTE/PATH/TO/YOUR/build/index.js"
-          ],
-          "env": {
-            "WEBFLOW_API_TOKEN": "your-api-token"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "kapilduraphe/webflow-mcp-server"
     },
     {
       "source": "https://github.com/SimonB97/win-cli-mcp-server",
@@ -5253,25 +1771,8 @@
       "description": "MCP server for secure command-line interactions on Windows systems, enabling controlled access to PowerShell, CMD, and Git Bash shells.",
       "developer": "SimonB97",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@simonb97/server-win-cli"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@simonb97/server-win-cli",
-            "--config",
-            "path/to/your/config.json"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "SimonB97/win-cli-mcp-server"
     },
     {
       "source": "https://github.com/anshumax/world_bank_mcp_server",
@@ -5279,18 +1780,8 @@
       "description": "A server that fetches data indicators available with the World Bank as part of their data API",
       "developer": "anshumax",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "path/to/world_bank_mcp_server",
-            "run",
-            "world_bank_mcp_server"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "anshumax/world_bank_mcp_server"
     },
     {
       "source": "https://github.com/EnesCinr/twitter-mcp",
@@ -5298,22 +1789,8 @@
       "description": "Interact with twitter API. Post tweets and search for tweets by query.",
       "developer": "EnesCinr",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@enescinar/twitter-mcp"
-          ],
-          "env": {
-            "API_KEY": "your_api_key_here",
-            "API_SECRET_KEY": "your_api_secret_key_here",
-            "ACCESS_TOKEN": "your_access_token_here",
-            "ACCESS_TOKEN_SECRET": "your_access_token_secret_here"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "EnesCinr/twitter-mcp"
     },
     {
       "source": "https://github.com/vidhupv/x-mcp",
@@ -5321,24 +1798,8 @@
       "description": "Create, manage and publish X/Twitter posts directly through Claude chat.",
       "developer": "vidhupv",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uv",
-          "args": [
-            "--directory",
-            "/path/to/x-mcp",
-            "run",
-            "x-mcp"
-          ],
-          "env": {
-            "TWITTER_API_KEY": "your_api_key",
-            "TWITTER_API_SECRET": "your_api_secret",
-            "TWITTER_ACCESS_TOKEN": "your_access_token",
-            "TWITTER_ACCESS_TOKEN_SECRET": "your_access_token_secret"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "vidhupv/x-mcp"
     },
     {
       "source": "https://github.com/ShenghaiWang/xcodebuild",
@@ -5346,22 +1807,8 @@
       "description": "🍎 Build iOS Xcode workspace/project and feed back errors to llm.",
       "developer": "ShenghaiWang",
       "is_official": false,
-      "configs": [
-        {
-          "command": "uvx",
-          "args": [
-            "mcpxcodebuild"
-          ]
-        },
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "mcpxcodebuild"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ShenghaiWang/xcodebuild"
     },
     {
       "source": "https://github.com/XGenerationLab/xiyan_mcp_server",
@@ -5369,19 +1816,8 @@
       "description": "to-SQL LLM.",
       "developer": "XGenerationLab",
       "is_official": false,
-      "configs": [
-        {
-          "command": "python",
-          "args": [
-            "-m",
-            "xiyan_mcp_server"
-          ],
-          "env": {
-            "YML": "PATH/TO/YML"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "XGenerationLab/xiyan_mcp_server"
     },
     {
       "source": "https://github.com/apeyroux/mcp-xmind",
@@ -5389,24 +1825,8 @@
       "description": "Read and search through your XMind directory containing XMind files.",
       "developer": "apeyroux",
       "is_official": false,
-      "configs": [
-        {
-          "command": "node",
-          "args": [
-            "/Users/alex/Src/mcp-xmind/dist/index.js",
-            "/Users/alex/XMind"
-          ]
-        },
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@41px/mcp-xmind",
-            "/Users/alex/XMind"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "apeyroux/mcp-xmind"
     },
     {
       "source": "https://github.com/ZubeidHendricks/youtube-mcp-server",
@@ -5414,19 +1834,8 @@
       "description": "Comprehensive YouTube API integration for video management, Shorts creation, and analytics.",
       "developer": "ZubeidHendricks",
       "is_official": false,
-      "configs": [
-        {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@modelcontextprotocol/server-youtube"
-          ],
-          "env": {
-            "YOUTUBE_API_KEY": "<YOUR_API_KEY>"
-          }
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "ZubeidHendricks/youtube-mcp-server"
     },
     {
       "source": "https://github.com/tadata-org/fastapi_mcp",
@@ -5434,21 +1843,8 @@
       "description": "configuration tool for automatically exposing FastAPI endpoints as MCP tools by **[Tadata](https://tadata.com/)**",
       "developer": "tadata-org",
       "is_official": false,
-      "configs": [
-        {
-          "command": "mcp-proxy",
-          "args": [
-            "http://127.0.0.1:8000/mcp"
-          ]
-        },
-        {
-          "command": "/Full/Path/To/Your/Executable/mcp-proxy",
-          "args": [
-            "http://127.0.0.1:8000/mcp"
-          ]
-        }
-      ],
-      "is_hot": false
+      "is_hot": false,
+      "server_id": "tadata-org/fastapi_mcp"
     }
   ]
 }

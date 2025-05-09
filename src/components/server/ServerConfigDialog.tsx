@@ -9,9 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { ServerConfig, ServerType, SseConfig, StdioServerConfig } from "@/types";
 import capitalizeFirstLetter from "@/utils/title";
+import { useQuery } from "@tanstack/react-query";
 import { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { fetchServerConfig } from "@/lib/api";
 import { ArgsTextarea } from "./ArgsTextarea";
 import { CommandInput } from "./CommandInput";
 import { ConfigTabs } from "./ConfigTabs";
@@ -60,38 +62,47 @@ export const ServerConfigDialog = forwardRef<
 
     const { saveServerConfig } = useSaveServerConfig();
 
-    // Initialize server data
+    const { data, isLoading } = useQuery({
+      queryKey: ["configs", currentServer?.server_id],
+      queryFn: () => fetchServerConfig(currentServer?.server_id),
+      enabled: isOpen && !!currentServer,
+      staleTime: 1000 * 60 * 5,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    });
+
     useEffect(() => {
-      if (isOpen && currentServer) {
+      if (isOpen && currentServer && data && !isLoading) {
         setServerName(currentServer.name);
-        setConfigs(currentServer.configs);
+        setConfigs(data);
 
-        if (currentServer.configs?.length > 0) {
-          setConfig(currentServer.configs[0]);
+        if (data.length > 0) {
+          setConfig(data[0]);
           setCurIndex(0);
-        }
 
-        // Initialize envValues with empty strings
-        if (currentServer.configs?.[0] && "env" in currentServer.configs[0]) {
-          const stdioConfig = currentServer.configs[0] as StdioServerConfig;
-          if (stdioConfig.env) {
-            const initialEnvValues = Object.keys(
-              stdioConfig.env
-            ).reduce(
-              (acc, key) => {
-                acc[key] = "";
-                return acc;
-              },
-              {} as Record<string, string>,
-            );
-            setEnvValues(initialEnvValues);
+          // Initialize envValues
+          if ("command" in data[0]) {
+            const stdioConfig = data[0] as StdioServerConfig;
+            const env = stdioConfig.env;
+          
+            if (env && Object.keys(env).length > 0) {
+              const initialEnvValues = Object.keys(env).reduce(
+                (acc, key) => {
+                  acc[key] = "";
+                  return acc;
+                },
+                {} as Record<string, string>,
+              );
+              setEnvValues(initialEnvValues);
+            } else {
+              setEnvValues({});
+            }
           }
         }
 
-        // Clear saved draft when server changes
         clearDraft();
       }
-    }, [isOpen, currentServer?.name]);
+    }, [isOpen, currentServer, data, isLoading]);
 
     const handleArgsChange = (value: string) => {
       if (config && "command" in config) {

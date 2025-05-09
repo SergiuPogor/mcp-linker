@@ -23,11 +23,11 @@ export type ServerType = {
   description: string;
   category?: string;
   source: string;
+  server_id: string;
   is_official?: boolean;
   is_hot?: boolean;
   is_featured?: boolean;
   hasViewed?: boolean;
-  configs: ServerConfig[];
 };
 
 export interface Category {
