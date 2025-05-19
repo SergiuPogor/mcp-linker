@@ -2,6 +2,7 @@ import { HeroBanner } from "@/components/banner";
 import { ServerList } from "@/components/server/ServerList";
 import { ServerTemplateDialog } from "@/components/server/ServerTemplateDialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMcpServers } from "@/hooks/useMcpServers";
 import { ServerType } from "@/types";
 import { ChevronDown } from "lucide-react";
@@ -76,15 +77,11 @@ export default function Discovery() {
     };
   }, [data?.hasNext, isFetching]);
 
-  // Initial loading state
-  if (isLoading && allServers.length === 0) {
-    return <div className="p-8">Loading servers...</div>;
-  }
 
   const handleDialogIsSell = (isSell: boolean) => {
-    setIsSell(isSell)
-    setIsDialogOpen(true)
-  }
+    setIsSell(isSell);
+    setIsDialogOpen(true);
+  };
 
   return (
     <div className="p-8">
@@ -99,14 +96,10 @@ export default function Discovery() {
           {t("featuredServers")}
         </h2>
         <div className="flex gap-2">
-          <Button
-            onClick={() => handleDialogIsSell(false)}
-          >
+          <Button onClick={() => handleDialogIsSell(false)}>
             {t("addCustomServer")}
           </Button>
-          <Button
-            onClick={() => handleDialogIsSell(true)}
-          >
+          <Button onClick={() => handleDialogIsSell(true)}>
             {t("sellServer")}
           </Button>
         </div>
@@ -114,7 +107,21 @@ export default function Discovery() {
 
       {/* Featured servers */}
       {allServers.length === 0 ? (
-        <div className="p-8">No servers available</div>
+        <div className="p-8 text-gray-500 dark:text-gray-400">
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-6 w-1/2" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            t("noServerTip")
+          )}
+        </div>
       ) : (
         <>
           <ServerList mcpServers={allServers} />
@@ -125,12 +132,12 @@ export default function Discovery() {
               </div>
             )}
             {data?.hasNext && (
-  <div className="text-blue-600 dark:text-blue-400">
-    <button onClick={() => setPage((prev) => prev + 1)}>
-      {t("loadMore")}
-    </button>
-  </div>
-)}
+              <div className="text-blue-600 dark:text-blue-400">
+                <button onClick={() => setPage((prev) => prev + 1)}>
+                  {t("loadMore")}
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}

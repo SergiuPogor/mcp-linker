@@ -9,6 +9,7 @@ const ja: { translation: TranslationSchema } = {
     searchPlaceholder: "検索",
     sellServer: "販売サーバー",
     addCustomServer: "カスタムサーバーを追加",
+    noServerTip: "サーバーヒントなし",
     confirmDeletion: "削除の確認",
     deleteConfirmation: "{{serverKey}} を削除してもよろしいですか？",
     cancel: "キャンセル",

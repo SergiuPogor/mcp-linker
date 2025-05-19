@@ -9,6 +9,7 @@ const zh: { translation: TranslationSchema } = {
     searchPlaceholder: "搜索",
     sellServer: "出售服务器",
     addCustomServer: "添加定制的服务器",
+    noServerTip: "无服务器提示",
     confirmDeletion: "确认删除",
     deleteConfirmation: "您确定要删除{{serverKey}}吗？",
     cancel: "取消",

@@ -6,6 +6,7 @@ export interface TranslationSchema {
   searchPlaceholder: string;
   sellServer: string;
   addCustomServer: string;
+  noServerTip: string;
   confirmDeletion: string;
   deleteConfirmation: string;
   cancel: string;

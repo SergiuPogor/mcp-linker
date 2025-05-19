@@ -24,7 +24,7 @@ const dynamicPages: {
   manage: lazy(() => import("@/views/manager")),
   favs: lazy(() => import("@/views/favorites")),
   auth: lazy(() => import("@/views/AuthPage")),
-  onboarding: lazy(() => import("@/views/OnBoardingPage")),
+  dashboard: lazy(() => import("@/views/Dashboard")),
   recently: lazy(() => import("@/views/recently")),
 };
 
@@ -105,7 +105,7 @@ const MCPStore = () => {
 
             <Route path="/search" element={<ContentArea navId="search" />} />
             <Route path="/auth" element={<ContentArea navId="auth" />} />
-            <Route path="/onboarding" element={<ContentArea navId="onboarding" />} />
+            <Route path="/dashboard" element={<ContentArea navId="dashboard" />} />
             <Route path="/" element={<ContentArea navId={navs[0].id} />} />
           </Routes>
         </div>

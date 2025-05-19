@@ -9,6 +9,7 @@ const en: { translation: TranslationSchema } = {
     searchPlaceholder: "search",
     sellServer: "sell server",
     addCustomServer: "Add custom server",
+    noServerTip: "no Server Tip",
     confirmDeletion: "Confirm Deletion",
     deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
     cancel: "Cancel",
