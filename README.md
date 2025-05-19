@@ -1,27 +1,7 @@
-<p align="center">
-  <img src="public/logo.png" alt="Project Logo" width="200" />
-</p>
-
-<p align="center">
-  📘 
-  <strong>English</strong> | 
-  <a href="./docs/README.zh-CN.md">简体中文</a> | 
-  <a href="./docs/README.ja-JP.md">日本語</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/milisp/mcp-linker/stargazers">
-    ⭐ If you find this project useful, please consider giving it a star!
-  </a>
-  <br/>
-  <a href="https://github.com/milisp/mcp-linker">
-    <img src="https://img.shields.io/github/stars/milisp/mcp-linker?style=social" alt="GitHub stars"/>
-    <img src="https://img.shields.io/github/forks/milisp/mcp-linker?style=social" alt="GitHub forks"/>
-  </a>
-</p>
-
 # MCP Linker
 
+📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
+ 
 [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
@@ -29,7 +9,8 @@
 
 ## News
 
-- [2025-05-08] Support add custom server
+- 2025-05-16: online MCP servers store  
+- 2025-05-08: Support add custom server
 
 ---
 
@@ -74,8 +55,7 @@
 ✅ Cross-platform: macOS, Windows, Linux support  
 ✅ Multi-language: English, 中文, 日本語  
 ✅ Improved error handling and user-friendly setup
-
-> 🛠️ *Coming Soon:* One-click server install, status monitoring, and more!
+✅ The server install by uvx or npx base the command
 
 ## 🚀 Quick Start
 
@@ -153,7 +133,3 @@ Thanks to the following contributors for improving this project:
 
 - [@eltociear](https://github.com/eltociear) — Japanese translation
 - [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions, Github workflow, UI improved, design
-
----
-
-[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)

@@ -1,11 +1,14 @@
 // src/App.tsx
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { checkForUpdate } from "./lib/update";
 
-import CommandChecker from "@/components/CommandChecker";
+import { useDeepLinkAuth } from '@/hooks/useDeepLinkAuth';
 import "./App.css";
-import Layout from "./components/Layout";
+const Layout = lazy(() => import("./components/Layout"));
+const CommandChecker = lazy(() => import("@/components/CommandChecker"));
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,19 +21,18 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const [selectedClient, setSelectedClient] = useState<string>("claude");
-  const [selectedPath, setSelectedPath] = useState<string>("");
+  useDeepLinkAuth();
 
+  useEffect(() => {
+    checkForUpdate()
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
-        <CommandChecker />
-        <Layout
-          selectedClient={selectedClient}
-          setSelectedClient={setSelectedClient}
-          selectedPath={selectedPath}
-          setSelectedPath={setSelectedPath}
-        />
+      <Suspense fallback={<div>Loading...</div>}>
+          <CommandChecker />
+          <Layout />
+        </Suspense>
       </ThemeProvider>
     </QueryClientProvider>
   );

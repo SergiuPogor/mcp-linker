@@ -3,6 +3,11 @@ import { TranslationSchema } from "../schema";
 const ja: { translation: TranslationSchema } = {
   translation: {
     get: "取得",
+    guest: "ゲスト",
+    loadMore: "もっと見る",
+    loading: "読み込み中",
+    searchPlaceholder: "検索",
+    sellServer: "販売サーバー",
     addCustomServer: "カスタムサーバーを追加",
     confirmDeletion: "削除の確認",
     deleteConfirmation: "{{serverKey}} を削除してもよろしいですか？",
@@ -10,16 +15,18 @@ const ja: { translation: TranslationSchema } = {
     delete: "削除",
     install: "インストール",
     addTo: "追加",
+    back: "戻る",
     mcpLinker: "MCP Linker",
-    categories: {
+    nav: {
       discover: "発見",
+      category: "カテゴリ",
       arcade: "アーケード",
       create: "作成",
       work: "仕事",
       manage: "管理",
       updates: "アップデート",
       recentlyAdded: "最近追加",
-      favs: "お気に入り", // <-- 新增
+      favs: "お気に入り",
     },
     content: {
       discover: "注目のコンテンツを発見",
@@ -29,7 +36,7 @@ const ja: { translation: TranslationSchema } = {
       manage: "管理",
       updates: "サーバーの更新",
       recentlyAdded: "最近追加されたサーバー",
-      favs: "お気に入り", // <-- 新增
+      favs: "お気に入り",
     },
     featured: {
       title: "今週の注目アプリ",
@@ -42,6 +49,10 @@ const ja: { translation: TranslationSchema } = {
     selectFolder: "フォルダを選択",
     search: {
       placeholder: "名前でサーバーを検索...",
+      "items": "アイテム",
+      "results": "件",
+      "noResults": "結果なし",
+      "startSearching": "検索を開始"
     },
     serverForm: {
       command: "Command",

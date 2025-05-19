@@ -1,15 +1,12 @@
 import { ServerCard } from "@/components/recently/ServerCard";
+import { useClientPathStore } from "@/store/clientPathStore";
 import { type ServerConfig } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface Props {
-  selectedClient: string;
-  selectedPath: string;
-}
-
-export default function Recently({ selectedClient, selectedPath }: Props) {
+export default function Recently() {
+  const { selectedClient, selectedPath } = useClientPathStore();
   const [serverList, setServerList] = useState<
     { name: string; config: ServerConfig }[]
   >([]);

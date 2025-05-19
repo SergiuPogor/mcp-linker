@@ -2,46 +2,44 @@ use std::process::Command;
 
 mod uv_installer;
 
-
 #[tauri::command]
 pub fn install_command(
     package_name: String,
     package_manage: Option<String>,
 ) -> Result<String, String> {
-    println!("Starting installation of package: {}", package_name); // 添加初始日志
+    println!("Starting installation of package: {}", package_name);
     let manager = package_manage.unwrap_or("brew".to_string());
-    println!("Using package manager: {}", manager); // 显示使用的包管理器
-    
+    println!("Using package manager: {}", manager);
+
     #[cfg(target_os = "macos")]
     {
-        // Check if brew is available
-        println!("Checking if brew is installed..."); // 检查brew状态
+        println!("Checking if brew is installed...");
         let brew_exists = Command::new("which")
             .arg("brew")
             .output()
             .map(|output| output.status.success())
             .unwrap_or(false);
 
-        println!("Brew exists: {}", brew_exists); // 显示brew检查结果
+        println!("Brew exists: {}", brew_exists);
 
         if brew_exists {
-            println!("Executing brew install command..."); // 执行brew安装前
+            println!("Executing brew install command...");
             let result = Command::new("sh")
                 .args(&["-c", &format!("brew install {}", package_name)])
                 .output();
 
             match result {
                 Ok(output) => {
-                    println!("Installation command completed"); // 安装命令完成
+                    println!("Installation command completed");
                     if output.status.success() {
-                        println!("Installation successful"); // 安装成功
+                        println!("Installation successful");
                         return Ok("installed successfully".to_string());
                     } else {
-                        println!("Installation failed"); // 安装失败
+                        println!("Installation failed");
                         let stderr = String::from_utf8_lossy(&output.stderr).to_string();
                         let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-                        println!("STDERR: {}", stderr); // 显示错误输出
-                        println!("STDOUT: {}", stdout); // 显示标准输出
+                        println!("STDERR: {}", stderr);
+                        println!("STDOUT: {}", stdout);
                         if !stderr.is_empty() {
                             return Err(stderr);
                         } else if !stdout.is_empty() {
@@ -52,9 +50,9 @@ pub fn install_command(
                     }
                 }
                 Err(e) => {
-                    println!("Installation command failed to execute: {}", e); // 命令执行失败
-                    return Err(format!("Failed to execute brew install: {}", e))
-                },
+                    println!("Installation command failed to execute: {}", e);
+                    return Err(format!("Failed to execute brew install: {}", e));
+                }
             }
         }
 
@@ -71,8 +69,8 @@ pub fn install_command(
     {
         let result = Command::new("powershell")
             .args(&["-Command", &format!("winget install {}", package_name)])
-            .output().map_err(|e| e.to_string())?;
-
+            .output()
+            .map_err(|e| e.to_string())?;
 
         if result.status.success() {
             return Ok("installed successfully".to_string());

@@ -6,8 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -23,24 +21,27 @@ import { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useClientPathStore } from "@/store/clientPathStore";
+import { LabeledInput } from "../shared/LabeledInput";
 import { ArgsTextarea } from "./ArgsTextarea";
 import { CommandInput } from "./CommandInput";
 import { EnvEditor } from "./EnvEditor";
 import { HeaderEditor } from "./HeaderEditor";
-import { ServerNameInput } from "./ServerNameInput";
 
 interface ServerTemplateDialogProps {
   isOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
-  selectedClient: string;
-  selectedPath: string;
+  isSell: boolean;
 }
 
 export const ServerTemplateDialog = forwardRef<
   HTMLDivElement,
   ServerTemplateDialogProps
->(({ isOpen, setIsDialogOpen, selectedClient, selectedPath }) => {
+>(({ isOpen, setIsDialogOpen, isSell }) => {
+  const { selectedClient, selectedPath } = useClientPathStore();
   const [serverName, setServerName] = useState<string>("");
+  const [projectUrl, setProjectUrl] = useState<string>("");
+  const [projectDescription, setProjectDescription] = useState<string>("");
   const [serverType, setServerType] = useState<string>("stdio");
 
   // Create separate templates for different server types
@@ -65,7 +66,7 @@ export const ServerTemplateDialog = forwardRef<
   const [headerValues, setHeaderValues] = useState<Record<string, string>>({});
   const { t } = useTranslation();
 
-  const commands = ["uvx", "bunx", "npx", "docker"];
+  const commands = ["uvx", "bunx", "npx", "docker", "python", "node"];
 
   const exampleTemplates: Record<string, ServerConfig> = {
     "brave-search": configTemplate,
@@ -104,6 +105,24 @@ export const ServerTemplateDialog = forwardRef<
       });
     }
   }, [serverType]);
+
+  const handleSellServer = () => {
+    const payload = {
+      configs: [config],
+      categoryId: "",
+      source: projectUrl,
+      developer: "",
+      translations: [
+        {
+          language: "en",
+          name: serverName,
+          description: projectDescription,
+        },
+      ],
+    };
+
+    toast("Selling server: " + JSON.stringify(payload));
+  };
 
   const handleArgsChange = (value: string) => {
     const newArgs = value.split(" ").filter((arg) => arg !== "");
@@ -186,7 +205,25 @@ export const ServerTemplateDialog = forwardRef<
           <DialogDescription>server config</DialogDescription>
         </DialogHeader>
 
-        <ServerNameInput serverName={serverName} onChange={setServerName} />
+        <LabeledInput
+          label="Server Name"
+          value={serverName}
+          onChange={setServerName}
+        />
+        {isSell && (
+          <div>
+            <LabeledInput
+              label="Project description"
+              value={projectDescription}
+              onChange={setProjectDescription}
+            />
+            <LabeledInput
+              label="Project url"
+              value={projectUrl}
+              onChange={setProjectUrl}
+            />
+          </div>
+        )}
 
         <Select defaultValue={serverType} onValueChange={setServerType}>
           <SelectTrigger className="w-[180px]">
@@ -196,7 +233,7 @@ export const ServerTemplateDialog = forwardRef<
             <SelectGroup>
               <SelectItem value="stdio">Stdio</SelectItem>
               <SelectItem value="sse">SSE</SelectItem>
-              <SelectItem value="http">Http</SelectItem>
+              <SelectItem value="http">http</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -237,14 +274,12 @@ export const ServerTemplateDialog = forwardRef<
 
         {(serverType === "sse" || serverType === "http") && (
           <div>
-            <div className="grid gap-2">
-              <Label className="text-foreground dark:text-gray-200">Url</Label>
-              <Input
-                value={"url" in config ? config.url : ""}
-                onChange={(e) => handleUrl(e.target.value)}
-                className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-              />
-            </div>
+            <LabeledInput
+              label="Url"
+              value={"url" in config ? config.url : ""}
+              onChange={handleUrl}
+            />
+
             <HeaderEditor
               header={"headers" in config ? config.headers || {} : {}}
               headerValues={headerValues}
@@ -254,14 +289,25 @@ export const ServerTemplateDialog = forwardRef<
           </div>
         )}
 
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          {t("addTo")} {capitalizeFirstLetter(selectedClient)}
-        </Button>
+        {isSell ? (
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSellServer();
+            }}
+          >
+            {t("sellServer")}
+          </Button>
+        ) : (
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            {t("addTo")} {capitalizeFirstLetter(selectedClient)}
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Notifications, Notification } from "./ui/Notifications";
+import { Notification, Notifications } from "./ui/Notifications";
 
 type ToolStatus = {
   name: string;
@@ -193,6 +193,7 @@ export default function InstallTools() {
   return (
     <>
       <Notifications
+        className="z-99"
         notifications={notifications}
         onDismiss={dismissNotification}
       />

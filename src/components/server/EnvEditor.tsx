@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 interface EnvEditorProps {
   env?: Record<string, string>;
@@ -18,6 +19,15 @@ export const EnvEditor = ({
   onEnvChange,
   isEdit = false,
 }: EnvEditorProps) => {
+  const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({});
+
+  const toggleVisibility = (key: string) => {
+    setVisibleKeys((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   const handleAddEnv = () => {
     const newKey = `NEW_KEY_${Object.keys(envValues).length + 1}`;
     setEnvValues({
@@ -61,20 +71,44 @@ export const EnvEditor = ({
                 {key}
               </Label>
             )}
-            <Input
-              className="col-span-3 dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-              value={value}
-              placeholder={env?.[key] || ""}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setEnvValues({
-                  ...envValues,
-                  [key]: newValue,
-                });
-                onEnvChange(key, newValue);
-              }}
-              required
-            />
+            <div className="relative w-full col-span-3">
+              <Input
+                type={visibleKeys[key] ? "text" : "password"}
+                className="pr-10 dark:bg-gray-800 dark:border-gray-500 dark:text-white"
+                value={value}
+                placeholder={env?.[key] || ""}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setEnvValues({
+                    ...envValues,
+                    [key]: newValue,
+                  });
+                  onEnvChange(key, newValue);
+                }}
+                required
+              />
+              {value && (
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-red-600"
+                  onClick={() => {
+                    const updatedEnvValues = { ...envValues, [key]: "" };
+                    setEnvValues(updatedEnvValues);
+                    onEnvChange(key, "");
+                  }}
+                >
+                  ❌
+                </button>
+              )}
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => toggleVisibility(key)}
+              className="text-xl"
+            >
+              {visibleKeys[key] ? "👁️" : "🙈"}
+            </Button>
             {isEdit && (
               <Button
                 variant="ghost"

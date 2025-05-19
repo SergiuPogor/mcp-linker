@@ -15,8 +15,9 @@ pub async fn read_json_file(client_name: String, path: Option<String>) -> Result
     // Normalize the response for client consistency
     if client_name == "vscode" && json.is_object() {
         let mut json_clone = json.clone();
-        if json_clone.as_object().unwrap().contains_key("servers") && 
-           !json_clone.as_object().unwrap().contains_key("mcpServers") {
+        if json_clone.as_object().unwrap().contains_key("servers")
+            && !json_clone.as_object().unwrap().contains_key("mcpServers")
+        {
             json_clone["mcpServers"] = json_clone["servers"].clone();
         }
         Ok(json_clone)

@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
+import { useClientPathStore } from "@/store/clientPathStore";
 
-interface PathSelectorProps {
-  selectedPath: string;
-  onChange: (path: string) => void;
-}
+// Props no longer needed as we're using the store
 
-export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
+export function PathSelector() {
+  const { selectedPath, setSelectedPath } = useClientPathStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleBrowse = async () => {
@@ -20,7 +19,7 @@ export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
       });
 
       if (selectedPath) {
-        onChange(selectedPath);
+        setSelectedPath(selectedPath);
       }
     } catch (error) {
       console.error("Failed to select directory:", error);
@@ -34,7 +33,7 @@ export function PathSelector({ selectedPath, onChange }: PathSelectorProps) {
       <div className="flex space-x-2">
         <Input
           value={selectedPath}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => setSelectedPath(e.target.value)}
           className="flex-1"
           placeholder="Select a project root or a directory containing mcp.json"
           readOnly

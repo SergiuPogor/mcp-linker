@@ -14,6 +14,8 @@
     "opener:default",
     "shell:default",
     "dialog:default",
-    "os:default"
+    "os:default",
+    "stronghold:default",
+    "deep-link:default"
   ]
 }

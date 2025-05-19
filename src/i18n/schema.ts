@@ -1,5 +1,10 @@
 export interface TranslationSchema {
   get: string;
+  guest: string;
+  loadMore: string;
+  loading: string;
+  searchPlaceholder: string;
+  sellServer: string;
   addCustomServer: string;
   confirmDeletion: string;
   deleteConfirmation: string;
@@ -7,9 +12,11 @@ export interface TranslationSchema {
   delete: string;
   install: string;
   addTo: string;
+  back: string;
   mcpLinker: string;
-  categories: {
+  nav: {
     discover: string;
+    category: string;
     arcade: string;
     create: string;
     work: string;
@@ -39,6 +46,10 @@ export interface TranslationSchema {
   selectFolder: string;
   search: {
     placeholder: string;
+    items: string;
+    results: string;
+    noResults: string;
+    startSearching: string;
   };
   serverForm: {
     command: string;

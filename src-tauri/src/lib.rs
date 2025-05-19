@@ -34,16 +34,15 @@ fn update_env_path() {
             local_bin,
         ]
     };
-    
-    let separator = if cfg!(target_os = "windows") { ";" } else { ":" };
-    
-    let updated_path = format!(
-        "{}{}{}",
-        new_paths.join(separator),
-        separator,
-        current_path
-    );
-    
+
+    let separator = if cfg!(target_os = "windows") {
+        ";"
+    } else {
+        ":"
+    };
+
+    let updated_path = format!("{}{}{}", new_paths.join(separator), separator, current_path);
+
     env::set_var("PATH", &updated_path);
 }
 
@@ -56,6 +55,8 @@ fn get_path_env() -> String {
 pub fn run() {
     update_env_path();
     tauri::Builder::default()
+        .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_stronghold::Builder::new(|_pass| todo!()).build())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())

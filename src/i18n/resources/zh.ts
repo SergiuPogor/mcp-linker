@@ -3,6 +3,11 @@ import { TranslationSchema } from "../schema";
 const zh: { translation: TranslationSchema } = {
   translation: {
     get: "获取",
+    guest: "未登录",
+    loadMore: "加载更多",
+    loading: "加载中",
+    searchPlaceholder: "搜索",
+    sellServer: "出售服务器",
     addCustomServer: "添加定制的服务器",
     confirmDeletion: "确认删除",
     deleteConfirmation: "您确定要删除{{serverKey}}吗？",
@@ -10,9 +15,11 @@ const zh: { translation: TranslationSchema } = {
     delete: "删除",
     install: "安装",
     addTo: "添加到",
+    back: "回去",
     mcpLinker: "MCP Linker",
-    categories: {
+    nav: {
       discover: "发现",
+      category: "分类",
       arcade: "Arcade",
       create: "创作",
       work: "工作",
@@ -42,6 +49,10 @@ const zh: { translation: TranslationSchema } = {
     selectFolder: "选择文件夹",
     search: {
       placeholder: "搜索服务器",
+      items: "项",
+      results: "结果",
+      noResults: "无结果",
+      startSearching: "开始搜索"
     },
     serverForm: {
       command: "命令",

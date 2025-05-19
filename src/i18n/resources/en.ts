@@ -3,16 +3,23 @@ import { TranslationSchema } from "../schema";
 const en: { translation: TranslationSchema } = {
   translation: {
     get: "Get",
-    addCustomServer: "Add Custom server",
+    guest: "Guest",
+    loadMore: "load more",
+    loading: "Loading",
+    searchPlaceholder: "search",
+    sellServer: "sell server",
+    addCustomServer: "Add custom server",
     confirmDeletion: "Confirm Deletion",
     deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
     cancel: "Cancel",
     delete: "Delete",
     install: "Install",
     addTo: "Add to",
+    back: "Back",
     mcpLinker: "MCP Linker",
-    categories: {
+    nav: {
       discover: "Discover",
+      category: "Categories",
       arcade: "Arcade",
       create: "Create",
       favs: "Favorites",
@@ -42,6 +49,10 @@ const en: { translation: TranslationSchema } = {
     selectFolder: "Select Folder",
     search: {
       placeholder: "Search servers by name...",
+      items: "Items",
+      results: "results",
+      noResults: "no results",
+      startSearching: "start searching",
     },
     serverForm: {
       command: "Command",

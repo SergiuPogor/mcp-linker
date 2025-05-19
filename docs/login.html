@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <body>
+    <h2>Login</h2>
+    <button onclick="login()">Login with GitHub</button>
+    <script>
+      function login() {
+        const redirectTo = window.location.href + "callback.html";
+        const url =
+          "https://mwcopfhhufdccrtwunle.supabase.co/auth/v1/authorize" +
+          "?provider=github&redirect_to=" +
+          encodeURIComponent(redirectTo);
+        window.location.href = url;
+      }
+    </script>
+  </body>
+</html>

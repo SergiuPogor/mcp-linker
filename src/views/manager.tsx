@@ -1,19 +1,14 @@
 import { ServerCard } from "@/components/manage/ServerCard";
+import { useClientPathStore } from "@/store/clientPathStore";
 import { ConfigType } from "@/types/config";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 // import { needspathClient } from "@/lib/data";
 
-interface McpServerProps {
-  selectedClient: string;
-  selectedPath: string;
-}
+export default function McpManage() {
+  const { selectedClient, selectedPath } = useClientPathStore();
 
-export default function McpManage({
-  selectedClient,
-  selectedPath,
-}: McpServerProps) {
   const [config, setConfig] = useState<ConfigType>({
     mcpServers: {},
   });

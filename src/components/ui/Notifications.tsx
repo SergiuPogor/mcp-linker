@@ -1,5 +1,5 @@
-import React from 'react';
 import { X } from 'lucide-react';
+import React from 'react';
 import { Button } from "./button";
 
 export interface Notification {
@@ -18,6 +18,7 @@ export interface Notification {
 interface NotificationsProps {
   notifications: Notification[];
   onDismiss: (id: string) => void;
+  className?: string;
 }
 
 export const Notifications: React.FC<NotificationsProps> = ({ notifications, onDismiss }) => {

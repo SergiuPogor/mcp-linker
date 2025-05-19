@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useClientPathStore } from "@/store/clientPathStore";
 
 interface ClientOption {
   id: string;
@@ -21,18 +22,13 @@ const clientOptions: ClientOption[] = [
   { id: "custom", name: "Custom" },
 ];
 
-interface ClientSelectorProps {
-  selectedClient: string;
-  onChange: (app: string) => void;
-}
+// Props no longer needed as we're using the store
 
-export function ClientSelector({
-  selectedClient,
-  onChange,
-}: ClientSelectorProps) {
+export function ClientSelector() {
+  const { selectedClient, setSelectedClient } = useClientPathStore();
   return (
     <div className="z-50">
-      <Select value={selectedClient} onValueChange={onChange}>
+      <Select value={selectedClient} onValueChange={setSelectedClient}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select an application" />
         </SelectTrigger>

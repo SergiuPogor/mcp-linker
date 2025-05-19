@@ -23,16 +23,14 @@ export type ServerType = {
   description: string;
   category?: string;
   source: string;
-  server_id: string;
-  is_official?: boolean;
-  is_hot?: boolean;
-  is_featured?: boolean;
-  hasViewed?: boolean;
+  uid: string;
+  isOfficial?: boolean;
+  githubStars: number;
+  views: number;
 };
 
-export interface Category {
+export interface Nav {
   id: string;
   name: string;
   icon: JSX.Element;
-  content: string;
 }

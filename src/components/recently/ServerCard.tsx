@@ -1,6 +1,7 @@
 import { ServerForm } from "@/components/manage/ServerForm";
+import { BaseServerCard } from "@/components/shared/BaseServerCard";
+import { ServerDetails } from "@/components/shared/ServerDetails";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConfigType } from "@/types/config";
-import { SseConfig, StdioServerConfig } from "@/types";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,42 +37,10 @@ export function ServerCard({
     setDeleteDialogOpen(false);
   };
 
-  // Display appropriate information based on the server config type
-  const getServerDetails = () => {
-    if ("command" in config) {
-      // It's a StdioServerConfig
-      return (
-        <div className="flex flex-col">
-          <span className="font-medium">Command:</span>
-          <span className="text-muted-foreground break-words">
-            {(config as StdioServerConfig).command}
-          </span>
-        </div>
-      );
-    } else if ("url" in config) {
-      // It's an SseConfig
-      return (
-        <div className="flex flex-col">
-          <span className="font-medium">URL:</span>
-          <span className="text-muted-foreground break-words">
-            {(config as SseConfig).url}
-          </span>
-          <span className="font-medium mt-1">Type:</span>
-          <span className="text-muted-foreground break-words">
-            {(config as SseConfig).type}
-          </span>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
-    <Card className="w-full max-w-xs border shadow rounded-lg">
-      <CardHeader className="flex items-center justify-between pb-2 px-3 pt-3">
-        <CardTitle className="text-base font-semibold truncate dark:text-white">
-          {serverKey}
-        </CardTitle>
+    <BaseServerCard
+      title={serverKey}
+      actions={
         <div className="flex space-x-1">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -131,12 +99,12 @@ export function ServerCard({
             </DialogContent>
           </Dialog>
         </div>
-      </CardHeader>
-      <CardContent className="px-3 pb-3">
-        <div className="space-y-2 text-sm">
-          {getServerDetails()}
-        </div>
-      </CardContent>
-    </Card>
+      }
+      contentClassName="px-3 pb-3"
+    >
+      <div className="space-y-2 text-sm">
+        <ServerDetails config={config} />
+      </div>
+    </BaseServerCard>
   );
 }

@@ -10,9 +10,7 @@ interface ArgsTextareaProps {
 export const ArgsTextarea = ({ args, onChange }: ArgsTextareaProps) => {
   return (
     <div className="grid gap-2">
-      <Label className="text-foreground dark:text-gray-200">
-        args
-      </Label>
+      <Label className="text-foreground dark:text-gray-200">args</Label>
       <Textarea
         value={args.join(" ")}
         onChange={(e) => onChange(e.target.value)}

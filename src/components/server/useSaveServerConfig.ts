@@ -99,7 +99,8 @@ export function useSaveServerConfig() {
         localStorage.removeItem(LOCAL_STORAGE_KEY);
       } catch (error) {
         console.error("Failed to update config:", error);
-        toast.error("Failed to update configuration");
+        const message = error instanceof Error ? error.message : String(error);
+        toast.error(`Failed to update configuration: ${message}`);
       }
     }
   };

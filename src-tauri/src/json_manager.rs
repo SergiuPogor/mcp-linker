@@ -11,16 +11,17 @@ impl JsonManager {
         if client == "vscode" && json.is_object() {
             let servers_key = "servers";
             let mcp_servers_key = "mcpServers";
-            
+
             // If json has "servers" key but not "mcpServers"
-            if json.as_object().unwrap().contains_key(servers_key) && 
-               !json.as_object().unwrap().contains_key(mcp_servers_key) {
+            if json.as_object().unwrap().contains_key(servers_key)
+                && !json.as_object().unwrap().contains_key(mcp_servers_key)
+            {
                 // Clone the content from servers to mcpServers
                 let servers_value = json[servers_key].clone();
                 json[mcp_servers_key] = servers_value;
             }
         }
-        
+
         Ok(json)
     }
 
@@ -71,7 +72,12 @@ impl JsonManager {
         }
     }
 
-    pub fn add_mcp_server(path: &Path, client: &str, name: &str, config: Value) -> Result<Value, String> {
+    pub fn add_mcp_server(
+        path: &Path,
+        client: &str,
+        name: &str,
+        config: Value,
+    ) -> Result<Value, String> {
         let mut json = Self::read_json_file(path)?;
         let key = Self::get_key_by_client(client);
 
@@ -83,10 +89,14 @@ impl JsonManager {
             json[key] = json!({});
         }
 
+        if json[key].as_object().unwrap().contains_key(name) {
+            return Err(format!("Server '{}' already exists in '{}'", name, key));
+        }
+
         json[key][name] = config;
 
         Self::write_json_file(path, &json)?;
-        
+
         // Normalize response key to mcpServers for client
         Self::normalize_response_key(json, client)
     }
@@ -102,12 +112,17 @@ impl JsonManager {
         }
 
         Self::write_json_file(path, &json)?;
-        
+
         // Normalize response key to mcpServers for client
         Self::normalize_response_key(json, client)
     }
 
-    pub fn update_mcp_server(path: &Path, client: &str, name: &str, config: Value) -> Result<Value, String> {
+    pub fn update_mcp_server(
+        path: &Path,
+        client: &str,
+        name: &str,
+        config: Value,
+    ) -> Result<Value, String> {
         let mut json = Self::read_json_file(path)?;
         let key = Self::get_key_by_client(client);
 
@@ -122,7 +137,7 @@ impl JsonManager {
         }
 
         Self::write_json_file(path, &json)?;
-        
+
         // Normalize response key to mcpServers for client
         Self::normalize_response_key(json, client)
     }

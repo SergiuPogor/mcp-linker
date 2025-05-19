@@ -1,264 +1,187 @@
 // ServerConfigDialog.tsx
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { ServerConfig, ServerType, SseConfig, StdioServerConfig } from "@/types";
-import capitalizeFirstLetter from "@/utils/title";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ServerConfig, ServerType, SseConfig } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { forwardRef, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { forwardRef, useEffect } from "react";
+import { toast } from "sonner";
 
 import { fetchServerConfig } from "@/lib/api";
-import { ArgsTextarea } from "./ArgsTextarea";
-import { CommandInput } from "./CommandInput";
+import { useClientPathStore } from "@/store/clientPathStore";
+import { LabeledInput } from "../shared/LabeledInput";
 import { ConfigTabs } from "./ConfigTabs";
-import { EnvEditor } from "./EnvEditor";
-import { ServerNameInput } from "./ServerNameInput";
+import { ServerConfigDialogFooter } from "./ServerConfigDialogFooter";
+import { ServerConfigDialogHeader } from "./ServerConfigDialogHeader";
+import { SseConfigForm } from "./SseConfigForm";
+import { StdioConfigForm } from "./StdioConfigForm";
 import { useLocalDraft } from "./useLocalDraft";
 import { useSaveServerConfig } from "./useSaveServerConfig";
+import { useServerConfig } from "./useServerConfig";
 
 interface ServerConfigDialogProps {
   isOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
   currentServer: ServerType;
-  selectedClient: string;
-  selectedPath: string;
   mcpServers: any;
 }
 
 export const ServerConfigDialog = forwardRef<
   HTMLDivElement,
   ServerConfigDialogProps
->(
-  ({
-    isOpen,
-    setIsDialogOpen,
-    currentServer,
-    selectedClient,
-    selectedPath,
-    mcpServers,
-  }) => {
-    const [serverName, setServerName] = useState<string>("");
-    const [config, setConfig] = useState<ServerConfig | null>(null);
-    const [curIndex, setCurIndex] = useState<number>(0);
-    const [configs, setConfigs] = useState<ServerConfig[] | null>(null);
-    const [envValues, setEnvValues] = useState<Record<string, string>>({});
-    const { t } = useTranslation();
+>(({ isOpen, setIsDialogOpen, currentServer, mcpServers }) => {
+  const { selectedClient, selectedPath } = useClientPathStore();
+  const { saveServerConfig } = useSaveServerConfig();
 
-    const { clearDraft } = useLocalDraft({
-      isOpen,
+  const queryResult = useQuery({
+    queryKey: ["configs", currentServer?.id],
+    queryFn: () => {
+      if (!currentServer?.id) throw new Error("No server ID");
+      return fetchServerConfig(currentServer.id);
+    },
+    enabled: isOpen && !!currentServer,
+    staleTime: 1000 * 60 * 5,
+    retry: 0,
+    refetchOnWindowFocus: false,
+  });
+
+  // Show toast on fetch error (404 or others)
+  useEffect(() => {
+    if (queryResult.error) {
+      const err = queryResult.error as Error;
+      if (err.message.includes("404") || err.message.includes("not found")) {
+        toast.error(
+          "Configuration not found: The server may not be set up yet.",
+        );
+      } else {
+        toast.error(`Failed to load configuration: ${err.message}`);
+      }
+    }
+  }, [queryResult.error]);
+
+  const { clearDraft } = useLocalDraft();
+
+  const {
+    serverName,
+    setServerName,
+    config,
+    setConfig,
+    curIndex,
+    setCurIndex,
+    configs,
+    envValues,
+    setEnvValues,
+  } = useServerConfig({
+    isOpen,
+    currentServer,
+    queryResult,
+    clearDraft: () => clearDraft(),
+  });
+
+  // Update draftProps whenever relevant state changes
+  useEffect(() => {
+    clearDraft({
       serverName,
       setServerName,
       config,
       setConfig,
       envValues,
       setEnvValues,
+      isOpen,
     });
+  }, [serverName, config, envValues, isOpen]);
 
-    const { saveServerConfig } = useSaveServerConfig();
-
-    const { data, isLoading } = useQuery({
-      queryKey: ["configs", currentServer?.server_id],
-      queryFn: () => fetchServerConfig(currentServer?.server_id),
-      enabled: isOpen && !!currentServer,
-      staleTime: 1000 * 60 * 5,
-      retry: 2,
-      refetchOnWindowFocus: false,
-    });
-
-    useEffect(() => {
-      if (isOpen && currentServer && data && !isLoading) {
-        setServerName(currentServer.name);
-        setConfigs(data);
-
-        if (data.length > 0) {
-          setConfig(data[0]);
-          setCurIndex(0);
-
-          // Initialize envValues
-          if ("command" in data[0]) {
-            const stdioConfig = data[0] as StdioServerConfig;
-            const env = stdioConfig.env;
-          
-            if (env && Object.keys(env).length > 0) {
-              const initialEnvValues = Object.keys(env).reduce(
-                (acc, key) => {
-                  acc[key] = "";
-                  return acc;
-                },
-                {} as Record<string, string>,
-              );
-              setEnvValues(initialEnvValues);
-            } else {
-              setEnvValues({});
-            }
-          }
-        }
-
-        clearDraft();
+  const handleArgsChange = (value: string) => {
+    if (config && "command" in config) {
+      // Only update if the value has actually changed
+      const newArgs = value.split(" ").filter((arg) => arg !== "");
+      if (JSON.stringify(newArgs) !== JSON.stringify(config.args)) {
+        setConfig({ ...config, args: newArgs });
       }
-    }, [isOpen, currentServer, data, isLoading]);
+    }
+  };
 
-    const handleArgsChange = (value: string) => {
-      if (config && "command" in config) {
-        // Only update if the value has actually changed
-        const newArgs = value.split(" ").filter((arg) => arg !== "");
-        if (JSON.stringify(newArgs) !== JSON.stringify(config.args)) {
-          setConfig({ ...config, args: newArgs });
-        }
-      }
+  const handleCommandChange = (value: string) => {
+    if (config && "command" in config) {
+      setConfig({ ...config, command: value });
+    }
+  };
+
+  const handleEnvChange = (key: string, value: string) => {
+    if (config && "command" in config) {
+      setConfig({
+        ...config,
+        env: { ...(config.env || {}), [key]: value },
+      });
+    }
+  };
+
+  const handleSseConfigChange = (newConfig: SseConfig) => {
+    setConfig(newConfig);
+  };
+
+  const handleConfigChange = (c: ServerConfig, index: number) => {
+    setConfig(c);
+    setCurIndex(index);
+  };
+
+  const handleSubmit = async () => {
+    const serverConfig = {
+      selectedClient,
+      selectedPath,
+      currentServer,
+      mcpServers,
+      serverName,
+      config,
+      setIsDialogOpen,
     };
+    console.log(serverConfig);
+    await saveServerConfig(serverConfig);
+    clearDraft(); // Clear the draft after successful save
+  };
 
-    const handleCommandChange = (value: string) => {
-      if (config && "command" in config) {
-        setConfig({ ...config, command: value });
-      }
-    };
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
+      <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
+        <ServerConfigDialogHeader />
 
-    const handleEnvChange = (key: string, value: string) => {
-      if (config && "command" in config) {
-        const stdioConfig = config as StdioServerConfig;
-        setConfig({ 
-          ...config, 
-          env: { ...(stdioConfig.env || {}), [key]: value } 
-        });
-      }
-    };
+        <LabeledInput label="Server name" value={serverName} onChange={setServerName} />
 
-    const handleConfigChange = (c: ServerConfig, index: number) => {
-      setConfig(c);
-      setCurIndex(index);
-    };
+        {configs && configs.length > 0 && (
+          <ConfigTabs
+            configs={configs}
+            curIndex={curIndex}
+            onConfigChange={handleConfigChange}
+          />
+        )}
 
-    const handleSubmit = async () => {
-      const serverConfig = {
-        selectedClient,
-        selectedPath,
-        currentServer,
-        mcpServers,
-        serverName,
-        config,
-        setIsDialogOpen,
-      }
-      console.log(serverConfig)
-      await saveServerConfig(serverConfig);
-    };
-
-    return (
-      <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
-          <DialogHeader>
-            <DialogTitle className="dark:text-white">config</DialogTitle>
-            <DialogDescription>server config</DialogDescription>
-          </DialogHeader>
-
-          <ServerNameInput serverName={serverName} onChange={setServerName} />
-
-          {configs && configs.length > 0 && (
-            <ConfigTabs
-              configs={configs}
-              curIndex={curIndex}
-              onConfigChange={handleConfigChange}
+        <div className="grid gap-4 py-4">
+          {/* StdioServerConfig specific fields */}
+          {config && "command" in config && (
+            <StdioConfigForm
+              config={config}
+              envValues={envValues}
+              setEnvValues={setEnvValues}
+              onCommandChange={handleCommandChange}
+              onArgsChange={handleArgsChange}
+              onEnvChange={handleEnvChange}
             />
           )}
 
-          <div className="grid gap-4 py-4">
-            {/* StdioServerConfig specific fields */}
-            {config && "command" in config && (
-              <>
-                <CommandInput
-                  command={config.command}
-                  onChange={handleCommandChange}
-                />
-                <ArgsTextarea args={config.args} onChange={handleArgsChange} />
-                <EnvEditor
-                  env={config.env || {}}
-                  envValues={envValues}
-                  setEnvValues={setEnvValues}
-                  onEnvChange={handleEnvChange}
-                  isEdit={false}
-                />
-              </>
-            )}
+          {/* SseConfig specific fields */}
+          {config && "url" in config && (
+            <SseConfigForm
+              config={config}
+              onConfigChange={handleSseConfigChange}
+            />
+          )}
+        </div>
 
-            {/* SseConfig specific fields */}
-            {config && "url" in config && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="url" className="text-sm font-medium">
-                      URL
-                    </label>
-                    <input
-                      id="url"
-                      value={config.url || ""}
-                      onChange={(e) =>
-                        setConfig({ ...config, url: e.target.value } as SseConfig)
-                      }
-                      className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="type" className="text-sm font-medium">
-                      Type
-                    </label>
-                    <select
-                      id="type"
-                      value={config.type}
-                      onChange={(e) =>
-                        setConfig({ 
-                          ...config, 
-                          type: e.target.value as "http" | "sse" 
-                        } as SseConfig)
-                      }
-                      className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
-                    >
-                      <option value="http">HTTP</option>
-                      <option value="sse">SSE</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Headers</label>
-                  <textarea
-                    value={
-                      config.headers
-                        ? JSON.stringify(config.headers, null, 2)
-                        : "{}"
-                    }
-                    onChange={(e) => {
-                      try {
-                        const headers = JSON.parse(e.target.value);
-                        setConfig({ ...config, headers } as SseConfig);
-                      } catch (err) {
-                        // Handle parsing error
-                      }
-                    }}
-                    className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            {t("addTo")} {capitalizeFirstLetter(selectedClient)}
-          </Button>
-        </DialogContent>
-      </Dialog>
-    );
-  },
-);
+        <ServerConfigDialogFooter
+          onSubmit={handleSubmit}
+          selectedClient={selectedClient}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+});
 
 ServerConfigDialog.displayName = "ServerConfigDialog";

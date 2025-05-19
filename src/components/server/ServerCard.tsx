@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
-import { Flame, Github, Star, StarOff } from "lucide-react";
+import { Github, Star, StarOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ServerCardProps {
@@ -26,6 +26,10 @@ export function ServerCard({
   onToggleFavorite,
 }: ServerCardProps) {
   const { t } = useTranslation();
+
+  const showGithubIcon =
+    app.source && app.source.startsWith("https://github.com");
+
   return (
     <Card
       key={`${app.name}-${app.source}`}
@@ -35,7 +39,7 @@ export function ServerCard({
         <div className="flex justify-between items-start">
           <div className="flex gap-3 items-start">
             <div className="p-2 bg-gray-100 rounded-full">
-              <Github size={18} />
+              {showGithubIcon && <Github size={18} />}
             </div>
             <div>
               <CardTitle className="text-base">
@@ -45,20 +49,18 @@ export function ServerCard({
                     openUrl(app.source);
                   }}
                   className="hover:underline text-left"
-                  title="open home page"
+                  title={`open ${app.source}`}
                 >
                   {app.name}
                 </button>
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                by {app.developer}
+                {app.developer}
               </CardDescription>
             </div>
           </div>
           <div className="flex gap-2 items-center">
-            {app.is_hot && <Flame size={16} className="text-orange-500" />}
             <button
-              // className="text-yellow-500 hover:text-yellow-600 active:scale-110 transition-transform z-20"
               className="absolute top-3 right-3 bg-white/70 rounded-full p-1 hover:bg-yellow-100 transition"
               onClick={(e) => {
                 e.stopPropagation();
@@ -81,8 +83,9 @@ export function ServerCard({
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">
-        <span className="flex">
-          {app.is_official && <span className="text-blue-600">✅</span>}
+        <span className="flex items-center gap-2 text-xs text-muted-foreground">
+          {app.isOfficial && <span className="text-blue-600">🎖️</span>}
+          {app.githubStars !== undefined && <span>⭐ {app.githubStars}</span>}
         </span>
         <Button onClick={() => onOpenDialog(app)} variant="default">
           {t("get")}

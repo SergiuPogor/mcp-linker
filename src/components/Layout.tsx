@@ -1,132 +1,119 @@
-import { Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import useAppCategories from "./categories";
+import useNav from "./nav";
 
-import { fetchServers } from "@/lib/api";
 import { needspathClient } from "@/lib/data";
-import { Pages } from "@/pages-map";
+import { useClientPathStore } from "@/store/clientPathStore";
 import { Toaster } from "sonner";
 import LangSelect from "./LangSelect";
 import { PathSelector } from "./PathSelector";
 import { Sidebar } from "./Sidebar";
+
 import { ClientSelector } from "./client-selector";
 
+const fallbackComponent = () => <div>Loading...</div>;
+
+const dynamicPages: {
+  [key: string]: React.LazyExoticComponent<React.FC<any>>;
+} = {
+  home: lazy(() => import("@/views/home")),
+  discover: lazy(() => import("@/views/Discover")),
+  categories: lazy(() => import("@/views/categories")),
+  search: lazy(() => import("@/views/search")),
+  manage: lazy(() => import("@/views/manager")),
+  favs: lazy(() => import("@/views/favorites")),
+  auth: lazy(() => import("@/views/AuthPage")),
+  onboarding: lazy(() => import("@/views/OnBoardingPage")),
+  recently: lazy(() => import("@/views/recently")),
+};
+
 interface ContentAreaProps {
-  selectedClient: string;
-  selectedPath: string;
-  categoryId: string;
+  navId: string;
 }
 
-const ContentArea: React.FC<ContentAreaProps> = ({
-  selectedClient,
-  selectedPath,
-  categoryId,
-}) => {
-  const [mcpServers, setMcpServers] = useState<{ servers: any[] }>({
-    servers: [],
-  });
+const ContentArea: React.FC<ContentAreaProps> = ({ navId }) => {
+  const PageComponent = dynamicPages[navId] || dynamicPages["other"];
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    fetchServers()
-      .then((data) => setMcpServers(data))
-      .catch((err) => console.error("Failed to load servers", err));
-  }, []);
-
-  const PageComponent = Pages[categoryId] || Pages["other"];
+    const savedScrollY = sessionStorage.getItem(`scroll-${navId}`);
+    if (scrollRef.current && savedScrollY) {
+      // Use requestAnimationFrame + setTimeout to delay setting scrollTop
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (scrollRef.current) {
+            scrollRef.current.scrollTop = parseInt(savedScrollY, 10);
+          }
+        }, 300); // Delay to ensure content rendering is complete
+      });
+    }
+  
+    return () => {
+      if (scrollRef.current) {
+        sessionStorage.setItem(
+          `scroll-${navId}`,
+          scrollRef.current.scrollTop.toString(),
+        );
+      }
+    };
+  }, [navId]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PageComponent
-        selectedClient={selectedClient}
-        selectedPath={selectedPath}
-        mcpServers={mcpServers.servers}
-      />
-    </Suspense>
+    <div className="flex-1 overflow-auto" ref={scrollRef}>
+      <Suspense fallback={fallbackComponent()}>
+        <PageComponent />
+      </Suspense>
+    </div>
   );
 };
 
-interface DashboardProps {
-  selectedClient: string;
-  setSelectedClient: (app: string) => void;
-  selectedPath: string;
-  setSelectedPath: (path: string) => void;
-}
-
-// App component
-const AppStore = ({
-  selectedClient,
-  setSelectedClient,
-  selectedPath,
-  setSelectedPath,
-}: DashboardProps) => {
-  // Define the app categories and their content
-  const appCategories = useAppCategories();
+const MCPStore = () => {
+  const { selectedClient } = useClientPathStore();
+  const navs = useNav();
 
   return (
-    <div className="flex h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-      <Sidebar appCategories={appCategories} />
+    <div className="flex h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 overflow-hidden">
+      {/* Sidebar fixed width to prevent scroll interference */}
+      <div className="flex-shrink-0 h-full">
+        <Sidebar navs={navs} />
+      </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        <div className="flex justify-between pt-2 px-2">
+      {/* Main content scrolls independently */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex justify-between pt-2 px-2 shrink-0">
           <span>
-            <ClientSelector
-              selectedClient={selectedClient}
-              onChange={setSelectedClient}
-            />
+            <ClientSelector />
           </span>
-
-          {needspathClient.includes(selectedClient) && (
-            <PathSelector
-              selectedPath={selectedPath}
-              onChange={setSelectedPath}
-            />
-          )}
+          {needspathClient.includes(selectedClient) && <PathSelector />}
           <LangSelect />
         </div>
-
+        {/* Scrollable content area */}
         <div className="flex-1 overflow-auto">
           <Routes>
-            {appCategories.map((category) => (
+            {navs.map((nav) => (
               <Route
-                key={category.id}
-                path={`/${category.id}`}
-                element={
-                  <ContentArea
-                    selectedClient={selectedClient}
-                    selectedPath={selectedPath}
-                    categoryId={category.id}
-                  />
-                }
+                key={nav.id}
+                path={`/${nav.id}`}
+                element={<ContentArea navId={nav.id} />}
               />
             ))}
             <Route
               path="/recently"
-              element={
-                <ContentArea
-                  selectedClient={selectedClient}
-                  selectedPath={selectedPath}
-                  categoryId="recently"
-                />
-              }
+              element={<ContentArea navId="recently" />}
             />
-            <Route
-              path="/"
-              element={
-                <ContentArea
-                  selectedClient={selectedClient}
-                  selectedPath={selectedPath}
-                  categoryId={appCategories[0].id}
-                />
-              }
-            />
+
+            <Route path="/search" element={<ContentArea navId="search" />} />
+            <Route path="/auth" element={<ContentArea navId="auth" />} />
+            <Route path="/onboarding" element={<ContentArea navId="onboarding" />} />
+            <Route path="/" element={<ContentArea navId={navs[0].id} />} />
           </Routes>
         </div>
       </div>
+
       <Toaster position="top-center" richColors />
     </div>
   );
 };
 
-export default AppStore;
+export default MCPStore;

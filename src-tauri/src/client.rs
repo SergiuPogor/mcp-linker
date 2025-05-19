@@ -1,5 +1,5 @@
-use std::path::{Path, PathBuf};
 use dirs::home_dir;
+use std::path::{Path, PathBuf};
 
 #[allow(dead_code)]
 pub struct ClientConfig {
@@ -20,8 +20,7 @@ impl ClientConfig {
                 }
                 #[cfg(target_os = "windows")]
                 {
-                    PathBuf::from(home)
-                        .join("AppData/Roaming/Claude/claude_desktop_config.json")
+                    PathBuf::from(home).join("AppData/Roaming/Claude/claude_desktop_config.json")
                 }
                 #[cfg(not(any(target_os = "macos", target_os = "windows")))]
                 {
@@ -48,9 +47,7 @@ impl ClientConfig {
                     PathBuf::from(base_path).join(".vscode/mcp.json")
                 }
             }
-            ("cursor", None) => {
-                PathBuf::from(&home).join(".cursor/mcp.json")
-            }
+            ("cursor", None) => PathBuf::from(&home).join(".cursor/mcp.json"),
             ("cursor", Some(base_path)) => {
                 // For Cursor, we use the provided path + .cursor/mcp.json
                 // If base_path is empty, use home directory
@@ -60,13 +57,8 @@ impl ClientConfig {
                     PathBuf::from(base_path).join(".cursor/mcp.json")
                 }
             }
-            ("mcphub", None) => {
-                PathBuf::from(home).join(".config/mcphub/servers.json")
-            }
-            ("windsurf", _) => {
-                PathBuf::from(home)
-                    .join(".codeium/windsurf/mcp_config.json")
-            }
+            ("mcphub", None) => PathBuf::from(home).join(".config/mcphub/servers.json"),
+            ("windsurf", _) => PathBuf::from(home).join(".codeium/windsurf/mcp_config.json"),
             (_, Some(path_str)) => {
                 // For any other app, use the provided path + mcp.json
                 // If path is empty, use home directory
@@ -81,7 +73,10 @@ impl ClientConfig {
                 PathBuf::from("")
             }
         };
-        println!("Creating ClientConfig with name: {}, path: {:?}", name, path);
+        println!(
+            "Creating ClientConfig with name: {}, path: {:?}",
+            name, path
+        );
         Self {
             name: name.to_string(),
             path,
