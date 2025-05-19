@@ -9,8 +9,9 @@
 
 ## News
 
-- 2025-05-16: online MCP servers store  
-- 2025-05-08: Support add custom server
+- 2025-05-19: server list sort by github stars  
+- 2025-05-16: online MCP servers store preview  
+- 2025-05-08: Support adding custom server  
 
 ---
 
@@ -54,7 +55,7 @@
 ✅ Favorites & Recently Used: Quickly access your go-to servers  
 ✅ Cross-platform: macOS, Windows, Linux support  
 ✅ Multi-language: English, 中文, 日本語  
-✅ Improved error handling and user-friendly setup
+✅ Improved error handling and user-friendly setup  
 ✅ The server install by uvx or npx base the command
 
 ## 🚀 Quick Start
