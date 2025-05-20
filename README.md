@@ -101,6 +101,10 @@ git clone https://github.com/milisp/mcp-linker
 cd mcp-linker
 bun install
 bun tauri dev
+
+# create a .env file at project root and set env
+cp .env.example .env
+VITE_API_BASE_URL=https://mcp-linker-api.onrender.com/api/v1
 ```
 
 ## 🔍 Troubleshooting
@@ -121,7 +125,7 @@ We welcome contributions from the community:
 
 ## 🌐 Official Servers
 
-Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers?from=mcp-linker).
+Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
 
 ## 💬 Feedback & Support
 
