@@ -1,0 +1,67 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP-Linker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #555;
+        }
+        .editor-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .editor-card {
+            background-color: #efefef;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to MCP Linker</h1>
+        <p>A Tauri tool to connect and manage MCP (Model Context Protocol) servers for MCP clients such as Claude Desktop.</p>
+        <a href="https://github.com/milisp/mcp-linker">GitHub repo</a> | 
+        <a href="https://github.com/milisp/mcp-linker/releases">Download</a>
+        <h2>Supported MCP clients</h2>
+        <div class="editor-list">
+            <div class="editor-card">Claude Desktop</div>
+            <div class="editor-card">Cursor</div>
+            <div class="editor-card">Windsurf</div>
+            <div class="editor-card">Cline</div>
+            <div class="editor-card">VS Code</div>
+            <div class="editor-card">neovim</div>
+          </div>
+    </div>
+</body>
+</html>
