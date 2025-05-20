@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
-import { BASE_URL } from "@/lib/api/common";
+import { api } from "@/lib/axios";
 
 type ServerItem = {
   id: number;
@@ -24,9 +24,7 @@ export default function Home() {
   const [data, setData] = useState<DiscoverResponse | null>(null);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/discover`)
-      .then((res) => res.json())
-      .then(setData);
+    api.get("/discover").then((res) => setData(res.data));
   }, []);
 
   if (!data) return <div className="p-4">Loading...</div>;

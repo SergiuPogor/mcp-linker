@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BASE_URL } from "@/lib/api/common";
+import { api } from "@/lib/axios";
 import { getSupabaseAuthInfo, signOut } from "@/services/auth";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,14 +14,16 @@ export default function OnBoardingPage() {
 
   const sendMe = async () => {
     try {
-      await fetch(`${BASE_URL}/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
+      await api.post(
+        `/users`,
+        { username },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
         },
-        body: JSON.stringify({ username }),
-      });
+      );
       console.log("sync username ok");
     } catch (error) {
       console.error("Failed to post username:", error);
@@ -37,7 +39,7 @@ export default function OnBoardingPage() {
 
       if (user && token) {
         try {
-          await fetch(`${BASE_URL}/auth/me`, {
+          await api.get(`/auth/me`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
