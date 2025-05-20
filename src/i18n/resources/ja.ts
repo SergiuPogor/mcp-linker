@@ -65,6 +65,11 @@ const ja: { translation: TranslationSchema } = {
       headers: "headers",
       url: "url",
     },
+    sortOptions: "並べ替えオプション",
+    sortByGithubStars: "GitHubスター順",
+    sortByCreatedAt: "作成日順",
+    descend: "降順",
+    ascend: "昇順",
   },
 };
 

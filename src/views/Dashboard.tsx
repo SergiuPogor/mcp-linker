@@ -45,6 +45,7 @@ export default function OnBoardingPage() {
               Authorization: `Bearer ${token}`,
             },
           });
+          navigate("/discover");
         } catch (error) {
           console.error("Failed to fetch user info:", error);
         }

@@ -65,6 +65,11 @@ const zh: { translation: TranslationSchema } = {
       headers: "headers",
       url: "url",
     },
+    sortOptions: "排序选项",
+    sortByGithubStars: "GitHub 星标",
+    sortByCreatedAt: "创建时间",
+    descend: "降序",
+    ascend: "升序",
   },
 };
 

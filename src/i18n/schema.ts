@@ -62,4 +62,9 @@ export interface TranslationSchema {
     headers: string;
     url: string;
   };
+  sortOptions: string;
+  sortByGithubStars: string;
+  sortByCreatedAt: string;
+  descend: string;
+  ascend: string;
 }

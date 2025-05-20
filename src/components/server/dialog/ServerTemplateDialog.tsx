@@ -6,10 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { apiWithAuth } from "@/lib/axiosWithToken";
 import { useClientPathStore } from "@/store/clientPathStore";
 import capitalizeFirstLetter from "@/utils/title";
 import { invoke } from "@tauri-apps/api/core";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ServerTemplateForm } from "../form/ServerTemplateForm";
@@ -28,6 +29,8 @@ export const ServerTemplateDialog = forwardRef<
 >(({ isOpen, setIsDialogOpen, isSell }) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const { t } = useTranslation();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
+  const apiClient = apiWithAuth();
 
   const {
     serverName,
@@ -51,15 +54,42 @@ export const ServerTemplateDialog = forwardRef<
     setHeaderValues,
   } = useServerConfig(isOpen, selectedClient);
 
-  const handleSellServer = () => {
-    const payload = {
-      configs: [config],
-      categoryId: "",
-      source: projectUrl,
-      developer: "",
-    };
-
-    toast("Selling server: " + JSON.stringify(payload));
+  const handleSellServer = async () => {
+    // Validate required fields
+    if (!projectUrl || !config || !selectedCategoryId) {
+      toast.error(
+        "Please fill in all required fields (project URL, config, category)",
+      );
+      return;
+    }
+    try {
+      // make sure config type
+      let configWithType = { ...config };
+      if (!("type" in configWithType)) {
+        (configWithType as any).type = "stdio";
+      }
+      const client = await apiClient;
+      const payload = {
+        name: serverName,
+        description: projectDescription,
+        categoryId: selectedCategoryId,
+        source: projectUrl,
+        developer: "",
+        configs: [configWithType],
+      };
+      await client.post("/servers/", payload);
+      setIsDialogOpen(false);
+      // toast("Selling server: " + JSON.stringify(payload));
+    } catch (error: any) {
+      let message = "Failed to sell server";
+      if (error?.response?.data?.message) {
+        message += ": " + error.response.data.message;
+      } else if (error?.message) {
+        message += ": " + error.message;
+      }
+      console.error(message, error);
+      toast.error(message);
+    }
   };
 
   const handleSubmit = async () => {
@@ -108,13 +138,14 @@ export const ServerTemplateDialog = forwardRef<
           setEnvValues={setEnvValues}
           headerValues={headerValues}
           setHeaderValues={setHeaderValues}
+          setSelectedCategoryId={setSelectedCategoryId}
         />
 
         {isSell ? (
           <Button
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
-              handleSellServer();
+              await handleSellServer(); // 确保触发
             }}
           >
             {t("sellServer")}

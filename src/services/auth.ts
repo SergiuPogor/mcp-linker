@@ -1,7 +1,7 @@
 import supabase from "@/utils/supabase";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const getSession = async () => {
+export const getSession = async () => {
   const { data, error } = await supabase.auth.getSession();
   if (error || !data.session) throw new Error("No active Supabase session");
   return data.session;

@@ -65,6 +65,11 @@ const en: { translation: TranslationSchema } = {
       headers: "headers",
       url: "url",
     },
+    sortOptions: "sort options",
+    sortByGithubStars: "GitHub Stars",
+    sortByCreatedAt: "Creation Date",
+    descend: "Descending",
+    ascend: "Ascending",
   },
 };
 

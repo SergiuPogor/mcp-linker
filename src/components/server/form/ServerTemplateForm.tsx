@@ -25,6 +25,7 @@ interface ServerTemplateFormProps {
   setEnvValues: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   headerValues: Record<string, string>;
   setHeaderValues: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setSelectedCategoryId: (id: number) => void;
 }
 
 export const ServerTemplateForm = ({
@@ -47,6 +48,7 @@ export const ServerTemplateForm = ({
   setEnvValues,
   headerValues,
   setHeaderValues,
+  setSelectedCategoryId,
 }: ServerTemplateFormProps) => {
   return (
     <div>
@@ -62,6 +64,7 @@ export const ServerTemplateForm = ({
           setProjectDescription={setProjectDescription}
           projectUrl={projectUrl}
           setProjectUrl={setProjectUrl}
+          setSelectedCategoryId={setSelectedCategoryId}
         />
       )}
 

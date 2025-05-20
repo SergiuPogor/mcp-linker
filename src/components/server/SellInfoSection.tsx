@@ -1,3 +1,13 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { CategoryType } from "@/types/cat";
+import { useEffect, useState } from "react";
 import { LabeledInput } from "../shared/LabeledInput";
 
 interface SellInfoSectionProps {
@@ -5,6 +15,7 @@ interface SellInfoSectionProps {
   setProjectDescription: (value: string) => void;
   projectUrl: string;
   setProjectUrl: (value: string) => void;
+  setSelectedCategoryId: (id: number) => void;
 }
 
 export const SellInfoSection = ({
@@ -12,7 +23,21 @@ export const SellInfoSection = ({
   setProjectDescription,
   projectUrl,
   setProjectUrl,
+  setSelectedCategoryId,
 }: SellInfoSectionProps) => {
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+
+  useEffect(() => {
+    fetch("/cats.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+        if (data.length > 0) {
+          setSelectedCategoryId(data[0].id);
+        }
+      });
+  }, []);
+
   return (
     <div>
       <LabeledInput
@@ -25,6 +50,19 @@ export const SellInfoSection = ({
         value={projectUrl}
         onChange={setProjectUrl}
       />
+
+      <Select onValueChange={(value) => setSelectedCategoryId(Number(value))}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a category" />
+        </SelectTrigger>
+        <SelectContent>
+          {categories.map((c) => (
+            <SelectItem key={c.id} value={String(c.id)}>
+              {c.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

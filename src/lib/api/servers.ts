@@ -17,6 +17,8 @@ export async function fetchServers(
   page_size: number = 10,
   category_id: string | null = null,
   searchTerm = "",
+  sort: string = "github_stars",
+  direction: string = "desc",
   developer: string | null = null,
 ) {
   const params = buildQueryParams({
@@ -24,6 +26,8 @@ export async function fetchServers(
     page_size: page_size.toString(),
     category_id,
     search: searchTerm,
+    sort,
+    direction,
     developer,
   });
 
