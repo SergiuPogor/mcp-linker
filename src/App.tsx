@@ -4,11 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect } from "react";
 import { checkForUpdate } from "./lib/update";
 
-import { useDeepLinkAuth } from '@/hooks/useDeepLinkAuth';
+import { useDeepLinkAuth } from "@/hooks/useDeepLinkAuth";
 import "./App.css";
 const Layout = lazy(() => import("./components/Layout"));
 const CommandChecker = lazy(() => import("@/components/CommandChecker"));
-
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,12 +23,12 @@ function App() {
   useDeepLinkAuth();
 
   useEffect(() => {
-    checkForUpdate()
+    checkForUpdate();
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
-      <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
           <CommandChecker />
           <Layout />
         </Suspense>

@@ -12,9 +12,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { ServerTemplateForm } from "./ServerTemplateForm";
-import { useServerConfig } from "./hooks/useServerConfig";
-import { transformConfig } from "./utils/transformConfig";
+import { ServerTemplateForm } from "../form/ServerTemplateForm";
+import { useServerConfig } from "../hooks/useServerConfig";
+import { transformConfig } from "../utils/transformConfig";
 
 interface ServerTemplateDialogProps {
   isOpen: boolean;
@@ -28,17 +28,17 @@ export const ServerTemplateDialog = forwardRef<
 >(({ isOpen, setIsDialogOpen, isSell }) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const { t } = useTranslation();
-  
-  const { 
-    serverName, 
+
+  const {
+    serverName,
     setServerName,
-    projectUrl, 
+    projectUrl,
     setProjectUrl,
-    projectDescription, 
+    projectDescription,
     setProjectDescription,
-    serverType, 
+    serverType,
     setServerType,
-    config, 
+    config,
     // setConfig,
     handleArgsChange,
     handleCommandChange,
@@ -48,7 +48,7 @@ export const ServerTemplateDialog = forwardRef<
     envValues,
     setEnvValues,
     headerValues,
-    setHeaderValues
+    setHeaderValues,
   } = useServerConfig(isOpen, selectedClient);
 
   const handleSellServer = () => {
@@ -65,7 +65,7 @@ export const ServerTemplateDialog = forwardRef<
   const handleSubmit = async () => {
     try {
       const finalConfig = transformConfig(serverType, config);
-      
+
       await invoke("add_mcp_server", {
         clientName: selectedClient,
         path: selectedPath || undefined,

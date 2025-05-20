@@ -1,9 +1,9 @@
-import { LabeledInput } from "../shared/LabeledInput";
-import { ServerTypeSelector } from "./ServerTypeSelector";
-import { StdioConfigSection } from "./StdioConfigSection";
-import { NetworkConfigSection } from "./NetworkConfigSection";
-import { SellInfoSection } from "./SellInfoSection";
 import type { ServerConfig } from "@/types";
+import { LabeledInput } from "../../shared/LabeledInput";
+import { SellInfoSection } from "../SellInfoSection";
+import { ServerTypeSelector } from "../ServerTypeSelector";
+import { StdioConfigSection } from "../StdioConfigSection";
+import { NetworkConfigSection } from "./NetworkConfigSection";
 
 interface ServerTemplateFormProps {
   serverName: string;
@@ -55,7 +55,7 @@ export const ServerTemplateForm = ({
         value={serverName}
         onChange={setServerName}
       />
-      
+
       {isSell && (
         <SellInfoSection
           projectDescription={projectDescription}
@@ -65,9 +65,9 @@ export const ServerTemplateForm = ({
         />
       )}
 
-      <ServerTypeSelector 
-        serverType={serverType} 
-        setServerType={setServerType} 
+      <ServerTypeSelector
+        serverType={serverType}
+        setServerType={setServerType}
       />
 
       {serverType === "stdio" ? (

@@ -1,6 +1,6 @@
-import { LabeledInput } from "../shared/LabeledInput";
-import { HeaderEditor } from "./HeaderEditor";
 import type { ServerConfig } from "@/types";
+import { LabeledInput } from "../../shared/LabeledInput";
+import { HeaderEditor } from "./HeaderEditor";
 
 interface NetworkConfigSectionProps {
   config: ServerConfig;

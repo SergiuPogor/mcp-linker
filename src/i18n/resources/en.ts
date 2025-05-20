@@ -3,6 +3,8 @@ import { TranslationSchema } from "../schema";
 const en: { translation: TranslationSchema } = {
   translation: {
     get: "Get",
+    edit: "Edit",
+    save: "Save",
     guest: "Guest",
     loadMore: "load more",
     loading: "Loading",

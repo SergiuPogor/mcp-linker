@@ -20,7 +20,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   return (
     <div
@@ -60,9 +60,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
             <Link key={nav.id} to={`/${nav.id}`} className="w-full">
               <Button
                 variant={
-                  location.pathname === `/${nav.id}`
-                    ? "secondary"
-                    : "ghost"
+                  location.pathname === `/${nav.id}` ? "secondary" : "ghost"
                 }
                 className={`w-full justify-start p-2 ${isCollapsed ? "justify-center" : ""}`}
               >
@@ -91,7 +89,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
           )}
           {!isCollapsed && (
             <p className="font-medium">
-              {user?.user_metadata.user_name || t("guest") }
+              {user?.user_metadata.user_name || t("guest")}
             </p>
           )}
         </Link>

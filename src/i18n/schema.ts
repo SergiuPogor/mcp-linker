@@ -1,5 +1,7 @@
 export interface TranslationSchema {
   get: string;
+  edit: string;
+  save: string;
   guest: string;
   loadMore: string;
   loading: string;

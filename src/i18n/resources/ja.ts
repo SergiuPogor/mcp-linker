@@ -3,6 +3,8 @@ import { TranslationSchema } from "../schema";
 const ja: { translation: TranslationSchema } = {
   translation: {
     get: "取得",
+    edit: "編集",
+    save: "保存",
     guest: "ゲスト",
     loadMore: "もっと見る",
     loading: "読み込み中",
@@ -50,10 +52,10 @@ const ja: { translation: TranslationSchema } = {
     selectFolder: "フォルダを選択",
     search: {
       placeholder: "名前でサーバーを検索...",
-      "items": "アイテム",
-      "results": "件",
-      "noResults": "結果なし",
-      "startSearching": "検索を開始"
+      items: "アイテム",
+      results: "件",
+      noResults: "結果なし",
+      startSearching: "検索を開始",
     },
     serverForm: {
       command: "Command",

@@ -3,7 +3,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const getSession = async () => {
   const { data, error } = await supabase.auth.getSession();
-  if (error || !data.session) throw new Error('No active Supabase session');
+  if (error || !data.session) throw new Error("No active Supabase session");
   return data.session;
 };
 
@@ -24,11 +24,11 @@ export const getCurrentUser = async () => {
       headers: { Authorization: `Bearer ${session.access_token}` },
     });
 
-    if (!res.ok) throw new Error('Failed to fetch user data');
+    if (!res.ok) throw new Error("Failed to fetch user data");
     const userData = await res.json();
     return { ...userData, session };
   } catch (err) {
-    console.error('Error getting current user:', err);
+    console.error("Error getting current user:", err);
     return null;
   }
 };

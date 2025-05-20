@@ -1,6 +1,6 @@
 import { HeroBanner } from "@/components/banner";
 import { ServerList } from "@/components/server/ServerList";
-import { ServerTemplateDialog } from "@/components/server/ServerTemplateDialog";
+import { ServerTemplateDialog } from "@/components/server/dialog/ServerTemplateDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMcpServers } from "@/hooks/useMcpServers";
@@ -76,7 +76,6 @@ export default function Discovery() {
       }
     };
   }, [data?.hasNext, isFetching]);
-
 
   const handleDialogIsSell = (isSell: boolean) => {
     setIsSell(isSell);

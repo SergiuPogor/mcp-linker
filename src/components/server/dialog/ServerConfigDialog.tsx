@@ -7,15 +7,15 @@ import { toast } from "sonner";
 
 import { fetchServerConfig } from "@/lib/api";
 import { useClientPathStore } from "@/store/clientPathStore";
-import { LabeledInput } from "../shared/LabeledInput";
-import { ConfigTabs } from "./ConfigTabs";
+import { LabeledInput } from "../../shared/LabeledInput";
+import { ConfigTabs } from "../ConfigTabs";
+import { SseConfigForm } from "../form/SseConfigForm";
+import { StdioConfigForm } from "../form/StdioConfigForm";
+import { useLocalDraft } from "../useLocalDraft";
+import { useSaveServerConfig } from "../useSaveServerConfig";
+import { useServerConfig } from "../useServerConfig";
 import { ServerConfigDialogFooter } from "./ServerConfigDialogFooter";
 import { ServerConfigDialogHeader } from "./ServerConfigDialogHeader";
-import { SseConfigForm } from "./SseConfigForm";
-import { StdioConfigForm } from "./StdioConfigForm";
-import { useLocalDraft } from "./useLocalDraft";
-import { useSaveServerConfig } from "./useSaveServerConfig";
-import { useServerConfig } from "./useServerConfig";
 
 interface ServerConfigDialogProps {
   isOpen: boolean;
@@ -143,7 +143,11 @@ export const ServerConfigDialog = forwardRef<
       <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
         <ServerConfigDialogHeader />
 
-        <LabeledInput label="Server name" value={serverName} onChange={setServerName} />
+        <LabeledInput
+          label="Server name"
+          value={serverName}
+          onChange={setServerName}
+        />
 
         {configs && configs.length > 0 && (
           <ConfigTabs

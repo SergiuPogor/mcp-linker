@@ -21,22 +21,32 @@ const REPO = "milisp/mcp-linker";
 export async function checkForUpdate() {
   try {
     const currentVersion = await getVersion();
-    const { version: cachedVersion, latest: cachedLatestVersion } = getCachedVersions();
-    const lastCheck = parseInt(localStorage.getItem("mcp_cached_time") || "0", 10);
+    const { version: cachedVersion, latest: cachedLatestVersion } =
+      getCachedVersions();
+    const lastCheck = parseInt(
+      localStorage.getItem("mcp_cached_time") || "0",
+      10,
+    );
     const CACHE_DURATION = 86400000; // 24 hours in milliseconds
     const isCacheValid = Date.now() - lastCheck < CACHE_DURATION;
 
-    if (cachedVersion === currentVersion && cachedLatestVersion !== null && isCacheValid) {
+    if (
+      cachedVersion === currentVersion &&
+      cachedLatestVersion !== null &&
+      isCacheValid
+    ) {
       return;
     }
-    const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`);
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO}/releases/latest`,
+    );
     const data = await res.json();
     const latestVersion = data.tag_name;
     setCachedVersions(currentVersion, latestVersion);
 
     if (latestVersion !== `v${currentVersion}`) {
       const confirmUpdate = confirm(
-        `new ${latestVersion} go to GitHub release`
+        `new ${latestVersion} go to GitHub release`,
       );
       if (confirmUpdate) {
         window.open(`https://github.com/${REPO}/releases/latest`, "_blank");

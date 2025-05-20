@@ -3,6 +3,8 @@ import { TranslationSchema } from "../schema";
 const zh: { translation: TranslationSchema } = {
   translation: {
     get: "获取",
+    edit: "编辑",
+    save: "保存",
     guest: "未登录",
     loadMore: "加载更多",
     loading: "加载中",
@@ -53,7 +55,7 @@ const zh: { translation: TranslationSchema } = {
       items: "项",
       results: "结果",
       noResults: "无结果",
-      startSearching: "开始搜索"
+      startSearching: "开始搜索",
     },
     serverForm: {
       command: "命令",

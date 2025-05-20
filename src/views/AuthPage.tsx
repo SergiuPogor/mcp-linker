@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getUserInfo = async () => {
       const { user } = await getSupabaseAuthInfo();
@@ -41,7 +41,6 @@ export default function AuthPage() {
       throw error;
     }
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4 text-center">

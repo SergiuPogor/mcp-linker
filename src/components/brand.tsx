@@ -2,7 +2,13 @@ import { Button } from "@/components/ui/button";
 import { open } from "@tauri-apps/plugin-shell";
 import { useTranslation } from "react-i18next";
 
-export const Brand = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean; setIsCollapsed: (val: boolean) => void }) => {
+export const Brand = ({
+  isCollapsed,
+  setIsCollapsed,
+}: {
+  isCollapsed: boolean;
+  setIsCollapsed: (val: boolean) => void;
+}) => {
   const { t } = useTranslation<"translation">();
 
   return (

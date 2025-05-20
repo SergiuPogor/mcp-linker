@@ -48,7 +48,7 @@ const ContentArea: React.FC<ContentAreaProps> = ({ navId }) => {
         }, 300); // Delay to ensure content rendering is complete
       });
     }
-  
+
     return () => {
       if (scrollRef.current) {
         sessionStorage.setItem(
@@ -105,7 +105,10 @@ const MCPStore = () => {
 
             <Route path="/search" element={<ContentArea navId="search" />} />
             <Route path="/auth" element={<ContentArea navId="auth" />} />
-            <Route path="/dashboard" element={<ContentArea navId="dashboard" />} />
+            <Route
+              path="/dashboard"
+              element={<ContentArea navId="dashboard" />}
+            />
             <Route path="/" element={<ContentArea navId={navs[0].id} />} />
           </Routes>
         </div>

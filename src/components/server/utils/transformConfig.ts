@@ -1,6 +1,9 @@
 import type { ServerConfig } from "@/types";
 
-export const transformConfig = (serverType: string, config: ServerConfig): ServerConfig => {
+export const transformConfig = (
+  serverType: string,
+  config: ServerConfig,
+): ServerConfig => {
   let finalConfig: ServerConfig;
 
   if (serverType === "stdio" && "command" in config && "args" in config) {

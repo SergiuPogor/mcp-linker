@@ -1,7 +1,8 @@
+import { incrementViews } from "@/lib/api/servers";
 import type { ServerType } from "@/types";
 import { useEffect, useRef, useState } from "react";
 import { ServerCard } from "./ServerCard";
-import { ServerConfigDialog } from "./ServerConfigDialog";
+import { ServerConfigDialog } from "./dialog/ServerConfigDialog";
 
 interface ServerListProps {
   mcpServers: ServerType[];
@@ -66,6 +67,7 @@ export function ServerList({ mcpServers }: ServerListProps) {
   const openDialog = (server: ServerType) => {
     setCurrentServer(server);
     setIsDialogOpen(true);
+    incrementViews(server.id);
   };
 
   // Handle empty state

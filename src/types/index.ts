@@ -16,7 +16,7 @@ export type StdioServerConfig = {
 export type ServerConfig = SseConfig | StdioServerConfig;
 
 export type ServerType = {
-  id?: string;
+  id: number;
   name: string;
   developer?: string;
   icon_url?: string;

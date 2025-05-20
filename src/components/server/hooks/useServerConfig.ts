@@ -119,6 +119,6 @@ export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
     envValues,
     setEnvValues,
     headerValues,
-    setHeaderValues
+    setHeaderValues,
   };
 };
