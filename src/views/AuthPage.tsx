@@ -13,7 +13,7 @@ export default function AuthPage() {
     const getUserInfo = async () => {
       const { user } = await getSupabaseAuthInfo();
       if (user) {
-        navigate("/dashboard");
+        navigate("/");
       }
     };
 
@@ -55,14 +55,14 @@ export default function AuthPage() {
           <Github />
           Continue with GitHub
         </Button>
-        {/* <Button
+        <Button
           onClick={() => handleOAuthLogin("google")}
           className="w-full flex items-center justify-center gap-2"
           variant="outline"
         >
           <span className="text-sm">🔍</span>
           Continue with Google
-        </Button> */}
+        </Button>
       </div>
     </div>
   );

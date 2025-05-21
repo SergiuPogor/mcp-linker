@@ -68,6 +68,8 @@ const en: { translation: TranslationSchema } = {
     sortOptions: "sort options",
     sortByGithubStars: "GitHub Stars",
     sortByCreatedAt: "Creation Date",
+    views: "Views",
+    downloads: "Downloads",
     descend: "Descending",
     ascend: "Ascending",
   },

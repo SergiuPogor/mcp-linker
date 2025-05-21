@@ -1,72 +1,15 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
 import { Route, Routes } from "react-router-dom";
-
-import useNav from "./nav";
 
 import { needspathClient } from "@/lib/data";
 import { useClientPathStore } from "@/store/clientPathStore";
+import { ServerPage } from "@/views/ServerPage";
 import { Toaster } from "sonner";
+import { ContentArea } from "./ContentArea";
 import LangSelect from "./LangSelect";
 import { PathSelector } from "./PathSelector";
 import { Sidebar } from "./Sidebar";
-
 import { ClientSelector } from "./client-selector";
-
-const fallbackComponent = () => <div>Loading...</div>;
-
-const dynamicPages: {
-  [key: string]: React.LazyExoticComponent<React.FC<any>>;
-} = {
-  home: lazy(() => import("@/views/home")),
-  discover: lazy(() => import("@/views/Discover")),
-  categories: lazy(() => import("@/views/categories")),
-  search: lazy(() => import("@/views/search")),
-  manage: lazy(() => import("@/views/manager")),
-  favs: lazy(() => import("@/views/favorites")),
-  auth: lazy(() => import("@/views/AuthPage")),
-  dashboard: lazy(() => import("@/views/Dashboard")),
-  recently: lazy(() => import("@/views/recently")),
-};
-
-interface ContentAreaProps {
-  navId: string;
-}
-
-const ContentArea: React.FC<ContentAreaProps> = ({ navId }) => {
-  const PageComponent = dynamicPages[navId] || dynamicPages["other"];
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const savedScrollY = sessionStorage.getItem(`scroll-${navId}`);
-    if (scrollRef.current && savedScrollY) {
-      // Use requestAnimationFrame + setTimeout to delay setting scrollTop
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          if (scrollRef.current) {
-            scrollRef.current.scrollTop = parseInt(savedScrollY, 10);
-          }
-        }, 300); // Delay to ensure content rendering is complete
-      });
-    }
-
-    return () => {
-      if (scrollRef.current) {
-        sessionStorage.setItem(
-          `scroll-${navId}`,
-          scrollRef.current.scrollTop.toString(),
-        );
-      }
-    };
-  }, [navId]);
-
-  return (
-    <div className="flex-1 overflow-auto" ref={scrollRef}>
-      <Suspense fallback={fallbackComponent()}>
-        <PageComponent />
-      </Suspense>
-    </div>
-  );
-};
+import useNav from "./nav";
 
 const MCPStore = () => {
   const { selectedClient } = useClientPathStore();
@@ -105,11 +48,12 @@ const MCPStore = () => {
 
             <Route path="/search" element={<ContentArea navId="search" />} />
             <Route path="/auth" element={<ContentArea navId="auth" />} />
+            <Route path="/servers/:id" element={<ServerPage />} />
             <Route
               path="/dashboard"
               element={<ContentArea navId="dashboard" />}
             />
-            <Route path="/" element={<ContentArea navId={navs[0].id} />} />
+            <Route path="/" element={<ContentArea navId="discover" />} />
           </Routes>
         </div>
       </div>

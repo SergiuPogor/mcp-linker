@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
-import { Github, Star, StarOff } from "lucide-react";
+import { Github, SquareArrowOutUpRight, Star, StarOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ServerCardProps {
@@ -48,10 +48,11 @@ export function ServerCard({
                     e.stopPropagation();
                     openUrl(app.source);
                   }}
-                  className="hover:underline text-left"
+                  className="hover:underline text-left flex"
                   title={`open ${app.source}`}
                 >
                   {app.name}
+                  <SquareArrowOutUpRight size={10} />
                 </button>
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">

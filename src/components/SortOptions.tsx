@@ -35,6 +35,10 @@ export function SortOptions({
         return t("sortByGithubStars");
       case "created_at":
         return t("sortByCreatedAt");
+      case "views":
+        return t("views");
+      case "downloads":
+        return t("downloads");
       default:
         return t("sortByGithubStars");
     }
@@ -75,6 +79,12 @@ export function SortOptions({
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="created_at">
               {t("sortByCreatedAt")}
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="views">
+              {t("views")}
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="downloads">
+              {t("downloads")}
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>

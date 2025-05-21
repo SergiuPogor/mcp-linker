@@ -145,7 +145,7 @@ export const ServerTemplateDialog = forwardRef<
           <Button
             onClick={async (e) => {
               e.preventDefault();
-              await handleSellServer(); // 确保触发
+              await handleSellServer();
             }}
           >
             {t("sellServer")}

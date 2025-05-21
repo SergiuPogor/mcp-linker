@@ -1,4 +1,5 @@
 // useSaveServerConfig.ts
+import { incrementDownloads } from "@/lib/api/servers";
 import type { ServerConfig, ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ export function useSaveServerConfig() {
     selectedClient: string,
     selectedPath: string,
     selectedServer: string,
+    currentServer: ServerType,
     value: ServerConfig,
   ) {
     try {
@@ -29,6 +31,7 @@ export function useSaveServerConfig() {
         serverConfig: value,
       };
       await invoke("add_mcp_server", server);
+      incrementDownloads(currentServer.id);
       console.log("add server", new Date(), server);
     } catch (error) {
       console.error(error);
@@ -64,7 +67,13 @@ export function useSaveServerConfig() {
 
     if (client && config) {
       try {
-        await updateConfig(selectedClient, selectedPath, client.name, config);
+        await updateConfig(
+          selectedClient,
+          selectedPath,
+          client.name,
+          currentServer,
+          config,
+        );
         try {
           console.log("Saving to myservers:", serverName, config);
           const savedMyServers = localStorage.getItem("myservers");

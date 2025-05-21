@@ -68,6 +68,8 @@ const ja: { translation: TranslationSchema } = {
     sortOptions: "並べ替えオプション",
     sortByGithubStars: "GitHubスター順",
     sortByCreatedAt: "作成日順",
+    views: "ビュー",
+    downloads: "ダウンロード",
     descend: "降順",
     ascend: "昇順",
   },

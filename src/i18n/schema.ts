@@ -65,6 +65,8 @@ export interface TranslationSchema {
   sortOptions: string;
   sortByGithubStars: string;
   sortByCreatedAt: string;
+  downloads: string;
+  views: string;
   descend: string;
   ascend: string;
 }

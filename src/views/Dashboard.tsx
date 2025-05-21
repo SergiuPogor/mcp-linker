@@ -1,34 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
 import { getSupabaseAuthInfo, signOut } from "@/services/auth";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function OnBoardingPage() {
+export default function Dashboard() {
   const navigate = useNavigate();
   const [me, setMe] = useState<Record<string, any>>();
   const [access_token, setToken] = useState<string | null>(null);
-  const [username, setUsername] = useState<string>("");
   const [isVerifyingToken, setIsVerifyingToken] = useState<boolean>(false);
-
-  const sendMe = async () => {
-    try {
-      await api.post(
-        `/users`,
-        { username },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        },
-      );
-      console.log("sync username ok");
-    } catch (error) {
-      console.error("Failed to post username:", error);
-    }
-  };
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -45,7 +25,6 @@ export default function OnBoardingPage() {
               Authorization: `Bearer ${token}`,
             },
           });
-          navigate("/discover");
         } catch (error) {
           console.error("Failed to fetch user info:", error);
         }
@@ -59,7 +38,7 @@ export default function OnBoardingPage() {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate("/discover");
+      navigate("/");
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -85,11 +64,11 @@ export default function OnBoardingPage() {
             {access_token ? "Available" : "Not Found"}
           </div>
 
-          {me?.user_metadata.user_name ? (
+          {me?.user_metadata.full_name && (
             <div className="space-y-2">
               <div className="text-lg font-semibold">Welcome to MCP-Linker</div>
               <div>
-                <strong>Username:</strong> {me.user_metadata.user_name}
+                <strong>Full name:</strong> {me.user_metadata.full_name}
               </div>
               <div>
                 <strong>Email:</strong> {me.email}
@@ -98,26 +77,6 @@ export default function OnBoardingPage() {
                 <strong>User ID:</strong> {me.id}
               </div>
             </div>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                sendMe();
-              }}
-              className="space-y-2"
-            >
-              <Input
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Submit
-              </button>
-            </form>
           )}
         </>
       )}

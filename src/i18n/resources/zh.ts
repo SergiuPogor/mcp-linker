@@ -68,6 +68,8 @@ const zh: { translation: TranslationSchema } = {
     sortOptions: "排序选项",
     sortByGithubStars: "GitHub 星标",
     sortByCreatedAt: "创建时间",
+    views: "浏览量",
+    downloads: "下载量",
     descend: "降序",
     ascend: "升序",
   },
