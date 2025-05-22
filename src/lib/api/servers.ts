@@ -1,4 +1,5 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 function buildQueryParams(
   params: Record<string, string | null | undefined>,
@@ -38,10 +39,8 @@ export async function fetchServers(
     const response = await api.get(path, { timeout: 3000 });
     return response.data;
   } catch (err) {
-    console.warn("Falling back to local /servers.json", err);
-    const fallbackResponse = await fetch("/servers.json");
-    const fallbackData = await fallbackResponse.json();
-    return fallbackData;
+    toast.error("Failed to fetch servers: " + (err instanceof Error ? err.message : String(err)));
+    return null
   }
 }
 

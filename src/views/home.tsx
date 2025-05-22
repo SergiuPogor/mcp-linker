@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api";
 
 type ServerItem = {
   id: number;

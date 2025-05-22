@@ -48,6 +48,7 @@ const MCPStore = () => {
 
             <Route path="/search" element={<ContentArea navId="search" />} />
             <Route path="/auth" element={<ContentArea navId="auth" />} />
+            <Route path="/onboarding" element={<ContentArea navId="onboarding" />} />
             <Route path="/servers/:id" element={<ServerPage />} />
             <Route
               path="/dashboard"

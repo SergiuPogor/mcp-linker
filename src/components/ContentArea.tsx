@@ -13,6 +13,7 @@ const dynamicPages: {
   favs: lazy(() => import("@/views/favorites")),
   auth: lazy(() => import("@/views/AuthPage")),
   dashboard: lazy(() => import("@/views/Dashboard")),
+  onboarding: lazy(() => import("@/views/OnBoarding")),
   recently: lazy(() => import("@/views/recently")),
 };
 

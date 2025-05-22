@@ -3,10 +3,11 @@ import supabase from "@/utils/supabase";
 import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 let pendingDeepLink: string | null = null;
 let trigger: (() => void) | null = null;
-let isInitialized = false;  // Track initialization state
+let isInitialized = false; // Track initialization state
 
 export const useUnifiedDeepLink = () => {
   const navigate = useNavigate();
@@ -24,7 +25,10 @@ export const useUnifiedDeepLink = () => {
         const { data, error } =
           await supabase.auth.exchangeCodeForSession(code);
         if (error) throw error;
-        if (data.session) navigate("/");
+        if (data.session) {
+          toast.info("nav to /onboarding")
+          navigate("/onboarding");
+        }
       } else if (url.hostname === "servers" && url.pathname.length > 1) {
         const id = url.pathname.slice(1);
         console.log(`Navigating to server ID from deep link: ${id}`);
@@ -42,7 +46,7 @@ export const useUnifiedDeepLink = () => {
     // Prevent multiple initializations
     if (isInitialized) return;
     isInitialized = true;
-    
+
     console.log("Setting up deep link listener");
 
     const process = async (url: string) => {
@@ -57,7 +61,7 @@ export const useUnifiedDeepLink = () => {
     };
 
     onOpenUrl((urls) => {
-      console.log(`Received URLs: ${urls.join(', ')}`);
+      console.log(`Received URLs: ${urls.join(", ")}`);
       if (urls.length > 0) process(urls[0]);
     });
 
@@ -84,9 +88,9 @@ export const useUnifiedDeepLink = () => {
     }
   };
 
-  return { 
-    isHandlingAuth, 
+  return {
+    isHandlingAuth,
     triggerPendingDeepLink: () => trigger?.(),
-    manualTriggerDeepLink 
+    manualTriggerDeepLink,
   };
 };

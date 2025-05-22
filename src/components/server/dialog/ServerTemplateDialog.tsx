@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { apiWithAuth } from "@/lib/axiosWithToken";
+import { apiClient } from "@/lib/apiClient";
 import { useClientPathStore } from "@/store/clientPathStore";
 import capitalizeFirstLetter from "@/utils/title";
 import { invoke } from "@tauri-apps/api/core";
@@ -30,7 +30,6 @@ export const ServerTemplateDialog = forwardRef<
   const { selectedClient, selectedPath } = useClientPathStore();
   const { t } = useTranslation();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
-  const apiClient = apiWithAuth();
 
   const {
     serverName,
@@ -68,7 +67,6 @@ export const ServerTemplateDialog = forwardRef<
       if (!("type" in configWithType)) {
         (configWithType as any).type = "stdio";
       }
-      const client = await apiClient;
       const payload = {
         name: serverName,
         description: projectDescription,
@@ -77,9 +75,9 @@ export const ServerTemplateDialog = forwardRef<
         developer: "",
         configs: [configWithType],
       };
-      await client.post("/servers/", payload);
+      await apiClient.post("/servers/", payload);
+      toast.success("Server upload successfully");
       setIsDialogOpen(false);
-      // toast("Selling server: " + JSON.stringify(payload));
     } catch (error: any) {
       let message = "Failed to sell server";
       if (error?.response?.data?.message) {

@@ -1,3 +1,4 @@
-export { login, signup } from "./auth";
+export { apiClient as api } from "@/lib/apiClient";
 export { fetchServerConfig } from "./configs";
 export { fetchServers } from "./servers";
+

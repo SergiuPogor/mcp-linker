@@ -9,9 +9,9 @@ export const TriggerOnMount = ({ onReady }: { onReady: () => void }) => {
       console.log("Triggering onReady callback");
       onReady();
     }, 100);
-    
+
     return () => clearTimeout(timeoutId);
   }, [onReady]);
-  
+
   return null;
 };

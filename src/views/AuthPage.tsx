@@ -1,25 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { getSupabaseAuthInfo } from "@/services/auth";
 import supabase from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
 import { Github } from "lucide-react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const { user } = await getSupabaseAuthInfo();
-      if (user) {
-        navigate("/");
-      }
-    };
-
-    getUserInfo();
-  }, []);
-
   const handleOAuthLogin = async (provider: "github" | "google") => {
     try {
       const { data } = await supabase.auth.signInWithOAuth({

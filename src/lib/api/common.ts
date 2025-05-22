@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/lib/api";
 import axios, { AxiosRequestConfig } from "axios";
 
 // Fetch with timeout utility (using axios)

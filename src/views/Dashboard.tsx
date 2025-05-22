@@ -1,39 +1,25 @@
+import { ServerList } from "@/components/server/ServerList";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/axios";
-import { getSupabaseAuthInfo, signOut } from "@/services/auth";
-import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/apiClient";
+import { signOut } from "@/services/auth";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [me, setMe] = useState<Record<string, any>>();
-  const [access_token, setToken] = useState<string | null>(null);
-  const [isVerifyingToken, setIsVerifyingToken] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const { token, user } = await getSupabaseAuthInfo();
-      setToken(token);
-      setMe(user);
-      setIsVerifyingToken(true);
-
-      if (user && token) {
-        try {
-          await api.get(`/auth/me`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        }
-      }
-
-      setIsVerifyingToken(false);
-    };
-    getUserInfo();
-  }, []);
+  const {
+    data: mcpServers,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["myMcpServers"],
+    queryFn: async () => {
+      const res = await apiClient.get("/servers/my");
+      return res.data.servers;
+    },
+  });
 
   const handleLogout = async () => {
     try {
@@ -46,10 +32,6 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 space-y-4">
-      {isVerifyingToken && (
-        <div className="text-gray-500">Verifying token...</div>
-      )}
-
       <Button
         onClick={handleLogout}
         className="w-full flex items-center justify-center gap-2 mt-6"
@@ -57,28 +39,16 @@ export default function Dashboard() {
       >
         Logout
       </Button>
-      {!isVerifyingToken && (
-        <>
-          <div className="text-sm text-gray-700">
-            <strong>Access Token:</strong>{" "}
-            {access_token ? "Available" : "Not Found"}
-          </div>
 
-          {me?.user_metadata.full_name && (
-            <div className="space-y-2">
-              <div className="text-lg font-semibold">Welcome to MCP-Linker</div>
-              <div>
-                <strong>Full name:</strong> {me.user_metadata.full_name}
-              </div>
-              <div>
-                <strong>Email:</strong> {me.email}
-              </div>
-              <div>
-                <strong>User ID:</strong> {me.id}
-              </div>
-            </div>
-          )}
-        </>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : isError ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <div>
+          <h1>my on sale servers</h1>
+          <ServerList mcpServers={mcpServers} />
+        </div>
       )}
     </div>
   );
