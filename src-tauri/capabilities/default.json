@@ -15,7 +15,6 @@
     "shell:default",
     "dialog:default",
     "os:default",
-    "stronghold:default",
     "deep-link:default"
   ]
 }
