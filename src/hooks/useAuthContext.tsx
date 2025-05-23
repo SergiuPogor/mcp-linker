@@ -1,6 +1,6 @@
 // hooks/useAuthContext.ts
 import { getSession, signOut } from "@/services/auth";
-import supabase from "@/utils/supabase";
+import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Session, User } from "@supabase/supabase-js";
 import {
   createContext,
@@ -15,6 +15,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isAuthEnabled: boolean;
   logout: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -26,6 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refreshSession = async () => {
+    // Skip if Supabase is not enabled
+    if (!isSupabaseEnabled || !supabase) {
+      setSession(null);
+      return;
+    }
+
     try {
       const newSession = await getSession();
       setSession(newSession);
@@ -36,6 +43,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // If Supabase is not enabled, skip authentication setup
+    if (!isSupabaseEnabled || !supabase) {
+      setSession(null);
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     refreshSession().finally(() => setLoading(false));
 
@@ -51,6 +65,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = async () => {
+    if (!isSupabaseEnabled || !supabase) {
+      return;
+    }
+    
     await signOut();
     setSession(null);
   };
@@ -60,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     session,
     loading,
     isAuthenticated: !!session?.user,
+    isAuthEnabled: isSupabaseEnabled,
     logout,
     refreshSession,
   };

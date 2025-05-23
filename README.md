@@ -9,8 +9,9 @@
 
 ## News
 
+- 2025-05-22: You can add your servers for other people, server list sort by more choice
 - 2025-05-19: server list sort by github stars  
-- 2025-05-16: online MCP servers store preview  
+- 2025-05-16: online MCP servers store preview, more than 600 serveres, will add more.
 - 2025-05-08: Support adding custom server  
 
 ---
@@ -34,7 +35,7 @@
   - [🔍 Troubleshooting](#-troubleshooting)
   - [🤝 Contributing](#-contributing)
 - [📚 Resources](#-resources)
-  - [🌐 Official Servers](#-official-servers)
+  - [🌐 Servers](#-servers)
   - [💬 Feedback \& Support](#-feedback--support)
   - [🎉 Contributors](#-contributors)
 
@@ -123,9 +124,11 @@ We welcome contributions from the community:
 
 # 📚 Resources
 
-## 🌐 Official Servers
+## 🌐 Servers
 
 Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
+
+[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
 
 ## 💬 Feedback & Support
 

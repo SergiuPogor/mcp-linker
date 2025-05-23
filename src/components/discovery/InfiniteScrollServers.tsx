@@ -1,8 +1,8 @@
 import { ServerList } from "@/components/server/ServerList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ServerType } from "@/types";
-import { useTranslation } from "react-i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface InfiniteScrollServersProps {
   servers: ServerType[];
@@ -37,7 +37,7 @@ export const InfiniteScrollServers = ({
             ))}
           </div>
         ) : (
-          t("noServerTip")
+          `${t("noServerTip")}. API is initializing, this may take up to 50 seconds.`
         )}
       </div>
     );
