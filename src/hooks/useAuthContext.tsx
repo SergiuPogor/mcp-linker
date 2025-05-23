@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!isSupabaseEnabled || !supabase) {
       return;
     }
-    
+
     await signOut();
     setSession(null);
   };

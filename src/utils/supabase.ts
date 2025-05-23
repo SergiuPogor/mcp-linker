@@ -22,7 +22,9 @@ if (isSupabaseEnabled) {
     supabase = null;
   }
 } else {
-  console.info("Supabase not configured - authentication features will be disabled");
+  console.info(
+    "Supabase not configured - authentication features will be disabled",
+  );
 }
 
 export default supabase;

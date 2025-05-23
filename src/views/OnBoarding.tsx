@@ -10,13 +10,15 @@ export default function OnBoarding() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 3;
-  
+
   // 使用 ref 来防止重复认证
   const hasInitialized = useRef(false);
 
   const authenticateWithRetry = useCallback(async () => {
     if (retryCount >= maxRetries) {
-      toast.error("Authentication failed after multiple attempts. Please sign in again.");
+      toast.error(
+        "Authentication failed after multiple attempts. Please sign in again.",
+      );
       navigate("/login");
       return;
     }
@@ -24,12 +26,14 @@ export default function OnBoarding() {
     try {
       // 如果是重试，等待一小段时间
       if (retryCount > 0) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
       }
 
-      toast.success(`Authenticating user... ${retryCount > 0 ? `(Attempt ${retryCount + 1})` : ''}`);
+      toast.success(
+        `Authenticating user... ${retryCount > 0 ? `(Attempt ${retryCount + 1})` : ""}`,
+      );
       const userData = await getCurrentUser();
-      
+
       if (userData) {
         toast.success("User authenticated successfully");
         navigate("/dashboard");
@@ -39,14 +43,16 @@ export default function OnBoarding() {
       }
     } catch (error: any) {
       console.error(`Authentication error (attempt ${retryCount + 1}):`, error);
-      
+
       // 如果是 JWT 时间问题，自动重试
       if (error.message?.includes("not yet valid") || error.status === 401) {
-        setRetryCount(prev => prev + 1);
-        toast.warning(`Authentication failed, retrying... (${retryCount + 1}/${maxRetries})`);
+        setRetryCount((prev) => prev + 1);
+        toast.warning(
+          `Authentication failed, retrying... (${retryCount + 1}/${maxRetries})`,
+        );
         return;
       }
-      
+
       // 其他错误直接跳转到登录页
       toast.error("Authentication failed. Please sign in again.");
       navigate("/login");
@@ -84,7 +90,13 @@ export default function OnBoarding() {
 
   // 重试逻辑 - 只在需要重试时触发
   useEffect(() => {
-    if (retryCount > 0 && retryCount < maxRetries && user && !loading && !isAuthenticating) {
+    if (
+      retryCount > 0 &&
+      retryCount < maxRetries &&
+      user &&
+      !loading &&
+      !isAuthenticating
+    ) {
       const timer = setTimeout(async () => {
         setIsAuthenticating(true);
         try {
@@ -95,7 +107,14 @@ export default function OnBoarding() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [retryCount, maxRetries, user, loading, isAuthenticating, authenticateWithRetry]);
+  }, [
+    retryCount,
+    maxRetries,
+    user,
+    loading,
+    isAuthenticating,
+    authenticateWithRetry,
+  ]);
 
   // Show loading while auth state is being determined
   if (loading) {
@@ -115,7 +134,9 @@ export default function OnBoarding() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Authenticating...{retryCount > 0 && ` (Attempt ${retryCount + 1})`}</p>
+          <p>
+            Authenticating...{retryCount > 0 && ` (Attempt ${retryCount + 1})`}
+          </p>
           {retryCount > 0 && (
             <p className="text-sm text-gray-600 mt-2">
               Retrying due to time sync issues...

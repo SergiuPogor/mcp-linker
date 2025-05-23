@@ -37,9 +37,9 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  return { 
-    user, 
-    loading, 
-    isAuthEnabled: isSupabaseEnabled 
+  return {
+    user,
+    loading,
+    isAuthEnabled: isSupabaseEnabled,
   };
 };

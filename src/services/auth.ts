@@ -44,14 +44,14 @@ export const getCurrentUser = async () => {
 
     const { authHeader } = await getAuthInfo();
     const endpoint = `${apiUrl}/users/me`;
-    
+
     console.log("Fetching user from:", endpoint);
     console.log("Auth header present:", !!authHeader);
-    
+
     const res = await fetch(endpoint, {
-      headers: { 
+      headers: {
         Authorization: authHeader,
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
     });
 
@@ -61,9 +61,11 @@ export const getCurrentUser = async () => {
     if (!res.ok) {
       const errorText = await res.text();
       console.error("API Error Response:", errorText);
-      throw new Error(`Failed to fetch user data: ${res.status} ${res.statusText}`);
+      throw new Error(
+        `Failed to fetch user data: ${res.status} ${res.statusText}`,
+      );
     }
-    
+
     const userData = await res.json();
     console.log("User data retrieved:", !!userData);
     return userData;

@@ -22,11 +22,13 @@ export const useUnifiedDeepLink = () => {
 
       if (code) {
         setIsHandlingAuth(true);
-        const { data, error } =
-          await supabase.auth.exchangeCodeForSession(code);
+        if (!supabase) {
+          throw new Error('Supabase client is not initialized');
+        }
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) throw error;
         if (data.session) {
-          toast.info("nav to /onboarding")
+          toast.info("nav to /onboarding");
           navigate("/onboarding");
         }
       } else if (url.hostname === "servers" && url.pathname.length > 1) {

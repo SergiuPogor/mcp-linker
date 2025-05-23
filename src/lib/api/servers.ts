@@ -39,8 +39,11 @@ export async function fetchServers(
     const response = await api.get(path, { timeout: 3000 });
     return response.data;
   } catch (err) {
-    toast.error("Failed to fetch servers: " + (err instanceof Error ? err.message : String(err)));
-    return null
+    toast.error(
+      "Failed to fetch servers: " +
+        (err instanceof Error ? err.message : String(err)),
+    );
+    return null;
   }
 }
 
