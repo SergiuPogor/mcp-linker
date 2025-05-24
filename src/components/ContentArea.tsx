@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
-
-const fallbackComponent = () => <div>Loading...</div>;
+import { ContentLoadingFallback } from "./LoadingConfig";
 
 const dynamicPages: {
   [key: string]: React.LazyExoticComponent<React.FC<any>>;
@@ -49,7 +48,7 @@ export const ContentArea: React.FC<ContentAreaProps> = ({ navId }) => {
 
   return (
     <div className="flex-1 overflow-auto" ref={scrollRef}>
-      <Suspense fallback={fallbackComponent()}>
+      <Suspense fallback={<ContentLoadingFallback />}>
         <PageComponent />
       </Suspense>
     </div>

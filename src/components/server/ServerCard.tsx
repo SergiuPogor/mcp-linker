@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/card";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
-import { Github, SquareArrowOutUpRight, Star, StarOff, Trash2 } from "lucide-react";
+import {
+  Github,
+  SquareArrowOutUpRight,
+  Star,
+  StarOff,
+  Trash2,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ServerCardProps {

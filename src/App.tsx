@@ -6,6 +6,7 @@ import { checkForUpdate } from "./lib/update";
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
 import "./App.css";
 import { TriggerOnMount } from "./components/TriggerOnMount";
+import { AppLoadingFallback } from "./components/LoadingConfig";
 const Layout = lazy(() => import("./components/Layout"));
 const CommandChecker = lazy(() => import("@/components/CommandChecker"));
 
@@ -29,7 +30,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<AppLoadingFallback />}>
           <CommandChecker />
           <Layout />
           {/* deep link */}

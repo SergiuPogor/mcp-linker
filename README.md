@@ -120,7 +120,7 @@ bun tauri dev
 
 # create a .env file at project root and set env
 cp .env.example .env
-VITE_API_BASE_URL=https://mcp-linker-api.onrender.com/api/v1
+VITE_API_BASE_URL=https://api.mcp-linker.store/api/v1
 ```
 
 ## 🔍 Troubleshooting

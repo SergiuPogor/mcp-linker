@@ -1,4 +1,4 @@
-// services/auth.ts (优化版)
+// services/auth.ts (optimized version)
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
@@ -8,7 +8,7 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 console.log("API URL:", apiUrl);
 console.log("Supabase enabled:", isSupabaseEnabled);
 
-// 基础会话获取（保持现有逻辑）
+// Basic session retrieval
 export const getSession = async (): Promise<Session> => {
   if (!isSupabaseEnabled || !supabase) {
     throw new Error("Supabase is not configured");
@@ -23,7 +23,7 @@ export const getSession = async (): Promise<Session> => {
   return data.session;
 };
 
-// 获取认证信息的通用方法
+// Get authentication information
 export const getAuthInfo = async () => {
   const session = await getSession();
   return {
@@ -34,7 +34,7 @@ export const getAuthInfo = async () => {
   };
 };
 
-// 获取当前用户（使用统一的 API 客户端）
+// Get current user (using unified API client)
 export const getCurrentUser = async () => {
   try {
     if (!isSupabaseEnabled) {
@@ -75,7 +75,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-// 登出
+// Sign out
 export const signOut = async () => {
   if (!isSupabaseEnabled || !supabase) {
     console.log("Authentication disabled - skipping sign out");
@@ -86,7 +86,7 @@ export const signOut = async () => {
   if (error) throw error;
 };
 
-// 认证回调处理
+// Handle authentication callback
 export const handleAuthCallback = async () => {
   if (!isSupabaseEnabled || !supabase) {
     throw new Error("Supabase is not configured");
@@ -94,7 +94,7 @@ export const handleAuthCallback = async () => {
   return getSession();
 };
 
-// 导出所有方法
+// Export all methods
 export default {
   getSession,
   getAuthInfo,

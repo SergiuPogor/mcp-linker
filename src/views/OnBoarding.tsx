@@ -11,7 +11,7 @@ export default function OnBoarding() {
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 3;
 
-  // 使用 ref 来防止重复认证
+  // Use ref to prevent duplicate authentication
   const hasInitialized = useRef(false);
 
   const authenticateWithRetry = useCallback(async () => {
@@ -24,7 +24,7 @@ export default function OnBoarding() {
     }
 
     try {
-      // 如果是重试，等待一小段时间
+      // If retrying, wait for a short time
       if (retryCount > 0) {
         await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
       }
@@ -44,7 +44,7 @@ export default function OnBoarding() {
     } catch (error: any) {
       console.error(`Authentication error (attempt ${retryCount + 1}):`, error);
 
-      // 如果是 JWT 时间问题，自动重试
+      // If JWT time issue, retry automatically
       if (error.message?.includes("not yet valid") || error.status === 401) {
         setRetryCount((prev) => prev + 1);
         toast.warning(
@@ -53,13 +53,13 @@ export default function OnBoarding() {
         return;
       }
 
-      // 其他错误直接跳转到登录页
+      // Other errors redirect to login page
       toast.error("Authentication failed. Please sign in again.");
       navigate("/login");
     }
   }, [retryCount, maxRetries, navigate]);
 
-  // 主要的认证逻辑 - 移除 isAuthenticating 依赖
+  // Main authentication logic - removed isAuthenticating dependency
   useEffect(() => {
     const initAuth = async () => {
       // Don't proceed if still loading auth state
@@ -72,7 +72,7 @@ export default function OnBoarding() {
         return;
       }
 
-      // 防止重复初始化
+      // Prevent duplicate initialization
       if (hasInitialized.current) return;
       hasInitialized.current = true;
 
@@ -86,9 +86,9 @@ export default function OnBoarding() {
     };
 
     initAuth();
-  }, [navigate, user, loading, authenticateWithRetry]); // 移除了 isAuthenticating
+  }, [navigate, user, loading, authenticateWithRetry]); // Removed isAuthenticating
 
-  // 重试逻辑 - 只在需要重试时触发
+  // Retry logic - only triggered when retry is needed
   useEffect(() => {
     if (
       retryCount > 0 &&

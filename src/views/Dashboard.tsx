@@ -19,7 +19,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [serverToDelete, setServerToDelete] = useState<{ id: number; name: string } | null>(null);
+  const [serverToDelete, setServerToDelete] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
   const {
     data: mcpServers,
@@ -42,11 +45,11 @@ export default function Dashboard() {
       console.error("Logout failed:", err);
     }
   };
-  
+
   const handleDelete = (id: number) => {
     const server = mcpServers?.find((s: ServerType) => s.id === id);
     const serverName = server?.name || `Server ${id}`;
-    
+
     setServerToDelete({ id, name: serverName });
     setDeleteDialogOpen(true);
   };
@@ -56,12 +59,17 @@ export default function Dashboard() {
 
     try {
       await apiClient.delete(`/servers/${serverToDelete.id}`);
-      console.log(`Successfully deleted server: ${serverToDelete.name} (ID: ${serverToDelete.id})`);
+      console.log(
+        `Successfully deleted server: ${serverToDelete.name} (ID: ${serverToDelete.id})`,
+      );
       queryClient.invalidateQueries({ queryKey: ["myMcpServers"] });
       setDeleteDialogOpen(false);
       setServerToDelete(null);
     } catch (error) {
-      console.error(`Failed to delete server ${serverToDelete.name} (ID: ${serverToDelete.id}):`, error);
+      console.error(
+        `Failed to delete server ${serverToDelete.name} (ID: ${serverToDelete.id}):`,
+        error,
+      );
       alert(`Failed to delete ${serverToDelete.name}. Please try again.`);
     }
   };
@@ -70,7 +78,7 @@ export default function Dashboard() {
     setDeleteDialogOpen(false);
     setServerToDelete(null);
   };
-  
+
   return (
     <div className="p-4 space-y-4">
       <Button
@@ -88,7 +96,7 @@ export default function Dashboard() {
       ) : (
         <div>
           <h1>My On Sale Servers</h1>
-          <ServerList mcpServers={mcpServers} onDelete={handleDelete}/>
+          <ServerList mcpServers={mcpServers} onDelete={handleDelete} />
         </div>
       )}
 
@@ -104,16 +112,10 @@ export default function Dashboard() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={handleDeleteCancel}
-            >
+            <Button variant="outline" onClick={handleDeleteCancel}>
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteConfirm}
-            >
+            <Button variant="destructive" onClick={handleDeleteConfirm}>
               Delete
             </Button>
           </DialogFooter>

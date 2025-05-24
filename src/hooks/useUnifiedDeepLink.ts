@@ -23,9 +23,10 @@ export const useUnifiedDeepLink = () => {
       if (code) {
         setIsHandlingAuth(true);
         if (!supabase) {
-          throw new Error('Supabase client is not initialized');
+          throw new Error("Supabase client is not initialized");
         }
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+        const { data, error } =
+          await supabase.auth.exchangeCodeForSession(code);
         if (error) throw error;
         if (data.session) {
           toast.info("nav to /onboarding");
