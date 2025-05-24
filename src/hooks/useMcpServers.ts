@@ -1,4 +1,4 @@
-import { fetchServers } from "@/lib/api";
+import { fetchServers } from "@/lib/api/servers";
 import { useQuery } from "@tanstack/react-query";
 
 export function useMcpServers({

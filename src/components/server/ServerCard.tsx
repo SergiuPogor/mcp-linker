@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
-import { Github, SquareArrowOutUpRight, Star, StarOff } from "lucide-react";
+import { Github, SquareArrowOutUpRight, Star, StarOff, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ServerCardProps {
@@ -17,6 +17,7 @@ interface ServerCardProps {
   onOpenDialog: (server: ServerType) => void;
   isFavorited: boolean;
   onToggleFavorite: (source: string) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function ServerCard({
@@ -24,6 +25,7 @@ export function ServerCard({
   onOpenDialog,
   isFavorited,
   onToggleFavorite,
+  onDelete,
 }: ServerCardProps) {
   const { t } = useTranslation();
 
@@ -75,6 +77,18 @@ export function ServerCard({
                 <StarOff size={20} className="text-gray-400" />
               )}
             </button>
+            {onDelete && (
+              <button
+                className="absolute top-3 right-10 bg-white/70 rounded-full p-1 hover:bg-red-100 transition"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(app.id);
+                }}
+                title="Delete Server"
+              >
+                <Trash2 size={20} className="text-red-500" />
+              </button>
+            )}
           </div>
         </div>
       </CardHeader>

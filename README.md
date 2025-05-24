@@ -1,3 +1,18 @@
+<p align="center">
+  <img src="public/logo.png" alt="Project Logo" width="200" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/milisp/mcp-linker/stargazers">
+    ⭐ If you find this project useful, please consider giving it a star!
+  </a>
+  <br/>
+  <a href="https://github.com/milisp/mcp-linker">
+    <img src="https://img.shields.io/github/stars/milisp/mcp-linker?style=social" alt="
+GitHub stars"/>
+  </a>
+</p>
+
 # MCP Linker
 
 📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
@@ -141,3 +156,7 @@ Thanks to the following contributors for improving this project:
 
 - [@eltociear](https://github.com/eltociear) — Japanese translation
 - [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions, Github workflow, UI improved, design
+
+---
+
+❤️ Enjoying MCP Linker? [Star us on GitHub](https://github.com/milisp/mcp-linker/stargazers) to support continued development!

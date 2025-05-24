@@ -1,5 +1,5 @@
 import { ServerList } from "@/components/server/ServerList";
-import { fetchServers } from "@/lib/api";
+import { fetchServers } from "@/lib/api/servers";
 import type { ServerType } from "@/types";
 import { useEffect, useState } from "react";
 

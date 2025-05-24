@@ -1,3 +1,17 @@
+<p align="center">
+  <img src="../public/logo.png" alt="项目 Logo" width="200" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/milisp/mcp-linker/stargazers">
+    ⭐ 如果你觉得这个项目有用，欢迎给一个 Star！
+  </a>
+  <br/>
+  <a href="https://github.com/milisp/mcp-linker">
+    <img src="https://img.shields.io/github/stars/milisp/mcp-linker?style=social" alt="GitHub stars"/>
+  </a>
+</p>
+
 # MCP Linker
 
 📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
@@ -129,3 +143,7 @@ bun tauri dev
 
 - [@eltociear](https://github.com/eltociear) — 日语翻译
 - [@devilcoder01](https://github.com/devilcoder01) — 改进 Windows 构建兼容性、项目安装说明、GitHub Workflow、UI 与设计
+
+---
+
+❤️ 喜欢MCP Linker吗？请在[GitHub](https://github.com/milisp/mcp-linker/stargazers)上给我们点星，支持持续开发！

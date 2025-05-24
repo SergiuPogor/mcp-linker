@@ -6,6 +6,7 @@ import { ServerConfigDialog } from "./dialog/ServerConfigDialog";
 
 interface ServerListProps {
   mcpServers: ServerType[];
+  onDelete?: (id: number) => void;
 }
 
 /**
@@ -14,7 +15,7 @@ interface ServerListProps {
  * - Improved responsive layout
  * - Better handling of favorites
  */
-export function ServerList({ mcpServers }: ServerListProps) {
+export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   // Stable key reference for consistent rendering
   const stableKeyRef = useRef(Math.random().toString(36));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -92,6 +93,7 @@ export function ServerList({ mcpServers }: ServerListProps) {
             onOpenDialog={openDialog}
             isFavorited={isFavorited(app.source)}
             onToggleFavorite={toggleFavorite}
+            onDelete={onDelete}
           />
         ))}
       </div>
