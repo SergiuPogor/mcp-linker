@@ -7,6 +7,7 @@ export interface TranslationSchema {
   loading: string;
   searchPlaceholder: string;
   sellServer: string;
+  loginRequired: string;
   addCustomServer: string;
   noServerTip: string;
   confirmDeletion: string;

@@ -4,12 +4,12 @@ import { needspathClient } from "@/lib/data";
 import { useClientPathStore } from "@/store/clientPathStore";
 import { ServerPage } from "@/views/ServerPage";
 import { Toaster } from "sonner";
-import { ContentArea } from "./ContentArea";
-import LangSelect from "./LangSelect";
-import { PathSelector } from "./PathSelector";
-import { Sidebar } from "./Sidebar";
-import { ClientSelector } from "./client-selector";
+import { ContentArea } from "../ContentArea";
+import { ClientSelector } from "../settings/client-selector";
+import LangSelect from "../settings/LangSelect";
+import { PathSelector } from "../settings/PathSelector";
 import useNav from "./nav";
+import { Sidebar } from "./Sidebar";
 
 const MCPStore = () => {
   const { selectedClient } = useClientPathStore();

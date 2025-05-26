@@ -9,10 +9,15 @@ import { InfiniteScrollServers } from "@/components/discovery/InfiniteScrollServ
 import { ScrollToBottomButton } from "@/components/discovery/ScrollToBottomButton";
 import { useServerDiscovery } from "@/hooks/useServerDiscovery";
 
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 export default function Discovery() {
   const { t } = useTranslation();
   const [isSell, setIsSell] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Use our custom hook for server discovery logic
   const {
@@ -35,6 +40,13 @@ export default function Discovery() {
   };
 
   const handleSellServer = () => {
+    // Check if user is authenticated before allowing server selling
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    // User is authenticated, proceed with sell server dialog
     setIsSell(true);
     setIsDialogOpen(true);
   };
@@ -55,6 +67,7 @@ export default function Discovery() {
         onSortChange={handleSortChange}
         onAddServer={handleAddServer}
         onSellServer={handleSellServer}
+        isAuthenticated={!!user}
       />
 
       {/* Server list with infinite scrolling */}

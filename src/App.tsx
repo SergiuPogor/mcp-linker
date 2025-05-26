@@ -5,8 +5,8 @@ import { checkForUpdate } from "./lib/update";
 
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
 import "./App.css";
+import { AppLoadingFallback } from "./components/common/LoadingConfig";
 import { TriggerOnMount } from "./components/TriggerOnMount";
-import { AppLoadingFallback } from "./components/LoadingConfig";
 const Layout = lazy(() => import("./components/Layout"));
 const CommandChecker = lazy(() => import("@/components/CommandChecker"));
 

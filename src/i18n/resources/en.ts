@@ -10,6 +10,7 @@ const en: { translation: TranslationSchema } = {
     loading: "Loading",
     searchPlaceholder: "search",
     sellServer: "sell server",
+    loginRequired: "login Required",
     addCustomServer: "Add custom server",
     noServerTip: "no Server Tip",
     confirmDeletion: "Confirm Deletion",

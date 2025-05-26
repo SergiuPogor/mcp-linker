@@ -10,6 +10,7 @@ const ja: { translation: TranslationSchema } = {
     loading: "読み込み中",
     searchPlaceholder: "検索",
     sellServer: "販売サーバー",
+    loginRequired: "ログインが必要です",
     addCustomServer: "カスタムサーバーを追加",
     noServerTip: "サーバーヒントなし",
     confirmDeletion: "削除の確認",

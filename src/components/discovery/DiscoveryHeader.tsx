@@ -1,5 +1,5 @@
+import { SortOptions } from "@/components/settings/SortOptions";
 import { Button } from "@/components/ui/button";
-import { SortOptions } from "@/components/SortOptions";
 import { useTranslation } from "react-i18next";
 
 interface DiscoveryHeaderProps {
@@ -8,6 +8,7 @@ interface DiscoveryHeaderProps {
   onSortChange: (sort: string, direction: string) => void;
   onAddServer: () => void;
   onSellServer: () => void;
+  isAuthenticated?: boolean;
 }
 
 export const DiscoveryHeader = ({
@@ -16,6 +17,7 @@ export const DiscoveryHeader = ({
   onSortChange,
   onAddServer,
   onSellServer,
+  isAuthenticated = false,
 }: DiscoveryHeaderProps) => {
   const { t } = useTranslation();
 
@@ -36,7 +38,12 @@ export const DiscoveryHeader = ({
         />
         <div className="flex gap-2">
           <Button onClick={onAddServer}>{t("addCustomServer")}</Button>
-          <Button onClick={onSellServer}>{t("sellServer")}</Button>
+          <Button
+            onClick={onSellServer}
+            title={!isAuthenticated ? t("loginRequired") : undefined}
+          >
+            {t("sellServer")}
+          </Button>
         </div>
       </div>
     </div>

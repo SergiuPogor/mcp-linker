@@ -10,6 +10,7 @@ const zh: { translation: TranslationSchema } = {
     loading: "加载中",
     searchPlaceholder: "搜索",
     sellServer: "出售服务器",
+    loginRequired: "需要登录",
     addCustomServer: "添加定制的服务器",
     noServerTip: "无服务器提示",
     confirmDeletion: "确认删除",

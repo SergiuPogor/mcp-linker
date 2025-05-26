@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
-import { ContentLoadingFallback } from "./LoadingConfig";
+import { ContentLoadingFallback } from "./common/LoadingConfig";
 
 const dynamicPages: {
   [key: string]: React.LazyExoticComponent<React.FC<any>>;

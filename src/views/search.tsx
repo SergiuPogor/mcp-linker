@@ -21,7 +21,7 @@ export default function SearchPage() {
   });
 
   // Debug logging to help identify issues
-  console.log('Search debug:', {
+  console.log("Search debug:", {
     query,
     searchTerm,
     deferredSearchTerm,
@@ -29,7 +29,7 @@ export default function SearchPage() {
     data,
     isFetching,
     error,
-    allServers
+    allServers,
   });
 
   useEffect(() => {
@@ -55,8 +55,8 @@ export default function SearchPage() {
         <div className="text-center text-red-600">
           <h2 className="text-xl font-semibold mb-2">Search Error</h2>
           <p>Failed to load search results. Please try again.</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           >
             Retry
@@ -96,13 +96,13 @@ export default function SearchPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Search Results for "{query}"</h1>
           <p className="text-gray-600 mt-1">
-            {servers.length} server{servers.length !== 1 ? 's' : ''} found
+            {servers.length} server{servers.length !== 1 ? "s" : ""} found
           </p>
         </div>
       )}
-      
+
       <ServerList mcpServers={servers} />
-      
+
       {/* Load more button */}
       {data?.hasNext && (
         <div className="mt-6 text-center">
@@ -113,11 +113,11 @@ export default function SearchPage() {
             }}
             disabled={isFetching}
           >
-            {isFetching ? 'Loading...' : t("loadMore")}
+            {isFetching ? "Loading..." : t("loadMore")}
           </button>
         </div>
       )}
-      
+
       {/* Additional loading indicator for pagination */}
       {isFetching && servers.length > 0 && (
         <div className="flex justify-center items-center py-4">

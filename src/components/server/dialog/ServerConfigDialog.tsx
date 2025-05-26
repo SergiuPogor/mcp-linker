@@ -38,7 +38,7 @@ export const ServerConfigDialog = forwardRef<
       return fetchServerConfig(currentServer.id);
     },
     enabled: isOpen && !!currentServer,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60 * 24 * 7,
     retry: 0,
     refetchOnWindowFocus: false,
   });

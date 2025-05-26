@@ -6,8 +6,8 @@ import { User, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Brand } from "./brand";
-import { ModeToggle } from "./mode-toggle";
+import { Brand } from "../brand";
+import { ModeToggle } from "../ui/mode-toggle";
 
 interface SidebarProps {
   navs: Nav[];
