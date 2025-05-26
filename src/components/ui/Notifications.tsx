@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import React from 'react';
 import { Button } from "./button";
+import { Progress } from "./progress";
 
 export interface Notification {
   id: string;
@@ -8,6 +9,8 @@ export interface Notification {
   message?: string;
   type: 'info' | 'success' | 'error';
   autoClose?: number;
+  progress?: number; // Progress value from 0 to 100
+  showProgress?: boolean; // Whether to show progress bar
   action?: {
     label: string;
     onClick: () => void;
@@ -56,6 +59,17 @@ export const Notifications: React.FC<NotificationsProps> = ({ notifications, onD
           </div>
           {notification.message && (
             <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+          )}
+          {notification.showProgress && (
+            <div className="mt-3">
+              <Progress 
+                value={notification.progress || 0} 
+                className="h-2"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {notification.progress || 0}% complete
+              </p>
+            </div>
           )}
           {notification.action && (
             <Button

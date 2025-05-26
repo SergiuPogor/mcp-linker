@@ -18,7 +18,14 @@ function setCachedVersions(version: string, latest: string) {
 
 const REPO = "milisp/mcp-linker";
 
-export async function checkForUpdate() {
+export interface UpdateInfo {
+  hasUpdate: boolean;
+  latestVersion: string;
+  releaseNotes: string;
+  releaseUrl: string;
+}
+
+export async function checkForUpdate(): Promise<UpdateInfo | null> {
   try {
     const currentVersion = await getVersion();
     const { version: cachedVersion, latest: cachedLatestVersion } =
@@ -35,7 +42,7 @@ export async function checkForUpdate() {
       cachedLatestVersion !== null &&
       isCacheValid
     ) {
-      return;
+      return null;
     }
     const res = await fetch(
       `https://api.github.com/repos/${REPO}/releases/latest`,
@@ -45,14 +52,17 @@ export async function checkForUpdate() {
     setCachedVersions(currentVersion, latestVersion);
 
     if (latestVersion !== `v${currentVersion}`) {
-      const confirmUpdate = confirm(
-        `new ${latestVersion} go to GitHub release`,
-      );
-      if (confirmUpdate) {
-        window.open(`https://github.com/${REPO}/releases/latest`, "_blank");
-      }
+      return {
+        hasUpdate: true,
+        latestVersion,
+        releaseNotes: data.body || "No release notes available.",
+        releaseUrl: `https://github.com/${REPO}/releases/latest`,
+      };
     }
+
+    return null;
   } catch (err) {
     console.error("check update error:", err);
+    return null;
   }
 }

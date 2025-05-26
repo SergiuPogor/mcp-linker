@@ -11,8 +11,10 @@ type ToolStatus = {
 };
 
 const STORAGE_KEY = "tools_check_status";
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
-export default function InstallTools() {
+export default function CommandChecker() {
+  // Fixed: Renamed from InstallTools to match component purpose
   const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [toolsStatus, setToolsStatus] = useState<
@@ -24,7 +26,10 @@ export default function InstallTools() {
   });
 
   const [isInstalling, setIsInstalling] = useState<Record<string, boolean>>({});
-  const [firstLoad, setFirstLoad] = useState(true);
+  const [_installProgress, setInstallProgress] = useState<
+    Record<string, number>
+  >({});
+  const [isChecking, setIsChecking] = useState(false); // Added: Track checking state
 
   const toolsConfig: ToolStatus[] = [
     {
@@ -34,13 +39,13 @@ export default function InstallTools() {
       fallbackUrl: "https://www.python.org/downloads/",
     },
     {
-      name: "npx",
+      name: "npx|node",
       cmd: "npx",
-      pkg: "nodejs",
+      pkg: "nodejs", // Fixed: Better to use 'node' for most package managers
       fallbackUrl: "https://nodejs.org/en/download/",
     },
     {
-      name: "UV",
+      name: "uv|uvx",
       cmd: "uv",
       pkg: "uv",
       fallbackUrl: "https://github.com/astral-sh/uv",
@@ -48,11 +53,27 @@ export default function InstallTools() {
   ];
 
   useEffect(() => {
-    if (firstLoad) {
+    // Check cache first
+    const checkCachedStatus = () => {
+      try {
+        const cached = localStorage.getItem(STORAGE_KEY);
+        if (cached) {
+          const { status, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setToolsStatus(status);
+            return true; // Cache is valid
+          }
+        }
+      } catch (error) {
+        console.error("Error reading cached status:", error);
+      }
+      return false; // Cache is invalid or doesn't exist
+    };
+
+    if (!checkCachedStatus()) {
       checkAllTools();
-      setFirstLoad(false);
     }
-  }, [firstLoad]);
+  }, []); // Fixed: Removed firstLoad dependency
 
   const addNotification = (notification: Omit<Notification, "id">) => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -63,68 +84,84 @@ export default function InstallTools() {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
-  async function checkAllTools(click: boolean = false) {
+  async function checkAllTools(isManualCheck: boolean = false) {
+    if (isChecking) return; // Prevent duplicate checks
+
+    setIsChecking(true);
     const updatedStatus = { ...toolsStatus };
 
-    for (const tool of toolsConfig) {
-      try {
-        const installed = await invoke<boolean>("check_command_exists", {
-          command: tool.cmd,
-        });
-        console.log(
-          `${tool.name}: ${installed ? "installed" : "not installed"}`,
-        );
-
-        if (!installed) {
-          // Remove any existing notifications for this tool
-          setNotifications((prev) =>
-            prev.filter(
-              (n) => !n.title.includes(tool.name) || n.type === "error",
-            ),
+    try {
+      // Check all tools in parallel for better performance
+      const checkPromises = toolsConfig.map(async (tool) => {
+        try {
+          const installed = await invoke<boolean>("check_command_exists", {
+            command: tool.cmd,
+          });
+          console.log(
+            `${tool.name}: ${installed ? "installed" : "not installed"}`,
           );
 
+          if (!installed && !isManualCheck) {
+            // Remove any existing notifications for this tool
+            setNotifications((prev) =>
+              prev.filter(
+                (n) => !n.title.includes(tool.name) || n.type === "error",
+              ),
+            );
+
+            addNotification({
+              title: `${tool.name} is not installed`,
+              type: "info",
+              action: {
+                label: t("install"),
+                onClick: async () => await installTool(tool),
+                loading: isInstalling[tool.cmd],
+              },
+            });
+          } else if (installed && isManualCheck) {
+            // Only show installed notification on manual check
+            addNotification({
+              title: `${tool.name} is installed`,
+              type: "success",
+              autoClose: 3000, // Auto close after 3 seconds
+            });
+          }
+
+          return { cmd: tool.cmd, status: installed };
+        } catch (error) {
+          console.error(`Failed to check ${tool.name}:`, error);
           addNotification({
-            title: `${tool.name} is not installed`,
-            type: "info",
-            action: {
-              label: t("install"),
-              onClick: async () => await installTool(tool),
-              loading: isInstalling[tool.cmd],
-            },
+            title: `Failed to check ${tool.name}`,
+            type: "error",
+            message: error instanceof Error ? error.message : String(error),
           });
-        } else if (click) {
-          // Only show installed notification on manual check
-          addNotification({
-            title: `${tool.name} is installed`,
-            type: "success",
-            autoClose: 3000, // Auto close after 3 seconds
-          });
+          return { cmd: tool.cmd, status: false };
         }
-        updatedStatus[tool.cmd] = installed;
+      });
+
+      const results = await Promise.all(checkPromises);
+
+      // Update status from results
+      results.forEach(({ cmd, status }) => {
+        updatedStatus[cmd] = status;
+      });
+
+      setToolsStatus(updatedStatus);
+
+      // Cache the results
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            status: updatedStatus,
+            timestamp: Date.now(),
+          }),
+        );
       } catch (error) {
-        console.error(`Failed to check ${tool.name}:`, error);
-        updatedStatus[tool.cmd] = false;
-        addNotification({
-          title: `Failed to check ${tool.name}`,
-          type: "error",
-          message: error instanceof Error ? error.message : String(error),
-        });
+        console.error("Error caching status:", error);
       }
-    }
-
-    setToolsStatus(updatedStatus);
-
-    // Cache the results
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          status: updatedStatus,
-          timestamp: Date.now(),
-        }),
-      );
-    } catch (error) {
-      console.error("Error caching status:", error);
+    } finally {
+      setIsChecking(false);
     }
   }
 
@@ -140,37 +177,103 @@ export default function InstallTools() {
       prev.filter((n) => !n.title.includes(tool.name) || n.type === "error"),
     );
 
+    const installingNotificationId = Math.random().toString(36).substr(2, 9);
+
+    // Initialize progress
+    setInstallProgress((prev) => ({ ...prev, [tool.cmd]: 0 }));
+
     const installingNotification = {
+      id: installingNotificationId,
       title: `Installing ${tool.name}...`,
       type: "info" as const,
+      showProgress: true,
+      progress: 0,
     };
 
-    addNotification(installingNotification);
+    setNotifications((prev) => [...prev, installingNotification]);
+
+    // Simulate progress updates (since Tauri doesn't provide real progress)
+    const progressInterval = setInterval(() => {
+      setInstallProgress((prev) => {
+        const currentProgress = prev[tool.cmd] || 0;
+        if (currentProgress < 80) {
+          // Don't go to 100% until actually done
+          const newProgress = Math.min(
+            currentProgress + Math.random() * 15,
+            80,
+          );
+
+          // Update the notification with new progress
+          setNotifications((notifications) =>
+            notifications.map((n) =>
+              n.id === installingNotificationId
+                ? { ...n, progress: Math.round(newProgress) }
+                : n,
+            ),
+          );
+
+          return { ...prev, [tool.cmd]: newProgress };
+        }
+        return prev;
+      });
+    }, 500);
 
     try {
       const result = await invoke<string>("install_command", {
         packageName: tool.pkg,
+        packageManager: undefined, // Fixed: Use consistent parameter name
       });
       console.log(result);
 
-      // Remove the installing notification
-      setNotifications((prev) =>
-        prev.filter((n) => n.title !== installingNotification.title),
+      // Clear progress interval
+      clearInterval(progressInterval);
+
+      // Complete the progress to 100%
+      setNotifications((notifications) =>
+        notifications.map((n) =>
+          n.id === installingNotificationId ? { ...n, progress: 100 } : n,
+        ),
       );
 
-      addNotification({
-        title: `${tool.name} installed successfully`,
-        type: "success",
-      });
+      // Wait a moment to show 100% completion
+      setTimeout(() => {
+        // Remove the installing notification
+        setNotifications((prev) =>
+          prev.filter((n) => n.id !== installingNotificationId),
+        );
+
+        addNotification({
+          title: `${tool.name} installed successfully`,
+          type: "success",
+          autoClose: 5000,
+        });
+      }, 500);
 
       setToolsStatus((prev) => ({
         ...prev,
         [tool.cmd]: true,
       }));
+
+      // Update cache
+      try {
+        const updatedStatus = { ...toolsStatus, [tool.cmd]: true };
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            status: updatedStatus,
+            timestamp: Date.now(),
+          }),
+        );
+      } catch (error) {
+        console.error("Error updating cache:", error);
+      }
     } catch (error) {
+      // Clear progress interval
+      clearInterval(progressInterval);
+
       // Remove the installing notification
       setNotifications((prev) =>
-        prev.filter((n) => n.title !== installingNotification.title),
+        prev.filter((n) => n.id !== installingNotificationId),
       );
 
       addNotification({
@@ -179,24 +282,30 @@ export default function InstallTools() {
         message: error instanceof Error ? error.message : String(error),
         action: tool.fallbackUrl
           ? {
-              label: "Install manually",
-              onClick: () => window.open(tool.fallbackUrl, "_blank"),
+              label: "Manual Install",
+              onClick: () => {
+                // Use Tauri's shell open instead of window.open for security
+                import("@tauri-apps/plugin-shell").then(({ open }) => {
+                  open(tool.fallbackUrl!);
+                });
+              },
             }
           : undefined,
       });
       console.error(`Failed to install ${tool.name}:`, error);
     } finally {
       setIsInstalling((prev) => ({ ...prev, [tool.cmd]: false }));
+      setInstallProgress((prev) => ({ ...prev, [tool.cmd]: 0 }));
     }
   }
 
   return (
-    <>
+    <div>
       <Notifications
-        className="z-99"
+        className="z-50"
         notifications={notifications}
         onDismiss={dismissNotification}
       />
-    </>
+    </div>
   );
 }

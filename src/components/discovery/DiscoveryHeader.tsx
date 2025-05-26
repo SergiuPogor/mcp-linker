@@ -1,5 +1,7 @@
 import { SortOptions } from "@/components/settings/SortOptions";
 import { Button } from "@/components/ui/button";
+import { apiClient } from "@/lib/apiClient";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 interface DiscoveryHeaderProps {
@@ -21,10 +23,21 @@ export const DiscoveryHeader = ({
 }: DiscoveryHeaderProps) => {
   const { t } = useTranslation();
 
+  const queryResult = useQuery({
+    queryKey: ["serverTotal"],
+    queryFn: async () => {
+      const res = await apiClient.get("/servers/count");
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <div className="flex items-center justify-between mb-4">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-        {t("featuredServers")}
+        {t("featuredServers")}{" "}
+        {queryResult.data?.total ? `(${queryResult.data.total})` : ""}
       </h2>
 
       {/* Sorting and action buttons */}
