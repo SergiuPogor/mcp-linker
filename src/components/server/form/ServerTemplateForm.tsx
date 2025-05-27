@@ -1,8 +1,10 @@
 import type { ServerConfig } from "@/types";
 import { LabeledInput } from "../../shared/LabeledInput";
-import { SellInfoSection } from "../SellInfoSection";
-import { ServerTypeSelector } from "../ServerTypeSelector";
-import { StdioConfigSection } from "../StdioConfigSection";
+import {
+  SellInfoSection,
+  ServerTypeSelector,
+  StdioConfigSection,
+} from "../config";
 import { NetworkConfigSection } from "./NetworkConfigSection";
 
 interface ServerTemplateFormProps {

@@ -8,12 +8,14 @@ import { toast } from "sonner";
 import { fetchServerConfig } from "@/lib/api";
 import { useClientPathStore } from "@/store/clientPathStore";
 import { LabeledInput } from "../../shared/LabeledInput";
-import { ConfigTabs } from "../ConfigTabs";
+import { ConfigTabs } from "../config";
 import { SseConfigForm } from "../form/SseConfigForm";
 import { StdioConfigForm } from "../form/StdioConfigForm";
-import { useLocalDraft } from "../useLocalDraft";
-import { useSaveServerConfig } from "../useSaveServerConfig";
-import { useServerConfig } from "../useServerConfig";
+import {
+  useLocalDraft,
+  useSaveServerConfig,
+  useServerConfigDialog,
+} from "../hooks";
 import { ServerConfigDialogFooter } from "./ServerConfigDialogFooter";
 import { ServerConfigDialogHeader } from "./ServerConfigDialogHeader";
 
@@ -69,7 +71,7 @@ export const ServerConfigDialog = forwardRef<
     configs,
     envValues,
     setEnvValues,
-  } = useServerConfig({
+  } = useServerConfigDialog({
     isOpen,
     currentServer,
     queryResult,

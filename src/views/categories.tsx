@@ -1,4 +1,4 @@
-import { ServerList } from "@/components/server/ServerList";
+import { ServerList } from "@/components/server";
 import { useMcpServers } from "@/hooks/useMcpServers";
 import { ServerType } from "@/types";
 import { CategoryType } from "@/types/cat";

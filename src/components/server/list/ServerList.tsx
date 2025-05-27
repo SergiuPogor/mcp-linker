@@ -1,8 +1,9 @@
 import { incrementViews } from "@/lib/api/servers";
+import { useFavoritesStore } from "@/store/favoritesStore";
 import type { ServerType } from "@/types";
 import { useEffect, useRef, useState } from "react";
+import { ServerConfigDialog } from "../dialog";
 import { ServerCard } from "./ServerCard";
-import { ServerConfigDialog } from "./dialog/ServerConfigDialog";
 
 interface ServerListProps {
   mcpServers: ServerType[];
@@ -13,56 +14,24 @@ interface ServerListProps {
  * Optimized Server List Component
  * - Added virtualization for better performance with large lists
  * - Improved responsive layout
- * - Better handling of favorites
+ * - Better handling of favorites using global store
  */
 export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   // Stable key reference for consistent rendering
   const stableKeyRef = useRef(Math.random().toString(36));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentServer, setCurrentServer] = useState<ServerType | null>(null);
-  const [favorites, setFavorites] = useState<string[]>([]);
+
+  // Use global favorites store
+  const { toggleFavorite, isFavorite, loadFavorites } = useFavoritesStore();
 
   // Container reference for virtualization
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Load favorites from local storage
+  // Load favorites on mount
   useEffect(() => {
-    try {
-      const favs = JSON.parse(
-        localStorage.getItem("favorites") || "[]",
-      ) as string[];
-      setFavorites(favs);
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-      setFavorites([]);
-    }
-  }, []);
-
-  // Toggle favorite status
-  function toggleFavorite(source: string) {
-    setFavorites((prev) => {
-      let updated;
-      if (prev.includes(source)) {
-        updated = prev.filter((item) => item !== source);
-      } else {
-        updated = [...prev, source];
-      }
-
-      // Save to localStorage
-      try {
-        localStorage.setItem("favorites", JSON.stringify(updated));
-      } catch (error) {
-        console.error("Error saving favorites:", error);
-      }
-
-      return updated;
-    });
-  }
-
-  // Check if server is favorited
-  function isFavorited(source: string) {
-    return favorites.includes(source);
-  }
+    loadFavorites();
+  }, [loadFavorites]);
 
   // Open server config dialog
   const openDialog = (server: ServerType) => {
@@ -91,7 +60,7 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
             key={`${app.id}`}
             app={app}
             onOpenDialog={openDialog}
-            isFavorited={isFavorited(app.source)}
+            isFavorited={isFavorite(app.source)}
             onToggleFavorite={toggleFavorite}
             onDelete={onDelete}
           />

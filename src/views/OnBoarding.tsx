@@ -19,7 +19,7 @@ export default function OnBoarding() {
       toast.error(
         "Authentication failed after multiple attempts. Please sign in again.",
       );
-      navigate("/login");
+      navigate("/auth");
       return;
     }
 
@@ -55,7 +55,7 @@ export default function OnBoarding() {
 
       // Other errors redirect to login page
       toast.error("Authentication failed. Please sign in again.");
-      navigate("/login");
+      navigate("/auth");
     }
   }, [retryCount, maxRetries, navigate]);
 
@@ -68,7 +68,7 @@ export default function OnBoarding() {
       // If no user, redirect to login
       if (!user) {
         toast.error("No user session found. Please sign in.");
-        navigate("/login");
+        navigate("/auth");
         return;
       }
 

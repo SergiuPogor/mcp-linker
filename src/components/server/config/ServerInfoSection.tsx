@@ -6,9 +6,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { LabeledInput } from "@/components/shared/LabeledInput";
 import { CategoryType } from "@/types/cat";
 import { useEffect, useState } from "react";
-import { LabeledInput } from "../shared/LabeledInput";
 
 interface SellInfoSectionProps {
   projectDescription: string;

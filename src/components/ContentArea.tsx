@@ -5,6 +5,7 @@ const dynamicPages: {
   [key: string]: React.LazyExoticComponent<React.FC<any>>;
 } = {
   home: lazy(() => import("@/views/home")),
+  activate: lazy(() => import("@/views/UnlockPage")),
   discover: lazy(() => import("@/views/Discover")),
   categories: lazy(() => import("@/views/categories")),
   search: lazy(() => import("@/views/search")),

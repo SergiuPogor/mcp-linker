@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { CommandInput } from "./CommandInput";
-import { ArgsTextarea } from "./ArgsTextarea";
-import { EnvEditor } from "./EnvEditor";
 import type { ServerConfig } from "@/types";
+import { ArgsTextarea, CommandInput, EnvEditor } from "../input";
 
 interface StdioConfigSectionProps {
   config: ServerConfig;

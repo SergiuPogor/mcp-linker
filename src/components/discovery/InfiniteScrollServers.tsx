@@ -1,8 +1,8 @@
-import { ServerList } from "@/components/server/ServerList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ServerType } from "@/types";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { ServerList } from "../server";
 
 interface InfiniteScrollServersProps {
   servers: ServerType[];

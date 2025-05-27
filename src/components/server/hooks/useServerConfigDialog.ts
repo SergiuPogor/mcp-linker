@@ -1,7 +1,7 @@
 // useServerConfig.ts
-import { useEffect, useState } from "react";
-import { UseQueryResult } from "@tanstack/react-query";
 import { ServerConfig, ServerType, StdioServerConfig } from "@/types";
+import { UseQueryResult } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 interface UseServerConfigProps {
   isOpen: boolean;
@@ -10,7 +10,7 @@ interface UseServerConfigProps {
   clearDraft: () => void;
 }
 
-export const useServerConfig = ({
+export const useServerConfigDialog = ({
   isOpen,
   currentServer,
   queryResult,

@@ -1,8 +1,6 @@
 // StdioConfigForm.tsx
 import { StdioServerConfig } from "@/types";
-import { ArgsTextarea } from "../ArgsTextarea";
-import { CommandInput } from "../CommandInput";
-import { EnvEditor } from "../EnvEditor";
+import { ArgsTextarea, CommandInput, EnvEditor } from "../input";
 
 interface StdioConfigFormProps {
   config: StdioServerConfig;

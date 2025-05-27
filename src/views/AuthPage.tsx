@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
-import { Github, AlertCircle } from "lucide-react";
+import { AlertCircle, Github } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function AuthPage() {
   const handleOAuthLogin = async (provider: "github" | "google") => {
@@ -55,7 +56,7 @@ export default function AuthPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen px-4 text-center">
-      <h1 className="text-3xl font-bold mb-4">Welcome to MCP-Linker</h1>
+      <h1 className="text-3xl font-bold mb-4">Welcome to MCP Linker</h1>
       <p className="mb-6 text-gray-500">Sign in to get more</p>
 
       <div className="w-full max-w-sm">
@@ -74,6 +75,10 @@ export default function AuthPage() {
           <span className="text-sm">🔍</span>
           Continue with Google
         </Button>
+
+        <Link to="/activate">
+          <Button>activate</Button>
+        </Link>
       </div>
     </div>
   );

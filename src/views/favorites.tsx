@@ -1,55 +1,56 @@
-import { ServerList } from "@/components/server/ServerList";
-import { fetchServers } from "@/lib/api/servers";
-import type { ServerType } from "@/types";
-import { useEffect, useState } from "react";
-
-// Cache for server list
-let cachedServerList: { servers: ServerType[] } | null = null;
-let lastFetchTime = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+import { ServerList } from "@/components/server";
+import { useFavoritesStore } from "@/store/favoritesStore";
+import { useServerStore } from "@/store/serverStore";
+import { useEffect } from "react";
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [serverList, setServerList] = useState<{ servers: ServerType[] }>({
-    servers: [],
-  });
+  const { servers, isLoading, error, loadServers } = useServerStore();
+  const { favorites, loadFavorites } = useFavoritesStore();
 
   useEffect(() => {
-    const loadData = async () => {
-      // Load favorites first
-      const favs = JSON.parse(
-        localStorage.getItem("favorites") || "[]",
-      ) as string[];
-      setFavorites(favs);
+    // Load favorites from localStorage
+    loadFavorites();
 
-      // Check if we have cached data that's still valid
-      const now = Date.now();
-      if (cachedServerList && now - lastFetchTime < CACHE_DURATION) {
-        setServerList(cachedServerList);
-        return;
-      }
+    // Load servers if not already loaded
+    loadServers();
+  }, [loadFavorites, loadServers]);
 
-      try {
-        const data = await fetchServers();
-        cachedServerList = data;
-        lastFetchTime = now;
-        setServerList(data);
-      } catch (err) {
-        console.error("Failed to load servers", err);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  const favoriteServers = serverList.servers.filter((server) =>
+  // Filter servers to show only favorites
+  const favoriteServers = servers.filter((server) =>
     favorites.includes(server.source),
   );
+
+  if (isLoading && servers.length === 0) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Favorites</h1>
+        <div className="text-center py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Favorites</h1>
+        <div className="text-center py-8 text-red-500">
+          Error loading servers: {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Favorites</h1>
-      <ServerList mcpServers={favoriteServers} />
+      {favoriteServers.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          No favorite servers yet. Add some servers to your favorites to see
+          them here.
+        </div>
+      ) : (
+        <ServerList mcpServers={favoriteServers} />
+      )}
     </div>
   );
 }

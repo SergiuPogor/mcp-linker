@@ -1,4 +1,4 @@
-import { ServerList } from "@/components/server/ServerList";
+import { ServerList } from "@/components/server";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,8 +12,8 @@ import { apiClient } from "@/lib/apiClient";
 import { signOut } from "@/services/auth";
 import { ServerType } from "@/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();

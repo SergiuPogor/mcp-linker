@@ -64,7 +64,7 @@ GitHub stars"/>
 
 ## ✨ Features
 
-✅ One-click to add MCP servers  
+✅ One-click to add MCP servers, less copy paste need     
 ✅ Manage multiple server configurations (add, delete, favorite)  
 ✅ No technical skills required — just click and go!  
 ✅ Open-source and community-driven  

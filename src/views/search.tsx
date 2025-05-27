@@ -1,4 +1,4 @@
-import { ServerList } from "@/components/server/ServerList";
+import { ServerList } from "@/components/server";
 import { useMcpServers } from "@/hooks/useMcpServers";
 import { useDeferredValue, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

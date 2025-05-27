@@ -1,11 +1,12 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { checkForUpdate, UpdateInfo } from "./lib/update";
 
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
 import "./App.css";
 import { AppLoadingFallback } from "./components/common/LoadingConfig";
+import { StoreInitializer } from "./components/StoreInitializer";
 import { TriggerOnMount } from "./components/TriggerOnMount";
 import { UpdateDialog } from "./components/UpdateDialog";
 const Layout = lazy(() => import("./components/Layout"));
@@ -28,10 +29,12 @@ function App() {
 
   useEffect(() => {
     const handleCheckForUpdate = async () => {
-      const update = await checkForUpdate();
-      if (update?.hasUpdate) {
-        setUpdateInfo(update);
-        setShowUpdateDialog(true);
+      if (import.meta.env.VITE_IS_CHECK_UPDATE === "true") {
+        const update = await checkForUpdate();
+        if (update?.hasUpdate) {
+          setUpdateInfo(update);
+          setShowUpdateDialog(true);
+        }
       }
     };
 
@@ -47,10 +50,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
         <Suspense fallback={<AppLoadingFallback />}>
+          <StoreInitializer />
           <CommandChecker />
-          <Layout />
           {/* deep link */}
           <TriggerOnMount onReady={triggerPendingDeepLink} />
+
+          <Layout />
 
           {/* Update dialog */}
           {updateInfo && (
@@ -67,4 +72,5 @@ function App() {
     </QueryClientProvider>
   );
 }
+
 export default App;
