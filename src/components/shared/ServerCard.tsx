@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ConfigType } from "@/types/config";
+import { ConfigType } from "@/types/mcpConfig";
 import { Trash2 } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";

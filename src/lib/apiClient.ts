@@ -2,9 +2,11 @@
 import { getSession } from "@/services/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
-const isDev = import.meta.env.VITE_MOCK_DEV === 'true';
+const isDev = import.meta.env.VITE_MOCK_DEV === "true";
 
-export const apiUrl = isDev ? import.meta.env.VITE_DEV_API_URL : import.meta.env.VITE_API_BASE_URL;
+export const apiUrl = isDev
+  ? import.meta.env.VITE_DEV_API_URL
+  : import.meta.env.VITE_API_BASE_URL;
 console.log("API URL:", apiUrl);
 
 class ApiClient {

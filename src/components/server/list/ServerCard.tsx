@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { api } from "@/lib/api";
+import { useFavoriteServers } from "@/stores/favoriteServers";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
 import {
@@ -23,35 +23,35 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface ServerCardProps {
-  app: ServerType;
+  server: ServerType;
   onOpenDialog: (server: ServerType) => void;
   isFavorited: boolean;
   onDelete?: (id: string) => void;
 }
 
 export function ServerCard({
-  app,
+  server,
   onOpenDialog,
   isFavorited,
   onDelete,
 }: ServerCardProps) {
   const { t } = useTranslation();
   const [isFavoriteLoading, setIiFavoriteLoading] = useState(false);
+  const toggleFavorite = useFavoriteServers((state) => state.toggleFavorite);
 
   const showGithubIcon =
-    app.source && app.source.startsWith("https://github.com");
+    server.source && server.source.startsWith("https://github.com");
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIiFavoriteLoading(true);
     try {
-      if (isFavorited) {
-        await api.delete(`/favorites/${app.id}`);
-      } else {
-        await api.post(`/favorites/${app.id}`);
-      }
+      await toggleFavorite(server);
+      toast.success(
+        `Successfully ${isFavorited ? "removed from" : "added to"} favorites`,
+      );
     } catch (e) {
-      toast.error(JSON.stringify(e))
+      toast.error(JSON.stringify(e));
     } finally {
       setIiFavoriteLoading(false);
     }
@@ -59,7 +59,7 @@ export function ServerCard({
 
   return (
     <Card
-      key={app.id}
+      key={server.id}
       className="hover:shadow-lg transition-shadow relative py-2"
     >
       <CardHeader className="px-2 py-2 pb-0">
@@ -73,17 +73,17 @@ export function ServerCard({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    openUrl(app.source);
+                    openUrl(server.source);
                   }}
                   className="hover:underline text-left flex"
-                  title={`open ${app.source}`}
+                  title={`open ${server.source}`}
                 >
-                  {app.name}
+                  {server.name}
                   <SquareArrowOutUpRight size={10} />
                 </button>
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                {app.developer}
+                {server.developer}
               </CardDescription>
             </div>
           </div>
@@ -107,7 +107,7 @@ export function ServerCard({
                 className="absolute top-3 right-10 bg-white/70 rounded-full p-1 hover:bg-red-100 transition"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(app.id);
+                  onDelete(server.id);
                 }}
                 title="Delete Server"
               >
@@ -119,15 +119,17 @@ export function ServerCard({
       </CardHeader>
 
       <CardContent className="px-4 pt-0 pb-2 text-sm text-foreground max-h-24 overflow-y-scroll">
-        {app.description || ""}
+        {server.description || ""}
       </CardContent>
 
       <CardFooter className="flex justify-between px-4 pb-4">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-          {app.isOfficial && <span className="text-blue-600">🎖️</span>}
-          {app.githubStars !== undefined && <span>⭐ {app.githubStars}</span>}
+          {server.isOfficial && <span className="text-blue-600">🎖️</span>}
+          {server.githubStars !== undefined && (
+            <span>⭐ {server.githubStars}</span>
+          )}
         </span>
-        <Button onClick={() => onOpenDialog(app)} variant="default">
+        <Button onClick={() => onOpenDialog(server)} variant="default">
           {t("get")}
         </Button>
       </CardFooter>

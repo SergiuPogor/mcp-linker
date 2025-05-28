@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ConfigType } from "@/types/config";
+import { ConfigType } from "@/types/mcpConfig";
 import { PenSquare } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

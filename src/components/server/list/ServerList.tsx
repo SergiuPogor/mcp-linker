@@ -1,4 +1,5 @@
 import { incrementViews } from "@/lib/api/servers";
+import { useFavoriteServers } from "@/stores/favoriteServers";
 import type { ServerType } from "@/types";
 import { useRef, useState } from "react";
 import { ServerConfigDialog } from "../dialog";
@@ -21,6 +22,9 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentServer, setCurrentServer] = useState<ServerType | null>(null);
 
+  // Get favorite servers from store
+  const favoriteServers = useFavoriteServers((state) => state.favoriteServers);
+
   // Container reference for virtualization
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +33,11 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
     setCurrentServer(server);
     setIsDialogOpen(true);
     incrementViews(server.id);
+  };
+
+  // Check if server is favorited
+  const isServerFavorited = (serverId: string) => {
+    return favoriteServers.some((favServer) => favServer.id === serverId);
   };
 
   // Handle empty state
@@ -46,12 +55,12 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
         className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full"
         id="server-grid"
       >
-        {mcpServers.map((app) => (
+        {mcpServers.map((server) => (
           <ServerCard
-            key={`${app.id}`}
-            app={app}
+            key={`${server.id}`}
+            server={server}
             onOpenDialog={openDialog}
-            isFavorited={app.isFavorited}
+            isFavorited={isServerFavorited(server.id)}
             onDelete={onDelete}
           />
         ))}

@@ -3,7 +3,6 @@ import { apiUrl } from "@/lib/apiClient";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
-
 // Add logging for debugging
 console.log("Supabase enabled:", isSupabaseEnabled);
 
