@@ -1,11 +1,10 @@
 // services/auth.ts (optimized version)
+import { apiUrl } from "@/lib/apiClient";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 // Add logging for debugging
-console.log("API URL:", apiUrl);
 console.log("Supabase enabled:", isSupabaseEnabled);
 
 // Basic session retrieval

@@ -29,7 +29,7 @@ interface ServerConfigDialogProps {
 export const ServerConfigDialog = forwardRef<
   HTMLDivElement,
   ServerConfigDialogProps
->(({ isOpen, setIsDialogOpen, currentServer, mcpServers }) => {
+>(({ isOpen, setIsDialogOpen, currentServer, mcpServers }, _ref) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const { saveServerConfig } = useSaveServerConfig();
 

@@ -64,7 +64,7 @@ export async function fetchServers(
   }
 }
 
-export async function updateServerStats(path: string, serverId: number) {
+export async function updateServerStats(path: string, serverId: string) {
   try {
     const response = await api.post(`/servers/${serverId}${path}`);
     console.log("Stats updated:", response.data);
@@ -73,10 +73,10 @@ export async function updateServerStats(path: string, serverId: number) {
   }
 }
 
-export async function incrementViews(serverId: number) {
+export async function incrementViews(serverId: string) {
   await updateServerStats("/view-count", serverId);
 }
 
-export async function incrementDownloads(serverId: number) {
+export async function incrementDownloads(serverId: string) {
   await updateServerStats("/download-count", serverId);
 }

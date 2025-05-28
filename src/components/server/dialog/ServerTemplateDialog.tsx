@@ -26,7 +26,8 @@ interface ServerTemplateDialogProps {
 export const ServerTemplateDialog = forwardRef<
   HTMLDivElement,
   ServerTemplateDialogProps
->(({ isOpen, setIsDialogOpen, isSell }) => {
+>((props, _ref) => {
+  const { isOpen, setIsDialogOpen, isSell } = props;
   const { selectedClient, selectedPath } = useClientPathStore();
   const { t } = useTranslation();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);

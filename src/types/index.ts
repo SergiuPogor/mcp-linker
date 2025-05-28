@@ -16,17 +16,17 @@ export type StdioServerConfig = {
 export type ServerConfig = SseConfig | StdioServerConfig;
 
 export type ServerType = {
-  id: number;
+  id: string;
   name: string;
   developer?: string;
   icon_url?: string;
   description: string;
   category?: string;
   source: string;
-  uid: string;
-  isOfficial?: boolean;
+  isOfficial: boolean;
   githubStars: number;
   views: number;
+  isFavorited: boolean;
 };
 
 export interface Nav {

@@ -7,40 +7,59 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { api } from "@/lib/api";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
 import {
   Github,
+  Loader2,
   SquareArrowOutUpRight,
   Star,
   StarOff,
   Trash2,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface ServerCardProps {
   app: ServerType;
   onOpenDialog: (server: ServerType) => void;
   isFavorited: boolean;
-  onToggleFavorite: (source: string) => void;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: string) => void;
 }
 
 export function ServerCard({
   app,
   onOpenDialog,
   isFavorited,
-  onToggleFavorite,
   onDelete,
 }: ServerCardProps) {
   const { t } = useTranslation();
+  const [isFavoriteLoading, setIiFavoriteLoading] = useState(false);
 
   const showGithubIcon =
     app.source && app.source.startsWith("https://github.com");
 
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIiFavoriteLoading(true);
+    try {
+      if (isFavorited) {
+        await api.delete(`/favorites/${app.id}`);
+      } else {
+        await api.post(`/favorites/${app.id}`);
+      }
+    } catch (e) {
+      toast.error(JSON.stringify(e))
+    } finally {
+      setIiFavoriteLoading(false);
+    }
+  };
+
   return (
     <Card
-      key={`${app.name}-${app.source}`}
+      key={app.id}
       className="hover:shadow-lg transition-shadow relative py-2"
     >
       <CardHeader className="px-2 py-2 pb-0">
@@ -70,14 +89,14 @@ export function ServerCard({
           </div>
           <div className="flex gap-2 items-center">
             <button
-              className="absolute top-3 right-3 bg-white/70 rounded-full p-1 hover:bg-yellow-100 transition"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite(app.source);
-              }}
+              className="absolute top-3 right-3 bg-white/70 rounded-full p-1 hover:bg-yellow-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleToggleFavorite}
+              disabled={isFavoriteLoading}
               title={isFavorited ? "Unfavorite" : "Favorite"}
             >
-              {isFavorited ? (
+              {isFavoriteLoading ? (
+                <Loader2 size={20} className="animate-spin text-gray-400" />
+              ) : isFavorited ? (
                 <Star size={20} className="text-yellow-400" />
               ) : (
                 <StarOff size={20} className="text-gray-400" />

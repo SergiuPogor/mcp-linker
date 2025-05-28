@@ -5,6 +5,8 @@ import { AlertCircle, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AuthPage() {
+  const isTauri = window.__TAURI__ !== undefined;
+
   const handleOAuthLogin = async (provider: "github" | "google") => {
     if (!isSupabaseEnabled || !supabase) {
       console.error("Authentication is not configured");
@@ -25,7 +27,11 @@ export default function AuthPage() {
       });
 
       if (!data?.url) throw new Error("No auth URL returned");
-      open(data.url);
+      if (isTauri) {
+        open(data.url);
+      } else {
+        window.open(data.url);
+      }
     } catch (error) {
       console.error(`Error signing in with ${provider}:`, error);
       throw error;

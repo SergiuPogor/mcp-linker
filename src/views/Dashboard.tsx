@@ -20,7 +20,7 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [serverToDelete, setServerToDelete] = useState<{
-    id: number;
+    id: string;
     name: string;
   } | null>(null);
 
@@ -46,7 +46,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     const server = mcpServers?.find((s: ServerType) => s.id === id);
     const serverName = server?.name || `Server ${id}`;
 

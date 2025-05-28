@@ -2,6 +2,11 @@
 import { getSession } from "@/services/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
+const isDev = import.meta.env.VITE_MOCK_DEV === 'true';
+
+export const apiUrl = isDev ? import.meta.env.VITE_DEV_API_URL : import.meta.env.VITE_API_BASE_URL;
+console.log("API URL:", apiUrl);
+
 class ApiClient {
   private client: AxiosInstance;
   private sessionCache: { session: any; timestamp: number } | null = null;
@@ -88,4 +93,4 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient(import.meta.env.VITE_API_BASE_URL);
+export const apiClient = new ApiClient(apiUrl);

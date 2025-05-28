@@ -6,9 +6,15 @@ import { checkForUpdate, UpdateInfo } from "./lib/update";
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
 import "./App.css";
 import { AppLoadingFallback } from "./components/common/LoadingConfig";
-import { StoreInitializer } from "./components/StoreInitializer";
 import { TriggerOnMount } from "./components/TriggerOnMount";
 import { UpdateDialog } from "./components/UpdateDialog";
+
+declare global {
+  interface Window {
+    __TAURI__?: any;
+  }
+}
+
 const Layout = lazy(() => import("./components/Layout"));
 const CommandChecker = lazy(() => import("@/components/CommandChecker"));
 
@@ -26,6 +32,7 @@ function App() {
   const { triggerPendingDeepLink } = useUnifiedDeepLink();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const isTauri = window.__TAURI__ !== undefined;
 
   useEffect(() => {
     const handleCheckForUpdate = async () => {
@@ -50,8 +57,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
         <Suspense fallback={<AppLoadingFallback />}>
-          <StoreInitializer />
-          <CommandChecker />
+          {isTauri && <CommandChecker />}
           {/* deep link */}
           <TriggerOnMount onReady={triggerPendingDeepLink} />
 

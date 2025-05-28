@@ -1,13 +1,12 @@
 import { incrementViews } from "@/lib/api/servers";
-import { useFavoritesStore } from "@/store/favoritesStore";
 import type { ServerType } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ServerConfigDialog } from "../dialog";
 import { ServerCard } from "./ServerCard";
 
 interface ServerListProps {
   mcpServers: ServerType[];
-  onDelete?: (id: number) => void;
+  onDelete?: (id: string) => void;
 }
 
 /**
@@ -22,16 +21,8 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentServer, setCurrentServer] = useState<ServerType | null>(null);
 
-  // Use global favorites store
-  const { toggleFavorite, isFavorite, loadFavorites } = useFavoritesStore();
-
   // Container reference for virtualization
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Load favorites on mount
-  useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
 
   // Open server config dialog
   const openDialog = (server: ServerType) => {
@@ -60,8 +51,7 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
             key={`${app.id}`}
             app={app}
             onOpenDialog={openDialog}
-            isFavorited={isFavorite(app.source)}
-            onToggleFavorite={toggleFavorite}
+            isFavorited={app.isFavorited}
             onDelete={onDelete}
           />
         ))}

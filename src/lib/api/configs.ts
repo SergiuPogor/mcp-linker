@@ -1,6 +1,6 @@
 import { fetchWithFallback } from "./common";
 
-export function fetchServerConfig(server_id: number) {
+export function fetchServerConfig(server_id: string) {
   const path = `/server_configs/?server_id=${server_id}`;
 
   return fetchWithFallback(path, (data) => {
