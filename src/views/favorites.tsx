@@ -1,15 +1,33 @@
 import { PageLoadingFallback } from "@/components/common/LoadingConfig";
 import { ServerList } from "@/components/server";
+import { useAuth } from "@/hooks/useAuth";
 import { useFavoriteServers } from "@/stores/favoriteServers";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function FavoritesPage() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const { favoriteServers, isLoading, error, fetchFavorites } =
     useFavoriteServers();
 
   useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+    if (!loading && !user) {
+      navigate("/auth");
+      return;
+    }
+    if (user) {
+      fetchFavorites();
+    }
+  }, [fetchFavorites, user, loading, navigate]);
+
+  if (loading) {
+    return <PageLoadingFallback />;
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="p-6">
@@ -23,17 +41,10 @@ export default function FavoritesPage() {
         </div>
       ) : favoriteServers.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          No favorite servers yet. Add some servers to your favorites to see
-          them here.
+          No favorite servers yet
         </div>
       ) : (
-        <>
-          <div className="mb-4 text-sm text-gray-600">
-            Found {favoriteServers.length} favorite server
-            {favoriteServers.length !== 1 ? "s" : ""}
-          </div>
-          <ServerList mcpServers={favoriteServers} />
-        </>
+        <ServerList mcpServers={favoriteServers} />
       )}
     </div>
   );
