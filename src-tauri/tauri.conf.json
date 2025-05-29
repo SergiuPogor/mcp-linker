@@ -33,15 +33,16 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": [
-      "../public/logo.png"
-    ]
+    "resources": ["../public/logo.png"]
   },
   "plugins": {
     "deep-link": {
       "desktop": {
         "schemes": ["mcp-linker"]
       }
+    },
+    "http": {
+      "scope": ["https://**", "http://**"]
     }
   }
 }
