@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
 import { useFavoriteServers } from "@/stores/favoriteServers";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface ServerCardProps {
@@ -38,12 +40,22 @@ export function ServerCard({
   const { t } = useTranslation();
   const [isFavoriteLoading, setIiFavoriteLoading] = useState(false);
   const toggleFavorite = useFavoriteServers((state) => state.toggleFavorite);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const showGithubIcon =
     server.source && server.source.startsWith("https://github.com");
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // Check if user is authenticated
+    if (!user) {
+      toast.error("Please sign in to favorite servers");
+      navigate("/auth");
+      return;
+    }
+
     setIiFavoriteLoading(true);
     try {
       await toggleFavorite(server);

@@ -3,11 +3,8 @@ import { getSession } from "@/services/auth";
 import { isSupabaseEnabled } from "@/utils/supabase";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
-const isDev = import.meta.env.VITE_MOCK_DEV === "true";
-
-export const apiUrl = isDev
-  ? import.meta.env.VITE_DEV_API_URL
-  : import.meta.env.VITE_API_BASE_URL;
+export const apiUrl =
+  import.meta.env.VITE_API_BASE_URL || "https://api.mcp-linker.store/api/v1";
 console.log("API URL:", apiUrl);
 
 class ApiClient {

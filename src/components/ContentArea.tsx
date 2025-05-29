@@ -9,7 +9,7 @@ const dynamicPages: {
   activate: lazy(() => import("@/views/UnlockPage")),
   categories: lazy(() => import("@/views/categories")),
   search: lazy(() => import("@/views/search")),
-  manage: lazy(() => import("@/views/manager")),
+  manage: lazy(() => import("@/views/manage")),
   favorites: lazy(() => import("@/views/favorites")),
   auth: lazy(() => import("@/views/AuthPage")),
   dashboard: lazy(() => import("@/views/Dashboard")),
