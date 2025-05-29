@@ -37,7 +37,14 @@ export const InfiniteScrollServers = ({
             ))}
           </div>
         ) : (
-          `${t("noServerTip")}. API is initializing, this may take up to 50 seconds.`
+          <div>
+            <div>{t("noServerTip")}</div>
+            {/* temp status */}
+            <div className="mt-4 text-xs opacity-50">
+              Debug: servers={servers.length}, isLoading={isLoading.toString()},
+              isFetching={isFetching.toString()}
+            </div>
+          </div>
         )}
       </div>
     );
