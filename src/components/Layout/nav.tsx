@@ -26,7 +26,7 @@ const useNav = (): Nav[] => {
       icon: <Clock size={24} />,
     },
     {
-      id: "favs",
+      id: "favorites",
       name: t("nav.favs"),
       icon: <Star size={24} />,
     },

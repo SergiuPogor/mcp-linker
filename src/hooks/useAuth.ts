@@ -4,15 +4,17 @@ import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start as false to avoid blocking
 
   useEffect(() => {
-    // If Supabase is not enabled, skip authentication
+    // If Supabase is not enabled, allow access without auth
     if (!isSupabaseEnabled || !supabase) {
       setUser(null);
       setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     // Get initial session
     supabase.auth
@@ -23,6 +25,7 @@ export const useAuth = () => {
       })
       .catch((error) => {
         console.error("Error getting session:", error);
+        setUser(null);
         setLoading(false);
       });
 
@@ -40,6 +43,7 @@ export const useAuth = () => {
   return {
     user,
     loading,
+    isAuthenticated: !!user,
     isAuthEnabled: isSupabaseEnabled,
   };
 };

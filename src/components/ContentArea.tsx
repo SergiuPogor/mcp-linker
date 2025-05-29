@@ -1,16 +1,16 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { ContentLoadingFallback } from "./common/LoadingConfig";
 
 const dynamicPages: {
   [key: string]: React.LazyExoticComponent<React.FC<any>>;
 } = {
-  home: lazy(() => import("@/views/home")),
-  activate: lazy(() => import("@/views/UnlockPage")),
   discover: lazy(() => import("@/views/Discover")),
+  activate: lazy(() => import("@/views/UnlockPage")),
   categories: lazy(() => import("@/views/categories")),
   search: lazy(() => import("@/views/search")),
   manage: lazy(() => import("@/views/manager")),
-  favs: lazy(() => import("@/views/favorites")),
+  favorites: lazy(() => import("@/views/favorites")),
   auth: lazy(() => import("@/views/AuthPage")),
   dashboard: lazy(() => import("@/views/Dashboard")),
   onboarding: lazy(() => import("@/views/OnBoarding")),
@@ -22,21 +22,29 @@ interface ContentAreaProps {
 }
 
 export const ContentArea: React.FC<ContentAreaProps> = ({ navId }) => {
-  const PageComponent = dynamicPages[navId] || dynamicPages["home"];
+  const location = useLocation();
+  const PageComponent = dynamicPages[navId] || dynamicPages["discover"];
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  // Handle navigation state
   useEffect(() => {
-    const savedScrollY = sessionStorage.getItem(`scroll-${navId}`);
-    if (scrollRef.current && savedScrollY) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          if (scrollRef.current) {
-            scrollRef.current.scrollTop = parseInt(savedScrollY, 10);
-          }
-        }, 300);
-      });
+    // If we're at the root path and navId is discover, ensure we're showing the discover page
+    if (location.pathname === "/" && navId === "discover") {
+      const savedScrollY = sessionStorage.getItem(`scroll-${navId}`);
+      if (scrollRef.current && savedScrollY) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTop = parseInt(savedScrollY, 10);
+            }
+          }, 300);
+        });
+      }
     }
+  }, [location.pathname, navId]);
 
+  // Save scroll position when unmounting
+  useEffect(() => {
     return () => {
       if (scrollRef.current) {
         sessionStorage.setItem(

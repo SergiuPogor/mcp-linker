@@ -7,16 +7,19 @@ import { Session } from "@supabase/supabase-js";
 console.log("Supabase enabled:", isSupabaseEnabled);
 
 // Basic session retrieval
-export const getSession = async (): Promise<Session> => {
+export const getSession = async (): Promise<Session | null> => {
   if (!isSupabaseEnabled || !supabase) {
-    throw new Error("Supabase is not configured");
+    console.debug("Supabase is not configured or disabled");
+    return null;
   }
 
   const { data, error } = await supabase.auth.getSession();
+
   if (error || !data.session) {
-    console.error("Supabase session error:", error);
-    throw new Error("No active Supabase session");
+    console.debug("No active Supabase session:", error?.message || "No session");
+    return null;
   }
+
   console.log("Session retrieved successfully:", !!data.session);
   return data.session;
 };
@@ -24,9 +27,11 @@ export const getSession = async (): Promise<Session> => {
 // Get authentication information
 export const getAuthInfo = async () => {
   const session = await getSession();
+  if (!session) {
+    throw new Error("No active session");
+  }
+
   return {
-    session,
-    token: session.access_token,
     user: session.user,
     authHeader: `Bearer ${session.access_token}`,
   };
@@ -59,9 +64,7 @@ export const getCurrentUser = async () => {
     if (!res.ok) {
       const errorText = await res.text();
       console.error("API Error Response:", errorText);
-      throw new Error(
-        `Failed to fetch user data: ${res.status} ${res.statusText}`,
-      );
+      throw new Error(`Failed to fetch user data: ${res.status} ${res.statusText}`);
     }
 
     const userData = await res.json();
@@ -75,9 +78,8 @@ export const getCurrentUser = async () => {
 
 // Sign out
 export const signOut = async () => {
-  if (!isSupabaseEnabled || !supabase) {
-    console.log("Authentication disabled - skipping sign out");
-    return;
+  if (!supabase || !isSupabaseEnabled) {
+    throw new Error("Supabase is not configured");
   }
 
   const { error } = await supabase.auth.signOut();

@@ -1,5 +1,6 @@
 // lib/apiClient.ts
 import { getSession } from "@/services/auth";
+import { isSupabaseEnabled } from "@/utils/supabase";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 const isDev = import.meta.env.VITE_MOCK_DEV === "true";
@@ -22,6 +23,11 @@ class ApiClient {
   private async getValidSession() {
     const now = Date.now();
 
+    // If auth is disabled, return null without error
+    if (!isSupabaseEnabled) {
+      return null;
+    }
+
     // use cache session if it's ok
     if (
       this.sessionCache &&
@@ -37,7 +43,9 @@ class ApiClient {
       return session;
     } catch (error) {
       this.sessionCache = null;
-      throw error;
+      // Don't throw error for missing session, just return null
+      console.debug("No session available:", error);
+      return null;
     }
   }
 
@@ -52,6 +60,7 @@ class ApiClient {
           }
         } catch (error) {
           console.warn("Failed to add auth header:", error);
+          // Continue with request even if auth fails
         }
         return config;
       },
