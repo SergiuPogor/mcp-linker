@@ -1,5 +1,5 @@
-use std::process::Command;
 use serde::{Deserialize, Serialize};
+use std::process::Command;
 
 mod uv_installer;
 
@@ -53,7 +53,7 @@ fn get_default_package_manager() -> String {
 // Fixed: Made async and improved error handling
 async fn install_on_macos(package_name: &str, manager: &str) -> Result<String, String> {
     println!("Checking if {} is installed...", manager);
-    
+
     if manager == "brew" {
         let brew_exists = Command::new("which")
             .arg("brew")
@@ -77,13 +77,16 @@ async fn install_on_macos(package_name: &str, manager: &str) -> Result<String, S
         }
     }
 
-    Err(format!("{} is not installed. Please install {} first.", manager, manager))
+    Err(format!(
+        "{} is not installed. Please install {} first.",
+        manager, manager
+    ))
 }
 
 // Fixed: Separated brew installation logic
 async fn execute_brew_install(package_name: &str) -> Result<String, String> {
     println!("Executing brew install command...");
-    
+
     // Fixed: Better command execution with proper error handling
     let result = tokio::process::Command::new("brew")
         .args(&["install", package_name])
@@ -95,10 +98,10 @@ async fn execute_brew_install(package_name: &str) -> Result<String, String> {
             println!("Installation command completed");
             let stdout = String::from_utf8_lossy(&output.stdout);
             let stderr = String::from_utf8_lossy(&output.stderr);
-            
+
             println!("STDOUT: {}", stdout);
             println!("STDERR: {}", stderr);
-            
+
             if output.status.success() {
                 println!("Installation successful");
                 Ok("Installed successfully".to_string())
@@ -146,7 +149,7 @@ async fn install_on_windows(package_name: &str, _manager: &str) -> Result<String
                     use uv_installer::install_uv_network;
                     return install_uv_network();
                 }
-                
+
                 let error_msg = if !stderr.is_empty() {
                     stderr.to_string()
                 } else if !stdout.is_empty() {
@@ -188,11 +191,7 @@ async fn install_on_linux(package_name: &str, manager: &str) -> Result<String, S
         }
     };
 
-    match tokio::process::Command::new(cmd)
-        .args(&args)
-        .output()
-        .await
-    {
+    match tokio::process::Command::new(cmd).args(&args).output().await {
         Ok(result) => {
             let stdout = String::from_utf8_lossy(&result.stdout);
             let stderr = String::from_utf8_lossy(&result.stderr);
@@ -205,7 +204,7 @@ async fn install_on_linux(package_name: &str, manager: &str) -> Result<String, S
                     use uv_installer::install_uv_network;
                     return install_uv_network();
                 }
-                
+
                 let error_msg = if !stderr.is_empty() {
                     stderr.to_string()
                 } else if !stdout.is_empty() {
@@ -241,22 +240,18 @@ async fn is_command_available(cmd: &str) -> bool {
 #[tauri::command]
 pub async fn check_command_exists(command: String) -> Result<bool, String> {
     let exists = match std::env::consts::OS {
-        "windows" => {
-            tokio::process::Command::new("cmd")
-                .args(&["/C", "where", &command])
-                .output()
-                .await
-                .map(|output| output.status.success())
-                .unwrap_or(false)
-        }
-        _ => {
-            tokio::process::Command::new("which")
-                .arg(&command)
-                .output()
-                .await
-                .map(|output| output.status.success())
-                .unwrap_or(false)
-        }
+        "windows" => tokio::process::Command::new("cmd")
+            .args(&["/C", "where", &command])
+            .output()
+            .await
+            .map(|output| output.status.success())
+            .unwrap_or(false),
+        _ => tokio::process::Command::new("which")
+            .arg(&command)
+            .output()
+            .await
+            .map(|output| output.status.success())
+            .unwrap_or(false),
     };
 
     Ok(exists)

@@ -55,6 +55,7 @@ fn get_path_env() -> String {
 pub fn run() {
     update_env_path();
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
