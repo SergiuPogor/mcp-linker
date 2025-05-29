@@ -13,7 +13,6 @@
     "shell:default",
     "dialog:default",
     "os:default",
-    "deep-link:default",
-    "http:default"
+    "deep-link:default"
   ]
 }
