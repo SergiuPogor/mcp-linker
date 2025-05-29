@@ -38,8 +38,8 @@ export async function fetchServers(
 
   try {
     // Try API with timeout (5s for search)
-    const response = await api.get(path, { timeout: 5000 });
-    console.log("API Response:", response.data);
+    const response = await api.get(path, { timeout: 10000 });
+    toast.success("API Response:", response.data);
 
     // Ensure we always return a valid structure
     return {
