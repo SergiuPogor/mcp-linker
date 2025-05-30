@@ -58,6 +58,7 @@ export default function Recently() {
 
         localStorage.setItem("myservers", JSON.stringify(parsedMyServers));
         console.log("Updated myservers:", parsedMyServers);
+        toast.success("update configuration success");
       } catch (error) {
         console.error("Failed to save to myservers:", error);
       }
