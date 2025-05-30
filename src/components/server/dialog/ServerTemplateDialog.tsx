@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { apiClient } from "@/lib/apiClient";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import capitalizeFirstLetter from "@/utils/title";
 import { invoke } from "@tauri-apps/api/core";
 import { forwardRef, useState } from "react";

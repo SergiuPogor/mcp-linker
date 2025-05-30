@@ -6,7 +6,7 @@ import { forwardRef, useEffect } from "react";
 import { toast } from "sonner";
 
 import { fetchServerConfig } from "@/lib/api";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { LabeledInput } from "../../shared/LabeledInput";
 import { ConfigTabs } from "../config";
 import { SseConfigForm } from "../form/SseConfigForm";

@@ -1,10 +1,9 @@
 import { ServerCard } from "@/components/manage/ServerCard";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { ConfigType } from "@/types/mcpConfig";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-// import { needspathClient } from "@/lib/data";
 
 export default function McpManage() {
   const { selectedClient, selectedPath } = useClientPathStore();
@@ -18,6 +17,20 @@ export default function McpManage() {
   useEffect(() => {
     loadConfig();
   }, [selectedClient, selectedPath]);
+
+  // Helper function to ensure config has the correct structure
+  const normalizeConfig = (data: any): ConfigType => {
+    if (!data || typeof data !== "object") {
+      return { mcpServers: {} };
+    }
+
+    // Ensure mcpServers exists and is an object
+    if (!data.mcpServers || typeof data.mcpServers !== "object") {
+      data.mcpServers = {};
+    }
+
+    return data as ConfigType;
+  };
 
   async function loadConfig() {
     setIsLoading(true);
@@ -33,16 +46,18 @@ export default function McpManage() {
         path: selectedPath || undefined,
       });
 
-      if (data) {
-        setConfig(data);
-      } else {
-        setConfig({ mcpServers: {} });
-      }
+      // Normalize the received config to ensure it has the correct structure
+      const normalizedConfig = normalizeConfig(data);
+      setConfig(normalizedConfig);
     } catch (error) {
       console.error(`Error loading config: ${error}`);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to load configuration";
       setError(errorMessage);
+
+      // Set default config even on error to prevent white screen
+      setConfig({ mcpServers: {} });
+
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -127,9 +142,12 @@ export default function McpManage() {
     );
   }
 
+  // Safely get servers, fallback to empty object if undefined
+  const servers = config?.mcpServers || {};
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 p-2">
-      {Object.entries(config.mcpServers).map(([key, serverConfigs]) => (
+      {Object.entries(servers).map(([key, serverConfigs]) => (
         <ServerCard
           key={key}
           serverKey={key}
@@ -138,7 +156,7 @@ export default function McpManage() {
           onDelete={deleteConfigKey}
         />
       ))}
-      {Object.keys(config.mcpServers).length === 0 && (
+      {Object.keys(servers).length === 0 && (
         <div className="col-span-full text-center py-8 text-gray-500">
           No servers configured yet
         </div>

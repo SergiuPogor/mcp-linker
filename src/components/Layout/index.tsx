@@ -1,5 +1,5 @@
 import { needspathClient } from "@/lib/data";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { ServerPage } from "@/views/ServerPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -36,7 +36,9 @@ const MCPStore = () => {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex justify-between pt-2 px-2 shrink-0">
-          <span><ClientSelector /></span>
+          <span>
+            <ClientSelector />
+          </span>
           {needspathClient.includes(selectedClient) && <PathSelector />}
           <LangSelect />
         </div>

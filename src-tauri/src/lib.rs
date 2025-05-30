@@ -5,9 +5,15 @@
 )]
 
 use dirs::home_dir;
+use std::env;
+
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::env;
+
+mod client;
+mod cmd;
+mod installer;
+mod json_manager;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -15,10 +21,6 @@ struct Config {
     mcp_servers: Value,
 }
 
-mod client;
-mod cmd;
-mod installer;
-mod json_manager;
 
 fn update_env_path() {
     let home = home_dir().unwrap().to_str().unwrap().to_string();
@@ -54,9 +56,20 @@ fn get_path_env() -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     update_env_path();
-    tauri::Builder::default()
-        .plugin(tauri_plugin_http::init())
-        .plugin(tauri_plugin_deep_link::init())
+
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|_app, argv, _cwd| {
+          println!("a new app instance was opened with {argv:?} and the deep link event was already triggered");
+          // when defining deep link schemes at runtime, you must also check `argv` here
+        }));
+    }
+
+    builder = builder.plugin(tauri_plugin_deep_link::init());
+
+    builder
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
@@ -73,6 +86,14 @@ pub fn run() {
             installer::install_command,
             get_path_env
         ])
+        .setup(|_app| {
+            #[cfg(any(windows, target_os = "linux"))]
+            {
+                use tauri_plugin_deep_link::DeepLinkExt;
+                _app.deep_link().register_all()?;
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

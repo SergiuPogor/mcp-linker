@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 
 interface ClientOption {
   id: string;

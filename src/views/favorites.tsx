@@ -4,7 +4,8 @@ import { useFavoriteServers } from "@/stores/favoriteServers";
 import { useEffect } from "react";
 
 export default function FavoritesPage() {
-  const { favoriteServers, isLoading, error, fetchFavorites } = useFavoriteServers();
+  const { favoriteServers, isLoading, error, fetchFavorites } =
+    useFavoriteServers();
 
   // Fetch favorites when component mounts
   useEffect(() => {

@@ -1,29 +1,37 @@
 use crate::client::ClientConfig;
 use crate::json_manager::JsonManager;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 #[tauri::command]
 pub async fn read_json_file(client_name: String, path: Option<String>) -> Result<Value, String> {
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    if !file_path.exists() && client_name != "claude" {
-        return Err(format!("File not found: {}", file_path.display()));
+    // Remove the file existence check - let JsonManager handle it
+    let mut json = JsonManager::read_json_file(file_path)?;
+
+    // Ensure the JSON always has the required structure
+    if !json.is_object() {
+        json = json!({});
     }
 
-    let json = JsonManager::read_json_file(file_path)?;
-    // Normalize the response for client consistency
-    if client_name == "vscode" && json.is_object() {
-        let mut json_clone = json.clone();
-        if json_clone.as_object().unwrap().contains_key("servers")
-            && !json_clone.as_object().unwrap().contains_key("mcpServers")
-        {
-            json_clone["mcpServers"] = json_clone["servers"].clone();
+    // Handle client-specific key normalization
+    if client_name == "vscode" {
+        // For VS Code, ensure both "servers" and "mcpServers" exist
+        if !json.as_object().unwrap().contains_key("servers") {
+            json["servers"] = json!({});
         }
-        Ok(json_clone)
+        if !json.as_object().unwrap().contains_key("mcpServers") {
+            json["mcpServers"] = json["servers"].clone();
+        }
     } else {
-        Ok(json)
+        // For other clients, ensure "mcpServers" exists
+        if !json.as_object().unwrap().contains_key("mcpServers") {
+            json["mcpServers"] = json!({});
+        }
     }
+
+    Ok(json)
 }
 
 #[tauri::command]

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
-import { useClientPathStore } from "@/store/clientPathStore";
 
 // Props no longer needed as we're using the store
 

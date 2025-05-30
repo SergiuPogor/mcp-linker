@@ -1,5 +1,5 @@
 import { ServerCard } from "@/components/recently/ServerCard";
-import { useClientPathStore } from "@/store/clientPathStore";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { type ServerConfig } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";

@@ -7,13 +7,13 @@ import { toast } from "sonner";
 
 let pendingDeepLink: string | null = null;
 let trigger: (() => void) | null = null;
-let isInitialized = false; // Track initialization state
+let isInitialized = false;
 
 export const useUnifiedDeepLink = () => {
   const navigate = useNavigate();
   const [isHandlingAuth, setIsHandlingAuth] = useState(false);
 
-  // Actually perform navigation
+  // Enhanced deep link handler with better Windows compatibility
   const handleDeepLink = async (urlString: string) => {
     try {
       console.log(`Received deep link: ${urlString}`);
@@ -22,24 +22,98 @@ export const useUnifiedDeepLink = () => {
 
       if (code) {
         setIsHandlingAuth(true);
+
         if (!supabase) {
           throw new Error("Supabase client is not initialized");
         }
+
         const { data, error } =
           await supabase.auth.exchangeCodeForSession(code);
+
         if (error) throw error;
+
         if (data.session) {
+          // Enhanced waiting mechanism for auth state synchronization
+          await new Promise<void>((resolve) => {
+            if (!supabase) {
+              throw new Error("Supabase client is not initialized");
+            }
+            let resolved = false;
+
+            // Primary: Wait for auth state change
+            const unsubscribe = supabase.auth.onAuthStateChange(
+              (event, session) => {
+                if (
+                  !resolved &&
+                  session?.user &&
+                  (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")
+                ) {
+                  resolved = true;
+                  unsubscribe.data.subscription.unsubscribe();
+                  resolve();
+                }
+              },
+            );
+
+            // Secondary: Wait for session to be available via getSession
+            const checkSession = async () => {
+              try {
+                if (!supabase) {
+                  throw new Error("Supabase client is not initialized");
+                }
+                const { data: sessionData } = await supabase.auth.getSession();
+                if (!resolved && sessionData.session?.user) {
+                  resolved = true;
+                  unsubscribe.data.subscription.unsubscribe();
+                  resolve();
+                }
+              } catch (err) {
+                console.warn("Session check failed:", err);
+              }
+            };
+
+            // Check session immediately and then periodically
+            checkSession();
+            const sessionCheckInterval = setInterval(checkSession, 250);
+
+            // Platform-specific timeout (Windows needs more time)
+            const timeoutDuration = navigator.platform
+              .toLowerCase()
+              .includes("win")
+              ? 3000
+              : 2000;
+            const fallbackTimeout = setTimeout(() => {
+              if (!resolved) {
+                resolved = true;
+                clearInterval(sessionCheckInterval);
+                unsubscribe.data.subscription.unsubscribe();
+                console.warn("Auth state sync timeout, proceeding anyway");
+                resolve();
+              }
+            }, timeoutDuration);
+
+            // Cleanup when resolved
+            const originalResolve = resolve;
+            resolve = () => {
+              clearInterval(sessionCheckInterval);
+              clearTimeout(fallbackTimeout);
+              originalResolve();
+            };
+          });
+
+          // Add small delay before navigation to ensure UI state is updated
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           toast.info("nav to /onboarding");
-          navigate("/onboarding");
+          navigate("/onboarding", { replace: true });
         }
       } else if (url.hostname === "servers" && url.pathname.length > 1) {
         const id = url.pathname.slice(1);
-        console.log(`Navigating to server ID from deep link: ${id}`);
-        // Use a direct navigate with pathname to ensure it doesn't get mixed up with other navigation
         navigate(`/servers/${id}`, { replace: true });
       }
     } catch (err) {
-      console.error("Error handling deep link:", err);
+      console.error("Deep link handling error:", err);
+      toast.error("Authentication failed. Please try again.");
     } finally {
       setIsHandlingAuth(false);
     }
@@ -56,15 +130,11 @@ export const useUnifiedDeepLink = () => {
       console.log(`Processing URL: ${url}`);
       pendingDeepLink = url;
       if (trigger) {
-        console.log("Triggering deep link handler");
         trigger();
-      } else {
-        console.log("Trigger not ready yet");
       }
     };
 
     onOpenUrl((urls) => {
-      console.log(`Received URLs: ${urls.join(", ")}`);
       if (urls.length > 0) process(urls[0]);
     });
 
@@ -77,7 +147,6 @@ export const useUnifiedDeepLink = () => {
     // Set up trigger
     trigger = () => {
       if (pendingDeepLink) {
-        console.log(`Handling pending deep link: ${pendingDeepLink}`);
         handleDeepLink(pendingDeepLink);
         pendingDeepLink = null;
       }
