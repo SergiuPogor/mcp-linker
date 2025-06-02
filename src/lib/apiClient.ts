@@ -13,7 +13,12 @@ class ApiClient {
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
   constructor(baseURL: string) {
-    this.client = axios.create({ baseURL });
+    this.client = axios.create({
+      baseURL,
+      headers: {
+        "X-Client-Agent": "MCP-Linker-Client/1.0",
+      },
+    });
     this.setupInterceptors();
   }
 

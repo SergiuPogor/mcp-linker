@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
 import { AlertCircle, Github } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function AuthPage() {
   const handleOAuthLogin = async (provider: "github" | "google") => {
@@ -75,10 +74,6 @@ export default function AuthPage() {
           <span className="text-sm">🔍</span>
           Continue with Google
         </Button>
-
-        <Link to="/activate">
-          <Button>activate</Button>
-        </Link>
       </div>
     </div>
   );
