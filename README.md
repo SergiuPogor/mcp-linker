@@ -24,6 +24,7 @@ GitHub stars"/>
 
 ## News
 
+- 2025-06-02: mcp-linker-api open source too
 - 2025-06-02: Show `git clone` button when the server config's `args` contains the word `"path"`    
 - 2025-05-29: Sync favorite servers to the cloud.
 - 2025-05-22: Share your servers. server list sort by more choice
@@ -146,6 +147,10 @@ We welcome contributions from the community:
 Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
 
 [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
+
+## 🔧 Backend API (Open Source)
+
+👉 [mcp-linker-api](https://github.com/milisp/mcp-linker-api)
 
 ## 💬 Feedback & Support
 
