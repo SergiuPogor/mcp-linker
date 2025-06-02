@@ -22,3 +22,25 @@ export function idToUrl(uid: string) {
   const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
   return new TextDecoder().decode(bytes);
 }
+
+export function parseGitHubRepoUrl(url: string): [boolean, string, string] {
+  if (!url.includes("github.com")) {
+    return [false, url, ""];
+  }
+
+  try {
+    const urlObj = new URL(url);
+    const pathParts = urlObj.pathname.split("/").filter(Boolean);
+
+    // Return full GitHub URL for repository
+    if (pathParts.length >= 2) {
+      const repoFullName = `${pathParts[0]}/${pathParts[1]}`;
+      return [true, `https://github.com/${repoFullName}`, repoFullName];
+    }
+
+    return [false, url, ""];
+  } catch {
+    // If URL parsing fails, return original URL
+    return [false, url, ""];
+  }
+}

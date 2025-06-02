@@ -1,10 +1,10 @@
 import { incrementViews } from "@/lib/api/servers";
 import { useFavoriteServers } from "@/stores/favoriteServers";
+import { useRepoUrlStore } from "@/stores/repoUrl";
 import type { ServerType } from "@/types";
 import { useRef, useState } from "react";
 import { ServerConfigDialog } from "../dialog";
 import { ServerCard } from "./ServerCard";
-
 interface ServerListProps {
   mcpServers: ServerType[];
   onDelete?: (id: string) => void;
@@ -25,12 +25,15 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   // Get favorite servers from store
   const favoriteServers = useFavoriteServers((state) => state.favoriteServers);
 
+  const setRepoUrl = useRepoUrlStore((state) => state.setRepoUrl);
+
   // Container reference for virtualization
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Open server config dialog
   const openDialog = (server: ServerType) => {
     setCurrentServer(server);
+    setRepoUrl(server.source);
     setIsDialogOpen(true);
     incrementViews(server.id);
   };
@@ -52,7 +55,7 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   return (
     <div ref={containerRef} className="h-full" key={stableKeyRef.current}>
       <div
-        className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full"
+        className="grid gap-4 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 w-full"
         id="server-grid"
       >
         {mcpServers.map((server) => (

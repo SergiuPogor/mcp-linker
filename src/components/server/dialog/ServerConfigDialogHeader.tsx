@@ -1,8 +1,8 @@
 // ServerConfigDialogHeader.tsx
 import {
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface ServerConfigDialogHeaderProps {
@@ -11,7 +11,7 @@ interface ServerConfigDialogHeaderProps {
 }
 
 export const ServerConfigDialogHeader = ({
-  title = "config",
+  title = "mcp server config",
   description = "server config",
 }: ServerConfigDialogHeaderProps) => {
   return (

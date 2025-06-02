@@ -15,16 +15,18 @@ GitHub stars"/>
 
 # MCP Linker
 
-📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
- 
-[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
+ [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
+
+📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
 
 > Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included.
 
 ## News
 
-- 2025-05-22: You can add your servers for other people, server list sort by more choice
+- 2025-06-02: Show `git clone` button when the server config's `args` contains the word `"path"`    
+- 2025-05-29: Sync favorite servers to the cloud.
+- 2025-05-22: Share your servers. server list sort by more choice
 - 2025-05-19: server list sort by github stars  
 - 2025-05-16: online MCP servers store preview, more than 600 serveres, will add more.
 - 2025-05-08: Support adding custom server  
@@ -71,7 +73,7 @@ GitHub stars"/>
 ✅ Favorites & Recently Used: Quickly access your go-to servers  
 ✅ Cross-platform: macOS, Windows, Linux support  
 ✅ Multi-language: English, 中文, 日本語  
-✅ Improved error handling and user-friendly setup  
+✅ Auto detect python, uv, node   
 ✅ The server install by uvx or npx base the command
 
 ## 🚀 Quick Start

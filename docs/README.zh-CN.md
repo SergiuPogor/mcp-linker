@@ -14,18 +14,28 @@
 
 # MCP Linker
 
-📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
-
 [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
+📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
+
 > 轻松将 MCP 服务器添加到 Claude Desktop、Cursor 和 Windsurf。跨平台。Tauri 图形界面。内置服务器管理功能。
+
+## 📰 更新日志
+
+- 2025-06-02：当服务器配置中的 `args` 字符串包含 `"path"` 字样时，显示 `git clone` 按钮  
+- 2025-05-29：支持将收藏的服务器同步到云端  
+- 2025-05-22：支持分享你的服务器，服务器列表新增排序选项  
+- 2025-05-19：服务器列表支持按 GitHub Star 数排序  
+- 2025-05-16：上线 MCP 服务器商店预览，已收录 600+ 服务器，持续增加中  
+- 2025-05-08：支持添加自定义服务器
 
 ---
 
 ## 📋 目录
 
 - [MCP Linker](#mcp-linker)
+  - [📰 更新日志](#-更新日志)
   - [📋 目录](#-目录)
 - [👤 用户指南](#-用户指南)
   - [🔽 下载 MCP Linker](#-下载-mcp-linker)

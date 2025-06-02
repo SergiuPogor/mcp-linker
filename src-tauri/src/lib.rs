@@ -14,6 +14,7 @@ mod client;
 mod cmd;
 mod installer;
 mod json_manager;
+mod git;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -84,7 +85,8 @@ pub fn run() {
             cmd::update_mcp_server,
             installer::check_command_exists,
             installer::install_command,
-            get_path_env
+            get_path_env,
+            git::git_clone,
         ])
         .setup(|_app| {
             #[cfg(any(windows, target_os = "linux"))]
