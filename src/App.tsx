@@ -28,7 +28,7 @@ const queryClient = new QueryClient({
 function App() {
   const { triggerPendingDeepLink } = useUnifiedDeepLink();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
-  const isTauri = window.__TAURI__ !== "undefined";
+  const isTauri = typeof window.__TAURI__ !== "undefined";
 
   useEffect(() => {
     if (import.meta.env.VITE_IS_CHECK_UPDATE === "true") {

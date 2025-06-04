@@ -1,126 +1,25 @@
-import { ServerCard } from "@/components/manage/ServerCard";
+import { PageLoadingFallback } from "@/components/common/LoadingConfig";
+import { McpServerTable } from "@/components/manage/McpServerTable";
+import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { ConfigType } from "@/types/mcpConfig";
-import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export default function McpManage() {
   const { selectedClient, selectedPath } = useClientPathStore();
-
-  const [config, setConfig] = useState<ConfigType>({
-    mcpServers: {},
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadConfig();
-  }, [selectedClient, selectedPath]);
-
-  // Helper function to ensure config has the correct structure
-  const normalizeConfig = (data: any): ConfigType => {
-    if (!data || typeof data !== "object") {
-      return { mcpServers: {} };
-    }
-
-    // Ensure mcpServers exists and is an object
-    if (!data.mcpServers || typeof data.mcpServers !== "object") {
-      data.mcpServers = {};
-    }
-
-    return data as ConfigType;
-  };
-
-  async function loadConfig() {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Validate path for Windows systems
-      if (selectedClient === "custom" && !selectedPath) {
-        throw new Error("Path is required for custom client");
-      }
-
-      const data = await invoke<ConfigType>("read_json_file", {
-        clientName: selectedClient,
-        path: selectedPath || undefined,
-      });
-
-      // Normalize the received config to ensure it has the correct structure
-      const normalizedConfig = normalizeConfig(data);
-      setConfig(normalizedConfig);
-    } catch (error) {
-      console.error(`Error loading config: ${error}`);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to load configuration";
-      setError(errorMessage);
-
-      // Set default config even on error to prevent white screen
-      setConfig({ mcpServers: {} });
-
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  const handleUpdate = async (
-    key: string,
-    updatedConfig: ConfigType["mcpServers"][string],
-  ) => {
-    try {
-      await invoke("update_mcp_server", {
-        clientName: selectedClient,
-        path: selectedPath || undefined,
-        serverName: key,
-        serverConfig: updatedConfig,
-      });
-      await loadConfig();
-      toast.success("Configuration updated successfully");
-    } catch (error) {
-      console.error(`Error updating config: ${error}`);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to update configuration";
-      toast.error(errorMessage);
-    }
-  };
-
-  async function deleteConfigKey(key: string) {
-    if (selectedClient === "custom" && !selectedPath) {
-      toast.error(
-        "Cannot delete config: selectedPath is required for custom app",
-      );
-      return;
-    }
-    try {
-      await invoke("remove_mcp_server", {
-        clientName: selectedClient,
-        path: selectedPath || undefined,
-        serverName: key,
-      });
-      await loadConfig();
-      toast.success("Configuration deleted successfully");
-    } catch (error) {
-      console.error(`Error deleting config: ${error}`);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to delete configuration";
-      toast.error(errorMessage);
-    }
-  }
+  const {
+    config,
+    isLoading,
+    error,
+    updateConfig,
+    deleteConfig,
+    loadConfig,
+    disabledServers,
+    enableServer,
+    disableServer,
+    syncConfig,
+  } = useMcpConfig(selectedClient, selectedPath);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading configuration...</p>
-        </div>
-      </div>
-    );
+    return <PageLoadingFallback />;
   }
 
   if (error) {
@@ -131,36 +30,55 @@ export default function McpManage() {
             Error Loading Configuration
           </h3>
           <p className="text-red-600 mt-2">{error}</p>
-          <button
-            onClick={loadConfig}
-            className="mt-4 px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 transition-colors"
-          >
-            Retry
-          </button>
+          <div className="mt-4 space-x-2">
+            <button
+              onClick={() => loadConfig()}
+              className="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 transition-colors"
+            >
+              Retry
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
+            >
+              Refresh Page
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Safely get servers, fallback to empty object if undefined
-  const servers = config?.mcpServers || {};
+  // Transform servers object to array for DataTable
+  const activeServersData = Object.entries(config?.mcpServers ?? {}).map(
+    ([name, config]) => ({
+      name,
+      ...config,
+    }),
+  );
+
+  const disabledServersData = Object.entries(disabledServers ?? {}).map(
+    ([name, config]) => ({
+      name,
+      ...config,
+    }),
+  );
+
+  // Combine all servers into a single array
+  const allServersData = [...activeServersData, ...disabledServersData];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 p-2">
-      {Object.entries(servers).map(([key, serverConfigs]) => (
-        <ServerCard
-          key={key}
-          serverKey={key}
-          config={serverConfigs}
-          onUpdate={handleUpdate}
-          onDelete={deleteConfigKey}
-        />
-      ))}
-      {Object.keys(servers).length === 0 && (
-        <div className="col-span-full text-center py-8 text-gray-500">
-          No servers configured yet
-        </div>
-      )}
+    <div className="p-4">
+      <McpServerTable
+        servers={allServersData}
+        onEdit={(name, config) => updateConfig(name, config)}
+        onDisable={disableServer}
+        onDelete={deleteConfig}
+        onEnable={enableServer}
+        onSync={syncConfig}
+        disabledServers={disabledServers}
+        currentClient={selectedClient}
+      />
     </div>
   );
 }

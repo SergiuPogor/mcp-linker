@@ -13,19 +13,27 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          zustand: ['zustand'],
-          query: ['@tanstack/react-query'],
-          supabase: ['@supabase/supabase-js'],
+          // Core React chunks
+          "react-core": ["react", "react-dom"],
+          "react-router": ["react-router-dom"],
+
+          // State management
+          zustand: ["zustand"],
+
+          // Data fetching
+          "react-query": ["@tanstack/react-query"],
+
+          // Database
+          supabase: ["@supabase/supabase-js"],
         },
       },
     },
     target: "esnext",
     minify: "esbuild",
+    chunkSizeWarningLimit: 1000,
   },
   esbuild: {
-    drop: ['console', 'debugger'],
+    drop: ["console", "debugger"],
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
