@@ -26,10 +26,10 @@ export default function SearchPage() {
     searchTerm,
     deferredSearchTerm,
     page,
-    data,
+    serversCount: data?.servers?.length || 0,
     isFetching,
-    error,
-    allServers,
+    error: error?.message,
+    allServersCount: allServers.length,
   });
 
   useEffect(() => {
@@ -70,6 +70,11 @@ export default function SearchPage() {
   if (isFetching && servers.length === 0) {
     return (
       <div className="p-8">
+        {query && (
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Searching for "{query}"</h1>
+          </div>
+        )}
         <div className="flex justify-center items-center py-10">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
           <span className="ml-2">Searching...</span>

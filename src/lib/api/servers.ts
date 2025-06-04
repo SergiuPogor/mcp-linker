@@ -37,9 +37,8 @@ export async function fetchServers(
   console.log("API Request:", { path, params: Object.fromEntries(params) });
 
   try {
-    // Try API with timeout (5s for search)
+    // Try API with timeout (10s for search)
     const response = await api.get(path, { timeout: 10000 });
-    toast.success("API Response:", response.data);
 
     // Ensure we always return a valid structure
     return {
@@ -50,10 +49,11 @@ export async function fetchServers(
     };
   } catch (err) {
     console.error("API Error:", err);
-    toast.error(
-      "Failed to fetch servers: " +
-        (err instanceof Error ? err.message : String(err)),
-    );
+    
+    // Only show toast for actual errors, not empty results
+    if (err instanceof Error && !err.message.includes('timeout')) {
+      toast.error("Search failed: " + err.message);
+    }
 
     // Return empty result structure instead of null
     return {

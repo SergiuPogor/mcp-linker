@@ -6,6 +6,7 @@ import Favorites from "@/pages/favorites";
 import Manage from "@/pages/manage";
 import OnBoarding from "@/pages/OnBoarding";
 import Recently from "@/pages/recently";
+import SearchPage from "@/pages/search";
 import { ServerPage } from "@/pages/ServerPage";
 import { Clock, Download, LayoutGrid, Search, Star } from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -19,6 +20,7 @@ export const AppRoutes = () => {
       <Route path="/categories" element={<Categories />} />
       <Route path="/manage" element={<Manage />} />
       <Route path="/recently" element={<Recently />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/servers/:id" element={<ServerPage />} />
 
