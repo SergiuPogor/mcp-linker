@@ -74,7 +74,7 @@ impl ClientConfig {
                 PathBuf::from("")
             }
         };
-        
+
         Self {
             name: name.to_string(),
             path,

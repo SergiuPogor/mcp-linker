@@ -15,9 +15,42 @@ export default function Recently() {
 
   // Load saved server configurations
   useEffect(() => {
+    async function checkFileExists(parsed: any) {
+      try {
+        const exists = await invoke<boolean>("check_mcplinker_config_exists");
+        if (!exists) {
+          toast.info("start add");
+          parsed.forEach(async (s: ServerListItem) => {
+            const saveServerItem = {
+              clientName: "mcplinker",
+              path: "",
+              serverName: s.name,
+              serverConfig: s.config,
+            };
+            toast.info(JSON.stringify(saveServerItem));
+            try {
+              await invoke("add_mcp_server", saveServerItem);
+            } catch (e) {
+              // already exists
+            }
+          });
+        }
+      } catch (e) {
+        console.log("Failed to check config file");
+      }
+    }
     const saved = localStorage.getItem("myservers");
     if (saved) {
-      console.log(saved);
+      try {
+        const parsed = JSON.parse(saved) as {
+          name: string;
+          config: ServerConfig;
+        }[];
+        checkFileExists(parsed);
+        setServerList(parsed);
+      } catch (error) {
+        console.error("Failed to load myservers:", error);
+      }
     }
     invoke<ConfigType>("read_json_file", {
       clientName: "mcplinker",

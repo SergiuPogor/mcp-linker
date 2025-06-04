@@ -82,6 +82,7 @@ pub fn run() {
             cmd::add_mcp_server,
             cmd::remove_mcp_server,
             cmd::update_mcp_server,
+            cmd::check_mcplinker_config_exists,
             installer::check_command_exists,
             installer::install_command,
             get_path_env,
