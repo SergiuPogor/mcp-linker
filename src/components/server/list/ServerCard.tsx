@@ -72,7 +72,7 @@ export function ServerCard({
   return (
     <Card
       key={server.id}
-      className="hover:shadow-lg transition-shadow relative py-2"
+      className="hover:shadow-lg transition-shadow relative py-2 group"
     >
       <CardHeader className="px-2 py-2 pb-0">
         <div className="flex justify-between items-start">
@@ -141,9 +141,19 @@ export function ServerCard({
             <span>⭐ {server.githubStars}</span>
           )}
         </span>
-        <Button onClick={() => onOpenDialog(server)} variant="default">
-          {t("get")}
-        </Button>
+        <span className="flex gap-2 ">
+          <span className="group-hover:flex hidden group">
+            <Button
+              onClick={() => navigate(`/servers/${server.id}`)}
+              variant="default"
+            >
+              {t("viewDetail")}
+            </Button>
+          </span>
+          <Button onClick={() => onOpenDialog(server)} variant="default">
+            {t("get")}
+          </Button>
+        </span>
       </CardFooter>
     </Card>
   );

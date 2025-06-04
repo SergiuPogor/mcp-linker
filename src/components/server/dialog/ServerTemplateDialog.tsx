@@ -147,7 +147,7 @@ export const ServerTemplateDialog = forwardRef<
               await handleSellServer();
             }}
           >
-            {t("sellServer")}
+            {t("submit")}
           </Button>
         ) : (
           <Button

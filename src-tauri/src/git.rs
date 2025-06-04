@@ -1,7 +1,7 @@
-use std::fs;
-use git2::Repository;
 use anyhow::Result;
 use dirs::home_dir;
+use git2::Repository;
+use std::fs;
 use url::Url;
 
 #[tauri::command]
@@ -14,7 +14,8 @@ pub async fn git_clone(url: String) -> Result<String, String> {
     }
 
     // path_segments should be /owner/repo
-    let segments: Vec<&str> = parsed_url.path_segments()
+    let segments: Vec<&str> = parsed_url
+        .path_segments()
         .ok_or("URL missing path")?
         .filter(|s| !s.is_empty())
         .collect();
@@ -36,13 +37,17 @@ pub async fn git_clone(url: String) -> Result<String, String> {
 
     tauri::async_runtime::spawn_blocking(move || {
         if target_dir.exists() {
-            return Ok(format!("Repository already exists at {}", target_dir.display()));
+            return Ok(format!(
+                "Repository already exists at {}",
+                target_dir.display()
+            ));
         }
 
         // Create parent directory ~/.cache/mcp-linker/owner
         if let Some(parent) = target_dir.parent() {
             if !parent.exists() {
-                fs::create_dir_all(parent).map_err(|e| format!("Failed to create directory: {}", e))?;
+                fs::create_dir_all(parent)
+                    .map_err(|e| format!("Failed to create directory: {}", e))?;
             }
         }
 

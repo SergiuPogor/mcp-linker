@@ -9,7 +9,6 @@ interface SaveServerConfigParams {
   selectedClient: string;
   selectedPath: string;
   currentServer: ServerType;
-  mcpServers: any[];
   serverName: string;
   config: ServerConfig | null;
   setIsDialogOpen: (open: boolean) => void;
@@ -31,6 +30,11 @@ export function useSaveServerConfig() {
         serverConfig: value,
       };
       await invoke("add_mcp_server", server);
+      try {
+        await invoke("add_mcp_server", { ...server, clientName: "mcplinker" });
+      } catch (e) {
+        // already have
+      }
       incrementDownloads(currentServer.id);
       console.log("add server", new Date(), server);
     } catch (error) {
@@ -43,7 +47,6 @@ export function useSaveServerConfig() {
     selectedClient,
     selectedPath,
     currentServer,
-    mcpServers,
     serverName,
     config,
     setIsDialogOpen,
@@ -57,20 +60,12 @@ export function useSaveServerConfig() {
       return;
     }
 
-    const client = mcpServers.find(
-      (s: ServerType) => s.source === currentServer.source,
-    );
-    if (!client) {
-      toast.error("Client not found");
-      return;
-    }
-
-    if (client && config) {
+    if (config) {
       try {
         await updateConfig(
           selectedClient,
           selectedPath,
-          client.name,
+          currentServer.name,
           currentServer,
           config,
         );

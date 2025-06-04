@@ -12,6 +12,7 @@ export interface TranslationSchema {
   noServerTip: string;
   confirmDeletion: string;
   deleteConfirmation: string;
+  submit: string;
   cancel: string;
   delete: string;
   install: string;
@@ -68,6 +69,7 @@ export interface TranslationSchema {
   sortByCreatedAt: string;
   downloads: string;
   views: string;
+  viewDetail: string;
   descend: string;
   ascend: string;
 }

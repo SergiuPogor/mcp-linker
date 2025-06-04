@@ -55,7 +55,7 @@ export const DiscoveryHeader = ({
             onClick={onSellServer}
             title={!isAuthenticated ? t("loginRequired") : undefined}
           >
-            {t("sellServer")}
+            {t("submit")}
           </Button>
         </div>
       </div>

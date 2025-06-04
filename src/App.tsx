@@ -1,22 +1,19 @@
+import CommandChecker from "@/components/CommandChecker";
 import { ThemeProvider } from "@/components/theme-provider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { lazy, Suspense, useEffect, useState } from "react";
-import { checkForUpdate, UpdateInfo } from "./lib/update";
-
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { AppLoadingFallback } from "./components/common/LoadingConfig";
+import Layout from "./components/Layout";
 import { TriggerOnMount } from "./components/TriggerOnMount";
 import { UpdateDialog } from "./components/UpdateDialog";
+import { checkForUpdate, UpdateInfo } from "./lib/update";
 
 declare global {
   interface Window {
     __TAURI__?: any;
   }
 }
-
-const Layout = lazy(() => import("./components/Layout"));
-const CommandChecker = lazy(() => import("@/components/CommandChecker"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,49 +28,34 @@ const queryClient = new QueryClient({
 function App() {
   const { triggerPendingDeepLink } = useUnifiedDeepLink();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
-  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const isTauri = window.__TAURI__ !== undefined;
+  const isTauri = window.__TAURI__ !== "undefined";
 
   useEffect(() => {
-    const handleCheckForUpdate = async () => {
-      if (import.meta.env.VITE_IS_CHECK_UPDATE === "true") {
-        const update = await checkForUpdate();
+    if (import.meta.env.VITE_IS_CHECK_UPDATE === "true") {
+      checkForUpdate().then((update) => {
         if (update?.hasUpdate) {
           setUpdateInfo(update);
-          setShowUpdateDialog(true);
         }
-      }
-    };
-
-    handleCheckForUpdate();
+      });
+    }
   }, []);
-
-  const handleCloseUpdateDialog = () => {
-    setShowUpdateDialog(false);
-    setUpdateInfo(null);
-  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storageKey="vite-ui-theme">
-        <Suspense fallback={<AppLoadingFallback />}>
-          {isTauri && <CommandChecker />}
-          {/* deep link */}
-          <TriggerOnMount onReady={triggerPendingDeepLink} />
+        {isTauri && <CommandChecker />}
+        <TriggerOnMount onReady={triggerPendingDeepLink} />
+        <Layout />
 
-          <Layout />
-
-          {/* Update dialog */}
-          {updateInfo && (
-            <UpdateDialog
-              isOpen={showUpdateDialog}
-              onClose={handleCloseUpdateDialog}
-              latestVersion={updateInfo.latestVersion}
-              releaseNotes={updateInfo.releaseNotes}
-              releaseUrl={updateInfo.releaseUrl}
-            />
-          )}
-        </Suspense>
+        {updateInfo && (
+          <UpdateDialog
+            isOpen={true}
+            onClose={() => setUpdateInfo(null)}
+            latestVersion={updateInfo.latestVersion}
+            releaseNotes={updateInfo.releaseNotes}
+            releaseUrl={updateInfo.releaseUrl}
+          />
+        )}
       </ThemeProvider>
     </QueryClientProvider>
   );

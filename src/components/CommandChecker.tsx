@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { open } from "@tauri-apps/plugin-shell";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Notification, Notifications } from "./ui/Notifications";
@@ -284,10 +285,7 @@ export default function CommandChecker() {
           ? {
               label: "Manual Install",
               onClick: () => {
-                // Use Tauri's shell open instead of window.open for security
-                import("@tauri-apps/plugin-shell").then(({ open }) => {
-                  open(tool.fallbackUrl!);
-                });
+                open(tool.fallbackUrl!);
               },
             }
           : undefined,

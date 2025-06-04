@@ -8,6 +8,8 @@ export type ServerType = {
   source: string;
   isOfficial: boolean;
   githubStars: number;
+  downloads: number;
+  rating: number;
   views: number;
   isFavorited: boolean;
 };

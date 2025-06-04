@@ -74,7 +74,6 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
           isOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           currentServer={currentServer}
-          mcpServers={mcpServers}
         />
       )}
     </div>

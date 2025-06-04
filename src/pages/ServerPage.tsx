@@ -1,50 +1,54 @@
+import { ContentLoadingFallback } from "@/components/common/LoadingConfig";
+import { ServerConfigDialog } from "@/components/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/api";
+import type { ServerType } from "@/types";
+import { openUrl } from "@/utils/urlHelper";
 import { Download, Eye, Github, Star, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-
-interface MCPServerDetail {
-  id: number;
-  name: string;
-  description: string;
-  source: string;
-  developer: string;
-  isOfficial: boolean;
-  rating: number;
-  githubStars: number;
-  downloads: number;
-  views: number;
-}
+import { useParams } from "react-router-dom";
 
 export function ServerPage() {
-  const [server, setServer] = useState<MCPServerDetail>();
+  const [server, setServer] = useState<ServerType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    const fetchServer = async (id: number) => {
+    const fetchData = async () => {
       try {
-        const response = await api.get(`/servers/${id}`);
-        setServer(response.data);
+        setIsLoading(true);
+        if (id) {
+          const serverResponse = await api.get(`/servers/${id}`);
+          setServer(serverResponse.data);
+        }
       } catch (error) {
-        console.error("Failed to fetch server data", error);
+        console.error("Failed to fetch data", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (id) {
-      fetchServer(Number(id));
-    }
+    fetchData();
   }, [id]);
+
+  if (isLoading) {
+    return <ContentLoadingFallback />;
+  }
+
+  if (!server) {
+    return <div>Server not found</div>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>{server?.name}</span>
-            {server?.isOfficial ? (
+            <span>{server.name}</span>
+            {server.isOfficial ? (
               <Badge variant="secondary" className="uppercase">
                 Official
               </Badge>
@@ -56,42 +60,55 @@ export function ServerPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-muted-foreground">{server?.description}</p>
+          <p className="text-muted-foreground">{server.description}</p>
 
           <div className="flex flex-wrap gap-6 text-sm text-gray-600">
             <div className="flex items-center space-x-2">
               <User size={16} />
-              <span>{server?.developer}</span>
+              <span>{server.developer}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Star size={16} />
-              <span>{server?.rating?.toFixed(1)}</span>
+              <span>{server.rating?.toFixed(1)}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Github size={16} />
-              <span>{server?.githubStars?.toLocaleString()}</span>
+              <span>{server.githubStars?.toLocaleString()}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Download size={16} />
-              <span>{server?.downloads?.toLocaleString()}</span>
+              <span>{server.downloads.toLocaleString()}</span>
             </div>
             <div className="flex items-center space-x-2">
               <Eye size={16} />
-              <span>{server?.views?.toLocaleString()}</span>
+              <span>{server.views?.toLocaleString()}</span>
             </div>
           </div>
 
-          <Link to={server?.source || "#"}>
+          <div className="flex gap-2">
             <Button
               variant="outline"
-              rel="noopener noreferrer"
+              onClick={() => openUrl(server.source)}
               className="flex items-center space-x-2"
             >
               <span>View Source</span>
             </Button>
-          </Link>
+            <Button
+              variant="outline"
+              onClick={() => setIsDialogOpen(true)}
+              className="flex items-center space-x-2"
+            >
+              get
+            </Button>
+          </div>
         </CardContent>
       </Card>
+
+      <ServerConfigDialog
+        isOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        currentServer={server}
+      />
     </div>
   );
 }

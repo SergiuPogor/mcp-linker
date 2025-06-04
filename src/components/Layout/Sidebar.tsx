@@ -57,10 +57,12 @@ export const Sidebar = ({ navs }: SidebarProps) => {
 
         <div className="flex flex-col gap-2">
           {navs.map((nav) => (
-            <Link key={nav.id} to={`/${nav.id}`} className="w-full">
+            <Link key={nav.id} to={nav.path || `/${nav.id}`} className="w-full">
               <Button
                 variant={
-                  location.pathname === `/${nav.id}` ? "secondary" : "ghost"
+                  location.pathname === (nav.path || `/${nav.id}`)
+                    ? "secondary"
+                    : "ghost"
                 }
                 className={`w-full justify-start p-2 ${isCollapsed ? "justify-center" : ""}`}
               >

@@ -21,4 +21,5 @@ export interface Nav {
   id: string;
   name: string;
   icon: JSX.Element;
+  path?: string;
 }

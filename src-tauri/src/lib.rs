@@ -12,16 +12,15 @@ use serde_json::Value;
 
 mod client;
 mod cmd;
+mod git;
 mod installer;
 mod json_manager;
-mod git;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
     #[serde(rename = "mcpServers", alias = "servers")]
     mcp_servers: Value,
 }
-
 
 fn update_env_path() {
     let home = home_dir().unwrap().to_str().unwrap().to_string();

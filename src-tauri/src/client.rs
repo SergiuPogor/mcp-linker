@@ -59,6 +59,7 @@ impl ClientConfig {
             }
             ("mcphub", None) => PathBuf::from(home).join(".config/mcphub/servers.json"),
             ("windsurf", _) => PathBuf::from(home).join(".codeium/windsurf/mcp_config.json"),
+            ("mcplinker", _) => PathBuf::from(home).join(".config/mcplinker/mcp.json"),
             (_, Some(path_str)) => {
                 // For any other app, use the provided path + mcp.json
                 // If path is empty, use home directory
@@ -73,10 +74,7 @@ impl ClientConfig {
                 PathBuf::from("")
             }
         };
-        println!(
-            "Creating ClientConfig with name: {}, path: {:?}",
-            name, path
-        );
+        
         Self {
             name: name.to_string(),
             path,
