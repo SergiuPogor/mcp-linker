@@ -20,11 +20,11 @@ GitHub stars"/>
 
 📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
 
-> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included.
+> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included. Sync configs cross Client
 
 ## News
 
-- 2025-06-02: mcp-linker-api open source too
+- 2025-06-04: Sync Server configs Claude <=> other clients.
 - 2025-06-02: Show `git clone` button when the server config's `args` contains the word `"path"`    
 - 2025-05-29: Sync favorite servers to the cloud.
 - 2025-05-22: Share your servers. server list sort by more choice
@@ -44,9 +44,9 @@ GitHub stars"/>
   - [🚀 Quick Start](#-quick-start)
   - [🛠️ How It Works](#️-how-it-works)
   - [🖼️ Screenshots](#️-screenshots)
+    - [Manage Example](#manage-example)
     - [Server Discovery](#server-discovery)
     - [Configuration Example](#configuration-example)
-    - [Manage Example](#manage-example)
 - [👨‍💻 For Developers](#-for-developers)
   - [💻 System Requirements](#-system-requirements)
   - [🔧 Installation Steps](#-installation-steps)
@@ -54,6 +54,7 @@ GitHub stars"/>
   - [🤝 Contributing](#-contributing)
 - [📚 Resources](#-resources)
   - [🌐 Servers](#-servers)
+  - [🔧 Backend API (Open Source)](#-backend-api-open-source)
   - [💬 Feedback \& Support](#-feedback--support)
   - [🎉 Contributors](#-contributors)
 
@@ -92,14 +93,14 @@ GitHub stars"/>
 
 ## 🖼️ Screenshots
 
+### Manage Example
+![Manage Screenshot](./images/manage.png)
+
 ### Server Discovery
 ![Discover Screenshot](./images/home.png)
 
 ### Configuration Example
 ![Config Screenshot](./images/config.png)
-
-### Manage Example
-![Manage Screenshot](./images/manager.png)
 
 ---
 

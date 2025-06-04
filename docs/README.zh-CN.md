@@ -19,10 +19,11 @@
 
 📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
 
-> 轻松将 MCP 服务器添加到 Claude Desktop、Cursor 和 Windsurf。跨平台。Tauri 图形界面。内置服务器管理功能。
+> 轻松将 MCP 服务器添加到 Claude Desktop、Cursor 和 Windsurf。跨平台。Tauri 图形界面。内置服务器管理功能。跨客户端同步配置
 
 ## 📰 更新日志
 
+- 2025-06-04: 同步服务器配置 Claude <=> 其他客户端.
 - 2025-06-02：当服务器配置中的 `args` 字符串包含 `"path"` 字样时，显示 `git clone` 按钮  
 - 2025-05-29：支持将收藏的服务器同步到云端  
 - 2025-05-22：支持分享你的服务器，服务器列表新增排序选项  
@@ -43,9 +44,9 @@
   - [🚀 快速开始](#-快速开始)
   - [🛠️ 工作原理](#️-工作原理)
   - [🖼️ 截图](#️-截图)
+    - [管理示例](#管理示例)
     - [服务器发现](#服务器发现)
     - [配置示例](#配置示例)
-    - [管理示例](#管理示例)
 - [👨‍💻 开发者指南](#-开发者指南)
   - [💻 系统要求](#-系统要求)
   - [🔧 安装步骤](#-安装步骤)
@@ -90,6 +91,9 @@
 
 ## 🖼️ 截图
 
+### 管理示例
+
+![Manage Screenshot](../images/manage.png)
 ### 服务器发现
 
 ![Discover Screenshot](../images/home.png)
@@ -98,9 +102,6 @@
 
 ![Config Screenshot](../images/config.png)
 
-### 管理示例
-
-![Manage Screenshot](../images/manager.png)
 
 ---
 
