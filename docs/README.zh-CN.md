@@ -14,6 +14,13 @@
 
 # MCP Linker
 
+[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
+![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
+
+📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
+
+> 轻松将 MCP 服务器添加到 Claude Desktop、Cursor 和 Windsurf。跨平台。Tauri 图形界面。内置服务器管理功能。跨客户端同步配置
+
 ---
 
 ## 🚀 Reddit 推荐
@@ -26,13 +33,6 @@
 📢 欢迎加入讨论或分享你的看法！
 
 ---
-
-[![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
-![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
-
-📘 [English](../README.md) | _简体中文_ | [日本語](./README.ja-JP.md)  
-
-> 轻松将 MCP 服务器添加到 Claude Desktop、Cursor 和 Windsurf。跨平台。Tauri 图形界面。内置服务器管理功能。跨客户端同步配置
 
 ## 📰 更新日志
 

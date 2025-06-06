@@ -16,6 +16,12 @@ GitHub stars"/>
 
 # MCP Linker
 
+ [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
+![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
+
+📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
+
+> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included. Sync configs cross Client, Say goodbye to `copy-paste`, `git clone`
 ---
 
 ## 🚀 Featured on Reddit
@@ -32,20 +38,11 @@ GitHub stars"/>
 
 If this tool saved you time or helped your workflow, consider:
 
-- 🌟 [Starring on GitHub](https://github.com/milisp/mcp-linker/stargazers)
-- ☕ Buy Me a Coffee *(coming soon?)*
-- 💖 [GitHub Sponsors](https://github.com/sponsors/milisp)
+- 🐙 [Gumroad](https://wei40680.gumroad.com/l/jdbuvc)
 
 Your support helps keep MCP-Linker open, updated and improving 🚀
 
 ---
-
- [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
-![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
-
-📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
-
-> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included. Sync configs cross Client, Say goodbye to `copy-paste`, `git clone`
 
 ## News
 
