@@ -14,6 +14,19 @@
 
 # MCP Linker
 
+---
+
+## 🚀 Reddit 推荐
+
+🔥 [r/selfhosted：13K+ 浏览量](https://www.reddit.com/r/selfhosted/comments/1kfcwwn/introducing_mcp_linker_oneclick_setup_for_adding/)  
+💬 [r/mcp：9.3K+ 浏览量](https://www.reddit.com/r/mcp/comments/1l34b93/mcp_manager_sync_config_across_clients_says_good/)
+
+
+📣 “不错！我也在把类似的方法集成到一个工作产品中…”  
+📢 欢迎加入讨论或分享你的看法！
+
+---
+
 [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 ![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
 
@@ -36,6 +49,7 @@
 ## 📋 目录
 
 - [MCP Linker](#mcp-linker)
+  - [🚀 Reddit 推荐](#-reddit-推荐)
   - [📰 更新日志](#-更新日志)
   - [📋 目录](#-目录)
 - [👤 用户指南](#-用户指南)
