@@ -179,8 +179,7 @@ Check out the list of [official MCP servers](https://github.com/modelcontextprot
 
 ## 💬 Feedback & Support
 
-Have questions or suggestions? Join our [GitHub Discussions](https://github.com/milisp/mcp-linker/discussions).
-
+Have questions or suggestions? 👉 Join our [Discord community](https://discord.gg/G9uJxjpd) 
 
 ## 🎉 Contributors
 
