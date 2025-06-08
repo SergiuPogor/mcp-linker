@@ -26,8 +26,8 @@ GitHub stars"/>
 
 ## 🚀 Featured on Reddit
 
+💬 [r/mcp: 10K+ views](https://www.reddit.com/r/mcp/comments/1l34b93/mcp_manager_sync_config_across_clients_says_good/)
 🔥 [r/selfhosted: 13K+ views](https://www.reddit.com/r/selfhosted/comments/1kfcwwn/introducing_mcp_linker_oneclick_setup_for_adding/)  
-💬 [r/mcp: 9.3K+ views](https://www.reddit.com/r/mcp/comments/1l34b93/mcp_manager_sync_config_across_clients_says_good/)
 
 📣 "Nice! I'm building a similar approach into a work product..."  
 📢 Join the discussion or share your thoughts!
