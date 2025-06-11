@@ -1,8 +1,12 @@
 # MCP Linker - One-Click MCP Server Manager for Claude Desktop & AI Clients
 
+**⚡ Our goal: To build the best open-source MCP server manager in the world.**
+
 <p align="center">
   <img src="public/logo.png" alt="Project Logo" width="200" />
 </p>
+
+> MCP Linker helps you configure and sync your MCP server settings across popular AI clients like Claude Desktop, VS Code, and Neovim. No more manual `git clone` or `copy-paste` — just click and connect.
 
 <p align="center">
   <a href="https://github.com/milisp/mcp-linker/stargazers">
@@ -21,7 +25,7 @@ GitHub stars"/>
 
 📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md)
 
-> Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included. Sync configs cross Client, Say goodbye to `copy-paste`, `git clone`
+> MCP Linker is a cross-platform GUI tool to easily add, manage, and sync Model Context Protocol (MCP) server configurations for Claude Desktop, Cursor, VS Code, Neovim, and other AI/LLM clients. With one-click setup and intuitive interface, no technical skill is required. Built with Tauri and FastAPI, it simplifies server integration and configuration sharing.
 
 ## 🚀 Featured on Reddit
 
@@ -42,17 +46,18 @@ GitHub stars"/>
 - 2025-05-16: online MCP servers store preview, more than 600 serveres, will add more.
 - 2025-05-08: Support adding custom server  
 
+🙌 Developers welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) if you'd like to help improve MCP Linker.
+
 ---
 
 ## 📋 Table of Contents
-- [MCP Linker](#mcp-linker)
+- [MCP Linker - One-Click MCP Server Manager for Claude Desktop \& AI Clients](#mcp-linker---one-click-mcp-server-manager-for-claude-desktop--ai-clients)
   - [🚀 Featured on Reddit](#-featured-on-reddit)
-  - [❤️ Support This Project](#️-support-this-project)
   - [News](#news)
   - [📋 Table of Contents](#-table-of-contents)
 - [👤 For Users](#-for-users)
   - [🔽 Download](#-download)
-  - [✨ Features](#-features)
+  - [✨ Key Features of MCP Linker: One-Click MCP Server Manager](#-key-features-of-mcp-linker-one-click-mcp-server-manager)
   - [🚀 Quick Start](#-quick-start)
   - [🛠️ How It Works](#️-how-it-works)
   - [🖼️ Screenshots](#️-screenshots)
@@ -60,13 +65,12 @@ GitHub stars"/>
     - [Server Discovery](#server-discovery)
     - [Configuration Example](#configuration-example)
 - [👨‍💻 For Developers](#-for-developers)
+  - [🤝 Contributing](#-contributing)
   - [💻 System Requirements](#-system-requirements)
   - [🔧 Installation Steps](#-installation-steps)
   - [🔍 Troubleshooting](#-troubleshooting)
-  - [🤝 Contributing](#-contributing)
 - [📚 Resources](#-resources)
   - [🌐 Servers](#-servers)
-  - [🔧 Backend API (Open Source)](#-backend-api-open-source)
   - [💬 Feedback \& Support](#-feedback--support)
   - [🎉 Contributors](#-contributors)
 
@@ -78,7 +82,7 @@ GitHub stars"/>
 
 👉 [Download on GitHub Releases](https://github.com/milisp/mcp-linker/releases)
 
-## ✨ Features
+## ✨ Key Features of MCP Linker: One-Click MCP Server Manager
 
 ✅ One-click to add MCP servers, less copy paste need     
 ✅ Manage multiple server configurations (add, delete, favorite)  
@@ -118,6 +122,10 @@ GitHub stars"/>
 
 # 👨‍💻 For Developers
 
+## 🤝 Contributing
+
+Contributions are welcome! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get started.
+
 ## 💻 System Requirements
 
 Before working on this project, ensure you have the following installed:
@@ -144,14 +152,6 @@ bun tauri dev
 
 [Wiki](https://github.com/milisp/mcp-linker/wiki#-troubleshooting)
 
-## 🤝 Contributing
-
-We welcome contributions from the community:
-
-1. **Fork & Clone** this repository
-2. **Create a branch** for your feature or fix
-3. **Submit a Pull Request** with your changes
-
 ---
 
 # 📚 Resources
@@ -160,10 +160,6 @@ We welcome contributions from the community:
 
 - [official MCP servers](https://github.com/modelcontextprotocol/servers).
 - [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
-
-## 🔧 Backend API (Open Source)
-
-👉 [api](./api)
 
 ## 💬 Feedback & Support
 
@@ -177,5 +173,6 @@ Thanks to the following contributors for improving this project:
 - [@devilcoder01](https://github.com/devilcoder01) — improved Windows build compatibility and project setup instructions, Github workflow, UI improved, design
 
 ---
+**Keywords**: MCP, Claude Desktop, MCP server manager, AI client integration, Tauri app, LLM config sync, cross-platform GUI, FastAPI backend
 
 ❤️ Enjoying MCP Linker? [Star us on GitHub](https://github.com/milisp/mcp-linker/stargazers) to support continued development!
