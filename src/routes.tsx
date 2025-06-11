@@ -11,20 +11,29 @@ import { ServerPage } from "@/pages/ServerPage";
 import { Clock, Download, LayoutGrid, Search, Star } from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import TeamPage from "./pages/TeamPage";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<Discover />} />
+      <Route path="/" element={<Manage />} />
+      <Route path="/discover" element={<Discover />} />
       <Route path="/categories" element={<Categories />} />
-      <Route path="/manage" element={<Manage />} />
       <Route path="/recently" element={<Recently />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/servers/:id" element={<ServerPage />} />
 
       {/* Protected routes */}
+      <Route
+        path="/team"
+        element={
+          <ProtectedRoute requireAuth={true}>
+            <TeamPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/favorites"
         element={
@@ -64,15 +73,28 @@ export const getNavigationRoutes = (
     discover: <Search size={24} />,
     categories: <LayoutGrid size={24} />,
     manage: <Download size={24} />,
+    team: <Download size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
   };
 
   return [
     {
+      id: "manage",
+      name: t("nav.manage"),
+      path: "/",
+      icon: iconMap.manage,
+    },
+    {
+      id: "team",
+      name: t("nav.team"),
+      path: "/team",
+      icon: iconMap.team,
+    },
+    {
       id: "discover",
       name: t("nav.discover"),
-      path: "/",
+      path: "/discover",
       icon: iconMap.discover,
     },
     {
@@ -80,12 +102,6 @@ export const getNavigationRoutes = (
       name: t("nav.category"),
       path: "/categories",
       icon: iconMap.categories,
-    },
-    {
-      id: "manage",
-      name: t("nav.manage"),
-      path: "/manage",
-      icon: iconMap.manage,
     },
     {
       id: "recently",

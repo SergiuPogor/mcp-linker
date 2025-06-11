@@ -49,9 +49,9 @@ export async function fetchServers(
     };
   } catch (err) {
     console.error("API Error:", err);
-    
+
     // Only show toast for actual errors, not empty results
-    if (err instanceof Error && !err.message.includes('timeout')) {
+    if (err instanceof Error && !err.message.includes("timeout")) {
       toast.error("Search failed: " + err.message);
     }
 

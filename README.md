@@ -1,3 +1,5 @@
+# MCP Linker - One-Click MCP Server Manager for Claude Desktop & AI Clients
+
 <p align="center">
   <img src="public/logo.png" alt="Project Logo" width="200" />
 </p>
@@ -11,38 +13,24 @@
     <img src="https://img.shields.io/github/stars/milisp/mcp-linker?style=social" alt="
 GitHub stars"/>
   </a>
+  <a href="https://github.com/milisp/mcp-linker">
+    <img src="https://img.shields.io/github/last-commit/milisp/mcp-linker" alt="Latest commit"/>
+  </a>
+  <img src="https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg" alt="Build status"/>
 </p>
 
-
-# MCP Linker
-
- [![GitHub last commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
-![build](https://github.com/milisp/mcp-linker/actions/workflows/tauri-ci-win.yml/badge.svg)
-
-📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md) 
+📘 _English_ | [简体中文](./docs/README.zh-CN.md) | [日本語](./docs/README.ja-JP.md)
 
 > Add MCP servers to Claude Desktop, Cursor, Windsurf, VS Code, Cline, neovim, and more — in two clicks. Cross-platform. Tauri GUI. Server management included. Sync configs cross Client, Say goodbye to `copy-paste`, `git clone`
----
 
 ## 🚀 Featured on Reddit
 
-💬 [r/mcp: 10K+ views](https://www.reddit.com/r/mcp/comments/1l34b93/mcp_manager_sync_config_across_clients_says_good/)
+💬 [r/mcp: 11K+ views](https://www.reddit.com/r/mcp/comments/1l34b93/mcp_manager_sync_config_across_clients_says_good/)   
 🔥 [r/selfhosted: 13K+ views](https://www.reddit.com/r/selfhosted/comments/1kfcwwn/introducing_mcp_linker_oneclick_setup_for_adding/)  
 
 📣 "Nice! I'm building a similar approach into a work product..."  
 📢 Join the discussion or share your thoughts!
 
----
-
-## ❤️ Support This Project
-
-If this tool saved you time or helped your workflow, consider:
-
-- 🐙 [Gumroad](https://wei40680.gumroad.com/l/jdbuvc)
-
-Your support helps keep MCP-Linker open, updated and improving 🚀
-
----
 
 ## News
 
@@ -144,11 +132,12 @@ Before working on this project, ensure you have the following installed:
 git clone https://github.com/milisp/mcp-linker
 cd mcp-linker
 bun install
-bun tauri dev
 
 # create a .env file at project root and set env
 cp .env.example .env
 VITE_API_BASE_URL=https://api.mcp-linker.store/api/v1
+
+bun tauri dev
 ```
 
 ## 🔍 Troubleshooting
@@ -169,13 +158,12 @@ We welcome contributions from the community:
 
 ## 🌐 Servers
 
-Check out the list of [official MCP servers](https://github.com/modelcontextprotocol/servers).
-
-[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
+- [official MCP servers](https://github.com/modelcontextprotocol/servers).
+- [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
 
 ## 🔧 Backend API (Open Source)
 
-👉 [mcp-linker-api](https://github.com/milisp/mcp-linker-api)
+👉 [api](./api)
 
 ## 💬 Feedback & Support
 

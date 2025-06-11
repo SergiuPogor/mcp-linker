@@ -31,7 +31,6 @@ tauri-plugin-deep-link = "2"
 tokio = { version = "1.45.1", features = ["process"] }
 url = "2.5.4"
 anyhow = "1.0.98"
-git2 = { version = "0.20.2", features = ["https", "vendored-openssl"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = { version = "2.0.0", features = ["deep-link"] }

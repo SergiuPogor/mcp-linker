@@ -25,6 +25,7 @@ export interface TranslationSchema {
     arcade: string;
     create: string;
     work: string;
+    team: string;
     manage: string;
     updates: string;
     favs: string;

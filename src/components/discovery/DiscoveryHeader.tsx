@@ -1,6 +1,6 @@
 import { SortOptions } from "@/components/settings/SortOptions";
 import { Button } from "@/components/ui/button";
-import { apiClient } from "@/lib/apiClient";
+import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,7 @@ export const DiscoveryHeader = ({
   const queryResult = useQuery({
     queryKey: ["serverTotal"],
     queryFn: async () => {
-      const res = await apiClient.get("/servers/count");
+      const res = await api.get("/servers/count");
       return res.data;
     },
     staleTime: 1000 * 60 * 60,

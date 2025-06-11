@@ -1,7 +1,7 @@
 use anyhow::Result;
 use dirs::home_dir;
-use git2::Repository;
 use std::fs;
+use std::process::Command;
 use url::Url;
 
 #[tauri::command]
@@ -54,9 +54,18 @@ pub async fn git_clone(url: String) -> Result<String, String> {
         // Clone the repository (append .git if not already present)
         let full_url = format!("{}.git", url.trim_end_matches(".git")); // Avoid double .git
 
-        match Repository::clone(&full_url, &target_dir) {
-            Ok(_) => Ok(format!("Cloned to {}", target_dir.display())),
-            Err(e) => Err(format!("Clone failed: {}", e)),
+        let output = Command::new("git")
+            .arg("clone")
+            .arg(&full_url)
+            .arg(&target_dir)
+            .output()
+            .map_err(|e| format!("Failed to execute git: {}", e))?;
+
+        if output.status.success() {
+            Ok(format!("Cloned to {}", target_dir.display()))
+        } else {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            Err(format!("Clone failed: {}", stderr))
         }
     })
     .await

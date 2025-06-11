@@ -27,11 +27,12 @@ const zh: { translation: TranslationSchema } = {
       category: "分类",
       arcade: "Arcade",
       create: "创作",
+      team: "团队",
       work: "工作",
       manage: "管理",
       updates: "更新",
       recentlyAdded: "最近添加",
-      favs: "收藏", // <-- 新增
+      favs: "收藏",
     },
     content: {
       discover: "发现精选内容",

@@ -58,7 +58,7 @@ export default function OnBoarding() {
 
       if (userData) {
         toast.success("User authenticated successfully");
-        navigate("/dashboard");
+        navigate("/manage");
         return;
       } else {
         throw new Error("No user data received");

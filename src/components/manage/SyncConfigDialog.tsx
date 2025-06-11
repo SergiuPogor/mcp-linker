@@ -13,8 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { availableClients } from "@/constants/clients";
 import { RefreshCw } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface SyncConfigDialogProps {
   open: boolean;
@@ -28,16 +30,6 @@ interface SyncConfigDialogProps {
   isSyncing: boolean;
 }
 
-const availableClients = [
-  { value: "claude", label: "Claude Desktop" },
-  { value: "cursor", label: "Cursor" },
-  { value: "cline", label: "Cline" },
-  { value: "vscode", label: "VSCode" },
-  { value: "windsurf", label: "Windsurf" },
-  { value: "mcphub", label: "MCPHub" },
-  { value: "mcplinker", label: "MCPLinker" },
-];
-
 export function SyncConfigDialog({
   open,
   onOpenChange,
@@ -46,27 +38,33 @@ export function SyncConfigDialog({
   isSyncing,
 }: SyncConfigDialogProps) {
   const [syncFromClient, setSyncFromClient] = useState<string>("");
-  const [syncToClient, setSyncToClient] = useState<string>("");
+  const [syncToClient, setSyncToClient] = useState<string>(currentClient || "");
   const [overrideMode, setOverrideMode] = useState(false);
+
+  const resetState = () => {
+    setSyncFromClient("");
+    setSyncToClient(currentClient || "");
+    setOverrideMode(false);
+  };
 
   const handleSync = async () => {
     if (syncFromClient && syncToClient) {
       try {
         await onSync(syncFromClient, syncToClient, overrideMode);
         onOpenChange(false);
-        setSyncFromClient("");
-        setSyncToClient("");
-        setOverrideMode(false);
+        resetState();
+        toast.success("Sync completed Configs have been synced.");
       } catch (error) {
         console.error("Sync failed:", error);
+        toast.error(
+          `Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
       }
     }
   };
 
   const handleCancel = () => {
-    setSyncFromClient("");
-    setSyncToClient("");
-    setOverrideMode(false);
+    resetState();
     onOpenChange(false);
   };
 
@@ -111,7 +109,7 @@ export function SyncConfigDialog({
             <Select
               value={syncToClient}
               onValueChange={setSyncToClient}
-              disabled={isSyncing}
+              disabled={isSyncing || syncFromClient === syncToClient}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select target client" />
@@ -154,7 +152,12 @@ export function SyncConfigDialog({
             </Button>
             <Button
               onClick={handleSync}
-              disabled={!syncFromClient || !syncToClient || isSyncing}
+              disabled={
+                !syncFromClient ||
+                !syncToClient ||
+                syncFromClient === syncToClient ||
+                isSyncing
+              }
             >
               {isSyncing ? (
                 <>
