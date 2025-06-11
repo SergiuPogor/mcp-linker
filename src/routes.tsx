@@ -11,6 +11,7 @@ import { ServerPage } from "@/pages/ServerPage";
 import { Clock, Download, LayoutGrid, Search, Star } from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import TeamMemberPage from "./pages/TeamMemberPage";
 import TeamPage from "./pages/TeamPage";
 
 export const AppRoutes = () => {
@@ -31,6 +32,14 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute requireAuth={true}>
             <TeamPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/teams/:teamId/members"
+        element={
+          <ProtectedRoute requireAuth={true}>
+            <TeamMemberPage />
           </ProtectedRoute>
         }
       />

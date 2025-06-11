@@ -9,6 +9,7 @@ import { api } from "@/lib/api";
 import { TeamFormData, TeamResponse } from "@/types/team";
 import { Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
   const [teams, setTeams] = useState<TeamResponse[]>([]);
@@ -22,6 +23,7 @@ export default function TeamPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const fetchMyTeams = async () => {
     try {
@@ -162,6 +164,7 @@ export default function TeamPage() {
   const columns = useTeamColumns({
     onEdit: openEditDialog,
     onDelete: handleDeleteTeam,
+    navigateToMembers: (teamId) => navigate(`/teams/${teamId}/members`),
   });
 
   useEffect(() => {

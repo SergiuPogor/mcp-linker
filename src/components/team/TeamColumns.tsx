@@ -10,18 +10,26 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { TeamResponse } from "@/types/team";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
-import { TeamResponse } from "../../types/team";
+import { Pencil, Trash2, User2 } from "lucide-react";
 
 interface TeamColumnsProps {
   onEdit: (team: TeamResponse) => void;
   onDelete: (teamId: string) => void;
+  navigateToMembers: (teamId: string) => void;
 }
 
 export function useTeamColumns({
   onEdit,
   onDelete,
+  navigateToMembers,
 }: TeamColumnsProps): ColumnDef<TeamResponse>[] {
   return [
     {
@@ -62,33 +70,37 @@ export function useTeamColumns({
       header: "Actions",
       cell: ({ row }) => {
         const team = row.original;
-    
+
         return (
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onEdit(team)}
-            >
+            {/* Manage Members Button */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => navigateToMembers(team.id)}
+                  >
+                    <User2 className="mr-1 h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Manage Members</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Button variant="outline" size="sm" onClick={() => onEdit(team)}>
               <Pencil className="mr-1 h-4 w-4" />
-              Edit
             </Button>
-    
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                >
+                <Button variant="destructive" size="sm">
                   <Trash2 className="mr-1 h-4 w-4" />
-                  Delete
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Are you absolutely sure?
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This action cannot be undone. This will permanently delete
                     the team "{team.name}" and all associated data.
