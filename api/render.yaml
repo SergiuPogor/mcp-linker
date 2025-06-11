@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mcp-linker-api
+    env: python
+    buildCommand: pip install -r requirements.txt && prisma generate
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: API_VERSION
+        sync: false
