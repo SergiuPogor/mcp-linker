@@ -1,112 +1,70 @@
-<p align="center">
-  <img src="../public/logo.png" alt="Project Logo" width="200" />
-</p>
-
-<p align="center">
-  📘 言語を選択：
-  <a href="../README.md">English</a> |
-  <a href="./README.zh-CN.md">简体中文</a> |
-  <strong>日本語</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/milisp/mcp-linker/stargazers">
-    ⭐ このプロジェクトが役に立った場合は、ぜひスターを付けてください！
-  </a>
-  <br/>
-  <a href="https://github.com/milisp/mcp-linker">
-    <img src="https://img.shields.io/github/stars/milisp/mcp-linker?style=social" alt="GitHub stars"/>
-    <img src="https://img.shields.io/github/forks/milisp/mcp-linker?style=social" alt="GitHub forks"/>
-  </a>
-</p>
-
 # MCP Linker
 
-> **Model Context Protocol (MCP) サーバー** を MCP クライアント（**Claude Cursor windsurf...**）に簡単に追加できます。操作は2クリックだけ：**取得** と **追加**。macos win をサポート
+AI クライアント（Claude Desktop、VS Code、Cursor など）間で MCP（Model Context Protocol）サーバーを管理するためのクロスプラットフォーム GUI ツールです。
 
-## 🔽 MCP Linkerをダウンロード
+![スクリーンショット](../images/home.png)
 
-👉 [GitHubリリースでダウンロード](https://github.com/milisp/mcp-linker/releases)
+## 主な機能
 
-## ✨ 特徴
+- ワンクリックで MCP サーバーのインストールと設定
+- 複数の AI クライアントに対応（Claude Desktop、Cursor、VS Code、Cline、Roo Code、Windsurf など）
+- 600 以上の厳選された MCP サーバーを利用可能
+- クロスプラットフォーム：macOS、Windows、Linux
+- Python、Node.js、UV 環境を自動検出
+- お気に入りサーバーのクラウド同期
+- Tauri で構築 - 軽量 (アプリの合計サイズは約 6 MB)、起動が速く、リソース使用量が少なく、安全です。
 
-✅ ワンクリックで MCP サーバーを追加  
-✅ 複数の MCP サーバー構成をサポート  
-✅ オープンソースでコミュニティ主導  
-✅ お気に入り：サーバーをお気に入りとしてマークし、すばやくアクセス可能  
-✅ 最近使用したもの：最近追加したサーバーを自動的に保存して表示  
-✅ Windows対応：Windowsでも動作（実験的）  
-✅ エラー処理とインストールガイドを改善
+## 主なメリット
 
-🗨 [フィードバックまたは質問](https://github.com/milisp/mcp-linker/discussions)
+**Claude のサーバー設定を他の MCP クライアントと同期できます。**  
+コピー＆ペーストはもう不要です。
 
-## 🔧 必要な環境
+## クイックスタート
 
-このプロジェクトを実行するには、以下のツールがインストールされていることを確認してください：
+1. [最新リリースをダウンロード](https://github.com/milisp/mcp-linker/releases)
+2. MCP サーバーをリストから選択
+3. 「追加」をクリックして自動でインストールと設定
+4. お使いの AI クライアントですぐに使用可能
 
-- Node.js
-- bun（または pnpm）
-- Rust ツールチェーン（安定版、Tauri 用）
+## アーキテクチャ
 
-## インストール
+- フロントエンド: Tauri + React + shadcn/ui
+- バックエンド: オプションの FastAPI
+
+## スクリーンショット
+
+| サーバー管理 | サーバー探索 | 設定 |
+|---------------|------------------|---------------|
+| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+
+## 開発手順
 
 ```bash
 git clone https://github.com/milisp/mcp-linker
 cd mcp-linker
 bun install
+cp .env.example .env
 bun tauri dev
-# yarn install
-# yarn tauri dev
-# pnpm install
-# pnpm tauri dev
 ```
 
-> **注意：** 問題が発生した場合は、`package-lock.json` ファイルと `node_modules` ディレクトリを削除してから、次のコマンドを実行してください：
->
-> ```bash
-> npm install --legacy-peer-deps
-> ```
+必要要件：Node.js 20 以上、Bun、Rust ツールチェーン
 
-## 🚀 クイックスタート
+## コントリビュート
 
-1. **ブラウズ＆選択**：利用可能なリストから MCP サーバーを選択します。
-2. **インストール**：**「取得」** をクリックしてサーバーの構成を表示します。
-3. **アクティベート**：**「追加」** をクリックして MCP クライアントに統合します。
+詳細は [CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
 
-> **ヒント：** お気に入りや最近使用したサーバーは、利便性のためローカルに保存されます！
+## サポート
 
-## 🌐 公式サーバー
+- [Discord コミュニティ](https://discord.gg/G9uJxjpd)
+- [GitHub Issues](https://github.com/milisp/mcp-linker/issues)
 
-[公式 MCP サーバーのリスト](https://github.com/modelcontextprotocol/servers)をチェックしてください。
+## 🎉 貢献者の皆さま
 
-## 🖼️ スクリーンショット
-
-### 管理例
-
-![管理スクリーンショット](../images/manage.png)
-
-![発見スクリーンショット](../images/home.png)
-
-### 構成例
-
-![構成スクリーンショット](../images/config.png)
-
----
-
-## 🤝 コントリビュート
-
-コントリビュートを歓迎します！以下の手順で貢献できます：
-
-1. **このリポジトリをフォーク＆クローン** します。
-2. **プルリクエストを送信** して変更を提出します。
-
-## 🎉 貢献者
-
-このプロジェクトを改善してくれた貢献者の皆様、ありがとうございます：
+このプロジェクトの改善にご協力いただいた皆さまに感謝します：
 
 - [@eltociear](https://github.com/eltociear) — 日本語翻訳
-- [@devilcoder01](https://github.com/devilcoder01) — Windows ビルドの互換性とプロジェクトセットアップ手順の改善
+- [@devilcoder01](https://github.com/devilcoder01) — Windows ビルドの互換性、セットアップ手順、GitHub ワークフロー、UI 改善、デザイン向上
 
 ---
 
-[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
+⭐ このプロジェクトが役に立ったら、GitHub にスターを付けてください！ [![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker)
