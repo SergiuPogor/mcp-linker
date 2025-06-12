@@ -16,7 +16,7 @@ A cross-platform Tauri GUI tool for managing MCP (Model Context Protocol) server
 
 ## Key Benefit
 
-**Sync Claude's server configuration across other MCP clients.**  
+**Sync MCP server configuration across MCP clients.**  
 No more copy-pasting
 
 ## Quick Start
