@@ -26,11 +26,6 @@
 3. 点击“添加”按钮自动安装和配置
 4. 你的 AI 客户端就可以使用该服务器了
 
-## 架构
-
-- 前端：Tauri + React + shadcn/ui
-- 后端：可选 FastAPI
-
 ## 截图展示
 
 | 管理服务器 | 发现服务器 | 配置界面 |
@@ -48,6 +43,11 @@ bun tauri dev
 ```
 
 环境要求：Node.js 20+、Bun、Rust 工具链
+
+## 架构
+
+- 前端：Tauri + React + shadcn/ui
+- 后端：可选 FastAPI
 
 ## 贡献指南
 

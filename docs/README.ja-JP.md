@@ -12,7 +12,7 @@ AI クライアント（Claude Desktop、VS Code、Cursor など）間で MCP（
 - クロスプラットフォーム：macOS、Windows、Linux
 - Python、Node.js、UV 環境を自動検出
 - お気に入りサーバーのクラウド同期
-- Tauri で構築 - 軽量 (アプリの合計サイズは約 6 MB)、起動が速く、リソース使用量が少なく、安全です。
+- Tauri で構築 - 軽量 (約 6 MB)、起動が速く、リソース使用量が少なく、安全です。
 
 ## 主なメリット
 
@@ -25,11 +25,6 @@ AI クライアント（Claude Desktop、VS Code、Cursor など）間で MCP（
 2. MCP サーバーをリストから選択
 3. 「追加」をクリックして自動でインストールと設定
 4. お使いの AI クライアントですぐに使用可能
-
-## アーキテクチャ
-
-- フロントエンド: Tauri + React + shadcn/ui
-- バックエンド: オプションの FastAPI
 
 ## スクリーンショット
 
@@ -48,6 +43,11 @@ bun tauri dev
 ```
 
 必要要件：Node.js 20 以上、Bun、Rust ツールチェーン
+
+## アーキテクチャ
+
+- フロントエンド: Tauri + React + shadcn/ui
+- バックエンド: オプションの FastAPI
 
 ## コントリビュート
 

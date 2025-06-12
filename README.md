@@ -12,7 +12,7 @@ A cross-platform Tauri GUI tool for managing MCP (Model Context Protocol) server
 - Cross-platform: macOS, Windows, Linux
 - Auto-detect Python, Node.js, UV environments
 - Cloud sync for favorite servers
-- Built with Tauri — lightweight (~6MB total app size), fast startup, low resource usage, and secure.
+- Built with Tauri — lightweight (~6MB), fast, secure.
 
 ## Key Benefit
 
@@ -25,11 +25,6 @@ No more copy-pasting
 2. Select an MCP server from the list
 3. Click "Add" to install and configure automatically
 4. Your AI client is ready to use the new server
-
-## Architecture
-
-- Frontend: Tauri + React + shadcn/ui
-- Backend: Optional FastAPI
 
 ## Screenshots
 
@@ -48,6 +43,11 @@ bun tauri dev
 ```
 
 Requirements: Node.js 20+, Bun, Rust toolchain
+
+## Architecture
+
+- Frontend: Tauri + React + shadcn/ui
+- Backend: Optional FastAPI
 
 ## Contributing
 
