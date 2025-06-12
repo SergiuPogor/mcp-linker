@@ -1,6 +1,6 @@
 # MCP Linker
 
-A cross-platform Tauri GUI tool for managing MCP (Model Context Protocol) servers across AI clients like Claude Desktop, VS Code, and Cursor.
+Add, manage, and sync MCP (Model Context Protocol) servers across AI clients like Claude Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP marketplace.
 
 ![Screenshot](./images/home.png)
 
@@ -16,7 +16,7 @@ A cross-platform Tauri GUI tool for managing MCP (Model Context Protocol) server
 
 ## Key Benefit
 
-**Sync MCP server configuration across MCP clients.**  
+**Sync MCP server configuration across MCP clients. disable and enable servers**  
 No more copy-pasting
 
 ## Quick Start

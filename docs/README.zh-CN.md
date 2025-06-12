@@ -1,6 +1,6 @@
 # MCP Linker
 
-跨平台的 Tauri 图形界面工具，用于在 Claude Desktop、VS Code、Cursor 等 AI 客户端之间管理 MCP（Model Context Protocol）服务器。
+使用轻量级 Tauri 图形界面，在 Claude Desktop、Cline、Cursor 等 AI 客户端之间同步和管理 MCP（模型上下文协议）服务器配置，并支持内置 MCP 市场。
 
 ![截图](../images/home.png)
 

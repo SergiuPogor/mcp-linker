@@ -1,6 +1,6 @@
 # MCP Linker
 
-AI クライアント（Claude Desktop、VS Code、Cursor など）間で MCP（Model Context Protocol）サーバーを管理するためのクロスプラットフォーム GUI ツールです。
+軽量なTauri GUIを使用して、Claude Desktop、Cline、CursorなどのAIクライアント間でMCP（モデルコンテキストプロトコル）サーバー設定を同期および管理し、内蔵のMCPマーケットプレイスをサポートします。
 
 ![スクリーンショット](../images/home.png)
 
