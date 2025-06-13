@@ -1,11 +1,13 @@
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true); // Start as true to prevent race conditions
   const [sessionCheckComplete, setSessionCheckComplete] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // If Supabase is not enabled, allow access without auth
@@ -72,9 +74,14 @@ export const useAuth = () => {
         case "SIGNED_IN":
         case "TOKEN_REFRESHED":
           setUser(session?.user ?? null);
+          // Navigate to onboarding after successful sign in
+          if (event === "SIGNED_IN") {
+            navigate("/onboarding", { replace: true });
+          }
           break;
         case "SIGNED_OUT":
           setUser(null);
+          navigate("/auth", { replace: true });
           break;
         case "INITIAL_SESSION":
           // Only update if we haven't completed initial session check
@@ -95,7 +102,7 @@ export const useAuth = () => {
       clearTimeout(timer);
       subscription.unsubscribe();
     };
-  }, [sessionCheckComplete]);
+  }, [sessionCheckComplete, navigate]);
 
   return {
     user,
