@@ -1,5 +1,4 @@
 // Encryption utilities for server configurations
-import { ServerConfig } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 
 // Generate a random encryption key
@@ -9,22 +8,22 @@ export async function generateEncryptionKey(): Promise<string> {
 
 // Encrypt server configuration
 export async function encryptConfig(
-  config: ServerConfig,
+  data: string,
   keyString: string,
 ): Promise<string> {
-  return await invoke("encrypt_data", { data: config, key: keyString });
+  return await invoke("encrypt_data", { data, key: keyString });
 }
 
 // Decrypt server configuration
 export async function decryptConfig(
   encryptedData: string,
   keyString: string,
-): Promise<ServerConfig> {
-  const decryptedConfig = await invoke<ServerConfig>("decrypt_data", {
+): Promise<string> {
+  const decryptedData = await invoke<string>("decrypt_data", {
     encryptedData,
     key: keyString,
   });
-  return decryptedConfig;
+  return decryptedData;
 }
 
 // Store encryption key in localStorage

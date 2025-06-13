@@ -1,6 +1,6 @@
 import {
-    downloadConfigsFromCloud,
-    uploadConfigsToCloud,
+  downloadConfigsFromCloud,
+  uploadConfigsToCloud,
 } from "@/lib/cloud-sync";
 import { ServerTableData } from "@/types";
 import { useCallback, useState } from "react";
@@ -16,6 +16,7 @@ export const useCloudSync = (
     async (overrideAll: boolean) => {
       try {
         setIsSyncing(true);
+        console.log(servers, currentClient, overrideAll)
         await uploadConfigsToCloud(servers, currentClient, overrideAll);
         toast.success("Configurations uploaded to cloud successfully.");
       } catch (error) {

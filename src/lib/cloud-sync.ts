@@ -1,14 +1,15 @@
 // Cloud sync API functions for MCP server configurations
 import { apiClient } from "@/lib/apiClient";
-import { ServerConfig, ServerTableData } from "@/types";
+import { ServerTableData } from "@/types";
+import { decryptConfig, encryptConfig, ensureEncryptionKey } from "@/utils/encryption";
 
 export interface CloudConfig {
   id: string;
-  server_name: string;
-  mcp_client: string;
-  encrypt_config_data: any;
-  created_at: string;
-  updated_at: string;
+  serverName: string;
+  mcpClient: string;
+  encryptConfigData: any;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CloudSyncStatus {
@@ -34,7 +35,7 @@ const callCloudApi = async <T>(
     const response =
       method === "GET" || method === "DELETE"
         ? await fn(endpoint)
-        : await fn(endpoint, { data: body });
+        : await fn(endpoint, body || {});
     return response.data as T;
   } catch (error: any) {
     throw new Error(`API call to ${endpoint} failed: ${error.message}`);
@@ -42,29 +43,36 @@ const callCloudApi = async <T>(
 };
 
 // Upload a single configuration to cloud
-const uploadSingleConfig = async (
+export const uploadSingleConfig = async (
   config: ServerTableData,
   currentClient: string,
   overrideAll: boolean,
 ) => {
   const { name, ...serverConfig } = config;
+  
+  // Get encryption key and encrypt the config
+  const encryptionKey = await ensureEncryptionKey();
+  // Stringify the config before encryption
+  const configString = JSON.stringify(serverConfig);
+  const encryptedConfig = await encryptConfig(configString, encryptionKey);
+  
   const payload = {
-    server_name: name,
-    mcp_client: currentClient,
-    encrypt_config_data: serverConfig,
+    serverName: name,
+    mcpClient: currentClient,
+    encryptConfigData: encryptedConfig,
   };
   try {
     await callCloudApi(`/user-server-configs/`, "POST", payload);
   } catch (error: any) {
     if (error.message.includes("status 409") && !overrideAll) {
-      await updateCloudConfig(name, currentClient, serverConfig);
+      await updateCloudConfig(name, currentClient, encryptedConfig);
     } else {
       throw new Error(`Failed to upload config ${name}: ${error.message}`);
     }
   }
 };
 
-// Upload configurations to cloud
+// Upload configurations to cloud using batch sync endpoint
 export const uploadConfigsToCloud = async (
   configs: ServerTableData[],
   currentClient: string,
@@ -76,12 +84,23 @@ export const uploadConfigsToCloud = async (
       await deleteAllCloudConfigs(currentClient);
     }
 
-    // Upload each configuration concurrently
-    await Promise.all(
-      configs.map((config) =>
-        uploadSingleConfig(config, currentClient, overrideAll),
-      ),
-    );
+    // Prepare payload for batch sync
+    const encryptionKey = await ensureEncryptionKey();
+    const batchPayload = await Promise.all(
+        configs.map(async (config) => {
+          const { name, ...serverConfig } = config;
+          const configString = JSON.stringify(serverConfig);
+          const encryptedConfig = await encryptConfig(configString, encryptionKey);
+          return {
+            serverName: name,
+            mcpClient: currentClient,
+            encryptConfigData: encryptedConfig,
+          };
+        }),
+      );
+
+    // Call batch sync API
+    await callCloudApi(`/user-server-configs/batch-sync?override_existing=${overrideAll}`, "POST", batchPayload);
   } catch (error) {
     console.error("Upload to cloud failed:", error);
     throw error;
@@ -94,15 +113,34 @@ export const downloadConfigsFromCloud = async (
 ): Promise<ServerTableData[]> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcp_client=${encodeURIComponent(currentClient)}`,
+      `/user-server-configs/?mcpClient=${encodeURIComponent(currentClient)}`,
     );
+    console.log('cloud data', data)
     const cloudConfigs: CloudConfig[] = data.configs || [];
 
-    // Convert cloud configs to ServerTableData format
-    const serverConfigs: ServerTableData[] = cloudConfigs.map((config) => ({
-      name: config.server_name,
-      ...config.encrypt_config_data,
-    }));
+    // Get encryption key for decryption
+    const encryptionKey = await ensureEncryptionKey();
+
+    // Convert cloud configs to ServerTableData format and decrypt
+    const serverConfigs: ServerTableData[] = (
+        await Promise.all(
+          cloudConfigs.map(async (config) => {
+            if (!config.encryptConfigData || typeof config.encryptConfigData !== "string") {
+              console.warn(`Missing or invalid encrypted data for config: ${config.serverName}`);
+              return null;
+            }
+      
+            const decryptedString = await decryptConfig(config.encryptConfigData, encryptionKey);
+            const decryptedConfig = JSON.parse(decryptedString);
+            return {
+              name: config.serverName,
+              ...decryptedConfig,
+            };
+          }),
+        )
+      ).filter((item): item is ServerTableData => item !== null);
+
+    console.log('serverConfigs: ', serverConfigs)
 
     return serverConfigs;
   } catch (error) {
@@ -117,16 +155,16 @@ export const getCloudSyncStatus = async (
 ): Promise<CloudSyncStatus> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcp_client=${encodeURIComponent(currentClient)}`,
+      `/user-server-configs/?mcpClient=${encodeURIComponent(currentClient)}`,
     );
     const configs: CloudConfig[] = data.configs || [];
 
     const lastSync =
       configs.length > 0
         ? configs.reduce((latest, config) => {
-            const configDate = new Date(config.updated_at);
-            return configDate > new Date(latest) ? config.updated_at : latest;
-          }, configs[0].updated_at)
+            const configDate = new Date(config.updatedAt);
+            return configDate > new Date(latest) ? config.updatedAt : latest;
+          }, configs[0].updatedAt)
         : null;
 
     return {
@@ -144,17 +182,17 @@ export const getCloudSyncStatus = async (
 const updateCloudConfig = async (
   serverName: string,
   mcpClient: string,
-  config: ServerConfig,
+  encryptedConfig: string,
 ): Promise<void> => {
   try {
     // First, get the config ID
     const existingConfig: CloudConfig = await callCloudApi(
-      `/user-server-configs/by-server-client/?server_name=${encodeURIComponent(serverName)}&mcp_client=${encodeURIComponent(mcpClient)}`,
+      `/user-server-configs/by-server-client/?serverName=${encodeURIComponent(serverName)}&mcpClient=${encodeURIComponent(mcpClient)}`,
     );
 
     // Update the configuration
     await callCloudApi(`/user-server-configs/${existingConfig.id}`, "PUT", {
-      encrypt_config_data: config,
+      encryptConfigData: encryptedConfig,
     });
   } catch (error) {
     console.error("Update cloud config failed:", error);
@@ -166,7 +204,7 @@ const updateCloudConfig = async (
 const deleteAllCloudConfigs = async (mcpClient: string): Promise<void> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcp_client=${encodeURIComponent(mcpClient)}`,
+      `/user-server-configs/?mcpClient=${encodeURIComponent(mcpClient)}`,
     );
     const configs: CloudConfig[] = data.configs || [];
 
@@ -175,7 +213,7 @@ const deleteAllCloudConfigs = async (mcpClient: string): Promise<void> => {
       try {
         await callCloudApi(`/user-server-configs/${config.id}`, "DELETE");
       } catch (error) {
-        console.warn(`Failed to delete config ${config.server_name}:`, error);
+        console.warn(`Failed to delete config ${config.serverName}:`, error);
       }
     }
   } catch (error) {

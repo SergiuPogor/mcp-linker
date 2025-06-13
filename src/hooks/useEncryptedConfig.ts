@@ -15,7 +15,8 @@ export function useEncryptedConfig() {
       }
 
       try {
-        return await decryptConfig(config.data, encryptionKey);
+        const decryptedString = await decryptConfig(config.data, encryptionKey);
+        return JSON.parse(decryptedString) as ServerConfig;
       } catch (error) {
         console.error("Error decrypting config:", error);
         throw new Error("Failed to decrypt configuration");
