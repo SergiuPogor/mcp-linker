@@ -1,6 +1,6 @@
 # MCP Linker
 
-Add, manage, and sync MCP (Model Context Protocol) servers across AI clients like Claude Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP marketplace.
+Add, manage, and sync MCP (Model Context Protocol) servers across AI clients like Claude Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
 ![Screenshot](./images/home.png)
 

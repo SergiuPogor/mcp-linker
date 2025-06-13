@@ -92,6 +92,7 @@ export default function McpManage() {
         disabledServers={disabledServers}
         currentClient={selectedClient}
         onBatchDelete={handleBatchDelete}
+        onCloudDownloadSuccess={loadConfig}
       />
     </div>
   );

@@ -25,6 +25,7 @@ interface McpServerTableProps {
   disabledServers: Record<string, ServerConfig>;
   currentClient: string;
   onBatchDelete: (names: string[]) => Promise<void>;
+  onCloudDownloadSuccess: () => Promise<void>;
 }
 
 export const McpServerTable = ({
@@ -37,6 +38,7 @@ export const McpServerTable = ({
   disabledServers,
   currentClient,
   onBatchDelete,
+  onCloudDownloadSuccess,
 }: McpServerTableProps) => {
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
   const [cloudSyncDialogOpen, setCloudSyncDialogOpen] = useState(false);
@@ -160,6 +162,7 @@ export const McpServerTable = ({
         onCloudDownload={handleCloudDownload}
         isSyncing={isSyncing}
         servers={decryptionState.decryptedServers}
+        onCloudDownloadSuccess={onCloudDownloadSuccess}
       />
 
       <DataTable

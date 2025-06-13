@@ -26,6 +26,7 @@ interface CloudSyncDialogProps {
   isSyncing: boolean;
   cloudSyncStatus?: CloudSyncStatus;
   servers: ServerTableData[];
+  onCloudDownloadSuccess: () => Promise<void>;
 }
 
 export function CloudSyncDialog({
@@ -36,6 +37,7 @@ export function CloudSyncDialog({
   isSyncing,
   cloudSyncStatus,
   servers,
+  onCloudDownloadSuccess,
 }: CloudSyncDialogProps) {
   const [cloudOverrideMode, setCloudOverrideMode] = useState(false);
 
@@ -59,6 +61,7 @@ export function CloudSyncDialog({
     try {
       await onCloudDownload(cloudOverrideMode);
       toast.success("Configurations downloaded from cloud successfully.");
+      onCloudDownloadSuccess();
     } catch (error) {
       console.error("Cloud download failed:", error);
       toast.error(

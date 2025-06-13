@@ -2,7 +2,9 @@ import {
   downloadConfigsFromCloud,
   uploadConfigsToCloud,
 } from "@/lib/cloud-sync";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { ServerTableData } from "@/types";
+import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
@@ -11,6 +13,7 @@ export const useCloudSync = (
   servers: ServerTableData[],
 ) => {
   const [isSyncing, setIsSyncing] = useState(false);
+  const { selectedClient, selectedPath } = useClientPathStore();
 
   const handleCloudUpload = useCallback(
     async (overrideAll: boolean) => {
@@ -33,7 +36,25 @@ export const useCloudSync = (
     async () => {
       try {
         setIsSyncing(true);
-        await downloadConfigsFromCloud(currentClient);
+        const serverConfigs = await downloadConfigsFromCloud(currentClient);
+
+        // Iterate over downloaded configurations and save them locally
+        for (const config of serverConfigs) {
+          // The backend add_mcp_server handles both adding and updating
+          const serverItem = {
+            clientName: selectedClient,
+            path: selectedPath || "",
+            serverName: config.name,
+            serverConfig: config,
+          };
+          
+          try {
+            await invoke("add_mcp_server", serverItem);
+          } catch (error) {
+            console.error(error)
+          }
+        }
+
         toast.success("Configurations downloaded from cloud successfully.");
       } catch (error) {
         console.error("Cloud download failed:", error);
