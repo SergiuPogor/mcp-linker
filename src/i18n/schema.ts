@@ -29,6 +29,7 @@ export interface TranslationSchema {
     manage: string;
     updates: string;
     favs: string;
+    settings: string;
     recentlyAdded: string;
   };
   content: {

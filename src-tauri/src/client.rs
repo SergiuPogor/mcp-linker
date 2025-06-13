@@ -9,6 +9,7 @@ pub struct ClientConfig {
 
 impl ClientConfig {
     pub fn new(name: &str, path: Option<&str>) -> Self {
+        #[cfg(debug_assertions)]
         println!("name: {}, path: {:?}", name, path);
         let home = home_dir().unwrap().to_str().unwrap().to_string();
         let path = match (name, path) {

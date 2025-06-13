@@ -7,6 +7,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
 import { TeamFormData, TeamResponse } from "@/types/team";
+import { RowSelectionState } from "@tanstack/react-table";
 import { Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,7 @@ export default function TeamPage() {
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -205,6 +207,8 @@ export default function TeamPage() {
           isLoading={isLoading}
           searchPlaceholder="Search teams..."
           emptyMessage="No teams found. Create your first team to get started."
+          rowSelection={rowSelection}
+          setRowSelection={setRowSelection}
         />
 
         <TeamForm

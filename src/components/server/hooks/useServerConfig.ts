@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import type { ServerConfig, SseConfig, StdioServerConfig } from "@/types";
+import { useEffect, useState } from "react";
 
 export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
   const [serverName, setServerName] = useState<string>("");
@@ -11,6 +11,7 @@ export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
 
   // Create separate templates for different server types
   const stdioConfigTemplate: StdioServerConfig = {
+    type: "stdio",
     command: "",
     args: [],
     env: {},
@@ -48,6 +49,7 @@ export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
     if (serverType === "stdio") {
       setConfig((prev) => {
         const newConfig: StdioServerConfig = {
+          type: "stdio",
           command: "command" in prev ? prev.command : "",
           args: "args" in prev ? prev.args : [],
           env: "env" in prev ? prev.env : {},

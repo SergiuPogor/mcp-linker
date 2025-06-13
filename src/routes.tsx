@@ -8,7 +8,15 @@ import OnBoarding from "@/pages/OnBoarding";
 import Recently from "@/pages/recently";
 import SearchPage from "@/pages/search";
 import { ServerPage } from "@/pages/ServerPage";
-import { Clock, Download, LayoutGrid, Search, Star } from "lucide-react";
+import SettingsPage from "@/pages/SettingsPage";
+import {
+  Clock,
+  Download,
+  LayoutGrid,
+  Search,
+  Settings,
+  Star,
+} from "lucide-react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import TeamMemberPage from "./pages/TeamMemberPage";
@@ -23,6 +31,7 @@ export const AppRoutes = () => {
       <Route path="/categories" element={<Categories />} />
       <Route path="/recently" element={<Recently />} />
       <Route path="/search" element={<SearchPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/servers/:id" element={<ServerPage />} />
 
@@ -85,6 +94,7 @@ export const getNavigationRoutes = (
     team: <Download size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
+    settings: <Settings size={24} />,
   };
 
   return [
@@ -123,6 +133,12 @@ export const getNavigationRoutes = (
       name: t("nav.favs"),
       path: "/favorites",
       icon: iconMap.favorites,
+    },
+    {
+      id: "settings",
+      name: t("nav.settings"),
+      path: "/settings",
+      icon: iconMap.settings,
     },
   ];
 };

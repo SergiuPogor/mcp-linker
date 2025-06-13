@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { api } from "@/lib/api";
 import { TeamMember, TeamMemberRole } from "@/types/team";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -27,7 +27,7 @@ export default function TeamMembers() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingMember, setIsAddingMember] = useState(false);
-
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const fetchTeamMembers = async () => {
     try {
@@ -185,13 +185,17 @@ export default function TeamMembers() {
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This action cannot be undone. This will permanently remove{" "}
-                    <span className="font-bold">{member.user?.fullname || member.user?.email}</span>{" "}
+                    <span className="font-bold">
+                      {member.user?.fullname || member.user?.email}
+                    </span>{" "}
                     from this team.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => handleRemoveMember(member.id)}>
+                  <AlertDialogAction
+                    onClick={() => handleRemoveMember(member.id)}
+                  >
                     Continue
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -238,6 +242,8 @@ export default function TeamMembers() {
             isLoading={isLoading}
             searchPlaceholder="Search members..."
             emptyMessage="No members found. Add your first team member to get started."
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
           />
         </div>
       </div>

@@ -1,4 +1,3 @@
-import { incrementViews } from "@/lib/api/servers";
 import { useFavoriteServers } from "@/stores/favoriteServers";
 import { useRepoUrlStore } from "@/stores/repoUrl";
 import type { ServerType } from "@/types";
@@ -35,7 +34,6 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
     setCurrentServer(server);
     setRepoUrl(server.source);
     setIsDialogOpen(true);
-    incrementViews(server.id);
   };
 
   // Check if server is favorited

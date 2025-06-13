@@ -8,6 +8,7 @@ export const transformConfig = (
 
   if (serverType === "stdio" && "command" in config && "args" in config) {
     finalConfig = {
+      type: "stdio",
       command: config.command,
       args: config.args,
       env: config.env || {},

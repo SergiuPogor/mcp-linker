@@ -3,6 +3,8 @@ import { McpServerTable } from "@/components/manage/McpServerTable";
 import { RefreshMcpConfig } from "@/components/manage/RefreshMcpConfig";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
+import { ServerTableData } from "@/types";
+import { useCallback, useMemo } from "react";
 
 export default function McpManage() {
   const { selectedClient, selectedPath } = useClientPathStore();
@@ -17,9 +19,60 @@ export default function McpManage() {
     enableServer,
     disableServer,
     syncConfig,
+    batchDeleteServers,
   } = useMcpConfig(selectedClient, selectedPath);
 
-  if (isLoading) {
+  // Memoize server data transformation to prevent unnecessary recalculations
+  const serversData = useMemo((): ServerTableData[] => {
+    const activeServers = Object.entries(config?.mcpServers ?? {}).map(
+      ([name, serverConfig]) =>
+        ({
+          name,
+          ...serverConfig,
+        }) as ServerTableData,
+    );
+
+    const disabledServersData = Object.entries(disabledServers ?? {}).map(
+      ([name, serverConfig]) =>
+        ({
+          name,
+          ...serverConfig,
+        }) as ServerTableData,
+    );
+
+    return [...activeServers, ...disabledServersData];
+  }, [config?.mcpServers, disabledServers]);
+
+  // Memoize callback functions to prevent unnecessary re-renders
+  const handleEdit = useCallback(
+    (name: string, serverConfig: Parameters<typeof updateConfig>[1]) => {
+      updateConfig(name, serverConfig);
+    },
+    [updateConfig],
+  );
+
+  const handleSync = useCallback(
+    (fromClient: string, toClient: string, overrideAll: boolean) => {
+      return syncConfig(fromClient, toClient, overrideAll);
+    },
+    [syncConfig],
+  );
+
+  // Wrap batchDeleteServers to handle loading state properly
+  const handleBatchDelete = useCallback(
+    async (names: string[]) => {
+      try {
+        await batchDeleteServers(names);
+      } catch (error) {
+        // Error is already handled in useMcpConfig
+        console.error("Batch delete operation failed:", error);
+        // Don't re-throw to prevent unhandled promise rejection
+      }
+    },
+    [batchDeleteServers],
+  );
+
+  if (isLoading && !config.mcpServers) {
     return <PageLoadingFallback />;
   }
 
@@ -27,35 +80,18 @@ export default function McpManage() {
     return <RefreshMcpConfig error={error} onRetry={loadConfig} />;
   }
 
-  // Transform servers object to array for DataTable
-  const activeServersData = Object.entries(config?.mcpServers ?? {}).map(
-    ([name, config]) => ({
-      name,
-      ...config,
-    }),
-  );
-
-  const disabledServersData = Object.entries(disabledServers ?? {}).map(
-    ([name, config]) => ({
-      name,
-      ...config,
-    }),
-  );
-
-  // Combine all servers into a single array
-  const allServersData = [...activeServersData, ...disabledServersData];
-
   return (
     <div className="p-4">
       <McpServerTable
-        servers={allServersData}
-        onEdit={(name, config) => updateConfig(name, config)}
+        servers={serversData}
+        onEdit={handleEdit}
         onDisable={disableServer}
         onDelete={deleteConfig}
         onEnable={enableServer}
-        onSync={syncConfig}
+        onSync={handleSync}
         disabledServers={disabledServers}
         currentClient={selectedClient}
+        onBatchDelete={handleBatchDelete}
       />
     </div>
   );

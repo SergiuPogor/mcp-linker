@@ -8,7 +8,7 @@ pub async fn read_json_file(client_name: String, path: Option<String>) -> Result
     let file_path = app_config.get_path();
 
     // Remove the file existence check - let JsonManager handle it
-    let mut json = JsonManager::read_json_file(file_path)?;
+    let mut json = JsonManager::read_json_file(file_path).await?;
 
     // Ensure the JSON always has the required structure
     if !json.is_object() {
@@ -43,7 +43,7 @@ pub async fn write_json_file(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::write_json_file(file_path, &content)
+    JsonManager::write_json_file(file_path, &content).await
 }
 
 #[tauri::command]

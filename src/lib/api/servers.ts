@@ -73,10 +73,6 @@ export async function updateServerStats(path: string, serverId: string) {
   }
 }
 
-export async function incrementViews(serverId: string) {
-  await updateServerStats("/view-count", serverId);
-}
-
 export async function incrementDownloads(serverId: string) {
   await updateServerStats("/download-count", serverId);
 }

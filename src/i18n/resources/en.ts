@@ -28,6 +28,7 @@ const en: { translation: TranslationSchema } = {
       arcade: "Arcade",
       create: "Create",
       favs: "Favorites",
+      settings: "Settings",
       team: "Team",
       work: "Work",
       manage: "Manage",

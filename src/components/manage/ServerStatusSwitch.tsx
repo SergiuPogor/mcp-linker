@@ -3,8 +3,8 @@ import { Switch } from "@/components/ui/switch";
 interface ServerStatusSwitchProps {
   serverName: string;
   isActive: boolean;
-  onEnable: (serverName: string) => void;
-  onDisable: (serverName: string) => void;
+  onEnable: (serverName: string) => Promise<void>;
+  onDisable: (serverName: string) => Promise<void>;
 }
 
 export function ServerStatusSwitch({

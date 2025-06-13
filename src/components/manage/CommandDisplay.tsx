@@ -1,32 +1,29 @@
+import { ServerTableData, SseConfig, StdioServerConfig } from "@/types";
 import { Terminal } from "lucide-react";
 
 interface CommandDisplayProps {
-  config: {
-    command?: string;
-    args?: string[];
-    url?: string;
-  };
+  config: ServerTableData;
 }
 
 export function CommandDisplay({ config }: CommandDisplayProps) {
   // Helper function to format command display
-  const formatCommand = (config: any) => {
-    if ("command" in config) {
+  const formatCommand = (serverConfig: ServerTableData) => {
+    if (serverConfig.type === "http" || serverConfig.type === "sse") {
+      const sseConfig = serverConfig as SseConfig;
+      return sseConfig.url;
+    } else {
+      const stdioConfig = serverConfig as StdioServerConfig;
       const fullCommand =
-        config.args && config.args.length > 0
-          ? `${config.command} ${config.args.join(" ")}`
-          : config.command;
+        stdioConfig.args && stdioConfig.args.length > 0
+          ? `${stdioConfig.command} ${stdioConfig.args.join(" ")}`
+          : stdioConfig.command;
       return fullCommand.length > 50
         ? `${fullCommand.substring(0, 50)}...`
         : fullCommand;
     }
-    if ("url" in config) {
-      return config.url;
-    }
-    return "N/A";
   };
 
-  const isStdio = "command" in config;
+  const isStdio = config.type !== "http" && config.type !== "sse";
   const command = formatCommand(config);
 
   return (

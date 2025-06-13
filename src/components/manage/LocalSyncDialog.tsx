@@ -15,10 +15,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { availableClients } from "@/constants/clients";
 import { RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface SyncConfigDialogProps {
+interface LocalSyncDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSync: (
@@ -30,34 +30,48 @@ interface SyncConfigDialogProps {
   isSyncing: boolean;
 }
 
-export function SyncConfigDialog({
+export function LocalSyncDialog({
   open,
   onOpenChange,
   onSync,
   currentClient,
   isSyncing,
-}: SyncConfigDialogProps) {
-  const [syncFromClient, setSyncFromClient] = useState<string>("");
+}: LocalSyncDialogProps) {
+  const [syncFromClient, setSyncFromClient] = useState<string>(() => {
+    // Load from localStorage on initial render
+    return localStorage.getItem("syncFromClient") || "";
+  });
   const [syncToClient, setSyncToClient] = useState<string>(currentClient || "");
   const [overrideMode, setOverrideMode] = useState(false);
 
+  // Effect to save syncFromClient to localStorage
+  useEffect(() => {
+    localStorage.setItem("syncFromClient", syncFromClient);
+  }, [syncFromClient]);
+
   const resetState = () => {
-    setSyncFromClient("");
+    setSyncFromClient(localStorage.getItem("syncFromClient") || ""); // Reset to localStorage value
     setSyncToClient(currentClient || "");
     setOverrideMode(false);
   };
 
-  const handleSync = async () => {
+  useEffect(() => {
+    if (open) {
+      setSyncToClient(currentClient || "");
+    }
+  }, [open, currentClient]);
+
+  const handleLocalSync = async () => {
     if (syncFromClient && syncToClient) {
       try {
         await onSync(syncFromClient, syncToClient, overrideMode);
         onOpenChange(false);
         resetState();
-        toast.success("Sync completed Configs have been synced.");
+        toast.success("Local sync completed successfully.");
       } catch (error) {
-        console.error("Sync failed:", error);
+        console.error("Local sync failed:", error);
         toast.error(
-          `Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+          `Local sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
         );
       }
     }
@@ -71,16 +85,17 @@ export function SyncConfigDialog({
   return (
     <Dialog
       open={open}
-      onOpenChange={() => {
-        if (!isSyncing) {
+      onOpenChange={(open) => {
+        if (!isSyncing && !open) {
           handleCancel();
         }
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Sync MCP Configuration</DialogTitle>
+          <DialogTitle>Local Sync Configuration</DialogTitle>
         </DialogHeader>
+
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">From Client:</label>
@@ -151,7 +166,7 @@ export function SyncConfigDialog({
               Cancel
             </Button>
             <Button
-              onClick={handleSync}
+              onClick={handleLocalSync}
               disabled={
                 !syncFromClient ||
                 !syncToClient ||
@@ -173,4 +188,4 @@ export function SyncConfigDialog({
       </DialogContent>
     </Dialog>
   );
-}
+} 

@@ -1,7 +1,7 @@
 use crate::client::ClientConfig;
 use crate::json_manager::JsonManager;
-use serde_json::Value;
 use serde_json::json;
+use serde_json::Value;
 use std::path::PathBuf;
 
 #[tauri::command]
@@ -14,7 +14,7 @@ pub async fn add_mcp_server(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::add_mcp_server(file_path, &client_name, &server_name, server_config)
+    JsonManager::add_mcp_server(file_path, &client_name, &server_name, server_config).await
 }
 
 #[tauri::command]
@@ -26,7 +26,7 @@ pub async fn remove_mcp_server(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::remove_mcp_server(file_path, &client_name, &server_name)
+    JsonManager::remove_mcp_server(file_path, &client_name, &server_name).await
 }
 
 #[tauri::command]
@@ -39,7 +39,7 @@ pub async fn update_mcp_server(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::update_mcp_server(file_path, &client_name, &server_name, server_config)
+    JsonManager::update_mcp_server(file_path, &client_name, &server_name, server_config).await
 }
 
 #[tauri::command]
@@ -51,7 +51,7 @@ pub async fn disable_mcp_server(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::disable_mcp_server(file_path, &client_name, &server_name)
+    JsonManager::disable_mcp_server(file_path, &client_name, &server_name).await
 }
 
 #[tauri::command]
@@ -63,7 +63,7 @@ pub async fn enable_mcp_server(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::enable_mcp_server(file_path, &client_name, &server_name)
+    JsonManager::enable_mcp_server(file_path, &client_name, &server_name).await
 }
 
 #[tauri::command]
@@ -74,7 +74,7 @@ pub async fn list_disabled_servers(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::list_disabled_servers(file_path)
+    JsonManager::list_disabled_servers(file_path).await
 }
 
 #[tauri::command]
@@ -98,8 +98,8 @@ pub async fn sync_mcp_config(
     let from_path = from_config.get_path();
     let to_path = to_config.get_path();
 
-    let from_json = JsonManager::read_json_file(from_path)?;
-    let mut to_json = JsonManager::read_json_file(to_path).unwrap_or_else(|_| json!({}));
+    let from_json = JsonManager::read_json_file(from_path).await?;
+    let mut to_json = JsonManager::read_json_file(to_path).await.unwrap_or_else(|_| json!({}));
 
     let from_servers = from_json.get("mcpServers").cloned().unwrap_or(json!({}));
     let from_disabled = from_json.get("__disabled").cloned().unwrap_or(json!({}));
@@ -120,11 +120,15 @@ pub async fn sync_mcp_config(
         if let Some(from_map) = from_servers.as_object() {
             for (k, v) in from_map {
                 // Check if server doesn't exist in either mcpServers or __disabled
-                let exists_in_servers = to_json["mcpServers"].as_object()
-                    .map(|obj| obj.contains_key(k)).unwrap_or(false);
-                let exists_in_disabled = to_json["__disabled"].as_object()
-                    .map(|obj| obj.contains_key(k)).unwrap_or(false);
-                
+                let exists_in_servers = to_json["mcpServers"]
+                    .as_object()
+                    .map(|obj| obj.contains_key(k))
+                    .unwrap_or(false);
+                let exists_in_disabled = to_json["__disabled"]
+                    .as_object()
+                    .map(|obj| obj.contains_key(k))
+                    .unwrap_or(false);
+
                 if !exists_in_servers && !exists_in_disabled {
                     if let Some(to_servers) = to_json["mcpServers"].as_object_mut() {
                         to_servers.insert(k.clone(), v.clone());
@@ -137,11 +141,15 @@ pub async fn sync_mcp_config(
         if let Some(from_map) = from_disabled.as_object() {
             for (k, v) in from_map {
                 // Check if server doesn't exist in either mcpServers or __disabled
-                let exists_in_servers = to_json["mcpServers"].as_object()
-                    .map(|obj| obj.contains_key(k)).unwrap_or(false);
-                let exists_in_disabled = to_json["__disabled"].as_object()
-                    .map(|obj| obj.contains_key(k)).unwrap_or(false);
-                
+                let exists_in_servers = to_json["mcpServers"]
+                    .as_object()
+                    .map(|obj| obj.contains_key(k))
+                    .unwrap_or(false);
+                let exists_in_disabled = to_json["__disabled"]
+                    .as_object()
+                    .map(|obj| obj.contains_key(k))
+                    .unwrap_or(false);
+
                 if !exists_in_servers && !exists_in_disabled {
                     if let Some(to_disabled) = to_json["__disabled"].as_object_mut() {
                         to_disabled.insert(k.clone(), v.clone());
@@ -151,5 +159,17 @@ pub async fn sync_mcp_config(
         }
     }
 
-    JsonManager::write_json_file(to_path, &to_json)
+    JsonManager::write_json_file(to_path, &to_json).await
+}
+
+#[tauri::command]
+pub async fn batch_delete_mcp_servers(
+    client_name: String,
+    path: Option<String>,
+    server_names: Vec<String>,
+) -> Result<Value, String> {
+    let app_config = ClientConfig::new(&client_name, path.as_deref());
+    let file_path = app_config.get_path();
+
+    JsonManager::batch_delete_mcp_servers(file_path, &client_name, server_names).await
 }

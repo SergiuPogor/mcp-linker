@@ -1,21 +1,21 @@
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConfigType } from "@/types/mcpConfig";
 import { PenSquare, Trash2 } from "lucide-react";
@@ -31,7 +31,7 @@ interface ServerActionButtonsProps {
     config: ConfigType["mcpServers"][string],
   ) => void;
   onDelete: (serverName: string) => void;
-  onEnable: (serverName: string) => void;
+  onEnable: (serverName: string) => Promise<void>;
   disabledServers?: Record<string, any>;
 }
 
@@ -99,13 +99,11 @@ export function ServerActionButtons({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => {
+              onClick={async () => {
                 const isDisabled = !!disabledServers?.[serverName];
                 if (isDisabled) {
-                  onEnable(serverName);
-                  setTimeout(() => {
-                    onDelete(serverName);
-                  }, 100); // wait status update
+                  await onEnable(serverName);
+                  onDelete(serverName);
                 } else {
                   onDelete(serverName);
                 }

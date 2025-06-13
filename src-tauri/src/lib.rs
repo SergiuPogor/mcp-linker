@@ -12,6 +12,7 @@ use serde_json::Value;
 
 mod client;
 mod cmd;
+mod encryption;
 mod git;
 mod installer;
 mod json_manager;
@@ -88,10 +89,14 @@ pub fn run() {
             mcp_commands::list_disabled_servers,
             mcp_commands::sync_mcp_config,
             mcp_commands::check_mcplinker_config_exists,
+            mcp_commands::batch_delete_mcp_servers,
             installer::check_command_exists,
             installer::install_command,
             get_path_env,
             git::git_clone,
+            encryption::generate_encryption_key,
+            encryption::encrypt_data,
+            encryption::decrypt_data,
         ])
         .setup(|_app| {
             #[cfg(any(windows, target_os = "linux"))]

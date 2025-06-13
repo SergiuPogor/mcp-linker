@@ -33,6 +33,7 @@ const zh: { translation: TranslationSchema } = {
       updates: "更新",
       recentlyAdded: "最近添加",
       favs: "收藏",
+      settings: "配置",
     },
     content: {
       discover: "发现精选内容",

@@ -12,5 +12,5 @@ RUN --mount=type=cache,target=/root/.bun/cache \
 
 COPY . .
 
-# RUN bun tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc
+# RUN NODE_ENV=production bun tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc
 RUN bun tauri build --runner cargo-xwin --target aarch64-pc-windows-msvc

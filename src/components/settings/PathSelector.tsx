@@ -20,6 +20,9 @@ export function PathSelector() {
 
       if (selectedPath) {
         setSelectedPath(selectedPath);
+      } else {
+        // If user cancels, set path to null to reflect no path selected
+        setSelectedPath(null);
       }
     } catch (error) {
       console.error("Failed to select directory:", error);
@@ -32,8 +35,8 @@ export function PathSelector() {
     <div className="w-full">
       <div className="flex space-x-2">
         <Input
-          value={selectedPath}
-          onChange={(e) => setSelectedPath(e.target.value)}
+          value={selectedPath || ""} // Display empty string if null
+          onChange={(e) => setSelectedPath(e.target.value || null)} // Set to null if empty
           className="flex-1"
           placeholder="Select a project root or a directory containing mcp.json"
           readOnly

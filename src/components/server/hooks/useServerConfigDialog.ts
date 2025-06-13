@@ -93,6 +93,7 @@ export const useServerConfigDialog = ({
   const createDefaultConfig = () => {
     console.log("Creating default stdio config");
     const defaultStdioConfig: StdioServerConfig = {
+      type: "stdio",
       command: "",
       args: [],
       env: {},

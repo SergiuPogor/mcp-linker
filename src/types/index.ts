@@ -9,13 +9,28 @@ export type SseConfig = {
 
 // Type for stdio server
 export type StdioServerConfig = {
+  type: "stdio";
   command: string;
   args: string[];
   env?: Record<string, any>;
 };
 
+// Type for encrypted server configuration
+export type EncryptedServerConfig = {
+  type: "encrypted";
+  data: string;
+};
+
 // Union type for all server config types
-export type ServerConfig = SseConfig | StdioServerConfig;
+export type ServerConfig =
+  | SseConfig
+  | StdioServerConfig
+  | EncryptedServerConfig;
+
+// Type for server table data
+export type ServerTableData = {
+  name: string;
+} & ServerConfig;
 
 export interface Nav {
   id: string;

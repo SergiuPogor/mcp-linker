@@ -6,7 +6,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  RowSelectionState,
   SortingState,
+  Table,
   useReactTable,
 } from "@tanstack/react-table"
 import * as React from "react"
@@ -14,7 +16,7 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
-  Table,
+  Table as ShadcnTable,
   TableBody,
   TableCell,
   TableHead,
@@ -29,12 +31,18 @@ interface DataTableProps<TData, TValue> {
   isLoading?: Boolean
   searchPlaceholder?: string
   emptyMessage?: string
+  rowSelection: RowSelectionState;
+  setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  onTableInstanceChange?: (table: Table<TData>) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
+  rowSelection,
+  setRowSelection,
+  onTableInstanceChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -48,11 +56,19 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
+      rowSelection,
     },
   })
+
+  React.useEffect(() => {
+    if (onTableInstanceChange) {
+      onTableInstanceChange(table);
+    }
+  }, [table, onTableInstanceChange]);
 
   return (
     <div>
@@ -69,7 +85,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
       <div className="rounded-md border">
-        <Table>
+        <ShadcnTable>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -116,7 +132,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </ShadcnTable>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
