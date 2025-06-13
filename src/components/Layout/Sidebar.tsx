@@ -91,7 +91,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
           )}
           {!isCollapsed && (
             <p className="font-medium">
-              {user?.user_metadata.full_name || t("guest")}
+              {user?.user_metadata.full_name || user?.user_metadata.email.slice(0, 2) || t("guest")}
             </p>
           )}
         </Link>
