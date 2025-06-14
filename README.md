@@ -67,4 +67,8 @@ Thanks to the following contributors for improving this project:
 
 ---
 
+🌐 [中文](./docs/README.zh-CN.md) | [日本文](./docs/README.ja-JP.md)
+
+---
+
 ⭐ Star us on GitHub if you find this useful! [![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker)

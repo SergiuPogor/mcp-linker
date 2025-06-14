@@ -19,8 +19,8 @@ export const useCloudSync = (
     async (overrideAll: boolean) => {
       try {
         setIsSyncing(true);
-        console.log(servers, currentClient, overrideAll)
-        await uploadConfigsToCloud(servers, currentClient, overrideAll);
+        console.log(servers, overrideAll);
+        await uploadConfigsToCloud(servers, overrideAll);
         toast.success("Configurations uploaded to cloud successfully.");
       } catch (error) {
         console.error("Cloud upload failed:", error);
@@ -29,46 +29,48 @@ export const useCloudSync = (
         setIsSyncing(false);
       }
     },
-    [servers, currentClient],
+    [servers],
   );
 
-  const handleCloudDownload = useCallback(
-    async () => {
-      try {
-        setIsSyncing(true);
-        const serverConfigs = await downloadConfigsFromCloud(currentClient);
+  const handleCloudDownload = useCallback(async () => {
+    try {
+      setIsSyncing(true);
+      const serverConfigs = await downloadConfigsFromCloud();
 
-        // Iterate over downloaded configurations and save them locally
-        for (const config of serverConfigs) {
-          // The backend add_mcp_server handles both adding and updating
-          const serverItem = {
-            clientName: selectedClient,
-            path: selectedPath || "",
-            serverName: config.name,
-            serverConfig: config,
-          };
-          
-          try {
-            await invoke("add_mcp_server", serverItem);
-          } catch (error) {
-            console.error(error)
-          }
-        }
-
-        toast.success("Configurations downloaded from cloud successfully.");
-      } catch (error) {
-        console.error("Cloud download failed:", error);
-        toast.error("Cloud download failed");
-      } finally {
-        setIsSyncing(false);
+      // Iterate over downloaded configurations and save them locally
+      for (const config of serverConfigs) {
+        // The backend add_mcp_server handles both adding and updating
+        const _serverItem = {
+          clientName: selectedClient,
+          path: selectedPath || "",
+          serverName: config.name,
+        };
+        try {
+          await invoke("enable_mcp_server", _serverItem);
+        } catch (error) {}
+        const serverItem = {
+          clientName: selectedClient,
+          path: selectedPath || "",
+          serverName: config.name,
+          serverConfig: config,
+        };
+        try {
+          await invoke("add_mcp_server", serverItem);
+        } catch (error) {}
       }
-    },
-    [currentClient],
-  );
+
+      toast.success("Configurations downloaded from cloud successfully.");
+    } catch (error) {
+      console.error("Cloud download failed:", error);
+      toast.error("Cloud download failed");
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [currentClient]);
 
   return {
     isSyncing,
     handleCloudUpload,
     handleCloudDownload,
   };
-}; 
+};

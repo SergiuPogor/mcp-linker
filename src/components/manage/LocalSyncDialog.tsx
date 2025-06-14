@@ -188,4 +188,4 @@ export function LocalSyncDialog({
       </DialogContent>
     </Dialog>
   );
-} 
+}

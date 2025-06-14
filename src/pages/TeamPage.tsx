@@ -2,6 +2,7 @@
 
 import { useTeamColumns } from "@/components/team/TeamColumns";
 import { TeamForm } from "@/components/team/TeamForm";
+import { TeamMembersGuideDialog } from "@/components/team/TeamMembersGuideDialog";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +25,8 @@ export default function TeamPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [showGuideDialog, setShowGuideDialog] = useState(false);
+  const [newlyCreatedTeam, setNewlyCreatedTeam] = useState<string>("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -68,14 +71,14 @@ export default function TeamPage() {
         description: formData.description.trim() || undefined,
       });
 
-      toast({
-        title: "Success",
-        description: "Team created successfully.",
-      });
+      const teamName = formData.name.trim();
+      setNewlyCreatedTeam(teamName);
 
       setIsCreateOpen(false);
       setFormData({ name: "", description: "" });
-      fetchMyTeams();
+      await fetchMyTeams();
+
+      setShowGuideDialog(true);
     } catch (error) {
       console.error("Failed to create team:", error);
       toast({
@@ -174,7 +177,7 @@ export default function TeamPage() {
   }, []);
 
   return (
-    <main className="bg-white rounded-t-3xl min-h-[60vh] py-8 mt-8">
+    <main className="bg-white rounded-t-3xl min-h-[60vh] py-2">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-800">My Teams</h2>
@@ -233,6 +236,19 @@ export default function TeamPage() {
           title="Edit Team"
           description="Update your team information."
           submitButtonText="Update Team"
+        />
+
+        <TeamMembersGuideDialog
+          isOpen={showGuideDialog}
+          onOpenChange={setShowGuideDialog}
+          newlyCreatedTeamName={newlyCreatedTeam}
+          onAddMembersNow={() => {
+            setShowGuideDialog(false);
+            const team = teams.find((t) => t.name === newlyCreatedTeam);
+            if (team) {
+              navigate(`/teams/${team.id}/members`);
+            }
+          }}
         />
       </div>
     </main>

@@ -82,17 +82,6 @@ export const McpServerTable = ({
     onDelete,
   });
 
-  if (decryptionState.isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        <span className="ml-2 text-sm text-muted-foreground">
-          Loading server configurations...
-        </span>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full">
       <div className="mb-4 flex justify-between items-center">
@@ -127,25 +116,6 @@ export const McpServerTable = ({
           </Button>
         </div>
       </div>
-
-      {(isDeleting || decryptionState.isLoading) && (
-        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
-          <div className="flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              {isDeleting ? "Deleting selected servers..." : "Loading server configurations..."}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {decryptionState.error && (
-        <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200">
-            {decryptionState.error}
-          </p>
-        </div>
-      )}
 
       <LocalSyncDialog
         open={localSyncDialogOpen}

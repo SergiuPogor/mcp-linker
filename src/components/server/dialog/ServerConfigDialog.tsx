@@ -125,7 +125,10 @@ export const ServerConfigDialog = forwardRef<
   };
 
   const handleSubmit = async () => {
-    if (!selectedPath && (selectedClient === "custom" || selectedClient === "vscode")) {
+    if (
+      !selectedPath &&
+      (selectedClient === "custom" || selectedClient === "vscode")
+    ) {
       toast.error("Path is required");
       return;
     }

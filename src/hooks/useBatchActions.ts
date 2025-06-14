@@ -28,7 +28,7 @@ export const useBatchActions = ({
 
   const handleBatchDisable = useCallback(async () => {
     if (!tableInstance) return;
-    
+
     try {
       const selectedRows = tableInstance.getSelectedRowModel().rows;
       for (const row of selectedRows) {
@@ -47,7 +47,7 @@ export const useBatchActions = ({
 
   const handleBatchEnable = useCallback(async () => {
     if (!tableInstance) return;
-    
+
     try {
       const selectedRows = tableInstance.getSelectedRowModel().rows;
       for (const row of selectedRows) {
@@ -77,7 +77,7 @@ export const useBatchActions = ({
       const namesToDelete = selectedRows.map((row: any) => row.original.name);
       console.log("Batch deleting servers:", namesToDelete);
       await onBatchDelete(namesToDelete);
-      
+
       // Clear selections after successful deletion
       if (tableInstance?.setRowSelection) {
         tableInstance.setRowSelection({});

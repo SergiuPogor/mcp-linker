@@ -105,4 +105,4 @@ export const useServerTableColumns = ({
       );
     },
   },
-]; 
+];

@@ -9,8 +9,8 @@ interface ClientPathState {
 
 // Get initial client from localStorage or use default
 const getInitialClient = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('selectedClient') || "claude";
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("selectedClient") || "claude";
   }
   return "claude";
 };
@@ -22,8 +22,8 @@ export const useClientPathStore = create<ClientPathState>((set) => ({
     set((state) => {
       if (state.selectedClient !== client) {
         // Save to localStorage when client changes
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('selectedClient', client);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("selectedClient", client);
         }
         return { selectedClient: client };
       }

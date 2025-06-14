@@ -1,12 +1,15 @@
 // Cloud sync API functions for MCP server configurations
-import { apiClient } from "@/lib/apiClient";
+import { api } from "@/lib/api";
 import { ServerTableData } from "@/types";
-import { decryptConfig, encryptConfig, ensureEncryptionKey } from "@/utils/encryption";
+import {
+  decryptConfig,
+  encryptConfig,
+  ensureEncryptionKey,
+} from "@/utils/encryption";
 
 export interface CloudConfig {
   id: string;
   serverName: string;
-  mcpClient: string;
   encryptConfigData: any;
   createdAt: string;
   updatedAt: string;
@@ -19,10 +22,10 @@ export interface CloudSyncStatus {
 }
 
 const methodMap = {
-  GET: apiClient.get.bind(apiClient),
-  POST: apiClient.post.bind(apiClient),
-  PUT: apiClient.put.bind(apiClient),
-  DELETE: apiClient.delete.bind(apiClient),
+  GET: api.get.bind(api),
+  POST: api.post.bind(api),
+  PUT: api.put.bind(api),
+  DELETE: api.delete.bind(api),
 };
 
 const callCloudApi = async <T>(
@@ -45,27 +48,25 @@ const callCloudApi = async <T>(
 // Upload a single configuration to cloud
 export const uploadSingleConfig = async (
   config: ServerTableData,
-  currentClient: string,
   overrideAll: boolean,
 ) => {
   const { name, ...serverConfig } = config;
-  
+
   // Get encryption key and encrypt the config
   const encryptionKey = await ensureEncryptionKey();
   // Stringify the config before encryption
   const configString = JSON.stringify(serverConfig);
   const encryptedConfig = await encryptConfig(configString, encryptionKey);
-  
+
   const payload = {
     serverName: name,
-    mcpClient: currentClient,
     encryptConfigData: encryptedConfig,
   };
   try {
     await callCloudApi(`/user-server-configs/`, "POST", payload);
   } catch (error: any) {
     if (error.message.includes("status 409") && !overrideAll) {
-      await updateCloudConfig(name, currentClient, encryptedConfig);
+      await updateCloudConfig(name, encryptedConfig);
     } else {
       throw new Error(`Failed to upload config ${name}: ${error.message}`);
     }
@@ -75,32 +76,37 @@ export const uploadSingleConfig = async (
 // Upload configurations to cloud using batch sync endpoint
 export const uploadConfigsToCloud = async (
   configs: ServerTableData[],
-  currentClient: string,
   overrideAll: boolean = false,
 ): Promise<void> => {
   try {
     // If override mode, delete existing configs first
     if (overrideAll) {
-      await deleteAllCloudConfigs(currentClient);
+      await deleteAllCloudConfigs();
     }
 
     // Prepare payload for batch sync
     const encryptionKey = await ensureEncryptionKey();
     const batchPayload = await Promise.all(
-        configs.map(async (config) => {
-          const { name, ...serverConfig } = config;
-          const configString = JSON.stringify(serverConfig);
-          const encryptedConfig = await encryptConfig(configString, encryptionKey);
-          return {
-            serverName: name,
-            mcpClient: currentClient,
-            encryptConfigData: encryptedConfig,
-          };
-        }),
-      );
+      configs.map(async (config) => {
+        const { name, ...serverConfig } = config;
+        const configString = JSON.stringify(serverConfig);
+        const encryptedConfig = await encryptConfig(
+          configString,
+          encryptionKey,
+        );
+        return {
+          serverName: name,
+          encryptConfigData: encryptedConfig,
+        };
+      }),
+    );
 
     // Call batch sync API
-    await callCloudApi(`/user-server-configs/batch-sync?override_existing=${overrideAll}`, "POST", batchPayload);
+    await callCloudApi(
+      `/user-server-configs/batch-sync?override_existing=${overrideAll}`,
+      "POST",
+      batchPayload,
+    );
   } catch (error) {
     console.error("Upload to cloud failed:", error);
     throw error;
@@ -108,14 +114,14 @@ export const uploadConfigsToCloud = async (
 };
 
 // Download configurations from cloud
-export const downloadConfigsFromCloud = async (
-  currentClient: string,
-): Promise<ServerTableData[]> => {
+export const downloadConfigsFromCloud = async (): Promise<
+  ServerTableData[]
+> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcpClient=${encodeURIComponent(currentClient)}`,
+      `/user-server-configs/`,
     );
-    console.log('cloud data', data)
+    console.log("cloud data", data);
     const cloudConfigs: CloudConfig[] = data.configs || [];
 
     // Get encryption key for decryption
@@ -123,24 +129,32 @@ export const downloadConfigsFromCloud = async (
 
     // Convert cloud configs to ServerTableData format and decrypt
     const serverConfigs: ServerTableData[] = (
-        await Promise.all(
-          cloudConfigs.map(async (config) => {
-            if (!config.encryptConfigData || typeof config.encryptConfigData !== "string") {
-              console.warn(`Missing or invalid encrypted data for config: ${config.serverName}`);
-              return null;
-            }
-      
-            const decryptedString = await decryptConfig(config.encryptConfigData, encryptionKey);
-            const decryptedConfig = JSON.parse(decryptedString);
-            return {
-              name: config.serverName,
-              ...decryptedConfig,
-            };
-          }),
-        )
-      ).filter((item): item is ServerTableData => item !== null);
+      await Promise.all(
+        cloudConfigs.map(async (config) => {
+          if (
+            !config.encryptConfigData ||
+            typeof config.encryptConfigData !== "string"
+          ) {
+            console.warn(
+              `Missing or invalid encrypted data for config: ${config.serverName}`,
+            );
+            return null;
+          }
 
-    console.log('serverConfigs: ', serverConfigs)
+          const decryptedString = await decryptConfig(
+            config.encryptConfigData,
+            encryptionKey,
+          );
+          const decryptedConfig = JSON.parse(decryptedString);
+          return {
+            name: config.serverName,
+            ...decryptedConfig,
+          };
+        }),
+      )
+    ).filter((item): item is ServerTableData => item !== null);
+
+    console.log("serverConfigs: ", serverConfigs);
 
     return serverConfigs;
   } catch (error) {
@@ -150,12 +164,10 @@ export const downloadConfigsFromCloud = async (
 };
 
 // Get cloud sync status
-export const getCloudSyncStatus = async (
-  currentClient: string,
-): Promise<CloudSyncStatus> => {
+export const getCloudSyncStatus = async (): Promise<CloudSyncStatus> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcpClient=${encodeURIComponent(currentClient)}`,
+      `/user-server-configs/`,
     );
     const configs: CloudConfig[] = data.configs || [];
 
@@ -181,13 +193,12 @@ export const getCloudSyncStatus = async (
 // Update existing cloud configuration
 const updateCloudConfig = async (
   serverName: string,
-  mcpClient: string,
   encryptedConfig: string,
 ): Promise<void> => {
   try {
     // First, get the config ID
     const existingConfig: CloudConfig = await callCloudApi(
-      `/user-server-configs/by-server-client/?serverName=${encodeURIComponent(serverName)}&mcpClient=${encodeURIComponent(mcpClient)}`,
+      `/user-server-configs/by-server-name/?serverName=${encodeURIComponent(serverName)}`,
     );
 
     // Update the configuration
@@ -200,11 +211,10 @@ const updateCloudConfig = async (
   }
 };
 
-// Delete all cloud configurations for a client
-const deleteAllCloudConfigs = async (mcpClient: string): Promise<void> => {
+const deleteAllCloudConfigs = async (): Promise<void> => {
   try {
     const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/?mcpClient=${encodeURIComponent(mcpClient)}`,
+      `/user-server-configs/`,
     );
     const configs: CloudConfig[] = data.configs || [];
 
@@ -225,10 +235,9 @@ const deleteAllCloudConfigs = async (mcpClient: string): Promise<void> => {
 // Compare local and cloud configurations to detect changes
 export const detectConfigChanges = async (
   localConfigs: ServerTableData[],
-  currentClient: string,
 ): Promise<boolean> => {
   try {
-    const cloudConfigs = await downloadConfigsFromCloud(currentClient);
+    const cloudConfigs = await downloadConfigsFromCloud();
 
     // Simple comparison - in a real implementation, you might want more sophisticated diffing
     if (localConfigs.length !== cloudConfigs.length) {

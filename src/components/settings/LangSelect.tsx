@@ -1,12 +1,14 @@
+import { Globe } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "zh", label: "中文" },
+  { code: "ja", label: "日本语" },
+];
 
 export default function LangSelect() {
   const { i18n } = useTranslation();
@@ -18,15 +20,33 @@ export default function LangSelect() {
   };
 
   return (
-    <Select value={currentLang} onValueChange={changeLanguage}>
-      <SelectTrigger>
-        <SelectValue placeholder="Select a lang" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="en">English</SelectItem>
-        <SelectItem value="zh">中文</SelectItem>
-        <SelectItem value="ja">日本语</SelectItem>
-      </SelectContent>
-    </Select>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Change language"
+          className="w-10 h-10"
+        >
+          <Globe className="w-4 h-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-32 p-1">
+        <ul className="text-sm space-y-1">
+          {languages.map((lang) => (
+            <li key={lang.code}>
+              <button
+                onClick={() => changeLanguage(lang.code)}
+                className={`w-full px-3 py-2 text-left hover:bg-accent ${
+                  currentLang === lang.code ? "font-semibold" : ""
+                }`}
+              >
+                {lang.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
   );
 }

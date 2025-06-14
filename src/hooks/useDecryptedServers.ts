@@ -98,4 +98,4 @@ export const useDecryptedServers = (servers: ServerTableData[]) => {
   }, [encryptedServers, regularServers, decryptServerConfig]);
 
   return decryptionState;
-}; 
+};

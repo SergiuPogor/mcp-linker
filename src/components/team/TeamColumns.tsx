@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import { TeamResponse } from "@/types/team";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2, User2 } from "lucide-react";
+import { Pencil, Trash2, Users } from "lucide-react";
 
 interface TeamColumnsProps {
   onEdit: (team: TeamResponse) => void;
@@ -82,7 +82,7 @@ export function useTeamColumns({
                     size="sm"
                     onClick={() => navigateToMembers(team.id)}
                   >
-                    <User2 className="mr-1 h-4 w-4" />
+                    <Users className="mr-1 h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Manage Members</TooltipContent>

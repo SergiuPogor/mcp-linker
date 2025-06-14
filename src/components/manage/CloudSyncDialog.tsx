@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { ServerTableData } from "@/types";
@@ -40,12 +40,15 @@ export function CloudSyncDialog({
   onCloudDownloadSuccess,
 }: CloudSyncDialogProps) {
   const [cloudOverrideMode, setCloudOverrideMode] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const resetState = () => {
     setCloudOverrideMode(false);
   };
 
   const handleCloudUpload = async () => {
+    setIsUploading(true);
     try {
       await onCloudUpload(cloudOverrideMode);
       toast.success("Configurations uploaded to cloud successfully.");
@@ -54,19 +57,24 @@ export function CloudSyncDialog({
       toast.error(
         `Cloud upload failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleCloudDownload = async () => {
+    setIsDownloading(true);
     try {
       await onCloudDownload(cloudOverrideMode);
-      toast.success("Configurations downloaded from cloud successfully.");
+      // toast.success("Configurations downloaded from cloud successfully.");
       onCloudDownloadSuccess();
     } catch (error) {
       console.error("Cloud download failed:", error);
       toast.error(
         `Cloud download failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -94,9 +102,7 @@ export function CloudSyncDialog({
         <div className="space-y-4">
           <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
-                Local Configurations:
-              </span>
+              <span className="text-sm font-medium">Local Configurations:</span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
             </div>
 
@@ -157,10 +163,10 @@ export function CloudSyncDialog({
             <Button
               variant="outline"
               onClick={handleCloudUpload}
-              disabled={isSyncing || localServersCount === 0}
+              disabled={isUploading || isDownloading || localServersCount === 0}
               className="flex items-center gap-2"
             >
-              {isSyncing ? (
+              {isUploading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
               ) : (
                 <Upload className="h-4 w-4" />
@@ -171,10 +177,12 @@ export function CloudSyncDialog({
             <Button
               variant="outline"
               onClick={handleCloudDownload}
-              disabled={isSyncing || cloudSyncStatus?.total === 0}
+              disabled={
+                isDownloading || isUploading || cloudSyncStatus?.total === 0
+              }
               className="flex items-center gap-2"
             >
-              {isSyncing ? (
+              {isDownloading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
               ) : (
                 <Download className="h-4 w-4" />
@@ -187,7 +195,7 @@ export function CloudSyncDialog({
             <Button
               variant="outline"
               onClick={handleCancel}
-              disabled={isSyncing}
+              disabled={isUploading || isDownloading}
             >
               Close
             </Button>
@@ -196,4 +204,4 @@ export function CloudSyncDialog({
       </DialogContent>
     </Dialog>
   );
-} 
+}
