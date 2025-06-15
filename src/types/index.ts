@@ -29,7 +29,7 @@ export type ServerConfig =
 
 // Type for server table data
 export type ServerTableData = {
-  id: string;
+  id?: string;
   name: string;
 } & ServerConfig;
 
