@@ -38,8 +38,8 @@ export function AddTeamMemberForm({
         <Plus className="h-4 w-4" />
         Add New Member
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
+      <div className="flex flex-row items-end justify-between gap-4">
+        <div className="flex-1 space-y-2">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
@@ -51,32 +51,34 @@ export function AddTeamMemberForm({
             }
           />
         </div>
-        <div>
-          <Label htmlFor="role">Role</Label>
-          <Select
-            value={newMemberData.role}
-            onValueChange={(value: TeamMemberRole) =>
-              setNewMemberData((prev) => ({ ...prev, role: value }))
-            }
+        <div className="flex items-end gap-4">
+          <div>
+            <Label htmlFor="role">Role</Label>
+            <Select
+              value={newMemberData.role}
+              onValueChange={(value: TeamMemberRole) =>
+                setNewMemberData((prev) => ({ ...prev, role: value }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="member">Member</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            onClick={handleAddClick}
+            disabled={isAddingMember || !newMemberData.email.trim()}
+            className="h-10"
           >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="member">Member</SelectItem>
-              <SelectItem value="admin">Admin</SelectItem>
-            </SelectContent>
-          </Select>
+            <Mail className="mr-2 h-4 w-4" />
+            {isAddingMember ? "Adding..." : "Add Member"}
+          </Button>
         </div>
       </div>
-      <Button
-        onClick={handleAddClick}
-        disabled={isAddingMember || !newMemberData.email.trim()}
-        className="w-full md:w-auto"
-      >
-        <Mail className="mr-2 h-4 w-4" />
-        {isAddingMember ? "Adding..." : "Add Member"}
-      </Button>
     </div>
   );
 }

@@ -5,166 +5,36 @@ import { TeamForm } from "@/components/team/TeamForm";
 import { TeamMembersGuideDialog } from "@/components/team/TeamMembersGuideDialog";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { useToast } from "@/hooks/use-toast";
-import { api } from "@/lib/api";
-import { TeamFormData, TeamResponse } from "@/types/team";
+import { useTeam } from "@/hooks/useTeam";
 import { RowSelectionState } from "@tanstack/react-table";
 import { Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
-  const [teams, setTeams] = useState<TeamResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingTeam, setEditingTeam] = useState<TeamResponse | null>(null);
-  const [formData, setFormData] = useState<TeamFormData>({
-    name: "",
-    description: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [showGuideDialog, setShowGuideDialog] = useState(false);
-  const [newlyCreatedTeam, setNewlyCreatedTeam] = useState<string>("");
-  const { toast } = useToast();
   const navigate = useNavigate();
-
-  const fetchMyTeams = async () => {
-    try {
-      setIsLoading(true);
-      const { data } = await api.get("/teams/my_teams");
-      setTeams(data.teams);
-    } catch (error) {
-      console.error("Failed to fetch teams:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch teams. Please try again.",
-        variant: "destructive",
-      });
-      setTeams([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCreateTeam = async () => {
-    if (!formData.name.trim()) {
-      toast({
-        title: "Error",
-        description: "Team name is required.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const params = new URLSearchParams();
-      params.append("name", formData.name.trim());
-      if (formData.description.trim()) {
-        params.append("description", formData.description.trim());
-      }
-
-      await api.post(`/teams/`, {
-        name: formData.name.trim(),
-        description: formData.description.trim() || undefined,
-      });
-
-      const teamName = formData.name.trim();
-      setNewlyCreatedTeam(teamName);
-
-      setIsCreateOpen(false);
-      setFormData({ name: "", description: "" });
-      await fetchMyTeams();
-
-      setShowGuideDialog(true);
-    } catch (error) {
-      console.error("Failed to create team:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create team. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleEditTeam = async () => {
-    if (!editingTeam || !formData.name.trim()) {
-      toast({
-        title: "Error",
-        description: "Team name is required.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const params = new URLSearchParams();
-      params.append("name", formData.name.trim());
-      if (formData.description.trim()) {
-        params.append("description", formData.description.trim());
-      }
-
-      await api.put(`/teams/${editingTeam.id}?${params.toString()}`);
-
-      toast({
-        title: "Success",
-        description: "Team updated successfully.",
-      });
-
-      setIsEditOpen(false);
-      setEditingTeam(null);
-      setFormData({ name: "", description: "" });
-      fetchMyTeams();
-    } catch (error) {
-      console.error("Failed to update team:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update team. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDeleteTeam = async (teamId: string) => {
-    try {
-      await api.delete(`/teams/${teamId}`);
-
-      toast({
-        title: "Success",
-        description: "Team deleted successfully.",
-      });
-
-      fetchMyTeams();
-    } catch (error) {
-      console.error("Failed to delete team:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete team. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const openEditDialog = (team: TeamResponse) => {
-    setEditingTeam(team);
-    setFormData({
-      name: team.name,
-      description: team.description || "",
-    });
-    setIsEditOpen(true);
-  };
-
-  const resetForm = () => {
-    setFormData({ name: "", description: "" });
-    setEditingTeam(null);
-  };
+  
+  const {
+    teams,
+    isLoading,
+    isCreateOpen,
+    setIsCreateOpen,
+    isEditOpen,
+    setIsEditOpen,
+    formData,
+    setFormData,
+    isSubmitting,
+    showGuideDialog,
+    setShowGuideDialog,
+    newlyCreatedTeam,
+    fetchMyTeams,
+    handleCreateTeam,
+    handleEditTeam,
+    handleDeleteTeam,
+    openEditDialog,
+    resetForm,
+  } = useTeam();
 
   const columns = useTeamColumns({
     onEdit: openEditDialog,
@@ -177,10 +47,10 @@ export default function TeamPage() {
   }, []);
 
   return (
-    <main className="bg-white rounded-t-3xl min-h-[60vh] py-2">
+    <main className="bg-white dark:bg-black rounded-t-3xl min-h-[60vh] py-2">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">My Teams</h2>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">My Teams</h2>
           <div className="flex space-x-2">
             <Button
               variant="outline"

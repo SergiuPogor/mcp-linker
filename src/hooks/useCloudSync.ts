@@ -32,6 +32,18 @@ export const useCloudSync = (
     [servers],
   );
 
+  const fetchCloudDownload = useCallback(async () => {
+    try {
+      setIsSyncing(true);
+      const serverConfigs = await downloadConfigsFromCloud();
+      return serverConfigs;
+    } catch (e) {
+      toast.error("Cloud fetch failed");
+    } finally {
+      setIsSyncing(false);
+    }
+  }, []);
+
   const handleCloudDownload = useCallback(async () => {
     try {
       setIsSyncing(true);
@@ -72,5 +84,6 @@ export const useCloudSync = (
     isSyncing,
     handleCloudUpload,
     handleCloudDownload,
+    fetchCloudDownload,
   };
 };

@@ -1,14 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConfigType } from "@/types/mcpConfig";
-import { PenSquare, Trash2 } from "lucide-react";
+import { PenSquare } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ServerForm } from "./ServerForm";
@@ -77,44 +67,18 @@ export function ServerActionButtons({
       </Dialog>
 
       {/* Delete Button */}
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span className="sr-only">{t ? t("delete") : "Delete"}</span>
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete the server "{serverName}"? This
-              action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={async () => {
-                const isDisabled = !!disabledServers?.[serverName];
-                if (isDisabled) {
-                  await onEnable(serverName);
-                  onDelete(serverName);
-                } else {
-                  onDelete(serverName);
-                }
-              }}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteAlertDialog
+        itemName={`the server "${serverName}"`}
+        onDelete={async () => {
+          const isDisabled = !!disabledServers?.[serverName];
+          if (isDisabled) {
+            await onEnable(serverName);
+            onDelete(serverName);
+          } else {
+            onDelete(serverName);
+          }
+        }}
+      />
     </div>
   );
 }

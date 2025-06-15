@@ -21,7 +21,7 @@ import { toast } from "sonner";
 interface LocalSyncDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSync: (
+  onLocalSync: (
     fromClient: string,
     toClient: string,
     overrideAll: boolean,
@@ -33,7 +33,7 @@ interface LocalSyncDialogProps {
 export function LocalSyncDialog({
   open,
   onOpenChange,
-  onSync,
+  onLocalSync,
   currentClient,
   isSyncing,
 }: LocalSyncDialogProps) {
@@ -64,7 +64,7 @@ export function LocalSyncDialog({
   const handleLocalSync = async () => {
     if (syncFromClient && syncToClient) {
       try {
-        await onSync(syncFromClient, syncToClient, overrideMode);
+        await onLocalSync(syncFromClient, syncToClient, overrideMode);
         onOpenChange(false);
         resetState();
         toast.success("Local sync completed successfully.");

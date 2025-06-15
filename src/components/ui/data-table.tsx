@@ -68,7 +68,8 @@ export function DataTable<TData, TValue>({
     if (onTableInstanceChange) {
       onTableInstanceChange(table);
     }
-  }, [table, onTableInstanceChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>

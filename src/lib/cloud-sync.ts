@@ -147,6 +147,7 @@ export const downloadConfigsFromCloud = async (): Promise<
           );
           const decryptedConfig = JSON.parse(decryptedString);
           return {
+            id: config.id,
             name: config.serverName,
             ...decryptedConfig,
           };
@@ -154,7 +155,7 @@ export const downloadConfigsFromCloud = async (): Promise<
       )
     ).filter((item): item is ServerTableData => item !== null);
 
-    console.log("serverConfigs: ", serverConfigs);
+    // console.log("serverConfigs: ", serverConfigs);
 
     return serverConfigs;
   } catch (error) {
