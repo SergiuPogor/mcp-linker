@@ -1,5 +1,10 @@
 import { useToast } from "@/hooks/use-toast";
-import { createTeam, deleteTeam, fetchMyTeams, updateTeam } from "@/services/teamService";
+import {
+  createTeam,
+  deleteTeam,
+  fetchMyTeams,
+  updateTeam,
+} from "@/services/teamService";
 import { TeamFormData, TeamResponse } from "@/types/team";
 import { useState } from "react";
 
@@ -22,6 +27,7 @@ export function useTeam() {
     try {
       setIsLoading(true);
       const teamsData = await fetchMyTeams();
+      console.log("teams: ", teamsData);
       setTeams(teamsData);
     } catch (error) {
       console.error("Failed to fetch teams:", error);

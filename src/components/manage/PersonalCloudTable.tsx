@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CommandDisplay } from "./CommandDisplay";
 
-export const PersonalTable = () => {
+export const PersonalCloudTable = () => {
   const [_tableInstance, setTableInstance] =
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -24,6 +24,7 @@ export const PersonalTable = () => {
   useEffect(() => {
     let isMounted = true;
     fetchCloudDownload().then((cloudData) => {
+      console.log("cloudData", cloudData);
       if (isMounted && cloudData) {
         setServersData(cloudData);
       }
@@ -87,13 +88,15 @@ export const PersonalTable = () => {
             >
               add
             </Button>
-            
+
             <DeleteAlertDialog
               itemName={`the server "${serverName}"`}
               onDelete={async () => {
                 try {
                   await api.delete(`/user-server-configs/${serverId}`);
-                  setServersData(prevData => prevData.filter(server => server.id !== serverId));
+                  setServersData((prevData) =>
+                    prevData.filter((server) => server.id !== serverId),
+                  );
                   toast.success(`remove server ${serverId} ${serverName}`);
                 } catch (e) {
                   toast.error(JSON.stringify(e));

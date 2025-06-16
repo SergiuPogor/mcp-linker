@@ -8,7 +8,10 @@ export const fetchMyTeams = async (): Promise<TeamResponse[]> => {
 };
 
 // Create a new team
-export const createTeam = async (name: string, description?: string): Promise<void> => {
+export const createTeam = async (
+  name: string,
+  description?: string,
+): Promise<void> => {
   await api.post(`/teams/`, {
     name: name.trim(),
     description: description?.trim() || undefined,
@@ -16,7 +19,11 @@ export const createTeam = async (name: string, description?: string): Promise<vo
 };
 
 // Update an existing team
-export const updateTeam = async (teamId: string, name: string, description?: string): Promise<void> => {
+export const updateTeam = async (
+  teamId: string,
+  name: string,
+  description?: string,
+): Promise<void> => {
   const params = new URLSearchParams();
   params.append("name", name.trim());
   if (description?.trim()) {
@@ -28,4 +35,4 @@ export const updateTeam = async (teamId: string, name: string, description?: str
 // Delete a team
 export const deleteTeam = async (teamId: string): Promise<void> => {
   await api.delete(`/teams/${teamId}`);
-}; 
+};

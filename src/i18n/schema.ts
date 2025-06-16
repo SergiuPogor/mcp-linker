@@ -30,6 +30,7 @@ export interface TranslationSchema {
     updates: string;
     favs: string;
     settings: string;
+    about: string;
     recentlyAdded: string;
   };
   content: {

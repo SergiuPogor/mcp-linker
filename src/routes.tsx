@@ -12,74 +12,112 @@ import SettingsPage from "@/pages/SettingsPage";
 import {
   Clock,
   Download,
+  Info,
   LayoutGrid,
   Search,
   Settings,
   Star,
 } from "lucide-react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import About from "./pages/About";
 import TeamMemberPage from "./pages/TeamMemberPage";
 import TeamPage from "./pages/TeamPage";
 
+// Component to redirect to last visited route only on initial load
+function StartupRedirect() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const redirected = useRef(false);
+
+  useEffect(() => {
+    if (redirected.current) return;
+    const lastRoute = localStorage.getItem("lastRoute");
+    // Only redirect if not already at lastRoute, and lastRoute is not "/" and not current path
+    if (
+      lastRoute &&
+      lastRoute !== "/" &&
+      lastRoute !== location.pathname
+    ) {
+      redirected.current = true;
+      navigate(lastRoute, { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null;
+}
+
 export const AppRoutes = () => {
+  const location = useLocation();
+
+  // Save current path to localStorage on every route change
+  useEffect(() => {
+    localStorage.setItem("lastRoute", location.pathname + location.search);
+  }, [location]);
+
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Manage />} />
-      <Route path="/discover" element={<Discover />} />
-      <Route path="/categories" element={<Categories />} />
-      <Route path="/recently" element={<Recently />} />
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/auth" element={<AuthPage />} />
-      <Route path="/servers/:id" element={<ServerPage />} />
+    <>
+      {/* Only redirect to last visited route on initial load */}
+      <StartupRedirect />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Manage />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/recently" element={<Recently />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/servers/:id" element={<ServerPage />} />
 
-      {/* Protected routes */}
-      <Route
-        path="/team"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <TeamPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/teams/:teamId/members"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <TeamMemberPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/favorites"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <Favorites />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/onboarding"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <OnBoarding />
-          </ProtectedRoute>
-        }
-      />
+        {/* Protected routes */}
+        <Route
+          path="/team"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <TeamPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teams/:teamId/members"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <TeamMemberPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Favorites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <OnBoarding />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Catch all route - redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Catch all route - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 };
 
@@ -95,6 +133,7 @@ export const getNavigationRoutes = (
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
     settings: <Settings size={24} />,
+    about: <Info size={24} />,
   };
 
   return [
@@ -139,6 +178,12 @@ export const getNavigationRoutes = (
       name: t("nav.settings"),
       path: "/settings",
       icon: iconMap.settings,
+    },
+    {
+      id: "about",
+      name: t("nav.about"),
+      path: "/about",
+      icon: iconMap.about,
     },
   ];
 };

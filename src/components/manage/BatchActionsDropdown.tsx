@@ -8,8 +8,8 @@ import {
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 interface BatchActionsDropdownProps {
-  handleBatchEnable: () => void;
-  handleBatchDisable: () => void;
+  handleBatchEnable?: () => void;
+  handleBatchDisable?: () => void;
   handleBatchDelete: () => void;
   isDeleting: boolean;
   hasSelectedRows: boolean;
@@ -32,12 +32,16 @@ export const BatchActionsDropdown = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={handleBatchEnable}>
-              Enable Selected
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleBatchDisable}>
-              Disable Selected
-            </DropdownMenuItem>
+            {handleBatchEnable && (
+              <DropdownMenuItem onClick={handleBatchEnable}>
+                Enable Selected
+              </DropdownMenuItem>
+            )}
+            {handleBatchDisable && (
+              <DropdownMenuItem onClick={handleBatchDisable}>
+                Disable Selected
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={handleBatchDelete} disabled={isDeleting}>
               Delete Selected
             </DropdownMenuItem>

@@ -34,6 +34,7 @@ const ja: { translation: TranslationSchema } = {
       recentlyAdded: "最近追加",
       favs: "お気に入り",
       settings: "設定",
+      about: "关于",
     },
     content: {
       discover: "注目のコンテンツを発見",

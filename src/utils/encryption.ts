@@ -1,7 +1,7 @@
 // Encryption utilities for server configurations
 import { invoke } from "@tauri-apps/api/core";
 
-// Generate a random encryption key
+// Generate a new encryption key
 export async function generateEncryptionKey(): Promise<string> {
   return await invoke("generate_encryption_key");
 }
@@ -26,14 +26,15 @@ export async function decryptConfig(
   return decryptedData;
 }
 
-// Store encryption key in localStorage
-export function storeEncryptionKey(key: string): void {
-  localStorage.setItem("mcp_encryption_key", key);
+// Get encryption key for a specific team
+export function getEncryptionKey(teamId?: string): string | null {
+  const key = localStorage.getItem(`encryption_key_${teamId || "default"}`);
+  return key;
 }
 
-// Get encryption key from localStorage
-export function getEncryptionKey(): string | null {
-  return localStorage.getItem("mcp_encryption_key");
+// Store encryption key for a specific team
+export function storeEncryptionKey(key: string, teamId?: string): void {
+  localStorage.setItem(`encryption_key_${teamId || "default"}`, key);
 }
 
 // Generate and store a new encryption key if one doesn't exist

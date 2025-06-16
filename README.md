@@ -12,12 +12,12 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 - Cross-platform: macOS, Windows, Linux
 - Auto-detect Python, Node.js, UV environments
 - Cloud sync for favorite servers
+- Encrypted cloud backup of `mcp_server_config` for Pro users (Team support coming soon)
 - Built with Tauri — lightweight (~6MB), fast, secure.
 
 ## Key Benefit
 
-**Sync MCP server configuration across MCP clients. disable and enable servers**  
-No more copy-pasting
+**Sync MCP server configuration across MCP clients. Pro users can securely back up and encrypt their `mcp_server_config` to our FastAPI backend. Team support is coming soon!**
 
 ## Quick Start
 

@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { TeamFormData } from "../../types/team";
+import { TeamFormData } from "@/types/team";
 
 interface TeamFormProps {
   isOpen: boolean;

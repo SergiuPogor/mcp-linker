@@ -95,7 +95,7 @@ export default function Dashboard() {
         <div>Error: {error.message}</div>
       ) : (
         <div>
-          <h1>My On Sale Servers</h1>
+          <h1>My submit Servers</h1>
           <ServerList mcpServers={mcpServers} onDelete={handleDelete} />
         </div>
       )}

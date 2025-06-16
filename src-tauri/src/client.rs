@@ -62,12 +62,15 @@ impl ClientConfig {
             ("windsurf", _) => PathBuf::from(home).join(".codeium/windsurf/mcp_config.json"),
             ("mcplinker", _) => PathBuf::from(home).join(".config/mcplinker/mcp.json"),
             (_, Some(path_str)) => {
-                // For any other app, use the provided path + mcp.json
-                // If path is empty, use home directory
                 if path_str.is_empty() {
                     PathBuf::from(&home).join("mcp.json")
                 } else {
-                    PathBuf::from(path_str).join("mcp.json")
+                    let given_path = PathBuf::from(path_str);
+                    if given_path.is_file() || given_path.extension().map_or(false, |ext| ext == "json") {
+                        given_path
+                    } else {
+                        given_path.join("mcp.json")
+                    }
                 }
             }
             _ => {

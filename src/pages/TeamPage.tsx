@@ -1,5 +1,3 @@
-"use client";
-
 import { useTeamColumns } from "@/components/team/TeamColumns";
 import { TeamForm } from "@/components/team/TeamForm";
 import { TeamMembersGuideDialog } from "@/components/team/TeamMembersGuideDialog";
@@ -14,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 export default function TeamPage() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const navigate = useNavigate();
-  
+
   const {
     teams,
     isLoading,
@@ -50,7 +48,9 @@ export default function TeamPage() {
     <main className="bg-white dark:bg-black rounded-t-3xl min-h-[60vh] py-2">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">My Teams</h2>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
+            My Teams
+          </h2>
           <div className="flex space-x-2">
             <Button
               variant="outline"
