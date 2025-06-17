@@ -1,3 +1,4 @@
+import { AuthPromptDialog } from "@/components/AuthPromptDialog";
 import {
   Select,
   SelectContent,
@@ -5,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
 import { fetchMyTeams } from "@/services/teamService";
 import { useTeamStore } from "@/stores/team";
 import { useEffect, useState } from "react";
@@ -19,24 +21,33 @@ export function TeamSelector() {
   const [teamOptions, setTeamOptions] = useState<TeamOption[]>([]);
   const selectedTeamId = useTeamStore((state) => state.selectedTeamId);
   const setSelectedTeam = useTeamStore((state) => state.setSelectedTeam);
+  const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
+  const { isAuthenticated, sessionCheckComplete } = useAuth();
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const teams = await fetchMyTeams();
-        setTeamOptions(teams);
-        // Optionally set default selected team if needed
-        if (teams.length > 0 && !selectedTeamId) {
-          setSelectedTeam(teams[0].id, teams[0].name);
-        }
-      } catch (error) {
-        console.error("Failed to load teams:", error);
-        toast.error("Failed to load teams");
+useEffect(() => {
+  if (!sessionCheckComplete) return;
+
+  if (!isAuthenticated) {
+    setIsAuthPromptOpen(true);
+    return;
+  }
+
+  async function loadData() {
+    try {
+      const teams = await fetchMyTeams();
+      setTeamOptions(teams);
+
+      // Set first team as selected if no team is currently selected
+      if (teams.length > 0 && !selectedTeamId) {
+        setSelectedTeam(teams[0].id, teams[0].name);
       }
+    } catch (error) {
+      toast.error("Failed to load teams");
     }
+  }
 
-    loadData();
-  }, []);
+  loadData();
+}, [isAuthenticated, sessionCheckComplete, selectedTeamId, setSelectedTeam]);
 
   return (
     <div className="z-50">
@@ -60,6 +71,11 @@ export function TeamSelector() {
           ))}
         </SelectContent>
       </Select>
+
+      <AuthPromptDialog
+        isOpen={isAuthPromptOpen}
+        onClose={() => setIsAuthPromptOpen(false)}
+      />
     </div>
   );
 }

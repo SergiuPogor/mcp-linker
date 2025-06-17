@@ -1,6 +1,6 @@
 // services/auth.ts (optimized version)
 import { apiUrl } from "@/lib/apiClient";
-import supabase, { isSupabaseEnabled } from "@/utils/supabase";
+import supabase, { isSupabaseEnabled, resetSupabaseClient } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
 // Add logging for debugging
@@ -8,6 +8,7 @@ console.log("Supabase enabled:", isSupabaseEnabled);
 
 // Basic session retrieval with retry mechanism for Windows
 export const getSession = async (): Promise<Session | null> => {
+  console.log("getSession called. Supabase enabled:", isSupabaseEnabled);
   if (!isSupabaseEnabled || !supabase) {
     console.debug("Supabase is not configured or disabled");
     return null;
@@ -41,11 +42,12 @@ export const getSession = async (): Promise<Session | null> => {
         console.debug(
           "No active Supabase session:",
           error?.message || "No session",
+          "Current session data:", data.session
         );
         return null;
       }
 
-      console.log("Session retrieved successfully:", !!data.session);
+      console.log("Session retrieved successfully:", !!data.session, "User ID:", data.session?.user?.id, "User email:", data.session?.user?.email);
       return data.session;
     } catch (err) {
       lastError = err;
@@ -175,6 +177,20 @@ export const signOut = async () => {
 
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
+
+  // Explicitly clear all Supabase related items from localStorage
+  // This is a safeguard if supabase.auth.signOut() doesn't fully clear them in all scenarios.
+  for (const key in localStorage) {
+    if (key.startsWith("sb-")) {
+      localStorage.removeItem(key);
+    }
+  }
+
+  // Explicitly reset the Supabase client instance to ensure a clean state
+  resetSupabaseClient();
+
+  // Force a full page reload to clear all client-side state and ensure fresh session
+  window.location.reload(); // Re-enabled to ensure a full client-side state reset
 };
 
 // Handle authentication callback

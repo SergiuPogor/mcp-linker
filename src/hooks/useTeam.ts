@@ -5,15 +5,15 @@ import {
   fetchMyTeams,
   updateTeam,
 } from "@/services/teamService";
-import { TeamFormData, TeamResponse } from "@/types/team";
+import { TeamFormData, TeamWithRoleResponse } from "@/types/team";
 import { useState } from "react";
 
 export function useTeam() {
-  const [teams, setTeams] = useState<TeamResponse[]>([]);
+  const [teams, setTeams] = useState<TeamWithRoleResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingTeam, setEditingTeam] = useState<TeamResponse | null>(null);
+  const [editingTeam, setEditingTeam] = useState<TeamWithRoleResponse | null>(null);
   const [formData, setFormData] = useState<TeamFormData>({
     name: "",
     description: "",
@@ -131,7 +131,7 @@ export function useTeam() {
     }
   };
 
-  const openEditDialog = (team: TeamResponse) => {
+  const openEditDialog = (team: TeamWithRoleResponse) => {
     setEditingTeam(team);
     setFormData({
       name: team.name,

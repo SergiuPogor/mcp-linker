@@ -1,10 +1,10 @@
 import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown";
-import { CloudSyncDialog } from "@/components/manage/CloudSyncDialog";
 import { RefreshMcpConfig } from "@/components/manage/RefreshMcpConfig";
+import { TeamCloudSyncDialog } from "@/components/manage/team/CloudSyncDialog";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
+import { useTeamCloudSync } from "@/hooks/useTeamCloudSync";
 import { useConfigFileStore } from "@/stores/configFileStore";
 import { useTeamStore } from "@/stores/team";
 import { ServerConfig, ServerTableData } from "@/types";
@@ -20,7 +20,7 @@ export const TeamLocalTable = () => {
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
   const filePath = getTeamConfigPath(selectedTeamId) ?? null;
-  
+
   const [cloudSyncDialogOpen, setCloudSyncDialogOpen] = useState(false);
   const [isDeleting, _setIsDeleting] = useState(false);
   const [_tableInstance, setTableInstance] =
@@ -47,9 +47,14 @@ export const TeamLocalTable = () => {
     return [...activeServers];
   }, [config?.mcpServers]);
 
-  const { isSyncing, handleCloudUpload, handleCloudDownload } = useCloudSync(
-    "custom",
-    serversData,
+  const { isSyncing, handleCloudUpload: originalHandleCloudUpload } =
+    useTeamCloudSync(serversData);
+
+  const handleCloudUpload = useCallback(
+    async (overrideAll: boolean) => {
+      await originalHandleCloudUpload(selectedTeamId, overrideAll);
+    },
+    [originalHandleCloudUpload, selectedTeamId],
   );
 
   const handleEdit = useCallback(
@@ -92,7 +97,7 @@ export const TeamLocalTable = () => {
             variant="outline"
             size="sm"
             onClick={() => {
-              const key = getEncryptionKey();
+              const key = getEncryptionKey(selectedTeamId);
               if (!key) {
                 navigate("/settings");
               } else {
@@ -123,11 +128,10 @@ export const TeamLocalTable = () => {
         onTableInstanceChange={setTableInstance}
       />
 
-      <CloudSyncDialog
+      <TeamCloudSyncDialog
         open={cloudSyncDialogOpen}
         onOpenChange={setCloudSyncDialogOpen}
         onCloudUpload={handleCloudUpload}
-        onCloudDownload={handleCloudDownload}
         isSyncing={isSyncing}
         servers={serversData}
         onCloudDownloadSuccess={loadConfig}

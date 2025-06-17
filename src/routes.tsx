@@ -17,6 +17,7 @@ import {
   Search,
   Settings,
   Star,
+  Users
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -129,7 +130,7 @@ export const getNavigationRoutes = (
     discover: <Search size={24} />,
     categories: <LayoutGrid size={24} />,
     manage: <Download size={24} />,
-    team: <Download size={24} />,
+    team: <Users size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
     settings: <Settings size={24} />,

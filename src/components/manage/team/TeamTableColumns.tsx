@@ -6,7 +6,7 @@ import { ServerTableData } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
-import { CommandDisplay } from "./CommandDisplay";
+import { CommandDisplay } from "../CommandDisplay";
 
 interface TeamTableColumnsProps {
   selectedClient: string;

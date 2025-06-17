@@ -49,7 +49,7 @@ export default function TeamPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            My Teams
+            All Teams
           </h2>
           <div className="flex space-x-2">
             <Button
@@ -79,7 +79,7 @@ export default function TeamPage() {
           data={teams}
           isLoading={isLoading}
           searchPlaceholder="Search teams..."
-          emptyMessage="No teams found. Create your first team to get started."
+          emptyMessage="No teams found. Create your first team or ask to be added to an existing team."
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

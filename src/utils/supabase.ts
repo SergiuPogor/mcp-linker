@@ -28,3 +28,11 @@ if (isSupabaseEnabled) {
 }
 
 export default supabase;
+
+// Function to explicitly reset the Supabase client instance.
+// This is used to ensure a clean state after sign-out, forcing re-initialization on next load.
+export const resetSupabaseClient = () => {
+  supabase = null;
+  console.log("Supabase client instance explicitly reset to null.");
+  return null;
+};

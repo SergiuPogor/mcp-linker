@@ -25,7 +25,7 @@ export function AddTeamMemberForm({
 }: AddTeamMemberFormProps) {
   const [newMemberData, setNewMemberData] = useState<AddTeamMemberData>({
     email: "",
-    role: "member",
+    role: "MEMBER",
   });
 
   const handleAddClick = () => {
@@ -64,8 +64,8 @@ export function AddTeamMemberForm({
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="member">Member</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="MEMBER">Member</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
               </SelectContent>
             </Select>
           </div>

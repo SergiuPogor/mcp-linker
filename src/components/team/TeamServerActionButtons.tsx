@@ -66,7 +66,7 @@ export function TeamServerActionButtons({
       <DeleteAlertDialog
         itemName={`the server "${serverName}"`}
         onDelete={async () => {
-            onDelete(serverName);
+          onDelete(serverName);
         }}
       />
     </div>

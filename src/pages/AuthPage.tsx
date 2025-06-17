@@ -6,12 +6,14 @@ import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
 import { AlertCircle, Github } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function AuthPage() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.getItem("email") || "");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate()
 
   const handleOAuthLogin = async (provider: "github" | "google") => {
     if (!isSupabaseEnabled || !supabase) {
@@ -52,10 +54,7 @@ export default function AuthPage() {
     try {
       const { error } = await supabase.auth.signUp({
         email,
-        password,
-        options: {
-          emailRedirectTo: import.meta.env.VITE_REDIRECT_URL,
-        },
+        password
       });
 
       if (error) throw error;
@@ -83,6 +82,8 @@ export default function AuthPage() {
       });
 
       if (error) throw error;
+      console.log("nav to onboarding after email login")
+      navigate("/onboarding")
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -131,7 +132,10 @@ export default function AuthPage() {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    localStorage.setItem("email", e.target.value);
+                  }}
                   required
                 />
               </div>
@@ -159,7 +163,10 @@ export default function AuthPage() {
                   id="signup-email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    // localStorage.setItem("email", e.target.value);
+                  }}
                   required
                 />
               </div>

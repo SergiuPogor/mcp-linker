@@ -111,11 +111,11 @@ export default function TeamMembers() {
 
   const getRoleBadgeVariant = (role: TeamMemberRole) => {
     switch (role) {
-      case "owner":
+      case "OWNER":
         return "default";
-      case "admin":
+      case "ADMIN":
         return "secondary";
-      case "member":
+      case "MEMBER":
         return "outline";
       default:
         return "outline";
@@ -166,7 +166,7 @@ export default function TeamMembers() {
       header: "Actions",
       cell: ({ row }) => {
         const member = row.original;
-        if (member.role === "owner") return null;
+        if (member.role === "OWNER") return null;
 
         return (
           <div className="flex items-center space-x-2">

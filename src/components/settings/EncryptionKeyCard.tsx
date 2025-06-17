@@ -44,7 +44,7 @@ export default function EncryptionKeyCard({
     try {
       const newKey = await generateEncryptionKey();
       setKey(newKey);
-      setShowKey(true); // 自动显示一次
+      setShowKey(true);
       setHasViewedGeneratedKey(true);
       storeEncryptionKey(newKey, keyId);
       toast.success(`New encryption key generated and saved for ${keyName}`);
@@ -103,7 +103,7 @@ export default function EncryptionKeyCard({
               value={showKey || hasViewedGeneratedKey ? key : "•".repeat(16)}
               onChange={(e) => {
                 setKey(e.target.value);
-                setHasViewedGeneratedKey(true); // 一旦编辑就算是已查看
+                setHasViewedGeneratedKey(true);
               }}
               placeholder="Enter or generate encryption key"
               className="font-mono text-sm"
@@ -130,6 +130,11 @@ export default function EncryptionKeyCard({
               <Copy className="w-4 h-4" />
             </Button>
           </div>
+          {(!key.trim() && !hasViewedGeneratedKey) && (
+            <p className="text-destructive text-sm mt-1">
+              Please generate or enter an encryption key to save.
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
           <Button
@@ -142,7 +147,7 @@ export default function EncryptionKeyCard({
           </Button>
           <Button
             onClick={handleSaveKey}
-            disabled={!key.trim()}
+            disabled={!key.trim() || !hasViewedGeneratedKey}
             className="flex items-center gap-2"
           >
             <Save className="w-4 h-4" />

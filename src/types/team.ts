@@ -8,6 +8,17 @@ export type TeamResponse = {
   updatedAt: string;
 };
 
+// Team response with user role information
+export type TeamWithRoleResponse = {
+  id: string;
+  name: string;
+  description: string | null;
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
+  userRole: TeamMemberRole;
+};
+
 // Team list response type from API
 export type TeamListResponse = {
   page: number;
@@ -17,6 +28,15 @@ export type TeamListResponse = {
   teams: TeamResponse[];
 };
 
+// Team list response with user roles
+export type TeamWithRoleListResponse = {
+  page: number;
+  page_size: number;
+  has_next: boolean;
+  has_prev: boolean;
+  teams: TeamWithRoleResponse[];
+};
+
 // Form data type for team creation/editing
 export type TeamFormData = {
   name: string;
@@ -24,7 +44,7 @@ export type TeamFormData = {
 };
 
 // Team member types
-export type TeamMemberRole = "owner" | "admin" | "member" | "viewer";
+export type TeamMemberRole = "OWNER" | "ADMIN" | "MEMBER" | "VIEWER";
 
 export type TeamMember = {
   id: string;

@@ -20,9 +20,16 @@ export function ConfigFileSelector() {
 
   const handleBrowse = async () => {
     try {
+      // Only allow selecting JSON files in the dialog
       const path = await open({
         directory: false,
         multiple: false,
+        filters: [
+          {
+            name: "JSON",
+            extensions: ["json"],
+          },
+        ],
       });
 
       if (path && selectedTeamId) {
@@ -50,9 +57,7 @@ export function ConfigFileSelector() {
           placeholder="Select a team mcp config json"
           readOnly
         />
-        <Button onClick={handleBrowse}>
-          Browse
-        </Button>
+        <Button onClick={handleBrowse}>Choose</Button>
       </div>
     </div>
   );

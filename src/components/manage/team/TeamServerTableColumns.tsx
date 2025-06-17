@@ -1,8 +1,8 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ServerConfig, ServerTableData } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { TeamServerActionButtons } from "../team/TeamServerActionButtons";
-import { CommandDisplay } from "./CommandDisplay";
+import { TeamServerActionButtons } from "../../team/TeamServerActionButtons";
+import { CommandDisplay } from "../CommandDisplay";
 
 interface ServerTableColumnsProps {
   onEdit: (name: string, config: ServerConfig) => void;

@@ -1,8 +1,8 @@
 import { api } from "@/lib/api";
-import { TeamResponse } from "@/types/team";
+import { TeamWithRoleResponse } from "@/types/team";
 
-// Fetch all teams for the current user
-export const fetchMyTeams = async (): Promise<TeamResponse[]> => {
+// Fetch all teams accessible by the current user (owned + joined)
+export const fetchMyTeams = async (): Promise<TeamWithRoleResponse[]> => {
   const { data } = await api.get("/teams/my_teams");
   return data.teams;
 };

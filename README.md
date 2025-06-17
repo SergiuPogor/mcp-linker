@@ -61,6 +61,14 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 > **💡 Pro Tip:** Star this repo to stay updated with new MCP servers and features!
 
+| Feature                 | Free      | Pro     | Team    |
+|-------------------------|-----------|---------|---------|
+| One-click install       | ✅        | ✅      | ✅      |
+| Sync across devices     | ❌        | ✅      | ✅      |
+| Encrypted backup        | ❌        | ✅      | ✅      |
+| Multi-team management   | ❌        | ❌      | ✅      |
+| Early access features   | ❌        | ✅      | ✅      |
+
 ## 📸 Screenshots
 
 | 🔍 Server Discovery | ⚙️ Configuration |
