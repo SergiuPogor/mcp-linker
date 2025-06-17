@@ -2,7 +2,7 @@
 
 軽量なTauri GUIを使用して、Claude Desktop、Cline、CursorなどのAIクライアント間でMCP（モデルコンテキストプロトコル）サーバー設定を同期および管理し、内蔵のMCPマーケットプレイスをサポートします。
 
-![スクリーンショット](../images/home.png)
+![スクリーンショット](../images/manage.png)
 
 ## 主な機能
 

@@ -148,7 +148,7 @@ export default function About() {
       </div>
 
       {/* Technology Stack */}
-      <Card>
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle>Technology Stack</CardTitle>
           <CardDescription>Built with modern, reliable technologies</CardDescription>
@@ -161,6 +161,46 @@ export default function About() {
             <Badge variant="secondary">TypeScript</Badge>
             <Badge variant="secondary">Rust</Badge>
             <Badge variant="secondary">FastAPI</Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Share with Friends */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Star className="h-5 w-5" />
+            Share with Friends
+          </CardTitle>
+          <CardDescription>
+            Help more developers discover MCP Linker by sharing it!
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Button
+              onClick={() =>
+                open(
+                  'https://twitter.com/intent/tweet?text=Check%20out%20MCP%20Linker%20-%20the%20ultimate%20tool%20for%20managing%20MCP%20servers%20with%20a%20beautiful%20Tauri%20UI!%20https%3A%2F%2Fgithub.com%2Fmilisp%2Fmcp-linker'
+                )
+              }
+              className="w-full"
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              Share on Twitter
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() =>
+                open(
+                  'https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/milisp/mcp-linker'
+                )
+              }
+              className="w-full"
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Share on LinkedIn
+            </Button>
           </div>
         </CardContent>
       </Card>

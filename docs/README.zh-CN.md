@@ -2,7 +2,7 @@
 
 使用轻量级 Tauri 图形界面，在 Claude Desktop、Cline、Cursor 等 AI 客户端之间同步和管理 MCP（模型上下文协议）服务器配置，并内置 MCP 服务器模板市场。
 
-![截图](../images/home.png)
+![截图](../images/manage.png)
 
 ## 功能特点
 
@@ -64,7 +64,3 @@ bun tauri dev
 
 - [@eltociear](https://github.com/eltociear) — 日文翻译
 - [@devilcoder01](https://github.com/devilcoder01) — 提升 Windows 构建兼容性与项目搭建说明，改进 GitHub workflow、UI 和设计
-
----
-
-⭐ 如果你觉得有用，请在 GitHub 上为我们加星！[![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker)
