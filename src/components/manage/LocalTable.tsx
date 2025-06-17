@@ -4,6 +4,7 @@ import { LocalSyncDialog } from "@/components/manage/LocalSyncDialog";
 import { RefreshMcpConfig } from "@/components/manage/RefreshMcpConfig";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
+import { useAuth } from "@/hooks/useAuth";
 import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
@@ -24,6 +25,7 @@ export const LocalTable = () => {
   const [_tableInstance, setTableInstance] =
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const { isAuthenticated } = useAuth();
 
   const {
     config,
@@ -124,46 +126,50 @@ export const LocalTable = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-3 items-center">
-          <div className="h-6 w-px bg-gray-300" />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setLocalSyncDialogOpen(true)}
-            disabled={isSyncing}
-            className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
-          >
-            <Monitor className="h-4 w-4" />
-            Local Sync
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const key = getEncryptionKey();
-              if (!key) {
-                navigate("/settings");
-              } else {
-                setCloudSyncDialogOpen(true);
-              }
-            }}
-            disabled={isSyncing}
-            className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
-          >
-            <Cloud className="h-4 w-4" />
-            Cloud Sync
-            <Key className="h-3 w-3 opacity-60" />
-          </Button>
+      {isAuthenticated ? (
+        <div className="flex justify-between items-center">
+          <div className="flex gap-3 items-center">
+            <div className="h-6 w-px bg-gray-300" />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setLocalSyncDialogOpen(true)}
+              disabled={isSyncing}
+              className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+            >
+              <Monitor className="h-4 w-4" />
+              Local Sync
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const key = getEncryptionKey();
+                if (!key) {
+                  navigate("/settings");
+                } else {
+                  setCloudSyncDialogOpen(true);
+                }
+              }}
+              disabled={isSyncing}
+              className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+            >
+              <Cloud className="h-4 w-4" />
+              Cloud Sync
+              <Key className="h-3 w-3 opacity-60" />
+            </Button>
+          </div>
+          <BatchActionsDropdown
+            hasSelectedRows={Object.keys(rowSelection).length > 0}
+            handleBatchEnable={handleBatchEnable}
+            handleBatchDisable={handleBatchDisable}
+            handleBatchDelete={handleBatchDelete}
+            isDeleting={isDeleting}
+          />
         </div>
-        <BatchActionsDropdown
-          hasSelectedRows={Object.keys(rowSelection).length > 0}
-          handleBatchEnable={handleBatchEnable}
-          handleBatchDisable={handleBatchDisable}
-          handleBatchDelete={handleBatchDelete}
-          isDeleting={isDeleting}
-        />
-      </div>
+      ) : (
+        <Button onClick={() => navigate("/auth")}>Login to Sync Local or cloud</Button>
+      )}
       <DataTable
         columns={localColumns}
         data={serversData}

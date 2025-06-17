@@ -64,6 +64,7 @@ export const AppRoutes = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Discover />} />
+        <Route path="/manage" element={<Manage />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/recently" element={<Recently />} />
@@ -74,14 +75,6 @@ export const AppRoutes = () => {
         <Route path="/servers/:id" element={<ServerPage />} />
 
         {/* Protected routes */}
-        <Route
-          path="/manage"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <Manage />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="/team"
           element={

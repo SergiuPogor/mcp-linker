@@ -4,6 +4,7 @@ import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
 import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useTabStore } from "@/stores/tabStore";
@@ -14,10 +15,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function McpManage() {
-  const { mainTab, personalTab, teamTab, setMainTab, setPersonalTab, setTeamTab } = useTabStore();
+  const {
+    mainTab,
+    personalTab,
+    teamTab,
+    setMainTab,
+    setPersonalTab,
+    setTeamTab,
+  } = useTabStore();
   const { isAuthenticated } = useAuth();
   const { selectedTeamId } = useTeamStore();
-  const [encryptionKey, setEncryptionKey] = useState<string|null>(null)
+  const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +38,11 @@ export default function McpManage() {
 
   return (
     <div className="p-4 bg-background text-foreground">
-      <Tabs value={mainTab} onValueChange={setMainTab} className="h-full flex flex-col">
+      <Tabs
+        value={mainTab}
+        onValueChange={setMainTab}
+        className="h-full flex flex-col"
+      >
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">MCP Server Management</h1>
           <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
@@ -41,7 +53,11 @@ export default function McpManage() {
         <div className="flex-1 min-h-0">
           {/* personal */}
           <TabsContent value="personal" className="flex-1 min-h-0">
-            <Tabs value={personalTab} onValueChange={setPersonalTab} className="h-full flex flex-col">
+            <Tabs
+              value={personalTab}
+              onValueChange={setPersonalTab}
+              className="h-full flex flex-col"
+            >
               <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
                 <TabsTrigger value="personalLocal">Local</TabsTrigger>
                 <TabsTrigger value="personalCloud">
@@ -56,8 +72,10 @@ export default function McpManage() {
                 {isAuthenticated ? (
                   <PersonalCloudTable />
                 ) : encryptionKey ? (
-                  <button onClick={() => navigate("/settings")}>go to generate Encryption Key</button>
-                  ) : (
+                  <Button onClick={() => navigate("/settings")}>
+                    go to generate Encryption Key
+                  </Button>
+                ) : (
                   <div className="flex justify-center items-center h-full text-muted-foreground">
                     Please log in to view your personal cloud servers.
                   </div>
@@ -68,7 +86,11 @@ export default function McpManage() {
 
           {/* team */}
           <TabsContent value="team" className="flex-1 min-h-0">
-            <Tabs value={teamTab} onValueChange={setTeamTab} className="h-full flex flex-col">
+            <Tabs
+              value={teamTab}
+              onValueChange={setTeamTab}
+              className="h-full flex flex-col"
+            >
               <div className="flex items-center space-x-4">
                 <TabsList className="flex space-x-2 bg-secondary rounded-md p-1">
                   <TabsTrigger value="teamLocal" className="whitespace-nowrap">
@@ -97,7 +119,7 @@ export default function McpManage() {
                 ) : !selectedTeamId ? (
                   <div className="flex flex-col justify-center items-center h-full text-muted-foreground space-y-4">
                     <p>No team selected. Please select a team or create one.</p>
-                    <button 
+                    <button
                       onClick={() => navigate("/team")}
                       className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
                     >
