@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [1.3.2] - 2025-06-17
+
+- Personal and Team Encrypted sync to cloud.
+- Login require.
+
 ## [1.2.2] - 2025-05-04
 
 chore: update dependencies and enhance UI components

@@ -1,4 +1,4 @@
-import { needspathClient } from "@/lib/data";
+import { mustHavePathClients } from "@/lib/data";
 import { ConfigType } from "@/types/mcpConfig";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
@@ -62,7 +62,7 @@ export function useMcpConfig(
     setIsLoading(true);
     setError(null);
     try {
-      if (needspathClient.includes(selectedClient) && !selectedPath) {
+      if (mustHavePathClients.includes(selectedClient) && !selectedPath) {
         toast("Path is required for custom client");
       }
 

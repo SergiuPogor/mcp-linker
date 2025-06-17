@@ -60,6 +60,7 @@ impl ClientConfig {
             }
             ("mcphub", None) => PathBuf::from(home).join(".config/mcphub/servers.json"),
             ("windsurf", _) => PathBuf::from(home).join(".codeium/windsurf/mcp_config.json"),
+            ("cherrystudio", _) => PathBuf::from(home).join(".config/cherrystudio/mcp.json"),
             ("mcplinker", _) => PathBuf::from(home).join(".config/mcplinker/mcp.json"),
             (_, Some(path_str)) => {
                 if path_str.is_empty() {

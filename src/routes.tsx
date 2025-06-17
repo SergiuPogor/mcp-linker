@@ -11,8 +11,8 @@ import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
 import {
   Clock,
-  Download,
   Info,
+  LayoutDashboard,
   LayoutGrid,
   Search,
   Settings,
@@ -63,7 +63,7 @@ export const AppRoutes = () => {
       <StartupRedirect />
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<Manage />} />
+        <Route path="/" element={<Discover />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/recently" element={<Recently />} />
@@ -74,6 +74,14 @@ export const AppRoutes = () => {
         <Route path="/servers/:id" element={<ServerPage />} />
 
         {/* Protected routes */}
+        <Route
+          path="/manage"
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Manage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/team"
           element={
@@ -129,7 +137,7 @@ export const getNavigationRoutes = (
   const iconMap = {
     discover: <Search size={24} />,
     categories: <LayoutGrid size={24} />,
-    manage: <Download size={24} />,
+    manage: <LayoutDashboard size={24} />,
     team: <Users size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
@@ -139,9 +147,15 @@ export const getNavigationRoutes = (
 
   return [
     {
+      id: "discover",
+      name: t("nav.discover"),
+      path: "/discover",
+      icon: iconMap.discover,
+    },
+    {
       id: "manage",
       name: t("nav.manage"),
-      path: "/",
+      path: "/manage",
       icon: iconMap.manage,
     },
     {
@@ -149,12 +163,6 @@ export const getNavigationRoutes = (
       name: t("nav.team"),
       path: "/team",
       icon: iconMap.team,
-    },
-    {
-      id: "discover",
-      name: t("nav.discover"),
-      path: "/discover",
-      icon: iconMap.discover,
     },
     {
       id: "categories",

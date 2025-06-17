@@ -5,24 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { clientOptions } from "@/constants/clients";
 import { useClientPathStore } from "@/stores/clientPathStore";
 
-interface ClientOption {
-  id: string;
-  name: string;
-}
-
-const clientOptions: ClientOption[] = [
-  { id: "claude", name: "Claude" },
-  { id: "cursor", name: "Cursor" },
-  { id: "windsurf", name: "Windsurf" },
-  { id: "cline", name: "Cline" },
-  { id: "vscode", name: "Vscode" },
-  { id: "mcphub", name: "mcphub.nvim" },
-  { id: "custom", name: "Custom" },
-];
-
-// Props no longer needed as we're using the store
 
 export function ClientSelector() {
   const { selectedClient, setSelectedClient } = useClientPathStore();
@@ -34,8 +19,8 @@ export function ClientSelector() {
         </SelectTrigger>
         <SelectContent>
           {clientOptions.map((option) => (
-            <SelectItem key={option.id} value={option.id}>
-              {option.name}
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
             </SelectItem>
           ))}
         </SelectContent>

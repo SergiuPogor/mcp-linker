@@ -65,7 +65,7 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 |-------------------------|-----------|---------|---------|
 | One-click install       | ✅        | ✅      | ✅      |
 | Sync across devices     | ❌        | ✅      | ✅      |
-| Encrypted backup        | ❌        | ✅      | ✅      |
+| Encrypted sync          | ❌        | ✅      | ✅      |
 | Multi-team management   | ❌        | ❌      | ✅      |
 | Early access features   | ❌        | ✅      | ✅      |
 

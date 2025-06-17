@@ -7,7 +7,7 @@ import { useState } from "react";
 // Props no longer needed as we're using the store
 
 export function PathSelector() {
-  const { selectedPath, setSelectedPath } = useClientPathStore();
+  const { selectedPath, setSelectedPath, selectedClient } = useClientPathStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleBrowse = async () => {
@@ -34,11 +34,12 @@ export function PathSelector() {
   return (
     <div className="w-full">
       <div className="flex space-x-2">
+        
         <Input
           value={selectedPath || ""} // Display empty string if null
           onChange={(e) => setSelectedPath(e.target.value || null)} // Set to null if empty
           className="flex-1"
-          placeholder="Select a project root or a directory containing mcp.json"
+          placeholder={selectedClient === 'custom' ? "Select a directory containing mcp.json" : "Select a project root or empty"}
           readOnly
         />
         <Button onClick={handleBrowse} disabled={isLoading}>
