@@ -1,94 +1,50 @@
 import { HeroBanner } from "@/components/banner";
-import { ServerTemplateDialog } from "@/components/server/dialog/ServerTemplateDialog";
+import { ServerList } from "@/components/server";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
-// Import refactored components
-import { DiscoveryHeader } from "@/components/discovery/DiscoveryHeader";
-import { InfiniteScrollServers } from "@/components/discovery/InfiniteScrollServers";
-import { ScrollToBottomButton } from "@/components/discovery/ScrollToBottomButton";
-import { useServerDiscovery } from "@/hooks/useServerDiscovery";
+const tabs = [
+  { key: "is_official", label: "Official Servers" },
+  { key: "github_stars", label: "Most GitHub Stars" },
+  { key: "must_have", label: "Must Have" },
+  { key: "featured", label: "Featured" },
+  { key: "best_new", label: "Best New" },
+  { key: "editors_choice", label: "Editors Choice" },
+  { key: "developer_tools", label: "Developer Tools" },
+];
 
-import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 export default function Discovery() {
-  const { t } = useTranslation();
-  const [isSell, setIsSell] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<string>("is_official");
 
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  // Use our custom hook for server discovery logic
-  const {
-    allServers,
-    isLoading,
-    isFetching,
-    loadMoreRef,
-    hasNext,
-    sort,
-    direction,
-    handleSortChange,
-    loadMore,
-    scrollToLoadMore,
-  } = useServerDiscovery();
-
-  // Dialog handlers
-  const handleAddServer = () => {
-    setIsSell(false);
-    setIsDialogOpen(true);
-  };
-
-  const handleSellServer = () => {
-    // Check if user is authenticated before allowing server selling
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-
-    // User is authenticated, proceed with sell server dialog
-    setIsSell(true);
-    setIsDialogOpen(true);
-  };
+  const { data: discoverServers, isLoading, error } = useQuery({
+    queryKey: ["discover-servers", selectedTab],
+    queryFn: async () => {
+      const res = await api.get(`/servers/discover?tab=${selectedTab}`);
+      return res.data;
+    },
+  });
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100 sr-only">
-        {t("nav.discover")}
-      </h1>
-
-      {/* Hero banner */}
+    <div className="p-8 space-y-4">
       <HeroBanner />
-
-      {/* Header with sorting and action buttons */}
-      <DiscoveryHeader
-        sort={sort}
-        direction={direction}
-        onSortChange={handleSortChange}
-        onAddServer={handleAddServer}
-        onSellServer={handleSellServer}
-        isAuthenticated={!!user}
-      />
-
-      {/* Server list with infinite scrolling */}
-      <InfiniteScrollServers
-        servers={allServers}
-        isLoading={isLoading}
-        isFetching={isFetching}
-        hasNext={hasNext}
-        loadMoreRef={loadMoreRef}
-        onLoadMore={loadMore}
-      />
-
-      {/* Scroll to bottom button */}
-      <ScrollToBottomButton onClick={scrollToLoadMore} />
-
-      {/* Server template dialog */}
-      <ServerTemplateDialog
-        isOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        isSell={isSell}
-      />
+      <Tabs defaultValue="is_official" onValueChange={(val) => setSelectedTab(val)}>
+        <TabsList className="mb-8 flex flex-wrap gap-2">
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.key} value={tab.key}
+            className="rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted data-[state=active]:bg-primary data-[state=active]:text-white"
+>
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <TabsContent value={selectedTab}>
+          {isLoading && <div>Loading...</div>}
+          {error && <div>Error loading servers.</div>}
+          {!isLoading && !error && <ServerList mcpServers={discoverServers ?? []} />}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

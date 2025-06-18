@@ -44,8 +44,8 @@ export function ServerList({ mcpServers, onDelete }: ServerListProps) {
   // Handle empty state
   if (mcpServers.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-        <p>No servers match your criteria</p>
+      <div className="flex flex-col items-center justify-center text-gray-500">
+        <p>No servers match your criteria, Editor updating</p>
       </div>
     );
   }

@@ -71,6 +71,13 @@ export default function TeamPage() {
               <Plus className="mr-2 h-4 w-4" />
               Create Team
             </Button>
+            <Button
+              onClick={() => {
+                navigate("/manage")
+              }}
+            >
+              Manage Servers
+            </Button>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { useClientPathStore } from "@/stores/clientPathStore";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
 import { ClientSelector } from "../settings/client-selector";
+import GitHubStars from "../settings/GithubStars";
 import LangSelect from "../settings/LangSelect";
 import { PathSelector } from "../settings/PathSelector";
 import { Sidebar } from "./Sidebar";
@@ -21,10 +22,15 @@ const Layout = () => {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header Controls */}
-        <div className="flex justify-between pt-2 px-2 shrink-0">
-          <ClientSelector />
-          {needspathClient.includes(selectedClient) && <PathSelector />}
-          <LangSelect />
+        <div className="flex justify-between pt-2 px-2 shrink-0 items-center">
+          <div className="flex items-center gap-2">
+            <ClientSelector />
+            {needspathClient.includes(selectedClient) && <PathSelector />}
+          </div>
+          <div className="flex items-center gap-2">
+            <LangSelect />
+            <GitHubStars />
+          </div>
         </div>
 
         {/* Main Content */}
