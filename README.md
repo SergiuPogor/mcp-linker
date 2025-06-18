@@ -33,7 +33,7 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 **The fastest way to supercharge your AI workflow with 600+ curated MCP servers.**
 
-![Screenshot](./images/manage.png)
+![Demo](./images/demo.gif)
 
 ### 🎯 Key Features
 
@@ -48,7 +48,7 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 ### 💎 Game-Changing Benefits
 
-**Sync MCP server configuration across all your MCP clients. Pro users get secure, encrypted backup of their `mcp_server_config` to our FastAPI backend. Team collaboration features coming soon!**
+**Sync MCP server configuration across all your MCP clients. Pro users get secure, encrypted backup of their `mcp_server_config` to our FastAPI backend. Team collaboration features (beta)!**
 
 ## 🚀 Quick Start
 
@@ -63,17 +63,23 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 | Feature                 | Free      | Pro     | Team    |
 |-------------------------|-----------|---------|---------|
+| Multi-client management | ✅        | ✅      | ✅      |
 | One-click install       | ✅        | ✅      | ✅      |
 | Sync across devices     | ❌        | ✅      | ✅      |
 | Encrypted sync          | ❌        | ✅      | ✅      |
 | Multi-team management   | ❌        | ❌      | ✅      |
 | Early access features   | ❌        | ✅      | ✅      |
 
+## 🚀 Upgrade to MCP-Linker Pro or Team
+
+Access cloud sync, unlimited clients, and more!  
+👉 [View Tiers & Subscribe](https://mcp-linker.store/tiers)
+
 ## 📸 Screenshots
 
-| 🔍 Server Discovery | ⚙️ Configuration |
-|---------------------|------------------|
-| ![Discover](./images/home.png) | ![Config](./images/config.png) |
+| Manage | 🔍 Server Discovery | ⚙️ Configuration |
+|---------------------|---------------------|------------------|
+![Manage](./images/manage.png)| ![Discover](./images/home.png) | ![Config](./images/config.png) |
 
 ---
 

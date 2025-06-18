@@ -2,7 +2,7 @@ export type ServerType = {
   id: string;
   name: string;
   developer?: string;
-  icon_url?: string;
+  logoUrl?: string;
   description: string;
   category?: string;
   source: string;
@@ -12,4 +12,5 @@ export type ServerType = {
   rating: number;
   views: number;
   isFavorited: boolean;
+  tags?: string[]
 };

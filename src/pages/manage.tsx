@@ -1,18 +1,20 @@
+import { Dashboard } from "@/components/manage/Dashboard";
 import { LocalTable } from "@/components/manage/LocalTable";
 import { PersonalCloudTable } from "@/components/manage/PersonalCloudTable";
 import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
 import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
+import { ServerTemplateDialog } from "@/components/server";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
-import { Dashboard } from "@/components/manage/Dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useTabStore } from "@/stores/tabStore";
 import { useTeamStore } from "@/stores/team";
 import { getEncryptionKey } from "@/utils/encryption";
-import { Cloud } from "lucide-react";
+import { Cloud, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 export default function McpManage() {
@@ -26,6 +28,8 @@ export default function McpManage() {
   } = useTabStore();
   const { isAuthenticated } = useAuth();
   const { selectedTeamId } = useTeamStore();
+  const { t } = useTranslation();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
   const [personalStats, setPersonalStats] = useState({
     total: 0,
@@ -45,6 +49,10 @@ export default function McpManage() {
     fetchKey();
   }, []);
 
+  const handleAddServer = () => {
+    setIsDialogOpen(true);
+  };
+
   return (
     <div className="p-4 bg-background text-foreground">
       <Tabs
@@ -54,15 +62,26 @@ export default function McpManage() {
       >
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">MCP Server Management</h1>
-          <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
-            <TabsTrigger value="personal">Personal</TabsTrigger>
-            <TabsTrigger value="team">Team</TabsTrigger>
-          </TabsList>
+          <span className="flex items-center gap-2">
+            <Button
+              className="flex"
+              onClick={() => {
+                navigate(0);
+              }}
+            >
+              <RefreshCcw /> Refresh
+            </Button>
+            <Button onClick={handleAddServer}>{t("addCustomServer")}</Button>
+            <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
+              <TabsTrigger value="personal">Personal</TabsTrigger>
+              <TabsTrigger value="team">Team</TabsTrigger>
+            </TabsList>
+          </span>
         </div>
-        
+
         {/* Dashboard */}
         <Dashboard personalStats={personalStats} teamStats={teamStats} />
-        
+
         <div className="flex-1 min-h-0">
           {/* personal */}
           <TabsContent value="personal" className="flex-1 min-h-0">
@@ -147,6 +166,12 @@ export default function McpManage() {
           </TabsContent>
         </div>
       </Tabs>
+
+      <ServerTemplateDialog
+        isOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        isSell={false}
+      />
     </div>
   );
 }
