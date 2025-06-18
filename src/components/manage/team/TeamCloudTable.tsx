@@ -85,13 +85,24 @@ export const TeamCloudTable = () => {
           <span>
             <Button
               onClick={async () => {
-                await invoke("add_mcp_server", {
-                  clientName: selectedClient,
-                  path: selectedPath || undefined,
-                  serverName: serverName,
-                  serverConfig: serverConfig,
-                });
-                toast.success(`add server ${serverName}`);
+                try {
+                  await invoke("add_mcp_server", {
+                    clientName: selectedClient,
+                    path: selectedPath || undefined,
+                    serverName: serverName,
+                    serverConfig: serverConfig,
+                  });
+                  toast.success(`add server ${serverName}`);
+                } catch (e) {
+                  toast.error(JSON.stringify(e));
+                }
+
+                try {
+                  await api.post("/servers/add_mcp_server_stats", {
+                    clientName: selectedClient,
+                    serverName: serverName,
+                  });
+                } catch (e) {}
               }}
             >
               add
