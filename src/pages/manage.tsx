@@ -4,6 +4,7 @@ import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
 import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
+import { Dashboard } from "@/components/manage/Dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +27,14 @@ export default function McpManage() {
   const { isAuthenticated } = useAuth();
   const { selectedTeamId } = useTeamStore();
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
+  const [personalStats, setPersonalStats] = useState({
+    total: 0,
+    active: 0,
+    disabled: 0,
+  });
+  const [teamStats, setTeamStats] = useState({
+    total: 0,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +59,10 @@ export default function McpManage() {
             <TabsTrigger value="team">Team</TabsTrigger>
           </TabsList>
         </div>
+        
+        {/* Dashboard */}
+        <Dashboard personalStats={personalStats} teamStats={teamStats} />
+        
         <div className="flex-1 min-h-0">
           {/* personal */}
           <TabsContent value="personal" className="flex-1 min-h-0">
@@ -66,7 +79,7 @@ export default function McpManage() {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="personalLocal" className="flex-1 min-h-0">
-                <LocalTable />
+                <LocalTable onStatsChange={setPersonalStats} />
               </TabsContent>
               <TabsContent value="personalCloud" className="flex-1 min-h-0">
                 {isAuthenticated ? (
@@ -109,7 +122,7 @@ export default function McpManage() {
                 <ConfigFileSelector />
               </div>
               <TabsContent value="teamLocal" className="flex-1 min-h-0">
-                <TeamLocalTable />
+                <TeamLocalTable onStatsChange={setTeamStats} />
               </TabsContent>
               <TabsContent value="teamCloud" className="flex-1 min-h-0">
                 {!isAuthenticated ? (

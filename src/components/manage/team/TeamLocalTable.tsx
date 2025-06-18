@@ -15,7 +15,11 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./TeamServerTableColumns";
 
-export const TeamLocalTable = () => {
+interface TeamLocalTableProps {
+  onStatsChange?: (stats: { total: number }) => void;
+}
+
+export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
   const navigate = useNavigate();
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
@@ -44,8 +48,16 @@ export const TeamLocalTable = () => {
           ...serverConfig,
         }) as ServerTableData,
     );
+    
+    // Update stats when data changes
+    if (onStatsChange) {
+      onStatsChange({
+        total: activeServers.length,
+      });
+    }
+    
     return [...activeServers];
-  }, [config?.mcpServers]);
+  }, [config?.mcpServers, onStatsChange]);
 
   const { isSyncing, handleCloudUpload: originalHandleCloudUpload } =
     useTeamCloudSync(serversData);

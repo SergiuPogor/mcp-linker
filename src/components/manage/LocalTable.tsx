@@ -16,7 +16,11 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./ServerTableColumns";
 
-export const LocalTable = () => {
+interface LocalTableProps {
+  onStatsChange?: (stats: { total: number; active: number; disabled: number }) => void;
+}
+
+export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
   const navigate = useNavigate();
   const { selectedClient, selectedPath } = useClientPathStore();
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
@@ -59,8 +63,20 @@ export const LocalTable = () => {
           ...serverConfig,
         }) as ServerTableData,
     );
-    return [...activeServers, ...disabledServersData];
-  }, [config?.mcpServers, disabledServers]);
+    
+    const allServers = [...activeServers, ...disabledServersData];
+    
+    // Update stats when data changes
+    if (onStatsChange) {
+      onStatsChange({
+        total: allServers.length,
+        active: activeServers.length,
+        disabled: disabledServersData.length,
+      });
+    }
+    
+    return allServers;
+  }, [config?.mcpServers, disabledServers, onStatsChange]);
 
   const handleSync = useCallback(
     (fromClient: string, toClient: string, overrideAll: boolean) => {
