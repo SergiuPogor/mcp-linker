@@ -1,6 +1,9 @@
 // services/auth.ts (optimized version)
 import { apiUrl } from "@/lib/apiClient";
-import supabase, { isSupabaseEnabled, resetSupabaseClient } from "@/utils/supabase";
+import supabase, {
+  isSupabaseEnabled,
+  resetSupabaseClient,
+} from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
 // Add logging for debugging
@@ -42,12 +45,20 @@ export const getSession = async (): Promise<Session | null> => {
         console.debug(
           "No active Supabase session:",
           error?.message || "No session",
-          "Current session data:", data.session
+          "Current session data:",
+          data.session,
         );
         return null;
       }
 
-      console.log("Session retrieved successfully:", !!data.session, "User ID:", data.session?.user?.id, "User email:", data.session?.user?.email);
+      console.log(
+        "Session retrieved successfully:",
+        !!data.session,
+        "User ID:",
+        data.session?.user?.id,
+        "User email:",
+        data.session?.user?.email,
+      );
       return data.session;
     } catch (err) {
       lastError = err;

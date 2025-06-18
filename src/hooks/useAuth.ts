@@ -50,10 +50,7 @@ export const useAuth = () => {
 
         setLoading(false);
         setSessionCheckComplete(true);
-        console.log(
-          "Initial session check complete. User:",
-          !!session?.user,
-        );
+        console.log("Initial session check complete. User:", !!session?.user);
       } catch (error) {
         console.error("Error in getInitialSession catch block:", error);
         if (isMounted) {
@@ -77,7 +74,14 @@ export const useAuth = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state change:", event, "Session:", session, "User email:", session?.user?.email);
+      console.log(
+        "Auth state change:",
+        event,
+        "Session:",
+        session,
+        "User email:",
+        session?.user?.email,
+      );
 
       if (!isMounted) {
         console.log("useAuth unmounted during auth state change");
@@ -89,7 +93,10 @@ export const useAuth = () => {
         case "SIGNED_IN":
         case "TOKEN_REFRESHED":
           setUser(session?.user ?? null);
-          console.log("Auth state changed to SIGNED_IN/TOKEN_REFRESHED. User:", !!session?.user);
+          console.log(
+            "Auth state changed to SIGNED_IN/TOKEN_REFRESHED. User:",
+            !!session?.user,
+          );
           // Navigate to onboarding after successful sign in
           if (event === "SIGNED_IN") {
             navigate("/onboarding", { replace: true });
@@ -107,7 +114,9 @@ export const useAuth = () => {
           if (!sessionCheckComplete) {
             setUser(session?.user ?? null);
             setSessionCheckComplete(true);
-            console.log("Auth state changed to INITIAL_SESSION. Session check complete.");
+            console.log(
+              "Auth state changed to INITIAL_SESSION. Session check complete.",
+            );
           }
           break;
         default:

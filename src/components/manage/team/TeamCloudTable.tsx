@@ -101,7 +101,9 @@ export const TeamCloudTable = () => {
               itemName={`the server "${serverName}"`}
               onDelete={async () => {
                 try {
-                  await api.delete(`/teams/${selectedTeamId}/configs/${serverId}`);
+                  await api.delete(
+                    `/teams/${selectedTeamId}/configs/${serverId}`,
+                  );
                   setServersData((prevData) =>
                     prevData.filter((server) => server.id !== serverId),
                   );

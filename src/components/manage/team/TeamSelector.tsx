@@ -24,30 +24,30 @@ export function TeamSelector() {
   const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
   const { isAuthenticated, sessionCheckComplete } = useAuth();
 
-useEffect(() => {
-  if (!sessionCheckComplete) return;
+  useEffect(() => {
+    if (!sessionCheckComplete) return;
 
-  if (!isAuthenticated) {
-    setIsAuthPromptOpen(true);
-    return;
-  }
-
-  async function loadData() {
-    try {
-      const teams = await fetchMyTeams();
-      setTeamOptions(teams);
-
-      // Set first team as selected if no team is currently selected
-      if (teams.length > 0 && !selectedTeamId) {
-        setSelectedTeam(teams[0].id, teams[0].name);
-      }
-    } catch (error) {
-      toast.error("Failed to load teams");
+    if (!isAuthenticated) {
+      setIsAuthPromptOpen(true);
+      return;
     }
-  }
 
-  loadData();
-}, [isAuthenticated, sessionCheckComplete, selectedTeamId, setSelectedTeam]);
+    async function loadData() {
+      try {
+        const teams = await fetchMyTeams();
+        setTeamOptions(teams);
+
+        // Set first team as selected if no team is currently selected
+        if (teams.length > 0 && !selectedTeamId) {
+          setSelectedTeam(teams[0].id, teams[0].name);
+        }
+      } catch (error) {
+        toast.error("Failed to load teams");
+      }
+    }
+
+    loadData();
+  }, [isAuthenticated, sessionCheckComplete, selectedTeamId, setSelectedTeam]);
 
   return (
     <div className="z-50">

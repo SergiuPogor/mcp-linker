@@ -17,10 +17,16 @@ import {
   Search,
   Settings,
   Star,
-  Users
+  Users,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
 import TeamMemberPage from "./pages/TeamMemberPage";
@@ -36,11 +42,7 @@ function StartupRedirect() {
     if (redirected.current) return;
     const lastRoute = localStorage.getItem("lastRoute");
     // Only redirect if not already at lastRoute, and lastRoute is not "/" and not current path
-    if (
-      lastRoute &&
-      lastRoute !== "/" &&
-      lastRoute !== location.pathname
-    ) {
+    if (lastRoute && lastRoute !== "/" && lastRoute !== location.pathname) {
       redirected.current = true;
       navigate(lastRoute, { replace: true });
     }

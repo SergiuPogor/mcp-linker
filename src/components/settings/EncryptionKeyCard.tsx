@@ -130,7 +130,7 @@ export default function EncryptionKeyCard({
               <Copy className="w-4 h-4" />
             </Button>
           </div>
-          {(!key.trim() && !hasViewedGeneratedKey) && (
+          {!key.trim() && !hasViewedGeneratedKey && (
             <p className="text-destructive text-sm mt-1">
               Please generate or enter an encryption key to save.
             </p>

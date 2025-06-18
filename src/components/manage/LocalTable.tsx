@@ -17,7 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./ServerTableColumns";
 
 interface LocalTableProps {
-  onStatsChange?: (stats: { total: number; active: number; disabled: number }) => void;
+  onStatsChange?: (stats: {
+    total: number;
+    active: number;
+    disabled: number;
+  }) => void;
 }
 
 export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
@@ -63,9 +67,9 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
           ...serverConfig,
         }) as ServerTableData,
     );
-    
+
     const allServers = [...activeServers, ...disabledServersData];
-    
+
     // Update stats when data changes
     if (onStatsChange) {
       onStatsChange({
@@ -74,7 +78,7 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
         disabled: disabledServersData.length,
       });
     }
-    
+
     return allServers;
   }, [config?.mcpServers, disabledServers, onStatsChange]);
 
@@ -184,7 +188,9 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
           />
         </div>
       ) : (
-        <Button onClick={() => navigate("/auth")}>Login to Sync Local or cloud</Button>
+        <Button onClick={() => navigate("/auth")}>
+          Login to Sync Local or cloud
+        </Button>
       )}
       <DataTable
         columns={localColumns}

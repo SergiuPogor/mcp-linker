@@ -28,6 +28,6 @@ export const useTabStore = create<TabState>()(
     }),
     {
       name: "mcp-tab-storage", // unique name for localStorage
-    }
-  )
-); 
+    },
+  ),
+);

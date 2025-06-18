@@ -56,14 +56,20 @@ export function useTeamColumns({
       cell: ({ row }) => {
         const role = row.getValue("userRole") as string;
         const roleColors = {
-          OWNER: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-          ADMIN: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
-          MEMBER: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-          VIEWER: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+          OWNER:
+            "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+          ADMIN:
+            "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+          MEMBER:
+            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+          VIEWER:
+            "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
         };
-        
+
         return (
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleColors[role as keyof typeof roleColors]}`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${roleColors[role as keyof typeof roleColors]}`}
+          >
             {role}
           </span>
         );
@@ -121,7 +127,7 @@ export function useTeamColumns({
                 <TooltipContent>Manage Members</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            
+
             {/* Edit button - only for owners */}
             {isOwner && (
               <Button variant="outline" size="sm" onClick={() => onEdit(team)}>
@@ -139,7 +145,9 @@ export function useTeamColumns({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will permanently delete
                       the team "{team.name}" and all associated data.

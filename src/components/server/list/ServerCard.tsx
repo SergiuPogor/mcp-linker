@@ -78,11 +78,15 @@ export function ServerCard({
         <div className="flex justify-between items-start">
           <div className="flex gap-3 items-start">
             <div className="bg-gray-100 rounded-full">
-             {server.logoUrl ? (
-               <img src={server.logoUrl} alt="icon" className="w-12 h-12 rounded-full" />
-             ) : (
-               showGithubIcon && <Github size={24} />
-             )}
+              {server.logoUrl ? (
+                <img
+                  src={server.logoUrl}
+                  alt="icon"
+                  className="w-12 h-12 rounded-full"
+                />
+              ) : (
+                showGithubIcon && <Github size={24} />
+              )}
             </div>
             <div>
               <CardTitle className="text-base">

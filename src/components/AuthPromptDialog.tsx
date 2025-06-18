@@ -16,7 +16,10 @@ interface AuthPromptDialogProps {
   onClose: () => void;
 }
 
-export const AuthPromptDialog = ({ isOpen, onClose }: AuthPromptDialogProps) => {
+export const AuthPromptDialog = ({
+  isOpen,
+  onClose,
+}: AuthPromptDialogProps) => {
   const navigate = useNavigate();
   const { setMainTab, setPersonalTab } = useTabStore();
 
@@ -37,14 +40,17 @@ export const AuthPromptDialog = ({ isOpen, onClose }: AuthPromptDialogProps) => 
         <AlertDialogHeader>
           <AlertDialogTitle>Authentication Required</AlertDialogTitle>
           <AlertDialogDescription>
-            You are not logged in. Please log in to access team features, or switch to your personal server management.
+            You are not logged in. Please log in to access team features, or
+            switch to your personal server management.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleGoToPersonal}>Go to Personal</AlertDialogCancel>
+          <AlertDialogCancel onClick={handleGoToPersonal}>
+            Go to Personal
+          </AlertDialogCancel>
           <AlertDialogAction onClick={handleLogin}>Log In</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
-}; 
+};

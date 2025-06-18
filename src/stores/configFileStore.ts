@@ -22,6 +22,6 @@ export const useConfigFileStore = create<ConfigFileState>()(
     }),
     {
       name: "config-file-storage",
-    }
-  )
-); 
+    },
+  ),
+);

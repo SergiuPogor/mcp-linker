@@ -48,14 +48,14 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
           ...serverConfig,
         }) as ServerTableData,
     );
-    
+
     // Update stats when data changes
     if (onStatsChange) {
       onStatsChange({
         total: activeServers.length,
       });
     }
-    
+
     return [...activeServers];
   }, [config?.mcpServers, onStatsChange]);
 

@@ -13,7 +13,9 @@ export function useTeam() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingTeam, setEditingTeam] = useState<TeamWithRoleResponse | null>(null);
+  const [editingTeam, setEditingTeam] = useState<TeamWithRoleResponse | null>(
+    null,
+  );
   const [formData, setFormData] = useState<TeamFormData>({
     name: "",
     description: "",

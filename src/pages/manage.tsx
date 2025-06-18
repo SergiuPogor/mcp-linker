@@ -80,7 +80,11 @@ export default function McpManage() {
         </div>
 
         {/* Dashboard */}
-        <Dashboard personalStats={personalStats} teamStats={teamStats} />
+        <Dashboard
+          isAuthenticated={isAuthenticated}
+          personalStats={personalStats}
+          teamStats={teamStats}
+        />
 
         <div className="flex-1 min-h-0">
           {/* personal */}

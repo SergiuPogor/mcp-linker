@@ -8,7 +8,6 @@ import {
 import { clientOptions } from "@/constants/clients";
 import { useClientPathStore } from "@/stores/clientPathStore";
 
-
 export function ClientSelector() {
   const { selectedClient, setSelectedClient } = useClientPathStore();
   return (
