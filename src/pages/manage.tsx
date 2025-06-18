@@ -71,7 +71,7 @@ export default function McpManage() {
               <TabsContent value="personalCloud" className="flex-1 min-h-0">
                 {isAuthenticated ? (
                   <PersonalCloudTable />
-                ) : encryptionKey ? (
+                ) : !encryptionKey ? (
                   <Button onClick={() => navigate("/settings")}>
                     go to generate Encryption Key
                   </Button>
