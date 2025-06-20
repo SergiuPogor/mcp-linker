@@ -26,6 +26,14 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 ---
 
+### ☕ Buy Me a Coffee
+
+If you like MCP Linker, consider buying me a coffee to support continued development ❤️
+
+[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
+
+---
+
 ## ✨ Why Choose MCP Linker?
 
 **The fastest way to supercharge your AI workflow**

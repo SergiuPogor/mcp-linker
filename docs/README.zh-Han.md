@@ -24,6 +24,14 @@
 
 ---
 
+### ☕ Buy Me a Coffee
+
+喜歡這個專案嗎？請我喝杯咖啡支持一下 ❤️
+
+[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
+
+---
+
 ## ✨ 為什麼選擇 MCP Linker？
 
 **加速你的 AI 工具工作流程的最快方式**

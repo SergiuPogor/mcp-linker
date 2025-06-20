@@ -26,6 +26,14 @@ Agrega, administra y sincroniza servidores MCP (Model Context Protocol) entre cl
 
 ---
 
+### ☕ Buy Me a Coffee
+
+¿Te gusta este proyecto? Invítame un café ❤️
+
+[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
+
+---
+
 ## ✨ ¿Por qué elegir MCP Linker?
 
 **La forma más rápida de mejorar tu flujo de trabajo con IA**
