@@ -7,7 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 const languages = [
   { code: "en", label: "English" },
   { code: "zh", label: "中文" },
+  { code: "es", label: "ES" },
   { code: "ja", label: "日本语" },
+  { code: "de", label: "Deutsch" },
 ];
 
 export default function LangSelect() {
