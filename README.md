@@ -6,7 +6,7 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 ![MCP Linker Logo](./public/logo.png)
 
-[中文](./docs/README.zh-CN.md) | [es](./docs/README.es.md) | [日本語](./docs/README.ja-JP.md) | [繁體中文](./docs/README.zh-Han.md)
+[中文](./docs/README.zh-CN.md) | [Deutsch](./docs/README.de.md) | [es](./docs/README.es.md) | [日本語](./docs/README.ja-JP.md) | [繁體中文](./docs/README.zh-Han.md)
 
 ⚡️ **Say goodbye to copy-paste**
 
