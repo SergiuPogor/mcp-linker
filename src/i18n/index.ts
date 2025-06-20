@@ -8,6 +8,7 @@ import de from "./resources/de";
 import en from "./resources/en";
 import es from "./resources/es";
 import ja from "./resources/ja";
+import tc from "./resources/tc";
 import zh from "./resources/zh";
 
 i18n
@@ -17,6 +18,7 @@ i18n
     resources: {
       en,
       zh,
+      tc,
       es,
       ja,
       de,

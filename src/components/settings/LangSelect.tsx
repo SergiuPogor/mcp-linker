@@ -10,6 +10,7 @@ const languages = [
   { code: "es", label: "ES" },
   { code: "ja", label: "日本语" },
   { code: "de", label: "Deutsch" },
+  { code: "tc", label: "繁體中文" },
 ];
 
 export default function LangSelect() {
