@@ -29,11 +29,11 @@ export function CommandDisplay({ config }: CommandDisplayProps) {
   return (
     <div className="flex items-center gap-2 max-w-xs">
       {isStdio ? (
-        <Terminal className="h-4 w-4 text-blue-500 flex-shrink-0" />
+        <Terminal className="h-4 w-4 text-primary flex-shrink-0" />
       ) : (
         <div className="h-4 w-4 rounded-full bg-orange-500 flex-shrink-0" />
       )}
-      <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded truncate">
+      <code className="text-sm bg-muted px-2 py-1 rounded truncate">
         {command}
       </code>
     </div>

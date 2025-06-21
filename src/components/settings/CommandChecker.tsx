@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-shell";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Notification, Notifications } from "./ui/Notifications";
+import { Notification, Notifications } from "@/components/ui/Notifications";
 
 type ToolStatus = {
   name: string;

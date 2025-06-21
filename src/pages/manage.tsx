@@ -9,6 +9,7 @@ import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { useStatsStore } from "@/stores/statsStore";
 import { useTabStore } from "@/stores/tabStore";
 import { useTeamStore } from "@/stores/team";
 import { getEncryptionKey } from "@/utils/encryption";
@@ -31,14 +32,8 @@ export default function McpManage() {
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
-  const [personalStats, setPersonalStats] = useState({
-    total: 0,
-    active: 0,
-    disabled: 0,
-  });
-  const [teamStats, setTeamStats] = useState({
-    total: 0,
-  });
+  const personalStats = useStatsStore((s) => s.personalStats);
+  const teamStats = useStatsStore((s) => s.teamStats);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -102,7 +97,7 @@ export default function McpManage() {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="personalLocal" className="flex-1 min-h-0">
-                <LocalTable onStatsChange={setPersonalStats} />
+                <LocalTable />
               </TabsContent>
               <TabsContent value="personalCloud" className="flex-1 min-h-0">
                 {isAuthenticated ? (
@@ -145,7 +140,7 @@ export default function McpManage() {
                 <ConfigFileSelector />
               </div>
               <TabsContent value="teamLocal" className="flex-1 min-h-0">
-                <TeamLocalTable onStatsChange={setTeamStats} />
+                <TeamLocalTable />
               </TabsContent>
               <TabsContent value="teamCloud" className="flex-1 min-h-0">
                 {!isAuthenticated ? (

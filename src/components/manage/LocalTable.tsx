@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
+import { useStatsStore } from "@/stores/statsStore";
 import { ServerConfig, ServerTableData } from "@/types";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
@@ -16,15 +17,9 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./ServerTableColumns";
 
-interface LocalTableProps {
-  onStatsChange?: (stats: {
-    total: number;
-    active: number;
-    disabled: number;
-  }) => void;
-}
+type LocalTableProps = {};
 
-export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
+export const LocalTable = ({}: LocalTableProps) => {
   const navigate = useNavigate();
   const { selectedClient, selectedPath } = useClientPathStore();
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
@@ -34,6 +29,7 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const { isAuthenticated } = useAuth();
+  const setPersonalStats = useStatsStore((s) => s.setPersonalStats);
 
   const {
     config,
@@ -47,10 +43,6 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
     error,
     loadConfig,
   } = useMcpConfig(selectedClient, selectedPath);
-
-  if (error) {
-    return <RefreshMcpConfig error={error} onRetry={loadConfig} />;
-  }
 
   const serversData = useMemo((): ServerTableData[] => {
     const activeServers = Object.entries(config?.mcpServers ?? {}).map(
@@ -67,20 +59,15 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
           ...serverConfig,
         }) as ServerTableData,
     );
-
     const allServers = [...activeServers, ...disabledServersData];
-
-    // Update stats when data changes
-    if (onStatsChange) {
-      onStatsChange({
-        total: allServers.length,
-        active: activeServers.length,
-        disabled: disabledServersData.length,
-      });
-    }
-
+    // Set stats directly to Zustand store
+    setPersonalStats({
+      total: allServers.length,
+      active: activeServers.length,
+      disabled: disabledServersData.length,
+    });
     return allServers;
-  }, [config?.mcpServers, disabledServers, onStatsChange]);
+  }, [config?.mcpServers, disabledServers, setPersonalStats]);
 
   const handleSync = useCallback(
     (fromClient: string, toClient: string, overrideAll: boolean) => {
@@ -95,8 +82,8 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
   );
 
   const handleEdit = useCallback(
-    (name: string, serverConfig: ServerConfig) => {
-      updateConfig(name, serverConfig);
+    (name: string, serverConfig: ServerConfig, isDisabled?: boolean) => {
+      updateConfig(name, serverConfig, isDisabled);
     },
     [updateConfig],
   );
@@ -149,13 +136,13 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
       {isAuthenticated ? (
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
-            <div className="h-6 w-px bg-gray-300" />
+            <div className="h-6 w-px bg-border" />
             <Button
               variant="outline"
               size="sm"
               onClick={() => setLocalSyncDialogOpen(true)}
               disabled={isSyncing}
-              className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+              className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
             >
               <Monitor className="h-4 w-4" />
               Local Sync
@@ -172,7 +159,7 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
                 }
               }}
               disabled={isSyncing}
-              className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+              className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
             >
               <Cloud className="h-4 w-4" />
               Cloud Sync
@@ -192,32 +179,38 @@ export const LocalTable = ({ onStatsChange }: LocalTableProps) => {
           Login to Sync Local or cloud
         </Button>
       )}
-      <DataTable
-        columns={localColumns}
-        data={serversData}
-        searchKey="name"
-        rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
-        onTableInstanceChange={setTableInstance}
-      />
+      {error ? (
+        <RefreshMcpConfig error={error} onRetry={loadConfig} />
+      ) : (
+        <>
+          <DataTable
+            columns={localColumns}
+            data={serversData}
+            searchKey="name"
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+            onTableInstanceChange={setTableInstance}
+          />
 
-      <LocalSyncDialog
-        open={localSyncDialogOpen}
-        onOpenChange={setLocalSyncDialogOpen}
-        onLocalSync={handleSync}
-        currentClient={selectedClient}
-        isSyncing={isSyncing}
-      />
+          <LocalSyncDialog
+            open={localSyncDialogOpen}
+            onOpenChange={setLocalSyncDialogOpen}
+            onLocalSync={handleSync}
+            currentClient={selectedClient}
+            isSyncing={isSyncing}
+          />
 
-      <CloudSyncDialog
-        open={cloudSyncDialogOpen}
-        onOpenChange={setCloudSyncDialogOpen}
-        onCloudUpload={handleCloudUpload}
-        onCloudDownload={handleCloudDownload}
-        isSyncing={isSyncing}
-        servers={serversData}
-        onCloudDownloadSuccess={loadConfig}
-      />
+          <CloudSyncDialog
+            open={cloudSyncDialogOpen}
+            onOpenChange={setCloudSyncDialogOpen}
+            onCloudUpload={handleCloudUpload}
+            onCloudDownload={handleCloudDownload}
+            isSyncing={isSyncing}
+            servers={serversData}
+            onCloudDownloadSuccess={loadConfig}
+          />
+        </>
+      )}
     </div>
   );
 };

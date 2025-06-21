@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,14 +96,11 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="command"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" dark:text-gray-200">
+              <FormLabel>
                 {t("serverForm.command")}
               </FormLabel>
               <FormControl>
                 <Input
-                  className={
-                    "dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-                  }
                   {...field}
                 />
               </FormControl>
@@ -116,14 +113,12 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="args"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" dark:text-gray-200">
+              <FormLabel>
                 {t("serverForm.arguments")}
               </FormLabel>
               <FormControl>
                 <Textarea
-                  className={
-                    "dark:bg-gray-800 dark:border-gray-500 dark:text-white w-full rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50 border-gray-300"
-                  }
+                  className="w-full rounded-md shadow-sm focus:ring focus:ring-ring/50 border-input"
                   {...field}
                   placeholder="space-separated args"
                 ></Textarea>
@@ -134,7 +129,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
         />
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <FormLabel className="dark:text-gray-200">
+            <FormLabel>
               {t("serverForm.env")}
             </FormLabel>
             <Button
@@ -155,9 +150,6 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                   <FormItem className="flex-1">
                     <FormControl>
                       <Input
-                        className={
-                          "dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-                        }
                         placeholder="Key"
                         {...field}
                       />
@@ -173,9 +165,6 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                   <FormItem className="flex-1">
                     <FormControl>
                       <Input
-                        className={
-                          "dark:bg-gray-800 dark:border-gray-500 dark:text-white"
-                        }
                         placeholder="Value"
                         {...field}
                       />
@@ -189,7 +178,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => remove(index)}
-                className="text-red-500"
+                className="text-destructive hover:text-destructive/80"
               >
                 ×
               </Button>

@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { ServerTableData } from "@/types";
@@ -80,16 +80,16 @@ export function TeamCloudSyncDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg space-y-3">
+          <div className="bg-muted/50 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Local Configurations:</span>
+              <span className="text-sm font-medium text-foreground">Local Configurations:</span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
             </div>
 
             {cloudSyncStatus && (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-foreground">
                     Cloud Configurations:
                   </span>
                   <Badge variant="secondary">
@@ -99,8 +99,8 @@ export function TeamCloudSyncDialog({
 
                 {cloudSyncStatus.lastSync && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Last Sync:</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                    <span className="text-sm font-medium text-foreground">Last Sync:</span>
+                    <span className="text-xs text-muted-foreground">
                       {new Date(cloudSyncStatus.lastSync).toLocaleString()}
                     </span>
                   </div>
@@ -109,7 +109,7 @@ export function TeamCloudSyncDialog({
                 {cloudSyncStatus.hasChanges && (
                   <Badge
                     variant="outline"
-                    className="text-orange-600 border-orange-300"
+                    className="text-orange-600 border-orange-300 dark:text-orange-400 dark:border-orange-500"
                   >
                     Changes detected
                   </Badge>
@@ -127,13 +127,13 @@ export function TeamCloudSyncDialog({
             />
             <label
               htmlFor="cloud-override-mode"
-              className="text-sm font-medium"
+              className="text-sm font-medium text-foreground"
             >
               Override mode (replace all configurations)
             </label>
           </div>
 
-          <div className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="text-xs text-muted-foreground">
             {cloudOverrideMode
               ? "This will completely replace all configurations on the target."
               : "This will merge configurations, keeping existing ones and adding new ones."}

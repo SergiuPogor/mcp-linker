@@ -1,11 +1,11 @@
 import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { ConfigType } from "@/types/mcpConfig";
 import { PenSquare } from "lucide-react";
@@ -19,6 +19,7 @@ interface ServerActionButtonsProps {
   onEdit: (
     serverName: string,
     config: ConfigType["mcpServers"][string],
+    isDisabled?: boolean,
   ) => void;
   onDelete: (serverName: string) => void;
 }
@@ -54,7 +55,7 @@ export function TeamServerActionButtons({
           <ServerForm
             config={serverConfig}
             onSubmit={(values) => {
-              onEdit(serverName, values);
+              onEdit(serverName, values, false);
               setEditingServer(null);
             }}
             buttonName={t ? t("save") : "Save"}

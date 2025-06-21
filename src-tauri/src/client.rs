@@ -13,6 +13,14 @@ impl ClientConfig {
         println!("name: {}, path: {:?}", name, path);
         let home = home_dir().unwrap().to_str().unwrap().to_string();
         let path = match (name, path) {
+            ("claude_code", Some(base_path)) => {
+                // If base_path + .mcp.json
+                if base_path.is_empty() {
+                    PathBuf::from("")
+                } else {
+                    PathBuf::from(base_path).join(".mcp.json")
+                }
+            }
             ("claude", _) => {
                 #[cfg(target_os = "macos")]
                 {

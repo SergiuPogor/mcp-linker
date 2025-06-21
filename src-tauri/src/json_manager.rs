@@ -135,15 +135,55 @@ impl JsonManager {
         let mut json = Self::read_json_file(path).await?;
         let key = Self::get_key_by_client(client);
 
-        if json.is_object() && json.as_object().unwrap().contains_key(key) {
-            if json[key].is_object() && json[key].as_object().unwrap().contains_key(name) {
-                json[key][name] = config;
-            } else {
-                return Self::add_mcp_server(path, client, name, config).await;
-            }
-        } else {
-            return Self::add_mcp_server(path, client, name, config).await;
+        if !json.is_object() {
+            json = json!({});
         }
+
+        // Check if server exists in active servers
+        if json.as_object().unwrap().contains_key(key) 
+            && json[key].is_object() 
+            && json[key].as_object().unwrap().contains_key(name) {
+            json[key][name] = config;
+        }
+        // Check if server exists in disabled servers
+        else if json.as_object().unwrap().contains_key("__disabled")
+            && json["__disabled"].is_object()
+            && json["__disabled"].as_object().unwrap().contains_key(name) {
+            json["__disabled"][name] = config;
+        }
+        // If server doesn't exist in either section, add to active servers
+        else {
+            if !json.as_object().unwrap().contains_key(key) {
+                json[key] = json!({});
+            }
+            json[key][name] = config;
+        }
+
+        Self::write_json_file(path, &json).await?;
+
+        // Normalize response key to mcpServers for client
+        Self::normalize_response_key(json, client)
+    }
+
+    pub async fn update_disabled_mcp_server(
+        path: &Path,
+        client: &str,
+        name: &str,
+        config: Value,
+    ) -> Result<Value, String> {
+        let mut json = Self::read_json_file(path).await?;
+
+        if !json.is_object() {
+            json = json!({});
+        }
+
+        // Ensure __disabled section exists
+        if !json.as_object().unwrap().contains_key("__disabled") {
+            json["__disabled"] = json!({});
+        }
+
+        // Update the disabled server
+        json["__disabled"][name] = config;
 
         Self::write_json_file(path, &json).await?;
 
@@ -306,5 +346,105 @@ impl JsonManager {
 
         // Normalize response key to mcpServers for client
         Self::normalize_response_key(json, client)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+    use std::path::PathBuf;
+
+    #[tokio::test]
+    async fn test_update_mcp_server_active() {
+        let temp_dir = tempdir().unwrap();
+        let config_path = temp_dir.path().join("test_config.json");
+        
+        // Create initial config with active server
+        let initial_config = json!({
+            "mcpServers": {
+                "test-server": {
+                    "command": "test-command",
+                    "args": ["arg1"]
+                }
+            }
+        });
+        
+        JsonManager::write_json_file(&config_path, &initial_config).await.unwrap();
+        
+        // Update the active server
+        let updated_config = json!({
+            "command": "updated-command",
+            "args": ["arg1", "arg2"]
+        });
+        
+        let result = JsonManager::update_mcp_server(&config_path, "mcplinker", "test-server", updated_config.clone()).await;
+        assert!(result.is_ok());
+        
+        // Verify the update
+        let final_config = JsonManager::read_json_file(&config_path).await.unwrap();
+        assert_eq!(final_config["mcpServers"]["test-server"], updated_config);
+    }
+
+    #[tokio::test]
+    async fn test_update_mcp_server_disabled() {
+        let temp_dir = tempdir().unwrap();
+        let config_path = temp_dir.path().join("test_config.json");
+        
+        // Create initial config with disabled server
+        let initial_config = json!({
+            "__disabled": {
+                "test-server": {
+                    "command": "test-command",
+                    "args": ["arg1"]
+                }
+            }
+        });
+        
+        JsonManager::write_json_file(&config_path, &initial_config).await.unwrap();
+        
+        // Update the disabled server
+        let updated_config = json!({
+            "command": "updated-command",
+            "args": ["arg1", "arg2"]
+        });
+        
+        let result = JsonManager::update_mcp_server(&config_path, "mcplinker", "test-server", updated_config.clone()).await;
+        assert!(result.is_ok());
+        
+        // Verify the update
+        let final_config = JsonManager::read_json_file(&config_path).await.unwrap();
+        assert_eq!(final_config["__disabled"]["test-server"], updated_config);
+    }
+
+    #[tokio::test]
+    async fn test_update_disabled_mcp_server() {
+        let temp_dir = tempdir().unwrap();
+        let config_path = temp_dir.path().join("test_config.json");
+        
+        // Create initial config with disabled server
+        let initial_config = json!({
+            "__disabled": {
+                "test-server": {
+                    "command": "test-command",
+                    "args": ["arg1"]
+                }
+            }
+        });
+        
+        JsonManager::write_json_file(&config_path, &initial_config).await.unwrap();
+        
+        // Update the disabled server using the specific function
+        let updated_config = json!({
+            "command": "updated-command",
+            "args": ["arg1", "arg2"]
+        });
+        
+        let result = JsonManager::update_disabled_mcp_server(&config_path, "mcplinker", "test-server", updated_config.clone()).await;
+        assert!(result.is_ok());
+        
+        // Verify the update
+        let final_config = JsonManager::read_json_file(&config_path).await.unwrap();
+        assert_eq!(final_config["__disabled"]["test-server"], updated_config);
     }
 }

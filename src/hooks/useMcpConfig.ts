@@ -1,4 +1,5 @@
 import { mustHavePathClients } from "@/lib/data";
+import { useClientPathStore } from "@/stores/clientPathStore";
 import { ConfigType } from "@/types/mcpConfig";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
@@ -14,6 +15,7 @@ export function useMcpConfig(
   const [disabledServers, setDisabledServers] = useState<Record<string, any>>(
     {},
   );
+  const { getClientPath } = useClientPathStore();
 
   // Helper to centralize common operation logic
   const executeMcpOperation = useCallback(
@@ -105,18 +107,31 @@ export function useMcpConfig(
   }, [selectedClient, selectedPath, executeMcpOperation]);
 
   const updateConfig = useCallback(
-    async (key: string, updatedConfig: ConfigType["mcpServers"][string]) => {
+    async (key: string, updatedConfig: ConfigType["mcpServers"][string], isDisabled?: boolean) => {
       try {
-        await executeMcpOperation(
-          invoke("update_mcp_server", {
-            clientName: selectedClient,
-            path: selectedPath || undefined,
-            serverName: key,
-            serverConfig: updatedConfig,
-          }),
-          "Configuration updated successfully",
-          "Failed to update configuration",
-        );
+        if (isDisabled) {
+          await executeMcpOperation(
+            invoke("update_disabled_mcp_server", {
+              clientName: selectedClient,
+              path: selectedPath || undefined,
+              serverName: key,
+              serverConfig: updatedConfig,
+            }),
+            "Configuration updated successfully",
+            "Failed to update configuration",
+          );
+        } else {
+          await executeMcpOperation(
+            invoke("update_mcp_server", {
+              clientName: selectedClient,
+              path: selectedPath || undefined,
+              serverName: key,
+              serverConfig: updatedConfig,
+            }),
+            "Configuration updated successfully",
+            "Failed to update configuration",
+          );
+        }
         await loadConfig();
       } catch (error) {
         const errorMessage =
@@ -208,12 +223,17 @@ export function useMcpConfig(
       try {
         setIsLoading(true);
         setError(null);
+        
+        // Get paths for both clients
+        const fromPath = getClientPath(fromClient);
+        const toPath = getClientPath(toClient);
+        
         await executeMcpOperation(
           invoke("sync_mcp_config", {
             fromClient,
             toClient,
-            fromPath: null,
-            toPath: null,
+            fromPath,
+            toPath,
             overrideAll,
           }),
           `Configuration synced from ${fromClient} to ${toClient} successfully`,
@@ -231,7 +251,7 @@ export function useMcpConfig(
         setIsLoading(false);
       }
     },
-    [selectedClient, selectedPath, executeMcpOperation, loadConfig],
+    [selectedClient, selectedPath, executeMcpOperation, loadConfig, getClientPath],
   );
 
   const batchDeleteServers = useCallback(

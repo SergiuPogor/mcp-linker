@@ -19,6 +19,7 @@ interface ServerActionButtonsProps {
   onEdit: (
     serverName: string,
     config: ConfigType["mcpServers"][string],
+    isDisabled?: boolean,
   ) => void;
   onDelete: (serverName: string) => void;
   onEnable: (serverName: string) => Promise<void>;
@@ -49,16 +50,17 @@ export function ServerActionButtons({
             <span className="sr-only">{t ? t("edit") : "Edit"}</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md bg-background dark:bg-gray-800">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="dark:text-white">
+            <DialogTitle>
               {t ? t("edit") : "Edit"} {serverName}
             </DialogTitle>
           </DialogHeader>
           <ServerForm
             config={serverConfig}
             onSubmit={(values) => {
-              onEdit(serverName, values);
+              const isDisabled = !!disabledServers?.[serverName];
+              onEdit(serverName, values, isDisabled);
               setEditingServer(null);
             }}
             buttonName={t ? t("save") : "Save"}

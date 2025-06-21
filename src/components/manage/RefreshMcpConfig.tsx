@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
 
 interface RefreshMcpConfigProps {
@@ -11,24 +12,25 @@ export const RefreshMcpConfig: React.FC<RefreshMcpConfigProps> = ({
 }) => {
   return (
     <div className="flex items-center justify-center min-h-[200px]">
-      <div className="text-center p-4 bg-red-50 rounded-lg">
-        <h3 className="text-red-800 font-medium">
+      <div className="text-center p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+        <h3 className="text-destructive font-medium">
           Error Loading Configuration
         </h3>
-        <p className="text-red-600 mt-2">{error}</p>
+        <p className="text-destructive/80 mt-2">{error}</p>
         <div className="mt-4 space-x-2">
-          <button
+          <Button
             onClick={onRetry}
-            className="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 transition-colors"
+            variant="outline"
+            className="border-destructive/30 text-destructive hover:bg-destructive/10"
           >
             Retry
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-gray-100 text-gray-800 rounded hover:bg-gray-200 transition-colors"
+            variant="outline"
           >
             Refresh Page
-          </button>
+          </Button>
         </div>
       </div>
     </div>

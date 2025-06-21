@@ -1,4 +1,4 @@
-import CommandChecker from "@/components/CommandChecker";
+import CommandChecker from "@/components/settings/CommandChecker";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

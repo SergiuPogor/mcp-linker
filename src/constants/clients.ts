@@ -1,4 +1,5 @@
 const clients = [
+  { value: "claude_code", label: "Claude Code" },
   { value: "claude", label: "Claude Desktop" },
   { value: "cursor", label: "Cursor" },
   { value: "cline", label: "Cline" },

@@ -5,7 +5,7 @@ import { TeamServerActionButtons } from "../../team/TeamServerActionButtons";
 import { CommandDisplay } from "../CommandDisplay";
 
 interface ServerTableColumnsProps {
-  onEdit: (name: string, config: ServerConfig) => void;
+  onEdit: (name: string, config: ServerConfig, isDisabled?: boolean) => void;
   onDelete: (name: string) => void;
 }
 

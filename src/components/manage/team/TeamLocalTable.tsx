@@ -6,6 +6,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useTeamCloudSync } from "@/hooks/useTeamCloudSync";
 import { useConfigFileStore } from "@/stores/configFileStore";
+import { useStatsStore } from "@/stores/statsStore";
 import { useTeamStore } from "@/stores/team";
 import { ServerConfig, ServerTableData } from "@/types";
 import { getEncryptionKey } from "@/utils/encryption";
@@ -15,11 +16,9 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./TeamServerTableColumns";
 
-interface TeamLocalTableProps {
-  onStatsChange?: (stats: { total: number }) => void;
-}
+type TeamLocalTableProps = {};
 
-export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
+export const TeamLocalTable = ({}: TeamLocalTableProps) => {
   const navigate = useNavigate();
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
@@ -40,6 +39,8 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
     loadConfig,
   } = useMcpConfig("custom", filePath);
 
+  const setTeamStats = useStatsStore((s) => s.setTeamStats);
+
   const serversData = useMemo((): ServerTableData[] => {
     const activeServers = Object.entries(config?.mcpServers ?? {}).map(
       ([name, serverConfig]) =>
@@ -48,16 +49,12 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
           ...serverConfig,
         }) as ServerTableData,
     );
-
-    // Update stats when data changes
-    if (onStatsChange) {
-      onStatsChange({
-        total: activeServers.length,
-      });
-    }
-
+    // Set stats directly to Zustand store
+    setTeamStats({
+      total: activeServers.length,
+    });
     return [...activeServers];
-  }, [config?.mcpServers, onStatsChange]);
+  }, [config?.mcpServers, setTeamStats]);
 
   const { isSyncing, handleCloudUpload: originalHandleCloudUpload } =
     useTeamCloudSync(serversData);
@@ -70,8 +67,8 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
   );
 
   const handleEdit = useCallback(
-    (name: string, serverConfig: ServerConfig) => {
-      updateConfig(name, serverConfig);
+    (name: string, serverConfig: ServerConfig, isDisabled?: boolean) => {
+      updateConfig(name, serverConfig, isDisabled);
     },
     [updateConfig],
   );
@@ -103,7 +100,7 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
     <div className="flex flex-col">
       <div className="flex justify-between items-center">
         <div className="flex gap-3 items-center">
-          <div className="h-6 w-px bg-gray-300" />
+          <div className="h-6 w-px bg-border" />
 
           <Button
             variant="outline"
@@ -117,7 +114,7 @@ export const TeamLocalTable = ({ onStatsChange }: TeamLocalTableProps) => {
               }
             }}
             disabled={isSyncing}
-            className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+            className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
           >
             <Cloud className="h-4 w-4" />
             Upload

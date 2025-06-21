@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,6 +15,9 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { availableClients } from "@/constants/clients";
+import { needspathClient } from "@/lib/data";
+import { useClientPathStore } from "@/stores/clientPathStore";
+import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -43,16 +47,39 @@ export function LocalSyncDialog({
   });
   const [syncToClient, setSyncToClient] = useState<string>(currentClient || "");
   const [overrideMode, setOverrideMode] = useState(false);
+  const [fromPath, setFromPath] = useState<string>("");
+  const [toPath, setToPath] = useState<string>("");
+  const [isLoadingFromPath, setIsLoadingFromPath] = useState(false);
+  const [isLoadingToPath, setIsLoadingToPath] = useState(false);
+  
+  const { getClientPath, setClientPath } = useClientPathStore();
 
   // Effect to save syncFromClient to localStorage
   useEffect(() => {
     localStorage.setItem("syncFromClient", syncFromClient);
   }, [syncFromClient]);
 
+  // Load paths when clients change
+  useEffect(() => {
+    if (syncFromClient) {
+      const path = getClientPath(syncFromClient);
+      setFromPath(path || "");
+    }
+  }, [syncFromClient, getClientPath]);
+
+  useEffect(() => {
+    if (syncToClient) {
+      const path = getClientPath(syncToClient);
+      setToPath(path || "");
+    }
+  }, [syncToClient, getClientPath]);
+
   const resetState = () => {
     setSyncFromClient(localStorage.getItem("syncFromClient") || ""); // Reset to localStorage value
     setSyncToClient(currentClient || "");
     setOverrideMode(false);
+    setFromPath("");
+    setToPath("");
   };
 
   useEffect(() => {
@@ -60,6 +87,44 @@ export function LocalSyncDialog({
       setSyncToClient(currentClient || "");
     }
   }, [open, currentClient]);
+
+  const handleBrowseFromPath = async () => {
+    try {
+      setIsLoadingFromPath(true);
+      const selectedPath = await openDialog({
+        directory: true,
+        multiple: false,
+      });
+
+      if (selectedPath) {
+        setFromPath(selectedPath);
+        setClientPath(syncFromClient, selectedPath);
+      }
+    } catch (error) {
+      console.error("Failed to select directory:", error);
+    } finally {
+      setIsLoadingFromPath(false);
+    }
+  };
+
+  const handleBrowseToPath = async () => {
+    try {
+      setIsLoadingToPath(true);
+      const selectedPath = await openDialog({
+        directory: true,
+        multiple: false,
+      });
+
+      if (selectedPath) {
+        setToPath(selectedPath);
+        setClientPath(syncToClient, selectedPath);
+      }
+    } catch (error) {
+      console.error("Failed to select directory:", error);
+    } finally {
+      setIsLoadingToPath(false);
+    }
+  };
 
   const handleLocalSync = async () => {
     if (syncFromClient && syncToClient) {
@@ -82,6 +147,9 @@ export function LocalSyncDialog({
     onOpenChange(false);
   };
 
+  const needsFromPath = needspathClient.includes(syncFromClient);
+  const needsToPath = needspathClient.includes(syncToClient);
+
   return (
     <Dialog
       open={open}
@@ -91,21 +159,21 @@ export function LocalSyncDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle>Local Sync Configuration</DialogTitle>
+          <DialogTitle className="text-gray-900 dark:text-gray-100">Local Sync Configuration</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">From Client:</label>
+            <label className="text-sm font-medium text-gray-900 dark:text-gray-100">From Client:</label>
             <Select
               value={syncFromClient}
               onValueChange={setSyncFromClient}
               disabled={isSyncing}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select source client" />
+              <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+                <SelectValue placeholder="Select source client" className="text-gray-900 dark:text-gray-100" />
               </SelectTrigger>
               <SelectContent>
                 {availableClients
@@ -117,17 +185,34 @@ export function LocalSyncDialog({
                   ))}
               </SelectContent>
             </Select>
+            
+            {needsFromPath && (
+              <div className="flex space-x-2">
+                <Input
+                  value={fromPath}
+                  onChange={(e) => {
+                    setFromPath(e.target.value);
+                    setClientPath(syncFromClient, e.target.value || null);
+                  }}
+                  className="flex-1"
+                  placeholder="Select source path (optional)"
+                />
+                <Button onClick={handleBrowseFromPath} disabled={isLoadingFromPath}>
+                  {isLoadingFromPath ? "Loading..." : "Browse"}
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">To Client:</label>
+            <label className="text-sm font-medium text-gray-900 dark:text-gray-100">To Client:</label>
             <Select
               value={syncToClient}
               onValueChange={setSyncToClient}
               disabled={isSyncing || syncFromClient === syncToClient}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select target client" />
+              <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+                <SelectValue placeholder="Select target client" className="text-gray-900 dark:text-gray-100" />
               </SelectTrigger>
               <SelectContent>
                 {availableClients.map((client) => (
@@ -137,6 +222,23 @@ export function LocalSyncDialog({
                 ))}
               </SelectContent>
             </Select>
+            
+            {needsToPath && (
+              <div className="flex space-x-2">
+                <Input
+                  value={toPath}
+                  onChange={(e) => {
+                    setToPath(e.target.value);
+                    setClientPath(syncToClient, e.target.value || null);
+                  }}
+                  className="flex-1"
+                  placeholder="Select target path (optional)"
+                />
+                <Button onClick={handleBrowseToPath} disabled={isLoadingToPath}>
+                  {isLoadingToPath ? "Loading..." : "Browse"}
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center space-x-2">
@@ -146,12 +248,12 @@ export function LocalSyncDialog({
               onCheckedChange={setOverrideMode}
               disabled={isSyncing}
             />
-            <label htmlFor="override-mode" className="text-sm font-medium">
+            <label htmlFor="override-mode" className="text-sm font-medium text-gray-900 dark:text-gray-100">
               Override all (replace existing configs)
             </label>
           </div>
 
-          <div className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
             {overrideMode
               ? "This will completely replace all MCP server configurations in the target client."
               : "This will merge configurations, keeping existing ones and adding new ones from source."}
@@ -162,6 +264,7 @@ export function LocalSyncDialog({
               variant="outline"
               onClick={handleCancel}
               disabled={isSyncing}
+              className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Cancel
             </Button>

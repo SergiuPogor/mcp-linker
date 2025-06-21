@@ -46,9 +46,9 @@ export function SyncForm({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 bg-background text-foreground">
       <div className="space-y-2">
-        <label className="text-sm font-medium">From Client:</label>
+        <label className="text-sm font-medium text-foreground">From Client:</label>
         <Select
           value={syncFromClient}
           onValueChange={setSyncFromClient}
@@ -70,7 +70,7 @@ export function SyncForm({
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">To Client:</label>
+        <label className="text-sm font-medium text-foreground">To Client:</label>
         <Select
           value={syncToClient}
           onValueChange={setSyncToClient}
@@ -96,12 +96,12 @@ export function SyncForm({
           onCheckedChange={setOverrideMode}
           disabled={isSyncing}
         />
-        <label htmlFor="override-mode" className="text-sm font-medium">
+        <label htmlFor="override-mode" className="text-sm font-medium text-foreground">
           Override all (replace existing configs)
         </label>
       </div>
 
-      <div className="text-xs text-gray-600 dark:text-gray-400">
+      <div className="text-xs text-muted-foreground">
         {overrideMode
           ? "This will completely replace all MCP server configurations in the target client."
           : "This will merge configurations, keeping existing ones and adding new ones from source."}

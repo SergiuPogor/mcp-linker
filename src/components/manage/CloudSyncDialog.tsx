@@ -94,22 +94,22 @@ export function CloudSyncDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle>Cloud Sync Configuration</DialogTitle>
+          <DialogTitle className="text-gray-900 dark:text-gray-100">Cloud Sync Configuration</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg space-y-3">
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Local Configurations:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Local Configurations:</span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
             </div>
 
             {cloudSyncStatus && (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     Cloud Configurations:
                   </span>
                   <Badge variant="secondary">
@@ -119,8 +119,8 @@ export function CloudSyncDialog({
 
                 {cloudSyncStatus.lastSync && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Last Sync:</span>
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Last Sync:</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {new Date(cloudSyncStatus.lastSync).toLocaleString()}
                     </span>
                   </div>
@@ -129,7 +129,7 @@ export function CloudSyncDialog({
                 {cloudSyncStatus.hasChanges && (
                   <Badge
                     variant="outline"
-                    className="text-orange-600 border-orange-300"
+                    className="text-orange-600 border-orange-300 dark:text-orange-400 dark:border-orange-500"
                   >
                     Changes detected
                   </Badge>
@@ -147,13 +147,13 @@ export function CloudSyncDialog({
             />
             <label
               htmlFor="cloud-override-mode"
-              className="text-sm font-medium"
+              className="text-sm font-medium text-gray-900 dark:text-gray-100"
             >
               Override mode (replace all configurations)
             </label>
           </div>
 
-          <div className="text-xs text-gray-600 dark:text-gray-400">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
             {cloudOverrideMode
               ? "This will completely replace all configurations on the target."
               : "This will merge configurations, keeping existing ones and adding new ones."}
@@ -164,7 +164,7 @@ export function CloudSyncDialog({
               variant="outline"
               onClick={handleCloudUpload}
               disabled={isUploading || isDownloading || localServersCount === 0}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               {isUploading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -180,7 +180,7 @@ export function CloudSyncDialog({
               disabled={
                 isDownloading || isUploading || cloudSyncStatus?.total === 0
               }
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               {isDownloading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -196,6 +196,7 @@ export function CloudSyncDialog({
               variant="outline"
               onClick={handleCancel}
               disabled={isUploading || isDownloading}
+              className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Close
             </Button>

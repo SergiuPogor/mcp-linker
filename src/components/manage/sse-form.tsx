@@ -1,10 +1,11 @@
+import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 
 export const sseFormSchema = z.object({
   url: z.string().min(1, "URL is required"),
@@ -65,12 +65,11 @@ export function SSEForm({ config, onSubmit, buttonName }: SSEFormProps) {
           name="url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="dark:text-gray-200">
+              <FormLabel>
                 {t("serverForm.url")}
               </FormLabel>
               <FormControl>
                 <Input
-                  className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
                   {...field}
                 />
               </FormControl>
@@ -83,12 +82,11 @@ export function SSEForm({ config, onSubmit, buttonName }: SSEFormProps) {
           name="headersJson"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="dark:text-gray-200">
+              <FormLabel>
                 {t("serverForm.headers")}
               </FormLabel>
               <FormControl>
                 <Textarea
-                  className="dark:bg-gray-800 dark:border-gray-500 dark:text-white"
                   {...field}
                   placeholder='{"Authorization": "Bearer token"}'
                   value={

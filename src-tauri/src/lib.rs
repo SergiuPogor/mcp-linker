@@ -90,6 +90,7 @@ pub fn run() {
             mcp_commands::sync_mcp_config,
             mcp_commands::check_mcplinker_config_exists,
             mcp_commands::batch_delete_mcp_servers,
+            mcp_commands::update_disabled_mcp_server,
             installer::check_command_exists,
             installer::install_command,
             get_path_env,

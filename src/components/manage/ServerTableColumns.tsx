@@ -10,7 +10,7 @@ interface ServerTableColumnsProps {
   disabledServers: Record<string, ServerConfig>;
   onEnable: (name: string) => Promise<void>;
   onDisable: (name: string) => Promise<void>;
-  onEdit: (name: string, config: ServerConfig) => void;
+  onEdit: (name: string, config: ServerConfig, isDisabled?: boolean) => void;
   onDelete: (name: string) => void;
 }
 
@@ -57,7 +57,7 @@ export const useServerTableColumns = ({
             className={`text-xs ${
               isServerActive
                 ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                : "bg-muted text-muted-foreground"
             }`}
           >
             {isServerActive ? "Active" : "Disabled"}
