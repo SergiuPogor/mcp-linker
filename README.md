@@ -1,8 +1,8 @@
 # MCP Linker
 
-<div align="center">
+MCP manage, one-click install and sync MCP (Model Context Protocol) servers across AI clients like Claude Code and Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
-Add, manage, and sync MCP (Model Context Protocol) servers across AI clients like Claude Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
+<div align="center">
 
 ![MCP Linker Logo](./public/logo.png)
 
@@ -12,7 +12,6 @@ Add, manage, and sync MCP (Model Context Protocol) servers across AI clients lik
 
 [![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=for-the-badge&logo=github&color=yellow)](https://github.com/milisp/mcp-linker/stargazers)
 [![GitHub release](https://img.shields.io/github/release/milisp/mcp-linker.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
-[![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
 
 ### 🌟 **Love this project? Give us a star!** 🌟
 
@@ -43,7 +42,7 @@ If you like MCP Linker, consider buying me a coffee to support continued develop
 ### 🎯 Key Features
 
 - **🚀 One-Click Installation** — No more manual config file editing
-- **🔄 Multi-Client Support** — Claude Desktop, Cursor, VS Code, Cline, Roo Code, Windsurf, and more
+- **🔄 Multi-Client Support** — Claude Code and Desktop, Cursor, VS Code, Cline, Roo Code, Windsurf, and more
 - **📦 600+ Curated Servers** — The build-in MCP server marketplace
 - **🌐 Cross-Platform** — macOS, Windows, Linux (lightweight ~6MB)
 - **🔍 Smart Detection** — Auto-detect Python, Node.js, UV environments
