@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { ServerTableData } from "@/types";
@@ -82,7 +82,9 @@ export function TeamCloudSyncDialog({
         <div className="space-y-4">
           <div className="bg-muted/50 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Local Configurations:</span>
+              <span className="text-sm font-medium text-foreground">
+                Local Configurations:
+              </span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
             </div>
 
@@ -99,7 +101,9 @@ export function TeamCloudSyncDialog({
 
                 {cloudSyncStatus.lastSync && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-foreground">Last Sync:</span>
+                    <span className="text-sm font-medium text-foreground">
+                      Last Sync:
+                    </span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(cloudSyncStatus.lastSync).toLocaleString()}
                     </span>

@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -65,13 +65,9 @@ export function SSEForm({ config, onSubmit, buttonName }: SSEFormProps) {
           name="url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t("serverForm.url")}
-              </FormLabel>
+              <FormLabel>{t("serverForm.url")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,9 +78,7 @@ export function SSEForm({ config, onSubmit, buttonName }: SSEFormProps) {
           name="headersJson"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t("serverForm.headers")}
-              </FormLabel>
+              <FormLabel>{t("serverForm.headers")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}

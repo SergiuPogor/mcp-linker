@@ -25,10 +25,7 @@ export const RefreshMcpConfig: React.FC<RefreshMcpConfigProps> = ({
           >
             Retry
           </Button>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline">
             Refresh Page
           </Button>
         </div>

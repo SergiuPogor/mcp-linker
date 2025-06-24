@@ -11,6 +11,7 @@ import { useStatsStore } from "@/stores/statsStore";
 import { ServerConfig, ServerTableData } from "@/types";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
+import { open } from "@tauri-apps/plugin-shell";
 import { Cloud, Key, Monitor } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const setPersonalStats = useStatsStore((s) => s.setPersonalStats);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const {
     config,
@@ -135,32 +137,36 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
 
   return (
     <div className="flex flex-col">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-3 items-center">
-            <div className="h-6 w-px bg-border" />
-            {isAuthenticated ? 
-            userTier === "FREE" && <Button
-            onClick={() => open("https://mcp-linker.store/pricing")}
-            className="mt-2"
+      <div className="flex justify-between items-center">
+        <div className="flex gap-3 items-center">
+          <div className="h-6 w-px bg-border" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLocalSyncDialogOpen(true)}
+            disabled={isSyncing}
+            className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
           >
-            Upgrade to MCP Linker Pro
-          </Button> :
-            <Button onClick={() => navigate("/auth")}>Login</Button>}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocalSyncDialogOpen(true)}
-              disabled={!isAuthenticated || userTier === "FREE" || isSyncing}
-              className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
-            >
-              <Monitor className="h-4 w-4" />
-              Local Sync
-            </Button>
+            <Monitor className="h-4 w-4" />
+            Local Sync
+          </Button>
 
+          {showUpgrade ? (
+            <Button
+              onClick={() => open("https://mcp-linker.store/pricing")}
+              className="mt-2"
+            >
+              Upgrade to MCP Linker Pro
+            </Button>
+          ) : (
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
+                if (userTier === "FREE") {
+                  setShowUpgrade(true);
+                  return;
+                }
                 const key = getEncryptionKey();
                 if (!key) {
                   navigate("/settings");
@@ -168,22 +174,27 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
                   setCloudSyncDialogOpen(true);
                 }
               }}
-              disabled={!isAuthenticated || userTier === "FREE" || isSyncing}
+              disabled={!isAuthenticated || isSyncing}
               className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
             >
               <Cloud className="h-4 w-4" />
               Cloud Sync
               <Key className="h-3 w-3 opacity-60" />
             </Button>
-          </div>
-          <BatchActionsDropdown
-            hasSelectedRows={Object.keys(rowSelection).length > 0}
-            handleBatchEnable={handleBatchEnable}
-            handleBatchDisable={handleBatchDisable}
-            handleBatchDelete={handleBatchDelete}
-            isDeleting={isDeleting}
-          />
+          )}
+
+          {!isAuthenticated && !showUpgrade && (
+            <Button onClick={() => navigate("/auth")}>Login</Button>
+          )}
         </div>
+        <BatchActionsDropdown
+          hasSelectedRows={Object.keys(rowSelection).length > 0}
+          handleBatchEnable={handleBatchEnable}
+          handleBatchDisable={handleBatchDisable}
+          handleBatchDelete={handleBatchDelete}
+          isDeleting={isDeleting}
+        />
+      </div>
       {error ? (
         <RefreshMcpConfig error={error} onRetry={loadConfig} />
       ) : (
@@ -203,6 +214,7 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
             onLocalSync={handleSync}
             currentClient={selectedClient}
             isSyncing={isSyncing}
+            userTier={userTier}
           />
 
           <CloudSyncDialog

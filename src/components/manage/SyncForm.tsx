@@ -48,7 +48,9 @@ export function SyncForm({
   return (
     <div className="space-y-4 bg-background text-foreground">
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">From Client:</label>
+        <label className="text-sm font-medium text-foreground">
+          From Client:
+        </label>
         <Select
           value={syncFromClient}
           onValueChange={setSyncFromClient}
@@ -70,7 +72,9 @@ export function SyncForm({
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">To Client:</label>
+        <label className="text-sm font-medium text-foreground">
+          To Client:
+        </label>
         <Select
           value={syncToClient}
           onValueChange={setSyncToClient}
@@ -96,7 +100,10 @@ export function SyncForm({
           onCheckedChange={setOverrideMode}
           disabled={isSyncing}
         />
-        <label htmlFor="override-mode" className="text-sm font-medium text-foreground">
+        <label
+          htmlFor="override-mode"
+          className="text-sm font-medium text-foreground"
+        >
           Override all (replace existing configs)
         </label>
       </div>

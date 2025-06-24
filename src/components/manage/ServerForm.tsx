@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,13 +96,9 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="command"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t("serverForm.command")}
-              </FormLabel>
+              <FormLabel>{t("serverForm.command")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -113,9 +109,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
           name="args"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                {t("serverForm.arguments")}
-              </FormLabel>
+              <FormLabel>{t("serverForm.arguments")}</FormLabel>
               <FormControl>
                 <Textarea
                   className="w-full rounded-md shadow-sm focus:ring focus:ring-ring/50 border-input"
@@ -129,9 +123,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
         />
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <FormLabel>
-              {t("serverForm.env")}
-            </FormLabel>
+            <FormLabel>{t("serverForm.env")}</FormLabel>
             <Button
               type="button"
               variant="outline"
@@ -149,10 +141,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input
-                        placeholder="Key"
-                        {...field}
-                      />
+                      <Input placeholder="Key" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -164,10 +153,7 @@ export function ServerForm({ config, onSubmit, buttonName }: ServerFormProps) {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input
-                        placeholder="Value"
-                        {...field}
-                      />
+                      <Input placeholder="Value" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

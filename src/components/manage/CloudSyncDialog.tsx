@@ -96,13 +96,17 @@ export function CloudSyncDialog({
     >
       <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 dark:text-gray-100">Cloud Sync Configuration</DialogTitle>
+          <DialogTitle className="text-gray-900 dark:text-gray-100">
+            Cloud Sync Configuration
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Local Configurations:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Local Configurations:
+              </span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
             </div>
 
@@ -119,7 +123,9 @@ export function CloudSyncDialog({
 
                 {cloudSyncStatus.lastSync && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Last Sync:</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      Last Sync:
+                    </span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
                       {new Date(cloudSyncStatus.lastSync).toLocaleString()}
                     </span>
