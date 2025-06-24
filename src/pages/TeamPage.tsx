@@ -4,7 +4,9 @@ import { TeamMembersGuideDialog } from "@/components/team/TeamMembersGuideDialog
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { useTeam } from "@/hooks/useTeam";
+import { useUserStore } from "@/stores/userStore";
 import { RowSelectionState } from "@tanstack/react-table";
+import { open } from "@tauri-apps/plugin-shell";
 import { Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 export default function TeamPage() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const navigate = useNavigate();
+  const { user, loading: userLoading, fetchUser } = useUserStore();
 
   const {
     teams,
@@ -41,8 +44,18 @@ export default function TeamPage() {
   });
 
   useEffect(() => {
-    fetchMyTeams();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
+
+  useEffect(() => {
+    if (user?.tier !== "FREE") {
+      fetchMyTeams();
+    }
+  }, [user]);
+
+  if (userLoading) {
+    return <div className="p-6 text-center">Loading user info...</div>;
+  }
 
   return (
     <main className="bg-white dark:bg-black rounded-t-3xl min-h-[60vh] py-2">
@@ -62,18 +75,24 @@ export default function TeamPage() {
               />
               Refresh
             </Button>
+            {user?.tier !== "FREE" ? (
+              <Button
+                onClick={() => {
+                  resetForm();
+                  setIsCreateOpen(true);
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create Team
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={() => open("https://mcp-linker.store/pricing")}>
+                Upgrade to Create Teams
+              </Button>
+            )}
             <Button
               onClick={() => {
-                resetForm();
-                setIsCreateOpen(true);
-              }}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create Team
-            </Button>
-            <Button
-              onClick={() => {
-                navigate("/manage")
+                navigate("/manage");
               }}
             >
               Manage Servers
@@ -81,15 +100,24 @@ export default function TeamPage() {
           </div>
         </div>
 
-        <DataTable
-          columns={columns}
-          data={teams}
-          isLoading={isLoading}
-          searchPlaceholder="Search teams..."
-          emptyMessage="No teams found. Create your first team or ask to be added to an existing team."
-          rowSelection={rowSelection}
-          setRowSelection={setRowSelection}
-        />
+        {user?.tier !== "FREE" ? (
+          <DataTable
+            columns={columns}
+            data={teams}
+            isLoading={isLoading}
+            searchPlaceholder="Search teams..."
+            emptyMessage="No teams found. Create your first team or ask to be added to an existing team."
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+          />
+        ) : (
+          <div className="border p-6 text-center rounded-lg text-muted-foreground">
+            <p>You need to upgrade to view and manage teams.</p>
+            <Button className="mt-4" onClick={() => open("https://mcp-linker.store/pricing")}>
+              Upgrade to Pro or Team
+            </Button>
+          </div>
+        )}
 
         <TeamForm
           isOpen={isCreateOpen}

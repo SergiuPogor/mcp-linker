@@ -1,13 +1,13 @@
 const clients = [
-  { value: "claude_code", label: "Claude Code" },
-  { value: "claude", label: "Claude Desktop" },
-  { value: "cursor", label: "Cursor" },
-  { value: "cline", label: "Cline" },
-  { value: "vscode", label: "VSCode" },
-  { value: "windsurf", label: "Windsurf" },
-  { value: "cherrystudio", label: "Cherry Studio" },
-  { value: "mcphub", label: "mcphub.nvim" },
+  { value: "claude", label: "Claude Desktop", free: true },
+  { value: "cursor", label: "Cursor", free: true },
+  { value: "claude_code", label: "Claude Code", free: false },
+  { value: "cline", label: "Cline", free: true },
+  { value: "vscode", label: "VSCode", free: true },
+  { value: "windsurf", label: "Windsurf", free: true },
+  { value: "cherrystudio", label: "Cherry Studio", free: true },
+  { value: "mcphub", label: "mcphub.nvim", free: true },
 ];
 
 export const availableClients = clients;
-export const clientOptions = [...clients, { value: "custom", label: "Custom" }];
+export const clientOptions = [...clients, { value: "custom", label: "Custom", free: true }];

@@ -1,11 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Activity, Cloud, Server, Users } from "lucide-react";
 import { ReactNode } from "react";
-import { useNavigate } from "react-router";
 
 interface DashboardProps {
-  isAuthenticated: boolean;
   personalStats: {
     total: number;
     active: number;
@@ -33,7 +30,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
           title: "text-blue-600 dark:text-blue-400",
           value: "text-blue-900 dark:text-blue-100",
           icon: "bg-blue-100 dark:bg-blue-900",
-          iconColor: "text-blue-600 dark:text-blue-400"
+          iconColor: "text-blue-600 dark:text-blue-400",
         };
       case "secondary":
         return {
@@ -41,7 +38,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
           title: "text-green-600 dark:text-green-400",
           value: "text-green-900 dark:text-green-100",
           icon: "bg-green-100 dark:bg-green-900",
-          iconColor: "text-green-600 dark:text-green-400"
+          iconColor: "text-green-600 dark:text-green-400",
         };
       case "destructive":
         return {
@@ -49,7 +46,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
           title: "text-orange-600 dark:text-orange-400",
           value: "text-orange-900 dark:text-orange-100",
           icon: "bg-orange-100 dark:bg-orange-900",
-          iconColor: "text-orange-600 dark:text-orange-400"
+          iconColor: "text-orange-600 dark:text-orange-400",
         };
       case "outline":
         return {
@@ -57,7 +54,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
           title: "text-purple-600 dark:text-purple-400",
           value: "text-purple-900 dark:text-purple-100",
           icon: "bg-purple-100 dark:bg-purple-900",
-          iconColor: "text-purple-600 dark:text-purple-400"
+          iconColor: "text-purple-600 dark:text-purple-400",
         };
       default:
         return {
@@ -65,7 +62,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
           title: "text-muted-foreground",
           value: "text-foreground",
           icon: "bg-muted",
-          iconColor: "text-muted-foreground"
+          iconColor: "text-muted-foreground",
         };
     }
   };
@@ -80,7 +77,9 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
             <p className={`text-sm font-medium ${classes.title}`}>{title}</p>
             <p className={`text-2xl font-bold ${classes.value}`}>{value}</p>
           </div>
-          <div className={`h-8 w-8 ${classes.icon} rounded-full flex items-center justify-center`}>
+          <div
+            className={`h-8 w-8 ${classes.icon} rounded-full flex items-center justify-center`}
+          >
             <div className={classes.iconColor}>{icon}</div>
           </div>
         </div>
@@ -89,13 +88,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
   );
 };
 
-export const Dashboard = ({
-  isAuthenticated,
-  personalStats,
-  teamStats,
-}: DashboardProps) => {
-  const navigate = useNavigate();
-
+export const Dashboard = ({ personalStats, teamStats }: DashboardProps) => {
   // Prepare stat card data
   const statCards = [
     {
@@ -125,34 +118,11 @@ export const Dashboard = ({
   ];
 
   return (
-    <>
-      {/* Show login prompt if not authenticated */}
-      {!isAuthenticated ? (
-        <Card className="border-dashed border-2 border-yellow-300 dark:border-yellow-600 bg-yellow-50/50 dark:bg-yellow-950/50 col-span-full">
-          <CardContent className="text-center">
-            <p className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
-              Pro & Team Features
-            </p>
-            <p className="text-lg font-semibold text-yellow-900 dark:text-yellow-100">
-              Unlock cloud sync, multi-device access, and advanced templates
-            </p>
-            <Button
-              variant="outline"
-              className="mt-2"
-              onClick={() => navigate("/auth")}
-            >
-              Login to Explore
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          {/* Render all stat cards */}
-          {statCards.map((card, idx) => (
-            <StatCard key={idx} {...card} />
-          ))}
-        </div>
-      )}
-    </>
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+      {/* Render all stat cards */}
+      {statCards.map((card, idx) => (
+        <StatCard key={idx} {...card} />
+      ))}
+    </div>
   );
 };

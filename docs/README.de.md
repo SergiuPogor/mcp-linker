@@ -24,14 +24,6 @@ Füge MCP-Server (Model Context Protocol) hinzu, verwalte und synchronisiere sie
 
 ---
 
-### ☕ Kaffee spendieren
-
-Wenn dir MCP Linker gefällt, kannst du mir gerne einen Kaffee spendieren, um die Entwicklung zu unterstützen ❤️
-
-[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
-
----
-
 ## ✨ Warum MCP Linker?
 
 **Die schnellste Möglichkeit, deinen AI-Workflow zu verbessern**
@@ -71,9 +63,9 @@ Nutze Cloud Sync und mehr!
 
 ## 📸 Screenshots
 
-| Verwalten | 🔍 Server entdecken | ⚙️ Konfiguration |
-|---------------------|---------------------|------------------|
-![Manage](../images/manage.png)| ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| Verwalten                       | 🔍 Server entdecken             | ⚙️ Konfiguration                |
+| ------------------------------- | ------------------------------- | ------------------------------- |
+| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
 
 ---
 
@@ -120,5 +112,6 @@ Vielen Dank an unsere fantastische Community, die MCP Linker jeden Tag besser ma
 [![Contributors](https://contrib.rocks/image?repo=milisp/mcp-linker)](https://github.com/milisp/mcp-linker/graphs/contributors)
 
 **Besonderer Dank an:**
+
 - [@eltociear](https://github.com/eltociear) — Japanische Übersetzung
 - [@devilcoder01](https://github.com/devilcoder01) — Windows-Kompatibilität, UI-Verbesserungen, GitHub-Workflows 🛠️

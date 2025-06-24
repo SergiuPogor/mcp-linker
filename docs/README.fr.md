@@ -1,5 +1,3 @@
-
-
 # MCP Linker
 
 <div align="center">
@@ -26,14 +24,6 @@ Ajoutez, gérez et synchronisez des serveurs MCP (Model Context Protocol) sur de
 
 ---
 
-### ☕ Offrez-moi un café
-
-Si vous aimez MCP Linker, envisagez de m'offrir un café pour soutenir le développement ❤️
-
-[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
-
----
-
 ## ✨ Pourquoi choisir MCP Linker ?
 
 **La façon la plus rapide d'améliorer votre flux de travail IA**
@@ -53,7 +43,7 @@ Si vous aimez MCP Linker, envisagez de m'offrir un café pour soutenir le dével
 
 - Synchronisez les configurations de serveurs MCP sur tous vos clients MCP.
 - Les utilisateurs Pro obtiennent 🔐 la synchronisation cloud chiffrée.
-- Fonctionnalités de collaboration en équipe !**
+- Fonctionnalités de collaboration en équipe !\*\*
 
 ## 🚀 Démarrage rapide
 
@@ -73,9 +63,9 @@ Accédez à la synchronisation cloud, et plus encore !
 
 ## 📸 Captures d'écran
 
-| Gérer | 🔍 Découverte des serveurs | ⚙️ Configuration |
-|---------------------|---------------------|------------------|
-![Manage](../images/manage.png)| ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| Gérer                           | 🔍 Découverte des serveurs      | ⚙️ Configuration                |
+| ------------------------------- | ------------------------------- | ------------------------------- |
+| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
 
 ---
 
@@ -122,5 +112,6 @@ Merci à notre superbe communauté de contributeurs qui améliore MCP Linker cha
 [![Contributors](https://contrib.rocks/image?repo=milisp/mcp-linker)](https://github.com/milisp/mcp-linker/graphs/contributors)
 
 **Remerciements particuliers à :**
+
 - [@eltociear](https://github.com/eltociear) — Traduction japonaise
 - [@devilcoder01](https://github.com/devilcoder01) — Compatibilité Windows, amélioration UI, workflows GitHub 🛠️

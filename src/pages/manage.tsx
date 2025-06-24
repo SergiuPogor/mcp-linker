@@ -12,7 +12,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useStatsStore } from "@/stores/statsStore";
 import { useTabStore } from "@/stores/tabStore";
 import { useTeamStore } from "@/stores/team";
+import { useUserStore } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
+import { open } from "@tauri-apps/plugin-shell";
 import { Cloud, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,6 +37,7 @@ export default function McpManage() {
   const personalStats = useStatsStore((s) => s.personalStats);
   const teamStats = useStatsStore((s) => s.teamStats);
   const navigate = useNavigate();
+  const { user, loading: userLoading, fetchUser } = useUserStore();
 
   useEffect(() => {
     async function fetchKey() {
@@ -43,6 +46,10 @@ export default function McpManage() {
     }
     fetchKey();
   }, []);
+
+  useEffect(() => {
+    fetchUser(); // Fetch user info (with tier) on mount
+  }, [fetchUser]);
 
   const handleAddServer = () => {
     setIsDialogOpen(true);
@@ -75,11 +82,7 @@ export default function McpManage() {
         </div>
 
         {/* Dashboard */}
-        <Dashboard
-          isAuthenticated={isAuthenticated}
-          personalStats={personalStats}
-          teamStats={teamStats}
-        />
+        <Dashboard personalStats={personalStats} teamStats={teamStats} />
 
         <div className="flex-1 min-h-0">
           {/* personal */}
@@ -93,22 +96,37 @@ export default function McpManage() {
                 <TabsTrigger value="personalLocal">Local</TabsTrigger>
                 <TabsTrigger value="personalCloud">
                   <Cloud />
-                  Cloud
+                  Cloud {user?.tier === "FREE" && "🔒"}
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="personalLocal" className="flex-1 min-h-0">
-                <LocalTable />
+                <LocalTable userTier={user?.tier} isAuthenticated={isAuthenticated} />
               </TabsContent>
               <TabsContent value="personalCloud" className="flex-1 min-h-0">
                 {isAuthenticated ? (
-                  <PersonalCloudTable />
+                  user?.tier !== "FREE" ? (
+                    <PersonalCloudTable />
+                  ) : (
+                    <div>
+                      Upgrade to <strong>Pro</strong> to access Pro cloud
+                      servers.
+                      <br />
+                      <Button
+                        onClick={() => open("https://mcp-linker.store/pricing")}
+                        className="mt-2"
+                      >
+                        See Plans
+                      </Button>
+                    </div>
+                  )
                 ) : !encryptionKey ? (
                   <Button onClick={() => navigate("/settings")}>
                     go to generate Encryption Key
                   </Button>
                 ) : (
                   <div className="flex justify-center items-center h-full text-muted-foreground">
-                    Please log in to view your personal cloud servers.
+                    Please log in to view your personal cloud servers. 
+                    <Button onClick={() => navigate("/auth")} className="mt-2">Login</Button>
                   </div>
                 )}
               </TabsContent>
@@ -117,51 +135,74 @@ export default function McpManage() {
 
           {/* team */}
           <TabsContent value="team" className="flex-1 min-h-0">
-            <Tabs
-              value={teamTab}
-              onValueChange={setTeamTab}
-              className="h-full flex flex-col"
-            >
-              <div className="flex items-center space-x-4">
-                <TabsList className="flex space-x-2 bg-secondary rounded-md p-1">
-                  <TabsTrigger value="teamLocal" className="whitespace-nowrap">
-                    Local
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="teamCloud"
-                    className="flex items-center space-x-1 whitespace-nowrap"
-                  >
-                    <Cloud />
-                    <span>Cloud</span>
-                  </TabsTrigger>
-                </TabsList>
-                <span className="whitespace-nowrap font-semibold">Team</span>
-                <TeamSelector />
-                <ConfigFileSelector />
+            {user?.tier !== "TEAM" ? (
+              <div className="flex justify-center items-center h-full text-muted-foreground">
+                Upgrade to <strong>TEAM</strong> to access team cloud servers.
+                <br />
+                <Button
+                  onClick={() => open("https://mcp-linker.store/pricing")}
+                  className="mt-2"
+                >
+                  See Plans
+                </Button>
               </div>
-              <TabsContent value="teamLocal" className="flex-1 min-h-0">
-                <TeamLocalTable />
-              </TabsContent>
-              <TabsContent value="teamCloud" className="flex-1 min-h-0">
-                {!isAuthenticated ? (
-                  <div className="flex justify-center items-center h-full text-muted-foreground">
-                    Please log in to view your team cloud servers.
-                  </div>
-                ) : !selectedTeamId ? (
-                  <div className="flex flex-col justify-center items-center h-full text-muted-foreground space-y-4">
-                    <p>No team selected. Please select a team or create one.</p>
-                    <button
-                      onClick={() => navigate("/team")}
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            ) : (
+              <Tabs
+                value={teamTab}
+                onValueChange={setTeamTab}
+                className="h-full flex flex-col"
+              >
+                <div className="flex items-center space-x-4">
+                  <TabsList className="flex space-x-2 bg-secondary rounded-md p-1">
+                    <TabsTrigger
+                      value="teamLocal"
+                      className="whitespace-nowrap"
                     >
-                      Go to Teams
-                    </button>
-                  </div>
-                ) : (
-                  <TeamCloudTable />
-                )}
-              </TabsContent>
-            </Tabs>
+                      Local
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="teamCloud"
+                      className="flex items-center space-x-1 whitespace-nowrap"
+                    >
+                      <Cloud />
+                      <span>Cloud</span>
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <span className="whitespace-nowrap font-semibold">Team</span>
+                  <TeamSelector />
+                  <ConfigFileSelector />
+                </div>
+                <TabsContent value="teamLocal" className="flex-1 min-h-0">
+                  <TeamLocalTable />
+                </TabsContent>
+                <TabsContent value="teamCloud" className="flex-1 min-h-0">
+                  {!isAuthenticated ? (
+                    <div className="flex justify-center items-center h-full text-muted-foreground">
+                      Please log in to view your team cloud servers.
+                    </div>
+                  ) : !selectedTeamId ? (
+                    <div className="flex flex-col justify-center items-center h-full text-muted-foreground space-y-4">
+                      <p>
+                        No team selected. Please select a team or create one.
+                      </p>
+                      <button
+                        onClick={() => navigate("/team")}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                      >
+                        Go to Teams
+                      </button>
+                    </div>
+                  ) : userLoading ? (
+                    <div className="flex justify-center items-center h-full text-muted-foreground">
+                      Loading user info...
+                    </div>
+                  ) : (
+                    <TeamCloudTable />
+                  )}
+                </TabsContent>
+              </Tabs>
+            )}
           </TabsContent>
         </div>
       </Tabs>

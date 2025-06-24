@@ -4,7 +4,6 @@ import { LocalSyncDialog } from "@/components/manage/LocalSyncDialog";
 import { RefreshMcpConfig } from "@/components/manage/RefreshMcpConfig";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { useAuth } from "@/hooks/useAuth";
 import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
@@ -17,9 +16,13 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./ServerTableColumns";
 
-type LocalTableProps = {};
+type LocalTableProps = {
+  /** The current user's tier, e.g., 'FREE', 'PRO', etc. */
+  userTier?: string;
+  isAuthenticated: boolean;
+};
 
-export const LocalTable = ({}: LocalTableProps) => {
+export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
   const navigate = useNavigate();
   const { selectedClient, selectedPath } = useClientPathStore();
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
@@ -28,7 +31,6 @@ export const LocalTable = ({}: LocalTableProps) => {
   const [_tableInstance, setTableInstance] =
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const { isAuthenticated } = useAuth();
   const setPersonalStats = useStatsStore((s) => s.setPersonalStats);
 
   const {
@@ -133,20 +135,28 @@ export const LocalTable = ({}: LocalTableProps) => {
 
   return (
     <div className="flex flex-col">
-      {isAuthenticated ? (
         <div className="flex justify-between items-center">
           <div className="flex gap-3 items-center">
             <div className="h-6 w-px bg-border" />
+            {isAuthenticated ? 
+            userTier === "FREE" && <Button
+            onClick={() => open("https://mcp-linker.store/pricing")}
+            className="mt-2"
+          >
+            Upgrade to MCP Linker Pro
+          </Button> :
+            <Button onClick={() => navigate("/auth")}>Login</Button>}
             <Button
               variant="outline"
               size="sm"
               onClick={() => setLocalSyncDialogOpen(true)}
-              disabled={isSyncing}
+              disabled={!isAuthenticated || userTier === "FREE" || isSyncing}
               className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
             >
               <Monitor className="h-4 w-4" />
               Local Sync
             </Button>
+
             <Button
               variant="outline"
               size="sm"
@@ -158,7 +168,7 @@ export const LocalTable = ({}: LocalTableProps) => {
                   setCloudSyncDialogOpen(true);
                 }
               }}
-              disabled={isSyncing}
+              disabled={!isAuthenticated || userTier === "FREE" || isSyncing}
               className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
             >
               <Cloud className="h-4 w-4" />
@@ -174,11 +184,6 @@ export const LocalTable = ({}: LocalTableProps) => {
             isDeleting={isDeleting}
           />
         </div>
-      ) : (
-        <Button onClick={() => navigate("/auth")}>
-          Login to Sync Local or cloud
-        </Button>
-      )}
       {error ? (
         <RefreshMcpConfig error={error} onRetry={loadConfig} />
       ) : (

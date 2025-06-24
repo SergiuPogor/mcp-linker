@@ -25,14 +25,6 @@ MCP manage, one-click install and sync MCP (Model Context Protocol) servers acro
 
 ---
 
-### ☕ Buy Me a Coffee
-
-If you like MCP Linker, consider buying me a coffee to support continued development ❤️
-
-[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
-
----
-
 ## ✨ Why Choose MCP Linker?
 
 **The fastest way to supercharge your AI workflow**
@@ -52,7 +44,7 @@ If you like MCP Linker, consider buying me a coffee to support continued develop
 
 - Sync MCP server configuration across all your MCP clients.
 - Pro users get 🔐 Encrypted Cloud Sync.
-- Team collaboration features!**
+- Team collaboration features!\*\*
 
 ## 🚀 Quick Start
 
@@ -68,13 +60,13 @@ If you like MCP Linker, consider buying me a coffee to support continued develop
 ## 🚀 Upgrade to MCP-Linker Pro or Team
 
 Access cloud sync, and more!  
-👉 [View Tiers & Subscribe](https://mcp-linker.store/tiers)
+👉 [View Tiers & Subscribe](https://mcp-linker.store/pricing)
 
 ## 📸 Screenshots
 
-| Manage | 🔍 Server Discovery | ⚙️ Configuration |
-|---------------------|---------------------|------------------|
-![Manage](./images/manage.png)| ![Discover](./images/home.png) | ![Config](./images/config.png) |
+| Manage                         | 🔍 Server Discovery            | ⚙️ Configuration               |
+| ------------------------------ | ------------------------------ | ------------------------------ |
+| ![Manage](./images/manage.png) | ![Discover](./images/home.png) | ![Config](./images/config.png) |
 
 ---
 
@@ -121,5 +113,6 @@ We're grateful to our awesome community contributors who make MCP Linker better 
 [![Contributors](https://contrib.rocks/image?repo=milisp/mcp-linker)](https://github.com/milisp/mcp-linker/graphs/contributors)
 
 **Special thanks to:**
+
 - [@eltociear](https://github.com/eltociear) — Japanese translation
 - [@devilcoder01](https://github.com/devilcoder01) — Windows build compatibility, UI improvements, GitHub workflows 🛠️

@@ -7,12 +7,6 @@
 💖 如果你觉得 MCP-Linker 有用，欢迎点个 ⭐ Star 鼓励我们继续开发！  
 👉 [![stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker)
 
-### ☕ Buy Me a Coffee
-
-如果你喜欢这个项目，可以请我喝杯咖啡 ❤️
-
-[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
-
 ## 功能特点
 
 - 一键安装和配置 MCP 服务器
@@ -37,8 +31,8 @@
 
 ## 截图展示
 
-| 管理服务器 | 发现服务器 | 配置界面 |
-|------------|------------|------------|
+| 管理服务器                    | 发现服务器                  | 配置界面                      |
+| ----------------------------- | --------------------------- | ----------------------------- |
 | ![管理](../images/manage.png) | ![发现](../images/home.png) | ![配置](../images/config.png) |
 
 ## 开发指南

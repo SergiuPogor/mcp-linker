@@ -24,14 +24,6 @@
 
 ---
 
-### ☕ Buy Me a Coffee
-
-喜歡這個專案嗎？請我喝杯咖啡支持一下 ❤️
-
-[![Buy Me a Coffee](https://img.shields.io/badge/-Buy%20Me%20a%20Coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/wei40680f)
-
----
-
 ## ✨ 為什麼選擇 MCP Linker？
 
 **加速你的 AI 工具工作流程的最快方式**
@@ -71,9 +63,9 @@
 
 ## 📸 畫面截圖
 
-| 管理介面 | 🔍 探索伺服器 | ⚙️ 設定頁 |
-|---------------------|---------------------|------------------|
-![Manage](../images/manage.png)| ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| 管理介面                        | 🔍 探索伺服器                   | ⚙️ 設定頁                       |
+| ------------------------------- | ------------------------------- | ------------------------------- |
+| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
 
 ---
 
@@ -120,5 +112,6 @@ bun tauri dev
 [![Contributors](https://contrib.rocks/image?repo=milisp/mcp-linker)](https://github.com/milisp/mcp-linker/graphs/contributors)
 
 **特別感謝：**
+
 - [@eltociear](https://github.com/eltociear) — 日文翻譯
 - [@devilcoder01](https://github.com/devilcoder01) — Windows 相容性、介面改進、GitHub 自動化流程 🛠️
