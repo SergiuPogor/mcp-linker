@@ -6,25 +6,33 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useConsentStore } from "@/stores/consentStore";
+import { useEffect, useState } from "react";
 
 export function ConsentDialog() {
   const hasAgreed = useConsentStore((state) => state.hasAgreedToTerms);
-  const setHasAgreed = useConsentStore((state) => state.setHasAgreedToTerms);
-  const setTelemetryEnabled = useConsentStore(
-    (state) => state.setTelemetryEnabled,
-  );
+  const agreeToTerms = useConsentStore((state) => state.agreeToTerms);
+  const declineTerms = useConsentStore((state) => state.declineTerms);
+
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!hasAgreed) {
+      setOpen(true);
+    }
+  }, [hasAgreed]);
 
   const handleAgree = () => {
-    setHasAgreed(true); // This will also enable telemetry
+    agreeToTerms();
+    setOpen(false);
   };
 
   const handleDecline = () => {
-    setHasAgreed(true); // Mark as seen so dialog won't show again
-    setTelemetryEnabled(false); // Disable telemetry explicitly
+    declineTerms();
+    setOpen(false);
   };
 
   return (
-    <Dialog open={!hasAgreed}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogTitle>Terms and Conditions</DialogTitle>
         <div>

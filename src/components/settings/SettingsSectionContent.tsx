@@ -22,9 +22,12 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
 }) => {
   // Use zustand store for privacy state
   const telemetryEnabled = useConsentStore((state) => state.telemetryEnabled);
-  const setTelemetryEnabled = useConsentStore(
-    (state) => state.setTelemetryEnabled,
+  const toggleTelemetry = useConsentStore(
+    (state) => state.toggleTelemetry,
   );
+  const hasAgreedToTerms = useConsentStore((state) => state.hasAgreedToTerms);
+  const agreeToTerms = useConsentStore((state) => state.agreeToTerms);
+  const declineTerms = useConsentStore((state) => state.declineTerms);
 
   if (selectedSection === "encryption") {
     return (
@@ -50,7 +53,14 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
           <span>Allow anonymous usage data</span>
           <Switch
             checked={telemetryEnabled}
-            onCheckedChange={setTelemetryEnabled}
+            onCheckedChange={toggleTelemetry}
+          />
+        </div>
+        <div className="flex items-center space-x-4">
+          <span>I agree to terms</span>
+          <Switch
+            checked={hasAgreedToTerms}
+            onCheckedChange={(val) => (val ? agreeToTerms() : declineTerms())}
           />
         </div>
       </div>

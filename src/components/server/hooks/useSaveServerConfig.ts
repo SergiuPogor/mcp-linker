@@ -35,7 +35,7 @@ export function useSaveServerConfig() {
       } catch (e) {
         // already have
       }
-      incrementDownloads(currentServer.id);
+      incrementDownloads(currentServer.id, selectedClient, selectedServer);
       console.log("add server", new Date(), server);
     } catch (error) {
       console.error(error);
