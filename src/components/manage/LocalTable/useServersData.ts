@@ -18,8 +18,8 @@ export function useServersData(
           return false;
         if (selectedClient === "cherrystudio") {
           return !(
-            "isActived" in serverConfig &&
-            (serverConfig as any).isActived === false
+            "isActive" in serverConfig &&
+            (serverConfig as any).isActive === false
           );
         } else if (["cline", "roo_code"].includes(selectedClient)) {
           return !(

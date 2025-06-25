@@ -30,7 +30,7 @@ pub async fn update_disabled_mcp_server(
         return normalize_response_key(json, client);
     }
 
-    // cherrystudio: update mcpServers with isActived: false
+    // cherrystudio: update mcpServers with isActive: false
     if is_cherrystudio_client(client) {
         if !json.is_object() {
             json = json!({});
@@ -38,10 +38,10 @@ pub async fn update_disabled_mcp_server(
         if !json.as_object().unwrap().contains_key(key) {
             json[key] = json!({});
         }
-        // Set config and isActived: false
-        let mut config_with_isactived = config;
-        config_with_isactived["isActived"] = json!(false);
-        json[key][name] = config_with_isactived;
+        // Set config and isActive: false
+        let mut config_with_isactive = config;
+        config_with_isactive["isActive"] = json!(false);
+        json[key][name] = config_with_isactive;
         write_json_file(path, &json).await?;
         return normalize_response_key(json, client);
     }
@@ -87,7 +87,7 @@ pub async fn disable_mcp_server(path: &Path, client: &str, name: &str) -> Result
         return normalize_response_key(json, client);
     }
 
-    // cherrystudio: set isActived: false in mcpServers
+    // cherrystudio: set isActive: false in mcpServers
     if is_cherrystudio_client(client) {
         if !json.as_object().unwrap().contains_key(key)
             || !json[key].is_object()
@@ -95,8 +95,8 @@ pub async fn disable_mcp_server(path: &Path, client: &str, name: &str) -> Result
         {
             return Err(format!("Server '{}' not found in active servers", name));
         }
-        // Set isActived: false
-        json[key][name]["isActived"] = json!(false);
+        // Set isActive: false
+        json[key][name]["isActive"] = json!(false);
         write_json_file(path, &json).await?;
         return normalize_response_key(json, client);
     }
@@ -155,14 +155,14 @@ pub async fn enable_mcp_server(path: &Path, client: &str, name: &str) -> Result<
         return normalize_response_key(json, client);
     }
 
-    // cherrystudio: set isActived: true in mcpServers, or move from __disabled if not found
+    // cherrystudio: set isActive: true in mcpServers, or move from __disabled if not found
     if is_cherrystudio_client(client) {
         if json.as_object().unwrap().contains_key(key)
             && json[key].is_object()
             && json[key].as_object().unwrap().contains_key(name)
         {
-            // Set isActived: true
-            json[key][name]["isActived"] = json!(true);
+            // Set isActive: true
+            json[key][name]["isActive"] = json!(true);
             write_json_file(path, &json).await?;
             return normalize_response_key(json, client);
         }
@@ -172,7 +172,7 @@ pub async fn enable_mcp_server(path: &Path, client: &str, name: &str) -> Result<
             && json["__disabled"].as_object().unwrap().contains_key(name)
         {
             let mut server_config = json["__disabled"][name].clone();
-            server_config["isActived"] = json!(true);
+            server_config["isActive"] = json!(true);
             json["__disabled"].as_object_mut().unwrap().remove(name);
             if json["__disabled"].as_object().unwrap().is_empty() {
                 json.as_object_mut().unwrap().remove("__disabled");
@@ -252,14 +252,14 @@ pub async fn list_disabled_servers(path: &Path, client: &str) -> Result<Value, S
         return Ok(Value::Object(disabled));
     }
 
-    // cherrystudio: return all mcpServers with isActived: false
+    // cherrystudio: return all mcpServers with isActive: false
     if is_cherrystudio_client(client) {
         let mut disabled = serde_json::Map::new();
         if json.is_object() && json.as_object().unwrap().contains_key(key) {
             if let Some(servers_obj) = json[key].as_object() {
                 for (name, server) in servers_obj {
                     if server
-                        .get("isActived")
+                        .get("isActive")
                         .and_then(|v| v.as_bool())
                         == Some(false)
                     {

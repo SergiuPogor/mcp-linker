@@ -6,7 +6,7 @@ export type SseConfig = {
   url: string;
   headers?: Record<string, any>;
   disabled?: boolean;
-  isActived?: boolean;
+  isActive?: boolean;
 };
 
 // Type for stdio server
@@ -16,7 +16,7 @@ export type StdioServerConfig = {
   args: string[];
   env?: Record<string, any>;
   disabled?: boolean;
-  isActived?: boolean;
+  isActive?: boolean;
 };
 
 // Type for encrypted server configuration

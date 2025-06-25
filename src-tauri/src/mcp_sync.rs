@@ -101,14 +101,14 @@ pub async fn sync_mcp_config(
         // Clear __disabled
         to_json["__disabled"] = json!({});
     }
-    // If to_client is cherrystudio, move all __disabled servers to mcpServers with isActived: false, then clear __disabled
+    // If to_client is cherrystudio, move all __disabled servers to mcpServers with isActive: false, then clear __disabled
     if is_cherrystudio_client(&to_client) {
-        // English comment: Move all servers from __disabled to mcpServers with isActived: false, then clear __disabled
+        // English comment: Move all servers from __disabled to mcpServers with isActive: false, then clear __disabled
         if let Some(disabled_map) = to_json["__disabled"].as_object() {
             let mut to_add = vec![];
             for (k, v) in disabled_map.iter() {
                 let mut server = v.clone();
-                server["isActived"] = json!(false);
+                server["isActive"] = json!(false);
                 to_add.push((k.clone(), server));
             }
             // Insert into mcpServers
@@ -153,13 +153,13 @@ pub async fn sync_mcp_config(
             }
         }
     }
-    // If from_client is cherrystudio, move all mcpServers with isActived: false to __disabled and remove from mcpServers
+    // If from_client is cherrystudio, move all mcpServers with isActive: false to __disabled and remove from mcpServers
     if is_cherrystudio_client(&from_client) {
-        // English comment: Move all servers with isActived: false from mcpServers to __disabled, then remove them from mcpServers
+        // English comment: Move all servers with isActive: false from mcpServers to __disabled, then remove them from mcpServers
         let mut to_move = vec![];
         if let Some(servers_map) = to_json["mcpServers"].as_object() {
             for (k, v) in servers_map.iter() {
-                if v.get("isActived").and_then(|d| d.as_bool()) == Some(false) {
+                if v.get("isActive").and_then(|d| d.as_bool()) == Some(false) {
                     to_move.push((k.clone(), v.clone()));
                 }
             }
@@ -179,7 +179,7 @@ pub async fn sync_mcp_config(
                     server_no_isactived
                         .as_object_mut()
                         .unwrap()
-                        .remove("isActived");
+                        .remove("isActive");
                 }
                 disabled_map.insert(k, server_no_isactived);
             }

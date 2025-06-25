@@ -33,7 +33,7 @@ pub fn is_per_server_disabled_client(client: &str) -> bool {
     matches!(client, "cline" | "roo_code")
 }
 
-/// Returns true if the client is cherrystudio (uses per-server 'isActived' key)
+/// Returns true if the client is cherrystudio (uses per-server 'isActive' key)
 pub fn is_cherrystudio_client(client: &str) -> bool {
     client == "cherrystudio"
 }
