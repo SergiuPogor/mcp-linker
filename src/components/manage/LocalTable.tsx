@@ -49,13 +49,18 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
   } = useMcpConfig(selectedClient, selectedPath);
 
   const serversData = useMemo((): ServerTableData[] => {
-    const activeServers = Object.entries(config?.mcpServers ?? {}).map(
-      ([name, serverConfig]) =>
-        ({
-          name,
-          ...serverConfig,
-        }) as ServerTableData,
-    );
+    const activeServers = Object.entries(config?.mcpServers ?? {})
+  .filter(([_, serverConfig]) =>
+    selectedClient === "cline"
+      ? !("disabled" in serverConfig && serverConfig.disabled)
+      : true
+  )
+  .map(([name, serverConfig]) =>
+    ({
+      name,
+      ...serverConfig,
+    }) as ServerTableData,
+  );
     const disabledServersData = Object.entries(disabledServers ?? {}).map(
       ([name, serverConfig]) =>
         ({

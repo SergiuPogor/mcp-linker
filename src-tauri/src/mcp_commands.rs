@@ -2,7 +2,6 @@ use crate::client::ClientConfig;
 use crate::json_manager::JsonManager;
 use serde_json::json;
 use serde_json::Value;
-use std::path::PathBuf;
 
 #[tauri::command]
 pub async fn add_mcp_server(
@@ -74,14 +73,7 @@ pub async fn list_disabled_servers(
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
-    JsonManager::list_disabled_servers(file_path).await
-}
-
-#[tauri::command]
-pub fn check_mcplinker_config_exists() -> bool {
-    let home_dir = dirs::home_dir().unwrap_or_default();
-    let config_path: PathBuf = home_dir.join(".config/mcplinker/mcp.json");
-    config_path.exists()
+    JsonManager::list_disabled_servers(file_path, &client_name).await
 }
 
 #[tauri::command]

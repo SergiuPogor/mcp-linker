@@ -1,6 +1,7 @@
 use crate::client::ClientConfig;
 use crate::json_manager::JsonManager;
 use serde_json::{json, Value};
+use std::path::PathBuf;
 
 #[tauri::command]
 pub async fn read_json_file(client_name: String, path: Option<String>) -> Result<Value, String> {
@@ -52,4 +53,11 @@ pub async fn get_app_path(client_name: String, path: Option<String>) -> Result<S
     let file_path = app_config.get_path();
 
     Ok(file_path.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub fn check_mcplinker_config_exists() -> bool {
+    let home_dir = dirs::home_dir().unwrap_or_default();
+    let config_path: PathBuf = home_dir.join(".config/mcplinker/mcp.json");
+    config_path.exists()
 }

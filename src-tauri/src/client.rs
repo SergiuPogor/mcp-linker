@@ -70,6 +70,25 @@ impl ClientConfig {
             ("windsurf", _) => PathBuf::from(home).join(".codeium/windsurf/mcp_config.json"),
             ("cherrystudio", _) => PathBuf::from(home).join(".config/cherrystudio/mcp.json"),
             ("mcplinker", _) => PathBuf::from(home).join(".config/mcplinker/mcp.json"),
+            ("roo_code", Some(base_path)) => {
+                // For roo_code, if a path is provided, use path + .roo/mcp.json
+                if base_path.is_empty() {
+                    #[cfg(target_os = "macos")]
+                    {
+                        // On macOS, use the globalStorage path for roo_code
+                        PathBuf::from(&home)
+                            .join("Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
+                    }
+                    #[cfg(not(target_os = "macos"))]
+                    {
+                        // On other platforms, return empty path
+                        PathBuf::from("")
+                    }
+                } else {
+                    // If a base path is provided, use base_path + .roo/mcp.json
+                    PathBuf::from(base_path).join(".roo/mcp.json")
+                }
+            }
             (_, Some(path_str)) => {
                 if path_str.is_empty() {
                     PathBuf::from(&home).join("mcp.json")

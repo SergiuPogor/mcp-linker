@@ -5,6 +5,7 @@ export type SseConfig = {
   type: "http" | "sse";
   url: string;
   headers?: Record<string, any>;
+  disabled?: boolean;
 };
 
 // Type for stdio server
@@ -13,6 +14,7 @@ export type StdioServerConfig = {
   command: string;
   args: string[];
   env?: Record<string, any>;
+  disabled?: boolean;
 };
 
 // Type for encrypted server configuration

@@ -3,10 +3,11 @@ const clients = [
   { value: "cursor", label: "Cursor", free: true },
   { value: "claude_code", label: "Claude Code", free: false },
   { value: "cline", label: "Cline", free: true },
+  { value: "roo_code", label: "Roo Code", free: false },
   { value: "vscode", label: "VSCode", free: true },
   { value: "windsurf", label: "Windsurf", free: true },
-  { value: "cherrystudio", label: "Cherry Studio", free: true },
-  { value: "mcphub", label: "mcphub.nvim", free: true },
+  { value: "cherrystudio", label: "Cherry Studio", free: false },
+  { value: "mcphub", label: "mcphub.nvim", free: false },
 ];
 
 export const availableClients = clients;
