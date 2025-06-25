@@ -1,3 +1,4 @@
+use chrono::Utc;
 use serde_json::{json, Value};
 use std::path::Path;
 
@@ -25,6 +26,10 @@ pub async fn add_mcp_server(
     if json[key].as_object().unwrap().contains_key(name) {
         return Err(format!("Server '{}' already exists in '{}'", name, key));
     }
+
+    let mut config = config.clone();
+    config["_creator"] = json!("mcp_linker");
+    config["updated_at"] = json!(Utc::now().to_rfc3339());
 
     json[key][name] = config;
 
@@ -69,6 +74,9 @@ pub async fn update_mcp_server(
         && json[key].is_object()
         && json[key].as_object().unwrap().contains_key(name)
     {
+        let mut config = config.clone();
+        config["_creator"] = json!("mcp_linker");
+        config["updated_at"] = json!(Utc::now().to_rfc3339());
         json[key][name] = config;
     }
     // Check if server exists in disabled servers
@@ -76,6 +84,9 @@ pub async fn update_mcp_server(
         && json["__disabled"].is_object()
         && json["__disabled"].as_object().unwrap().contains_key(name)
     {
+        let mut config = config.clone();
+        config["_creator"] = json!("mcp_linker");
+        config["updated_at"] = json!(Utc::now().to_rfc3339());
         json["__disabled"][name] = config;
     }
     // If server doesn't exist in either section, add to active servers
@@ -83,6 +94,9 @@ pub async fn update_mcp_server(
         if !json.as_object().unwrap().contains_key(key) {
             json[key] = json!({});
         }
+        let mut config = config.clone();
+        config["_creator"] = json!("mcp_linker");
+        config["updated_at"] = json!(Utc::now().to_rfc3339());
         json[key][name] = config;
     }
 

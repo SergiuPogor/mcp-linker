@@ -136,9 +136,13 @@ export default function McpManage() {
           {/* team */}
           <TabsContent value="team" className="flex-1 min-h-0">
             {user?.tier !== "TEAM" ? (
-              <div className="flex justify-center items-center h-full text-muted-foreground">
-                Upgrade to <strong>TEAM</strong> to access team cloud servers.
-                <br />
+              <div className="flex flex-col justify-center items-center h-full text-center space-y-3 text-muted-foreground">
+                <p>
+                  Access to team cloud servers requires a <strong>TEAM</strong> upgrade.
+                </p>
+                <p className="text-sm font-semibold text-orange-500">
+                  Don’t let your team wait.
+                </p>
                 <Button
                   onClick={() => open("https://mcp-linker.store/pricing")}
                   className="mt-2"
