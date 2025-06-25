@@ -76,7 +76,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
 
       <div className="w-full flex items-center gap-3">
         <Link
-          to={user ? "/manage" : "/auth"}
+          to={user ? "/dashboard" : "/auth"}
           className={`flex items-center gap-3 flex-grow ${isCollapsed ? "justify-center" : ""}`}
         >
           {user?.user_metadata.avatar_url ? (

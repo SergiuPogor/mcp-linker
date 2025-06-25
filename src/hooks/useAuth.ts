@@ -99,7 +99,7 @@ export const useAuth = () => {
           );
           // Navigate to onboarding after successful sign in
           if (event === "SIGNED_IN") {
-            navigate("/onboarding", { replace: true });
+            navigate("/manage", { replace: true });
           }
           break;
         case "SIGNED_OUT":
