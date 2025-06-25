@@ -1,5 +1,5 @@
 import { Dashboard } from "@/components/manage/Dashboard";
-import { LocalTable } from "@/components/manage/LocalTable";
+import { LocalTable } from "@/components/manage/LocalTable/index";
 import { PersonalCloudTable } from "@/components/manage/PersonalCloudTable";
 import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
 import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";

@@ -6,8 +6,8 @@ const clients = [
   { value: "roo_code", label: "Roo Code", free: false },
   { value: "vscode", label: "VSCode", free: true },
   { value: "windsurf", label: "Windsurf", free: true },
-  { value: "cherrystudio", label: "Cherry Studio", free: false },
-  { value: "mcphub", label: "mcphub.nvim", free: false },
+  { value: "cherrystudio", label: "Cherry Studio", free: true },
+  { value: "mcphub", label: "mcphub.nvim", free: true },
 ];
 
 export const availableClients = clients;

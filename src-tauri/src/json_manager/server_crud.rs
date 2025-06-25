@@ -65,15 +65,17 @@ pub async fn update_mcp_server(
     }
 
     // Check if server exists in active servers
-    if json.as_object().unwrap().contains_key(key) 
-        && json[key].is_object() 
-        && json[key].as_object().unwrap().contains_key(name) {
+    if json.as_object().unwrap().contains_key(key)
+        && json[key].is_object()
+        && json[key].as_object().unwrap().contains_key(name)
+    {
         json[key][name] = config;
     }
     // Check if server exists in disabled servers
     else if json.as_object().unwrap().contains_key("__disabled")
         && json["__disabled"].is_object()
-        && json["__disabled"].as_object().unwrap().contains_key(name) {
+        && json["__disabled"].as_object().unwrap().contains_key(name)
+    {
         json["__disabled"][name] = config;
     }
     // If server doesn't exist in either section, add to active servers
@@ -81,7 +83,8 @@ pub async fn update_mcp_server(
         if !json.as_object().unwrap().contains_key(key) {
             json[key] = json!({});
         }
-        json[key][name] = config;    }
+        json[key][name] = config;
+    }
 
     write_json_file(path, &json).await?;
 
@@ -96,7 +99,7 @@ pub async fn batch_delete_mcp_servers(
     server_names: Vec<String>,
 ) -> Result<Value, String> {
     use super::utils::is_per_server_disabled_client;
-    
+
     let mut json = read_json_file(path).await?;
     let key = get_key_by_client(client);
 

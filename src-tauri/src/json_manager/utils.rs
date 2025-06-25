@@ -1,4 +1,4 @@
-use serde_json::{json, Value};
+use serde_json::Value;
 
 /// Normalize response key to mcpServers for consistent client API
 pub fn normalize_response_key(mut json: Value, client: &str) -> Result<Value, String> {
@@ -31,4 +31,9 @@ pub fn get_key_by_client(client: &str) -> &str {
 /// Returns true if the client uses per-server 'disabled' key instead of global __disabled section
 pub fn is_per_server_disabled_client(client: &str) -> bool {
     matches!(client, "cline" | "roo_code")
+}
+
+/// Returns true if the client is cherrystudio (uses per-server 'isActived' key)
+pub fn is_cherrystudio_client(client: &str) -> bool {
+    client == "cherrystudio"
 }

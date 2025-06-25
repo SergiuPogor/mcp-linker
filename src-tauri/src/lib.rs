@@ -17,6 +17,8 @@ mod git;
 mod installer;
 mod json_manager;
 mod mcp_commands;
+mod mcp_crud;
+mod mcp_sync;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -82,15 +84,15 @@ pub fn run() {
             cmd::write_json_file,
             cmd::get_app_path,
             cmd::check_mcplinker_config_exists,
-            mcp_commands::add_mcp_server,
-            mcp_commands::remove_mcp_server,
-            mcp_commands::update_mcp_server,
+            mcp_crud::add_mcp_server,
+            mcp_crud::remove_mcp_server,
+            mcp_crud::update_mcp_server,
+            mcp_crud::batch_delete_mcp_servers,
             mcp_commands::disable_mcp_server,
             mcp_commands::enable_mcp_server,
             mcp_commands::list_disabled_servers,
-            mcp_commands::sync_mcp_config,
-            mcp_commands::batch_delete_mcp_servers,
             mcp_commands::update_disabled_mcp_server,
+            mcp_sync::sync_mcp_config,
             installer::check_command_exists,
             installer::install_command,
             get_path_env,

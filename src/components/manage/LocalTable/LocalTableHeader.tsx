@@ -1,0 +1,64 @@
+// Header component for LocalTable actions
+// Always use English comments for code
+import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown";
+import { Button } from "@/components/ui/button";
+import { Cloud, Key, Monitor } from "lucide-react";
+import React from "react";
+
+interface LocalTableHeaderProps {
+  isSyncing: boolean;
+  rowSelection: Record<string, unknown>;
+  isDeleting: boolean;
+  onLocalSync: () => void;
+  onCloudSync: () => void;
+  handleBatchEnable: () => void;
+  handleBatchDisable: () => void;
+  handleBatchDelete: () => void;
+}
+
+export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
+  isSyncing,
+  rowSelection,
+  isDeleting,
+  onLocalSync,
+  onCloudSync,
+  handleBatchEnable,
+  handleBatchDisable,
+  handleBatchDelete,
+}) => {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="flex gap-3 items-center">
+        <div className="h-6 w-px bg-border" />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onLocalSync}
+          disabled={isSyncing}
+          className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
+        >
+          <Monitor className="h-4 w-4" />
+          Local Sync
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onCloudSync}
+          disabled={isSyncing}
+          className="flex items-center gap-2 hover:bg-accent hover:border-accent-foreground"
+        >
+          <Cloud className="h-4 w-4" />
+          Cloud Sync
+          <Key className="h-3 w-3 opacity-60" />
+        </Button>
+      </div>
+      <BatchActionsDropdown
+        hasSelectedRows={Object.keys(rowSelection).length > 0}
+        handleBatchEnable={handleBatchEnable}
+        handleBatchDisable={handleBatchDisable}
+        handleBatchDelete={handleBatchDelete}
+        isDeleting={isDeleting}
+      />
+    </div>
+  );
+};

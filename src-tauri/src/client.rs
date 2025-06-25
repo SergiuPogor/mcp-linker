@@ -94,7 +94,9 @@ impl ClientConfig {
                     PathBuf::from(&home).join("mcp.json")
                 } else {
                     let given_path = PathBuf::from(path_str);
-                    if given_path.is_file() || given_path.extension().map_or(false, |ext| ext == "json") {
+                    if given_path.is_file()
+                        || given_path.extension().map_or(false, |ext| ext == "json")
+                    {
                         given_path
                     } else {
                         given_path.join("mcp.json")

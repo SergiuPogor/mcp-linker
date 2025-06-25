@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { open } from "@tauri-apps/plugin-shell";
 import { Github } from "lucide-react";
 
-
 const fetchStarCount = async () => {
   const res = await fetch("https://api.github.com/repos/milisp/mcp-linker");
   if (!res.ok) throw new Error("Failed to fetch");

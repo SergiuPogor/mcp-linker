@@ -10,13 +10,11 @@ pub async fn read_json_file(path: &Path) -> Result<Value, String> {
     let content_result = fs::read_to_string(&path_buf).await;
 
     match content_result {
-        Ok(content) => {
-            task::spawn_blocking(move || {
-                serde_json::from_str(&content).map_err(|e| format!("Failed to parse JSON: {}", e))
-            })
-            .await
-            .map_err(|e| format!("Failed to run blocking task for JSON parsing: {}", e))?
-        },
+        Ok(content) => task::spawn_blocking(move || {
+            serde_json::from_str(&content).map_err(|e| format!("Failed to parse JSON: {}", e))
+        })
+        .await
+        .map_err(|e| format!("Failed to run blocking task for JSON parsing: {}", e))?,
         Err(e) => {
             if e.kind() == ErrorKind::NotFound {
                 Ok(json!({})) // Return empty JSON for Not Found
@@ -35,9 +33,9 @@ pub async fn write_json_file(path: &Path, content: &Value) -> Result<(), String>
     // Ensure directory exists
     if let Some(parent) = path_buf.parent() {
         if !parent.exists() {
-            fs::create_dir_all(parent).await.map_err(|e| {
-                format!("Failed to create directory: {}", e)
-            })?;
+            fs::create_dir_all(parent)
+                .await
+                .map_err(|e| format!("Failed to create directory: {}", e))?;
         }
     }
 
@@ -45,10 +43,14 @@ pub async fn write_json_file(path: &Path, content: &Value) -> Result<(), String>
     let json_string_result = task::spawn_blocking(move || {
         serde_json::to_string_pretty(&content_cloned)
             .map_err(|e| format!("Failed to serialize JSON: {}", e))
-    }).await.map_err(|e| format!("Failed to run blocking task for JSON serialization: {}", e))?;
+    })
+    .await
+    .map_err(|e| format!("Failed to run blocking task for JSON serialization: {}", e))?;
 
     let json_string = json_string_result?; // Handle the inner Result from the blocking task
 
     // Write the JSON file asynchronously
-    fs::write(&path_buf, json_string).await.map_err(|e| format!("Failed to write file: {}", e))
+    fs::write(&path_buf, json_string)
+        .await
+        .map_err(|e| format!("Failed to write file: {}", e))
 }

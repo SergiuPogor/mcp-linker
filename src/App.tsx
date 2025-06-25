@@ -1,6 +1,9 @@
+import { GlobalDialog } from "@/components/common/GlobalDialog";
 import CommandChecker from "@/components/settings/CommandChecker";
+import { ConsentDialog } from "@/components/settings/consent";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
+import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -29,6 +32,7 @@ function App() {
   const { triggerPendingDeepLink } = useUnifiedDeepLink();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const isTauri = typeof window.__TAURI__ !== "undefined";
+  const { open, type, hideDialog } = useGlobalDialogStore();
 
   useEffect(() => {
     if (import.meta.env.VITE_IS_CHECK_UPDATE === "true") {
@@ -46,7 +50,7 @@ function App() {
         {isTauri && <CommandChecker />}
         <TriggerOnMount onReady={triggerPendingDeepLink} />
         <Layout />
-
+        <GlobalDialog open={open} type={type || "login"} onClose={hideDialog} />
         {updateInfo && (
           <UpdateDialog
             isOpen={true}
@@ -56,6 +60,7 @@ function App() {
             releaseUrl={updateInfo.releaseUrl}
           />
         )}
+        <ConsentDialog />
       </ThemeProvider>
     </QueryClientProvider>
   );
