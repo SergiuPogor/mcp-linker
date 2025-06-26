@@ -44,7 +44,7 @@ MCP manage, one-click install and sync MCP (Model Context Protocol) servers acro
 
 - Sync MCP server configuration across all your MCP clients.
 - Pro users get 🔐 Encrypted Cloud Sync.
-- Team collaboration features!\*\*
+- Team collaboration features!
 
 ## 🚀 Quick Start
 
@@ -103,6 +103,21 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 - **[💬 Join our Discord Community](https://discord.gg/UqXeVqUKQq)** — Get help, share ideas, and connect with other users
 - **[🐛 Report Issues](https://github.com/milisp/mcp-linker/issues)** — Help us improve
+
+---
+
+📅 Roadmap
+
+Planned features for upcoming versions:
+
+- 📋 Copy Server Config — Easily copy configurations to share or backup
+- 📥 Import Server Config — Load server config from local files
+- 🌐 Auto Import via GitHub URL — Sync server config directly from a public GitHub link
+- 🔁 Accept Server Config via PR or Issue — Let users submit server configs to the marketplace
+- 🧩 Input Args Form UI — Auto-generate simple forms based on inputArgs, like MCPhub Desktop
+- 🐳 One-Click Deploy to Docker — Launch server via MCPHub using Docker with one click
+
+💡 Have more ideas? [Open an issue](https://github.com/milisp/mcp-linker/issues) or join the discussion on [Discord](https://discord.gg/UqXeVqUKQq)!
 
 ---
 
