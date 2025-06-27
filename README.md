@@ -2,6 +2,12 @@
 
 MCP manage, one-click install and sync MCP (Model Context Protocol) servers across AI clients like Claude Code and Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
+> A new way to install MCP server for CLaude Desktop
+
+> [Desktop Extensions](https://www.anthropic.com/engineering/desktop-extensions) One-click MCP server installation for Claude Desktop
+
+[awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome Claude Desktop Extensions (.dxt files), tools, and resources - by milisp
+
 <div align="center">
 
 ![MCP Linker Logo](./public/logo.png)
@@ -59,8 +65,7 @@ MCP manage, one-click install and sync MCP (Model Context Protocol) servers acro
 
 ## 🚀 Upgrade to MCP-Linker Pro or Team
 
-Access cloud sync, and more!  
-👉 [View Tiers & Subscribe](https://mcp-linker.store/pricing)
+👉 [Check out pricing plans](./early-access.md) or [sign up for early access](https://mcp-linker.store/early-access).
 
 ## 📸 Screenshots
 
