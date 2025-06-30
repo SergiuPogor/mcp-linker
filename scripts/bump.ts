@@ -8,7 +8,7 @@ if (!newVersion) {
   process.exit(1);
 }
 
-const configPath = "src-tauri/tauri.conf.json";
+const configPath = "tauri-app/src-tauri/tauri.conf.json";
 const json = JSON.parse(readFileSync(configPath, "utf8"));
 
 json.version = newVersion;

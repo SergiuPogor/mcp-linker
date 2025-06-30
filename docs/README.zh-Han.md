@@ -4,7 +4,7 @@
 
 新增、管理並同步 MCP（Model Context Protocol）伺服器設定至 Claude Desktop、Cursor、Cline 等 AI 客戶端，透過輕量級的 Tauri 圖形介面，內建 MCP 伺服器市集。
 
-![MCP Linker Logo](../public/logo.png)
+![MCP Linker Logo](../images/logo.png)
 
 ⚡️ **告別繁瑣的手動操作！**
 

@@ -4,7 +4,7 @@
 
 Füge MCP-Server (Model Context Protocol) hinzu, verwalte und synchronisiere sie über AI-Clients wie Claude Desktop, Cursor und Cline – alles über eine schlanke Tauri-GUI mit integriertem MCP-Server-Marktplatz.
 
-![MCP Linker Logo](../public/logo.png)
+![MCP Linker Logo](../images/logo.png)
 
 ⚡️ **Nie wieder Copy & Paste**
 

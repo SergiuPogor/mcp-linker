@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/tauri-ci-win.yml'
-      - 'src/**'
-      - 'src-tauri/**'
-      - 'package.json'
+      - ".github/workflows/tauri-ci-win.yml"
+      - "tauri-app/src/**"
+      - "tauri-app/src-tauri/**"
+      - "tauri-app/package.json"
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # set BUILD_KEY auto run 
+      # set BUILD_KEY auto run
       - name: Set build type
         id: build-type
         run: |
@@ -49,11 +49,11 @@ jobs:
           irm https://bun.sh/install.ps1 | iex
           echo "$HOME\.bun\bin" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
-      - name: Install dependencies bun
-        run: bun install
-
-      - name: Check Tauri version
-        run: bun tauri --version
+      - name: Install dependencies bun and Check Tauri version
+        run: |
+          bun install
+          bun tauri --version
+        working-directory: tauri-app
 
       - name: Set environment variables
         run: |
@@ -65,11 +65,12 @@ jobs:
 
       - name: Build Rust app with bun
         run: bun tauri build
-        
+        working-directory: tauri-app
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MCP-Linker-Windows-CI
           path: |
-            src-tauri/target/release/bundle/**/*.exe
-            src-tauri/target/release/bundle/**/*.msi
+            tauri-app/src-tauri/target/release/bundle/**/*.exe
+            tauri-app/src-tauri/target/release/bundle/**/*.msi

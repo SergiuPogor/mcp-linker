@@ -4,7 +4,7 @@
 
 Agrega, administra y sincroniza servidores MCP (Model Context Protocol) entre clientes de IA como Claude Desktop, Cursor y Cline, todo a través de una interfaz Tauri ligera con un mercado MCP incorporado.
 
-![MCP Linker Logo](../public/logo.png)
+![MCP Linker Logo](../images/logo.png)
 
 ⚡️ **Di adiós al copiar y pegar**
 
