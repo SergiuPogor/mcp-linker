@@ -6,16 +6,18 @@ import { User, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Brand } from "../brand";
 import { ModeToggle } from "../ui/mode-toggle";
 
 interface SidebarProps {
   navs: Nav[];
+  isCollapsed: boolean;
 }
 
-export const Sidebar = ({ navs }: SidebarProps) => {
+export const Sidebar = ({
+  navs,
+  isCollapsed,
+}: SidebarProps) => {
   const { t } = useTranslation<"translation">();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -24,25 +26,24 @@ export const Sidebar = ({ navs }: SidebarProps) => {
 
   return (
     <div
-      className={`flex flex-col justify-between h-screen bg-background border-r p-2 transition-all duration-300 ${isCollapsed ? "w-16" : "w-56"}`}
-    >
+  className={`flex flex-col justify-between h-screen bg-background border-r px-2 transition-all duration-300 ${isCollapsed ? "w-12" : "w-56"}`}
+>
       <div>
-        <Brand isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-
-        <div className="relative mb-4">
+        <div className="relative">
           <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
-            🔍
           </span>
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && searchQuery.trim()) {
-                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                navigate(
+                  `/search?q=${encodeURIComponent(searchQuery.trim())}`,
+                );
               }
             }}
             placeholder={t("searchPlaceholder")}
-            className="pl-10 pr-4 w-full"
+            className="w-full"
           />
           {searchQuery && (
             <button
@@ -55,7 +56,7 @@ export const Sidebar = ({ navs }: SidebarProps) => {
           )}
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-">
           {navs.map((nav) => (
             <Link key={nav.id} to={nav.path || `/${nav.id}`} className="w-full">
               <Button
@@ -67,14 +68,15 @@ export const Sidebar = ({ navs }: SidebarProps) => {
                 className={`w-full justify-start p-2 ${isCollapsed ? "justify-center" : ""}`}
               >
                 <span className="text-xl">{nav.icon}</span>
-                {!isCollapsed && <span className="ml-2">{nav.name}</span>}
+                {!isCollapsed && <span>{nav.name}</span>}
               </Button>
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="w-full flex items-center gap-3">
+      {/* user info */}
+      <div className="flex items-center gap-3 mb-12">
         <Link
           to={user ? "/dashboard" : "/auth"}
           className={`flex items-center gap-3 flex-grow ${isCollapsed ? "justify-center" : ""}`}
