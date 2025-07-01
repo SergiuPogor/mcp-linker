@@ -39,10 +39,10 @@ export function ConsentDialog() {
           Please agree to the terms before using the app.
           <br />
           <br />
-          <b>Usage data may be collected to improve the experience.</b>
+          <b>server name and client name data may be collected to improve the experience.</b>
           <br />
           By clicking Agree, you consent to the collection of usage data as
-          described.
+          described. You can disable any time at setting page.
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleDecline}>

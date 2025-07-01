@@ -221,7 +221,7 @@ export default function AuthPage() {
       </div>
       <span className="text-sm text-gray-500 mt-4">
         We respect your privacy. Usage data may be collected to improve the
-        experience.
+        experience. which data we collect, server name and client name
       </span>
     </div>
   );

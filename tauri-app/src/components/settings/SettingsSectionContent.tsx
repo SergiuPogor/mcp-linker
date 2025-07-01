@@ -54,6 +54,7 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
             onCheckedChange={toggleTelemetry}
           />
         </div>
+        <div>Only server name and client name will be collect</div>
         <div className="flex items-center space-x-4">
           <span>I agree to terms</span>
           <Switch

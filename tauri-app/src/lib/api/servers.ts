@@ -65,23 +65,20 @@ export async function fetchServers(
   }
 }
 
-export async function updateServerStats(path: string, serverId: string, clientName: string, serverName: string) {
+export async function incrementDownloads(serverId: string, clientName: string, serverName: string) {
   const { hasAgreedToTerms } = useConsentStore.getState();
   const payload = {
-    client_name: hasAgreedToTerms ? clientName : "",
-    server_name: hasAgreedToTerms ? serverName : "",
+    client_name: clientName,
+    server_name: serverName,
   };
-  
-  console.log("hasAgreedToTerms", hasAgreedToTerms, payload);
-  
-  try {
-    const response = await api.post(`/servers/${serverId}${path}`, payload);
-    console.log("Stats updated:", response.data);
-  } catch (error) {
-    console.error("Error updating server stats:", error);
-  }
-}
 
-export async function incrementDownloads(serverId: string, clientName: string, serverName: string) {
-  await updateServerStats("/download-count", serverId, clientName, serverName);
+  // only send client_name and server_name with hasAgreedToTerms
+  if (hasAgreedToTerms) {
+    try {
+      const response = await api.post(`/servers/${serverId}/download-count`, payload);
+      console.log("Stats updated:", response.data);
+    } catch (error) {
+      console.error("Error updating server stats:", error);
+    }
+  }
 }
