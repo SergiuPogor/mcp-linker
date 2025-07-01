@@ -1,5 +1,5 @@
 use crate::client::ClientConfig;
-use crate::json_manager::utils::{is_per_server_disabled_client, is_cherrystudio_client};
+use crate::json_manager::utils::{is_cherrystudio_client, is_per_server_disabled_client};
 use crate::json_manager::JsonManager;
 use serde_json::json;
 

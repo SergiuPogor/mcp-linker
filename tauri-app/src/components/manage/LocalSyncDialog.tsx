@@ -18,7 +18,6 @@ import { availableClients } from "@/constants/clients";
 import { needspathClient } from "@/lib/data";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { open as openUrl } from "@tauri-apps/plugin-shell";
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -33,7 +32,6 @@ interface LocalSyncDialogProps {
   ) => Promise<void>;
   currentClient?: string;
   isSyncing: boolean;
-  userTier?: string;
 }
 
 export function LocalSyncDialog({
@@ -42,7 +40,6 @@ export function LocalSyncDialog({
   onLocalSync,
   currentClient,
   isSyncing,
-  userTier,
 }: LocalSyncDialogProps) {
   const [syncFromClient, setSyncFromClient] = useState<string>(() => {
     // Load from localStorage on initial render
@@ -296,8 +293,7 @@ export function LocalSyncDialog({
                 !syncFromClient ||
                 !syncToClient ||
                 syncFromClient === syncToClient ||
-                isSyncing ||
-                (userTier === "FREE" && syncToClient === "claude_code")
+                isSyncing
               }
             >
               {isSyncing ? (
@@ -309,15 +305,6 @@ export function LocalSyncDialog({
                 "Sync"
               )}
             </Button>
-
-            {userTier === "FREE" && syncToClient === "claude_code" && (
-              <Button
-                onClick={() => openUrl("https://mcp-linker.store/pricing")}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white"
-              >
-                Upgrade to Pro
-              </Button>
-            )}
           </div>
         </div>
       </DialogContent>

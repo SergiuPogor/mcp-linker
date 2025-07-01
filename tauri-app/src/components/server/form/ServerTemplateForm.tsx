@@ -1,7 +1,6 @@
 import type { ServerConfig } from "@/types";
 import { LabeledInput } from "../../shared/LabeledInput";
 import {
-  SellInfoSection,
   ServerTypeSelector,
   StdioConfigSection,
 } from "../config";
@@ -13,7 +12,6 @@ interface ServerTemplateFormProps {
   serverType: string;
   setServerType: (value: string) => void;
   config: ServerConfig;
-  isSell: boolean;
   projectDescription: string;
   setProjectDescription: (value: string) => void;
   projectUrl: string;
@@ -36,11 +34,6 @@ export const ServerTemplateForm = ({
   serverType,
   setServerType,
   config,
-  isSell,
-  projectDescription,
-  setProjectDescription,
-  projectUrl,
-  setProjectUrl,
   handleArgsChange,
   handleCommandChange,
   handleUrl,
@@ -50,7 +43,6 @@ export const ServerTemplateForm = ({
   setEnvValues,
   headerValues,
   setHeaderValues,
-  setSelectedCategoryId,
 }: ServerTemplateFormProps) => {
   return (
     <div>
@@ -59,16 +51,6 @@ export const ServerTemplateForm = ({
         value={serverName}
         onChange={setServerName}
       />
-
-      {isSell && (
-        <SellInfoSection
-          projectDescription={projectDescription}
-          setProjectDescription={setProjectDescription}
-          projectUrl={projectUrl}
-          setProjectUrl={setProjectUrl}
-          setSelectedCategoryId={setSelectedCategoryId}
-        />
-      )}
 
       <ServerTypeSelector
         serverType={serverType}

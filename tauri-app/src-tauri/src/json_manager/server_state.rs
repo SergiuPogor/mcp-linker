@@ -2,7 +2,10 @@ use serde_json::{json, Value};
 use std::path::Path;
 
 use super::file_io::{read_json_file, write_json_file};
-use super::utils::{get_key_by_client, is_per_server_disabled_client, normalize_response_key, is_cherrystudio_client};
+use super::utils::{
+    get_key_by_client, is_cherrystudio_client, is_per_server_disabled_client,
+    normalize_response_key,
+};
 
 /// Update a disabled MCP server configuration
 pub async fn update_disabled_mcp_server(
@@ -184,7 +187,10 @@ pub async fn enable_mcp_server(path: &Path, client: &str, name: &str) -> Result<
             write_json_file(path, &json).await?;
             return normalize_response_key(json, client);
         }
-        return Err(format!("Server '{}' not found in active or disabled servers", name));
+        return Err(format!(
+            "Server '{}' not found in active or disabled servers",
+            name
+        ));
     }
 
     // Default: move from __disabled section to active
@@ -258,11 +264,7 @@ pub async fn list_disabled_servers(path: &Path, client: &str) -> Result<Value, S
         if json.is_object() && json.as_object().unwrap().contains_key(key) {
             if let Some(servers_obj) = json[key].as_object() {
                 for (name, server) in servers_obj {
-                    if server
-                        .get("isActive")
-                        .and_then(|v| v.as_bool())
-                        == Some(false)
-                    {
+                    if server.get("isActive").and_then(|v| v.as_bool()) == Some(false) {
                         disabled.insert(name.clone(), server.clone());
                     }
                 }

@@ -9,8 +9,6 @@ interface DiscoveryHeaderProps {
   direction: string;
   onSortChange: (sort: string, direction: string) => void;
   onAddServer: () => void;
-  onSellServer: () => void;
-  isAuthenticated?: boolean;
 }
 
 export const DiscoveryHeader = ({
@@ -18,8 +16,6 @@ export const DiscoveryHeader = ({
   direction,
   onSortChange,
   onAddServer,
-  onSellServer,
-  isAuthenticated = false,
 }: DiscoveryHeaderProps) => {
   const { t } = useTranslation();
 
@@ -51,12 +47,6 @@ export const DiscoveryHeader = ({
         />
         <div className="flex gap-2">
           <Button onClick={onAddServer}>{t("addCustomServer")}</Button>
-          <Button
-            onClick={onSellServer}
-            title={!isAuthenticated ? t("loginRequired") : undefined}
-          >
-            {t("submit")}
-          </Button>
         </div>
       </div>
     </div>

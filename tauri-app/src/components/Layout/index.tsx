@@ -16,7 +16,7 @@ const Layout = () => {
   const { t } = useTranslation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const {isMacOS} = usePlatform()
+  const { isMacOS } = usePlatform();
 
   // Get navigation routes with icons
   const navs = getNavigationRoutes(t as (key: string, options?: any) => string);
@@ -26,17 +26,19 @@ const Layout = () => {
     <div className="flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 overflow-hidden">
       {/* Header Controls */}
       <div
-       id="titlebar" 
+        id="titlebar"
         className={`flex justify-between pt-2 ${
-          isMacOS ? 'pl-20 pr-2' : 'px-2'
+          isMacOS ? "pl-20 pr-2" : "px-2"
         } shrink-0 items-center`}
       >
         <span className="flex">
-
-        <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="pr-2">
-          <PanelLeft size={20} />
-        </button>
-        <ClientSelector />
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="pr-2"
+          >
+            <PanelLeft size={20} />
+          </button>
+          <ClientSelector />
         </span>
         {needspathClient.includes(selectedClient) && <PathSelector />}
         <LangSelect />
@@ -45,10 +47,7 @@ const Layout = () => {
       {/* Main content area: sidebar + main */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar on the left */}
-        <Sidebar
-          navs={navs}
-          isCollapsed={sidebarCollapsed}
-        />
+        <Sidebar navs={navs} isCollapsed={sidebarCollapsed} />
 
         {/* Main content on the right */}
         <div className="flex-1 flex flex-col overflow-hidden">

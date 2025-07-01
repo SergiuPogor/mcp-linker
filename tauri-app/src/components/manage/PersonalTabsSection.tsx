@@ -1,0 +1,64 @@
+import { LocalTable } from "@/components/manage/LocalTable/index";
+import { PersonalCloudTable } from "@/components/manage/PersonalCloudTable";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Cloud } from "lucide-react";
+
+/**
+ * Props for PersonalTabsSection component.
+ */
+interface PersonalTabsSectionProps {
+  personalTab: string;
+  setPersonalTab: (tab: string) => void;
+  user: any;
+  isAuthenticated: boolean;
+  encryptionKey: string | null;
+  navigate: (to: any) => void;
+}
+
+/**
+ * Component for rendering the personal tabs and tables.
+ */
+export function PersonalTabsSection({
+  personalTab,
+  setPersonalTab,
+  user,
+  isAuthenticated,
+  encryptionKey,
+  navigate,
+}: PersonalTabsSectionProps) {
+  return (
+    <Tabs
+      value={personalTab}
+      onValueChange={setPersonalTab}
+      className="h-full flex flex-col"
+    >
+      <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
+        <TabsTrigger value="personalLocal">Local</TabsTrigger>
+        <TabsTrigger value="personalCloud">
+          <Cloud />
+          Cloud {user?.tier === "FREE" && "🔒"}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="personalLocal" className="flex-1 min-h-0">
+        <LocalTable user={user} isAuthenticated={isAuthenticated} />
+      </TabsContent>
+      <TabsContent value="personalCloud" className="flex-1 min-h-0">
+        {isAuthenticated ? (
+          <PersonalCloudTable />
+        ) : !encryptionKey ? (
+          <Button onClick={() => navigate("/settings")}>
+            go to generate Encryption Key
+          </Button>
+        ) : (
+          <div className="flex justify-center items-center h-full text-muted-foreground">
+            Please log in to view your personal cloud servers.
+            <Button onClick={() => navigate("/auth")} className="mt-2">
+              Login
+            </Button>
+          </div>
+        )}
+      </TabsContent>
+    </Tabs>
+  );
+}

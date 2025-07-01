@@ -13,10 +13,7 @@ interface SidebarProps {
   isCollapsed: boolean;
 }
 
-export const Sidebar = ({
-  navs,
-  isCollapsed,
-}: SidebarProps) => {
+export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
   const { t } = useTranslation<"translation">();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,20 +23,17 @@ export const Sidebar = ({
 
   return (
     <div
-  className={`flex flex-col justify-between h-screen bg-background border-r px-2 transition-all duration-300 ${isCollapsed ? "w-12" : "w-56"}`}
->
+      className={`flex flex-col justify-between h-screen bg-background border-r px-2 transition-all duration-300 ${isCollapsed ? "w-12" : "w-56"}`}
+    >
       <div>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
-          </span>
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></span>
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && searchQuery.trim()) {
-                navigate(
-                  `/search?q=${encodeURIComponent(searchQuery.trim())}`,
-                );
+                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
               }
             }}
             placeholder={t("searchPlaceholder")}

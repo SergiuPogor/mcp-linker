@@ -12,7 +12,7 @@ import { ServerConfig, ServerTableData } from "@/types";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
 import { Cloud, Key } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./TeamServerTableColumns";
 
@@ -42,19 +42,20 @@ export const TeamLocalTable = ({}: TeamLocalTableProps) => {
   const setTeamStats = useStatsStore((s) => s.setTeamStats);
 
   const serversData = useMemo((): ServerTableData[] => {
-    const activeServers = Object.entries(config?.mcpServers ?? {}).map(
+    return Object.entries(config?.mcpServers ?? {}).map(
       ([name, serverConfig]) =>
         ({
           name,
           ...serverConfig,
         }) as ServerTableData,
     );
-    // Set stats directly to Zustand store
+  }, [config?.mcpServers]);
+
+  useEffect(() => {
     setTeamStats({
-      total: activeServers.length,
+      total: serversData.length,
     });
-    return [...activeServers];
-  }, [config?.mcpServers, setTeamStats]);
+  }, [serversData.length, setTeamStats]);
 
   const { isSyncing, handleCloudUpload: originalHandleCloudUpload } =
     useTeamCloudSync(serversData);

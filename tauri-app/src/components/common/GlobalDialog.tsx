@@ -6,12 +6,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { api } from "@/lib/api";
+import { open as openUrl } from "@tauri-apps/plugin-shell";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 /**
  * GlobalDialog for login or upgrade prompts
  * @param open - whether dialog is open
- * @param type - 'login' | 'upgrade'
+ * @param type - 'login' | 'upgrade' | 'startTrial'
  * @param onClose - close handler
  */
 export function GlobalDialog({
@@ -20,45 +24,80 @@ export function GlobalDialog({
   onClose,
 }: {
   open: boolean;
-  type: "login" | "upgrade";
+  type: "login" | "upgrade" | "startTrial";
   onClose: () => void;
 }) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {type === "login" ? "Login Required" : "Upgrade Required"}
+            {type === "login"
+              ? "Sign In to Continue"
+              : type === "upgrade"
+                ? "Unlock Pro Features"
+                : "Start Your Free 7-Day Trial!"}
           </DialogTitle>
         </DialogHeader>
         <div className="py-4">
           {type === "login"
             ? "You need to login to use this feature."
-            : "Upgrade to MCP Linker Pro to use this feature."}
+            : type === "upgrade"
+              ? "Upgrade to MCP Linker Pro to use this feature."
+              : "Start a 7-day free trial to unlock all features. No credit card required."}
         </div>
         <DialogFooter>
-          {type === "login" ? (
+          {type === "login" && (
             <Button
               onClick={() => {
                 onClose();
                 navigate("/auth");
               }}
             >
-              Go to Login
+              Sign In
             </Button>
-          ) : (
+          )}
+          {type === "upgrade" && (
             <Button
               onClick={() => {
                 onClose();
-                window.open("https://mcp-linker.store/pricing", "_blank");
+                openUrl("https://mcp-linker.store/pricing");
               }}
             >
-              Upgrade Now
+              Upgrade to Pro
+            </Button>
+          )}
+          {type === "startTrial" && (
+            <Button
+              disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  await api.post("/users/start-trial");
+                  toast.success("Trial started! Enjoy your 7-day free access.");
+                  setTimeout(() => {
+                    onClose();
+                    navigate(0);
+                  }, 1200);
+                } catch (e: any) {
+                  toast.error(
+                    e?.message ||
+                      "Failed to start trial. Please try again later.",
+                  );
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              {loading ? <span className="animate-spin mr-2">⏳</span> : null}
+              Start Free Trial
             </Button>
           )}
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            Maybe Later
           </Button>
         </DialogFooter>
       </DialogContent>

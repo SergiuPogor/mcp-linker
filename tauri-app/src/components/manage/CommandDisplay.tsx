@@ -13,13 +13,8 @@ export function CommandDisplay({ config }: CommandDisplayProps) {
       return sseConfig.url;
     } else {
       const stdioConfig = serverConfig as StdioServerConfig;
-      const fullCommand =
-        stdioConfig.args && stdioConfig.args.length > 0
-          ? `${stdioConfig.command} ${stdioConfig.args.join(" ")}`
-          : stdioConfig.command;
-      return fullCommand.length > 50
-        ? `${fullCommand.substring(0, 50)}...`
-        : fullCommand;
+      const fullCommand = stdioConfig.command;
+      return fullCommand;
     }
   };
 

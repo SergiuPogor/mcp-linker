@@ -22,9 +22,7 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
 }) => {
   // Use zustand store for privacy state
   const telemetryEnabled = useConsentStore((state) => state.telemetryEnabled);
-  const toggleTelemetry = useConsentStore(
-    (state) => state.toggleTelemetry,
-  );
+  const toggleTelemetry = useConsentStore((state) => state.toggleTelemetry);
   const hasAgreedToTerms = useConsentStore((state) => state.hasAgreedToTerms);
   const agreeToTerms = useConsentStore((state) => state.agreeToTerms);
   const declineTerms = useConsentStore((state) => state.declineTerms);

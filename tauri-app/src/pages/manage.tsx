@@ -1,20 +1,21 @@
 import { Dashboard } from "@/components/manage/Dashboard";
-import { LocalTable } from "@/components/manage/LocalTable/index";
-import { PersonalCloudTable } from "@/components/manage/PersonalCloudTable";
+import { PersonalTabsSection } from "@/components/manage/PersonalTabsSection";
 import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
 import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
+import { TeamTrialSection } from "@/components/manage/TeamTrialSection";
 import { ServerTemplateDialog } from "@/components/server";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { useTeamTrialStatus } from "@/hooks/useTeamTrialStatus";
+import { fetchMyTeams } from "@/services/teamService";
 import { useStatsStore } from "@/stores/statsStore";
 import { useTabStore } from "@/stores/tabStore";
 import { useTeamStore } from "@/stores/team";
-import { useUserStore } from "@/stores/userStore";
+import { UserWithTier, useUserStore } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
-import { open } from "@tauri-apps/plugin-shell";
 import { Cloud, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,6 +32,7 @@ export default function McpManage() {
   } = useTabStore();
   const { isAuthenticated } = useAuth();
   const { selectedTeamId } = useTeamStore();
+  const [teamCount, setTeamCount] = useState(0);
   const { t } = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
@@ -38,6 +40,8 @@ export default function McpManage() {
   const teamStats = useStatsStore((s) => s.teamStats);
   const navigate = useNavigate();
   const { user, loading: userLoading, fetchUser } = useUserStore();
+  const { hasTrial, isTeamUser, isTeamOrTrialActive } =
+    useTeamTrialStatus(user);
 
   useEffect(() => {
     async function fetchKey() {
@@ -50,6 +54,23 @@ export default function McpManage() {
   useEffect(() => {
     fetchUser(); // Fetch user info (with tier) on mount
   }, [fetchUser]);
+
+  // Load team count for reliable team management UI
+  useEffect(() => {
+    async function loadTeamCount() {
+      if (isAuthenticated && isTeamOrTrialActive) {
+        try {
+          const teams = await fetchMyTeams();
+          console.log(teams.length, hasTrial);
+          console.log(teams);
+          setTeamCount(teams.length);
+        } catch (error) {
+          setTeamCount(0);
+        }
+      }
+    }
+    loadTeamCount();
+  }, [isAuthenticated, isTeamOrTrialActive]);
 
   const handleAddServer = () => {
     setIsDialogOpen(true);
@@ -87,70 +108,21 @@ export default function McpManage() {
         <div className="flex-1 min-h-0">
           {/* personal */}
           <TabsContent value="personal" className="flex-1 min-h-0">
-            <Tabs
-              value={personalTab}
-              onValueChange={setPersonalTab}
-              className="h-full flex flex-col"
-            >
-              <TabsList className="grid grid-cols-2 gap-2 bg-secondary">
-                <TabsTrigger value="personalLocal">Local</TabsTrigger>
-                <TabsTrigger value="personalCloud">
-                  <Cloud />
-                  Cloud {user?.tier === "FREE" && "🔒"}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="personalLocal" className="flex-1 min-h-0">
-                <LocalTable userTier={user?.tier} isAuthenticated={isAuthenticated} />
-              </TabsContent>
-              <TabsContent value="personalCloud" className="flex-1 min-h-0">
-                {isAuthenticated ? (
-                  user?.tier !== "FREE" ? (
-                    <PersonalCloudTable />
-                  ) : (
-                    <div>
-                      Upgrade to <strong>Pro</strong> to access Pro cloud
-                      servers.
-                      <br />
-                      <Button
-                        onClick={() => open("https://mcp-linker.store/pricing")}
-                        className="mt-2"
-                      >
-                        See Plans
-                      </Button>
-                    </div>
-                  )
-                ) : !encryptionKey ? (
-                  <Button onClick={() => navigate("/settings")}>
-                    go to generate Encryption Key
-                  </Button>
-                ) : (
-                  <div className="flex justify-center items-center h-full text-muted-foreground">
-                    Please log in to view your personal cloud servers. 
-                    <Button onClick={() => navigate("/auth")} className="mt-2">Login</Button>
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+            <PersonalTabsSection
+              personalTab={personalTab}
+              setPersonalTab={setPersonalTab}
+              user={user as UserWithTier}
+              isAuthenticated={isAuthenticated}
+              encryptionKey={encryptionKey}
+              navigate={navigate}
+            />
           </TabsContent>
 
           {/* team */}
           <TabsContent value="team" className="flex-1 min-h-0">
-            {user?.tier !== "TEAM" ? (
-              <div className="flex flex-col justify-center items-center h-full text-center space-y-3 text-muted-foreground">
-                <p>
-                  Access to team cloud servers requires a <strong>TEAM</strong> upgrade.
-                </p>
-                <p className="text-sm font-semibold text-orange-500">
-                  Don’t let your team wait.
-                </p>
-                <Button
-                  onClick={() => open("https://mcp-linker.store/pricing")}
-                  className="mt-2"
-                >
-                  See Plans
-                </Button>
-              </div>
-            ) : (
+            {/* Show trial start button before trial is active */}
+            <TeamTrialSection />
+            {isTeamOrTrialActive && (
               <Tabs
                 value={teamTab}
                 onValueChange={setTeamTab}
@@ -173,9 +145,20 @@ export default function McpManage() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <span className="whitespace-nowrap font-semibold">Team</span>
-                  <TeamSelector />
-                  <ConfigFileSelector />
+                  {(hasTrial || isTeamUser) && (
+                    <>
+                      <Button onClick={() => navigate("/team")}>
+                        {teamCount === 0 ? "Create first team" : "Manage teams"}
+                      </Button>
+                      {teamCount > 0 && (
+                        <>
+                          <span>Team</span>
+                          <TeamSelector />
+                          <ConfigFileSelector />
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
                 <TabsContent value="teamLocal" className="flex-1 min-h-0">
                   <TeamLocalTable />
@@ -184,6 +167,18 @@ export default function McpManage() {
                   {!isAuthenticated ? (
                     <div className="flex justify-center items-center h-full text-muted-foreground">
                       Please log in to view your team cloud servers.
+                    </div>
+                  ) : teamCount === 0 ? (
+                    <div className="flex flex-col justify-center items-center h-full text-muted-foreground space-y-4">
+                      <p>
+                        No teams found. Create your first team to get started.
+                      </p>
+                      <button
+                        onClick={() => navigate("/team")}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                      >
+                        Create first team
+                      </button>
                     </div>
                   ) : !selectedTeamId ? (
                     <div className="flex flex-col justify-center items-center h-full text-muted-foreground space-y-4">
@@ -202,7 +197,9 @@ export default function McpManage() {
                       Loading user info...
                     </div>
                   ) : (
-                    <TeamCloudTable />
+                    <div>
+                      <TeamCloudTable />
+                    </div>
                   )}
                 </TabsContent>
               </Tabs>
@@ -214,7 +211,6 @@ export default function McpManage() {
       <ServerTemplateDialog
         isOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
-        isSell={false}
       />
     </div>
   );

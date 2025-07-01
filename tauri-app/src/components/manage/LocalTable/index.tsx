@@ -8,6 +8,7 @@ import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { useGlobalDialogStore } from "@/stores/globalDialogStore";
+import { UserWithTier } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
 import { useState } from "react";
@@ -17,11 +18,11 @@ import { useServersData } from "./useServersData";
 import { useSyncHandlers } from "./useSyncHandlers";
 
 interface LocalTableProps {
-  userTier?: string;
   isAuthenticated: boolean;
+  user: UserWithTier;
 }
 
-export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
+export const LocalTable = ({ isAuthenticated, user }: LocalTableProps) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
   const [cloudSyncDialogOpen, setCloudSyncDialogOpen] = useState(false);
@@ -109,9 +110,22 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
       showGlobalDialog("login");
       return;
     }
-    if (userTier === "FREE") {
-      showGlobalDialog("upgrade");
-      return;
+    if (user.tier === "FREE") {
+      if (user.trialActive) {
+        if (
+          !user.trialEndsAt ||
+          new Date(user.trialEndsAt).getTime() < Date.now()
+        ) {
+          // Trial expired or no trial end date, show upgrade dialog
+          showGlobalDialog("upgrade");
+          return;
+        }
+        // Trial is active and not expired, allow sync (do nothing)
+      } else {
+        // No trial, show start trial dialog
+        showGlobalDialog("startTrial");
+        return;
+      }
     }
     const key = getEncryptionKey();
     if (!key) {
@@ -159,7 +173,6 @@ export const LocalTable = ({ userTier, isAuthenticated }: LocalTableProps) => {
             onLocalSync={handleSync}
             currentClient={selectedClient}
             isSyncing={isSyncing}
-            userTier={userTier}
           />
           <CloudSyncDialog
             open={cloudSyncDialogOpen}

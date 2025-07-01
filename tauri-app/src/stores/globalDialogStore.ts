@@ -3,7 +3,7 @@ import { create } from "zustand";
 /**
  * GlobalDialogStore for managing global login/upgrade dialog
  */
-type DialogType = "login" | "upgrade";
+type DialogType = "login" | "upgrade" | "startTrial";
 
 interface GlobalDialogState {
   open: boolean;

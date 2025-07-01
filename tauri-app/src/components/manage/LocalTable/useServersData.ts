@@ -2,7 +2,7 @@
 // Always use English comments for code
 import { useStatsStore } from "@/stores/statsStore";
 import { ServerTableData } from "@/types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export function useServersData(
   config: any,
@@ -11,8 +11,8 @@ export function useServersData(
 ) {
   const setPersonalStats = useStatsStore((s) => s.setPersonalStats);
 
-  return useMemo((): ServerTableData[] => {
-    const activeServers = Object.entries(config?.mcpServers ?? {})
+  const activeServers = useMemo(() => {
+    return Object.entries(config?.mcpServers ?? {})
       .filter(([_, serverConfig]) => {
         if (typeof serverConfig !== "object" || serverConfig === null)
           return false;
@@ -37,7 +37,10 @@ export function useServersData(
               : {}),
           }) as ServerTableData,
       );
-    const disabledServersData = Object.entries(disabledServers ?? {}).map(
+  }, [config?.mcpServers, selectedClient]);
+
+  const disabledServersData = useMemo(() => {
+    return Object.entries(disabledServers ?? {}).map(
       ([name, serverConfig]) =>
         ({
           name,
@@ -46,13 +49,24 @@ export function useServersData(
             : {}),
         }) as ServerTableData,
     );
-    const allServers = [...activeServers, ...disabledServersData];
-    // Set stats directly to Zustand store
+  }, [disabledServers]);
+
+  const allServers = useMemo(() => {
+    return [...activeServers, ...disabledServersData];
+  }, [activeServers, disabledServersData]);
+
+  useEffect(() => {
     setPersonalStats({
       total: allServers.length,
       active: activeServers.length,
       disabled: disabledServersData.length,
     });
-    return allServers;
-  }, [config?.mcpServers, disabledServers, setPersonalStats, selectedClient]);
+  }, [
+    allServers.length,
+    activeServers.length,
+    disabledServersData.length,
+    setPersonalStats,
+  ]);
+
+  return allServers;
 }
