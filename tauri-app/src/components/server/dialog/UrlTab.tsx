@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
-import { readText } from '@tauri-apps/plugin-clipboard-manager';
+import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { GithubJsonImportPanel } from "./GithubJsonImportPanel";
 import { useServerTemplateLogic } from "./useServerTemplateLogic";
 
@@ -19,8 +19,8 @@ const UrlTab: React.FC<UrlTabProps> = ({ logic, onImportGithubBlock }) => (
       disabled={logic.loading}
     />
     <Button
-      onClick={async() => {
-        logic.setGithubUrl(await readText())
+      onClick={async () => {
+        logic.setGithubUrl(await readText());
       }}
       className="mr-2"
     >

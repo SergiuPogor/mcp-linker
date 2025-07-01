@@ -29,7 +29,7 @@ export const GithubJsonImportPanel: React.FC<GithubJsonImportPanelProps> = ({
             </Button>
           </div>
           <Textarea
-            value={JSON.stringify({[item.serverName]: item.obj}, null, 2)}
+            value={JSON.stringify({ [item.serverName]: item.obj }, null, 2)}
             readOnly
             rows={8}
           />

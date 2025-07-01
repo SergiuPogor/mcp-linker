@@ -79,6 +79,7 @@ const tc: { translation: TranslationSchema } = {
     downloads: "下載次數",
     descend: "遞減",
     ascend: "遞增",
+    teamLocal: "Team Local"
   },
 };
 

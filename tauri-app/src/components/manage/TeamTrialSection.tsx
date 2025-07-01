@@ -6,11 +6,7 @@ import { useTeamTrial } from "@/hooks/useTeamTrial";
  * Handles loading, eligibility, and button UI.
  */
 export function TeamTrialSection() {
-  const {
-    loading,
-    isEligibleForTrial,
-    startTrial,
-  } = useTeamTrial();
+  const { loading, isEligibleForTrial, startTrial } = useTeamTrial();
 
   // Show nothing if user is already TEAM or trial is active (handled elsewhere)
   if (!isEligibleForTrial) return null;

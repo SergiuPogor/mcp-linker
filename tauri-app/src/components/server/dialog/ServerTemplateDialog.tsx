@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -38,15 +39,26 @@ export const ServerTemplateDialog = forwardRef<
         {/* Tabs for config editing */}
         <ServerTemplateTabs logic={logic} />
 
-        {/* Submit button for sell or add */}
-        <Button
-          onClick={async (e) => {
-            e.preventDefault();
+        <DialogFooter>
+          <Button
+            onClick={async (e) => {
+              e.preventDefault();
+              logic.handleSubmitTeamLocal();
+            }}
+          >
+            {t("addTo")} {t("teamLocal")}
+          </Button>
+
+          {/* Submit button for add */}
+          <Button
+            onClick={async (e) => {
+              e.preventDefault();
               logic.handleSubmit();
-          }}
-        >
-          {t("addTo")} {capitalizeFirstLetter(logic.selectedClient)}
-        </Button>
+            }}
+          >
+            {t("addTo")} {capitalizeFirstLetter(logic.selectedClient)}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -1,9 +1,6 @@
 import type { ServerConfig } from "@/types";
 import { LabeledInput } from "../../shared/LabeledInput";
-import {
-  ServerTypeSelector,
-  StdioConfigSection,
-} from "../config";
+import { ServerTypeSelector, StdioConfigSection } from "../config";
 import { NetworkConfigSection } from "./NetworkConfigSection";
 
 interface ServerTemplateFormProps {
