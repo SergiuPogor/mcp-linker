@@ -6,41 +6,52 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { clientOptions } from "@/constants/clients";
-import { useAuth } from "@/hooks/useAuth";
-import { useIsFreeUser } from "@/hooks/useTier";
+import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
 
 export function ClientSelector() {
   const { selectedClient, setSelectedClient } = useClientPathStore();
-  const { isAuthenticated } = useAuth();
-  const isFreeUser = useIsFreeUser();
 
   return (
     <div className="z-50">
       <Select value={selectedClient} onValueChange={setSelectedClient}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select an application" />
+          <SelectValue placeholder="Select a client" />
         </SelectTrigger>
         <SelectContent>
           {clientOptions.map((option) => {
-            const isDisabledForFreeUser =
-              (isFreeUser && !option.free) ||
-              (!isAuthenticated && !option.free);
             return (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                disabled={isDisabledForFreeUser}
-              >
+              <SelectItem key={option.value} value={option.value}>
                 {option.label}
-                {isDisabledForFreeUser && (
-                  <span className="text-red-500 text-xs ml-2">
-                    (Upgrade to Pro)
-                  </span>
-                )}
               </SelectItem>
             );
           })}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+const configScopes = [
+  { label: "Personal", value: "personal" },
+  { label: "Team", value: "team" },
+];
+
+export function ConfigScopeSelector() {
+  const { scope, setScope } = useConfigScopeStore();
+
+  return (
+    <div className="z-50">
+      <Select value={scope} onValueChange={setScope}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select scope" />
+        </SelectTrigger>
+        <SelectContent>
+          {configScopes.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>

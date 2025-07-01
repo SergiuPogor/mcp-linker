@@ -2150,6 +2150,7 @@ dependencies = [
  "base64 0.21.7",
  "chrono",
  "dirs",
+ "log",
  "ring",
  "serde",
  "serde_json",

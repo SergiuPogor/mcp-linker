@@ -4,8 +4,8 @@
     windows_subsystem = "windows"
 )]
 
-use dirs::home_dir;
 use std::env;
+use std::sync::{Arc, Mutex};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -13,6 +13,7 @@ use serde_json::Value;
 mod client;
 mod cmd;
 mod encryption;
+mod env_path;
 mod git;
 mod installer;
 mod json_manager;
@@ -26,40 +27,9 @@ struct Config {
     mcp_servers: Value,
 }
 
-fn update_env_path() {
-    let home = home_dir().unwrap().to_str().unwrap().to_string();
-    let local_bin = format!("{}/.local/bin", home);
-    let current_path = env::var("PATH").unwrap_or_default();
-
-    let new_paths: Vec<String> = if cfg!(target_os = "windows") {
-        vec![local_bin]
-    } else {
-        vec![
-            "/opt/homebrew/bin".into(),
-            "/usr/local/bin".into(),
-            local_bin,
-        ]
-    };
-
-    let separator = if cfg!(target_os = "windows") {
-        ";"
-    } else {
-        ":"
-    };
-
-    let updated_path = format!("{}{}{}", new_paths.join(separator), separator, current_path);
-
-    env::set_var("PATH", &updated_path);
-}
-
-#[tauri::command]
-fn get_path_env() -> String {
-    env::var("PATH").unwrap_or_else(|_| "PATH not found".to_string())
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    update_env_path();
+    env_path::update_env_path();
 
     let mut builder = tauri::Builder::default();
 
@@ -96,12 +66,13 @@ pub fn run() {
             mcp_sync::sync_mcp_config,
             installer::check_command_exists,
             installer::install_command,
-            get_path_env,
+            env_path::get_path_env,
             git::git_clone,
             encryption::generate_encryption_key,
             encryption::encrypt_data,
             encryption::decrypt_data,
         ])
+        .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {
             #[cfg(any(windows, target_os = "linux"))]
             {

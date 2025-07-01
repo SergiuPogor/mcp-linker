@@ -127,13 +127,13 @@ export function useServerTemplateLogic(
       });
       toast.success(`add to Team Local ok`);
       setTimeout(() => {
-        navigate(0)
-      }, 1200)
+        navigate(0);
+      }, 1200);
     } catch (e: any) {
       console.error(e);
       toast.error(e?.message || "fail to add to Team Local");
     } finally {
-      setIsDialogOpen(false)
+      setIsDialogOpen(false);
     }
   };
 

@@ -1,18 +1,25 @@
 import { usePlatform } from "@/hooks/usePlatform";
 import { needspathClient } from "@/lib/data";
 import { AppRoutes, getNavigationRoutes } from "@/routes";
+import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
-import { ClientSelector } from "../settings/client-selector";
+import { TeamSelector } from "../manage/team/TeamSelector";
+import {
+  ClientSelector,
+  ConfigScopeSelector,
+} from "../settings/client-selector";
+import { ConfigFileSelector } from "../settings/ConfigFileSelector";
 import LangSelect from "../settings/LangSelect";
 import { PathSelector } from "../settings/PathSelector";
 import { Sidebar } from "./Sidebar";
 
 const Layout = () => {
   const { selectedClient } = useClientPathStore();
+  const { scope } = useConfigScopeStore();
   const { t } = useTranslation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -38,9 +45,14 @@ const Layout = () => {
           >
             <PanelLeft size={20} />
           </button>
-          <ClientSelector />
+          <ConfigScopeSelector />
+          {scope === "personal" ? <ClientSelector /> : <TeamSelector />}
         </span>
-        {needspathClient.includes(selectedClient) && <PathSelector />}
+        {scope === "personal" ? (
+          <>{needspathClient.includes(selectedClient) && <PathSelector />}</>
+        ) : (
+          <ConfigFileSelector />
+        )}
         <LangSelect />
       </div>
 
