@@ -13,10 +13,7 @@ export function useServerTemplateSubmit({
 }: {
   serverName: string;
   setIsDialogOpen: (open: boolean) => void;
-  projectUrl: string;
   config: any;
-  selectedCategoryId: number;
-  projectDescription: string;
   serverType: string;
   selectedClient: string;
   selectedPath: string | undefined;

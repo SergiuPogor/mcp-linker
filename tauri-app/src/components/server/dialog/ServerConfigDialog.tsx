@@ -7,16 +7,15 @@ import { toast } from "sonner";
 
 import { fetchServerConfig } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { LabeledInput } from "../../shared/LabeledInput";
-import { ConfigTabs } from "../config";
-import { SseConfigForm } from "../form/SseConfigForm";
-import { StdioConfigForm } from "../form/StdioConfigForm";
+import { useConfigFileStore } from "@/stores/configFileStore";
+import { useTeamStore } from "@/stores/team";
+import { invoke } from "@tauri-apps/api/core";
+import { ServerConfigForm } from "../form/ServerConfigForm";
 import {
   useLocalDraft,
   useSaveServerConfig,
   useServerConfigDialog,
 } from "../hooks";
-import { ServerConfigDialogFooter } from "./ServerConfigDialogFooter";
 import { ServerConfigDialogHeader } from "./ServerConfigDialogHeader";
 
 interface ServerConfigDialogProps {
@@ -31,6 +30,8 @@ export const ServerConfigDialog = forwardRef<
 >(({ isOpen, setIsDialogOpen, currentServer }, _ref) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const { saveServerConfig } = useSaveServerConfig();
+  const { getTeamConfigPath } = useConfigFileStore();
+  const { selectedTeamId } = useTeamStore();
 
   const queryResult = useQuery({
     queryKey: ["configs", currentServer?.id],
@@ -145,50 +146,47 @@ export const ServerConfigDialog = forwardRef<
     clearDraft(); // Clear the draft after successful save
   };
 
+  const handleSubmitTeamLocal = async () => {
+    try {
+      await invoke("add_mcp_server", {
+        clientName: "custom",
+        path: getTeamConfigPath(selectedTeamId),
+        serverName: serverName,
+        serverConfig: config,
+      });
+      toast.success(`add to Team Local ok`);
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "fail to add to Team Local");
+    } finally {
+      setIsDialogOpen(false);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
         <ServerConfigDialogHeader />
 
-        <LabeledInput
-          label="Server name"
-          value={serverName}
-          onChange={setServerName}
-        />
-
-        {configs && configs.length > 0 && (
-          <ConfigTabs
-            configs={configs}
-            curIndex={curIndex}
-            onConfigChange={handleConfigChange}
-          />
-        )}
-
-        <div className="grid gap-4 py-4">
-          {/* StdioServerConfig specific fields */}
-          {config && "command" in config && (
-            <StdioConfigForm
-              config={config}
-              envValues={envValues}
-              setEnvValues={setEnvValues}
-              onCommandChange={handleCommandChange}
-              onArgsChange={handleArgsChange}
-              onEnvChange={handleEnvChange}
-            />
-          )}
-
-          {/* SseConfig specific fields */}
-          {config && "url" in config && (
-            <SseConfigForm
-              config={config}
-              onConfigChange={handleSseConfigChange}
-            />
-          )}
-        </div>
-
-        <ServerConfigDialogFooter
+        {/* Main server config form extracted to a reusable component */}
+        <ServerConfigForm
+          serverName={serverName}
+          setServerName={setServerName}
+          // Ensure configs is always an array, never null
+          configs={configs ?? []}
+          curIndex={curIndex}
+          onConfigChange={handleConfigChange}
+          // Ensure config is never null, fallback to an empty object or suitable default if needed
+          config={config ?? ({} as ServerConfig)}
+          envValues={envValues}
+          setEnvValues={setEnvValues}
+          onCommandChange={handleCommandChange}
+          onArgsChange={handleArgsChange}
+          onEnvChange={handleEnvChange}
+          onSseConfigChange={handleSseConfigChange}
           onSubmit={handleSubmit}
           selectedClient={selectedClient}
+          onSubmitTeamLocal={handleSubmitTeamLocal}
         />
       </DialogContent>
     </Dialog>

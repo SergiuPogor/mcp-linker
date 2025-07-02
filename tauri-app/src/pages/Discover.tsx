@@ -1,23 +1,64 @@
 import { HeroBanner } from "@/components/banner";
 import { ServerList } from "@/components/server";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
-const tabs = [
-  { key: "featured", label: "Featured" },
-  { key: "editors_choice", label: "Editors Choice" },
-  { key: "must_have", label: "Must Have" },
-  { key: "best_new", label: "Best New" },
-  { key: "github_stars", label: "Most GitHub Stars" },
-  { key: "is_official", label: "Official Servers" },
-  { key: "developer_tools", label: "Developer Tools" },
-  { key: "team", label: "Team" },
+const categories = [
+  {
+    key: "featured",
+    label: "Recommended",
+    icon: "🌟",
+    description: "Editor picks and user favorites",
+  },
+  {
+    key: "developer_tools",
+    label: "Developer Tools",
+    icon: "💻 ",
+    description: "Prompt testing, context analysis",
+  },
+  {
+    key: "must_have",
+    label: "Must have",
+    icon: "📌",
+    description: "Must have",
+  },
+  {
+    key: "Marketing",
+    label: "AI for Marketing",
+    icon: "📈",
+    description: "Copywriting, A/B testing agents",
+  },
+  {
+    key: "Browser Automation",
+    label: "Automation",
+    icon: "🤝",
+    description: "HubSpot, lead nurturing AI",
+  },
+  {
+    key: "Multimedia Process",
+    label: "Media Workflows",
+    icon: "🎬",
+    description: "TTS, summarization, repurposing",
+  },
+  {
+    key: "editors_choice",
+    label: "Editors choice",
+    icon: "✨",
+    description: "Editors choice",
+  },
+  {
+    key: "team",
+    label: "Team",
+    icon: "👥",
+    description: "Team",
+  },
 ];
 
 export default function Discovery() {
   const [selectedTab, setSelectedTab] = useState<string>("featured");
+  const navigate = useNavigate();
 
   const {
     data: discoverServers,
@@ -38,26 +79,39 @@ export default function Discovery() {
   return (
     <div className="p-8 space-y-4">
       <HeroBanner onFeatureClick={handleFeatureClick} />
-      <Tabs value={selectedTab} onValueChange={(val) => setSelectedTab(val)}>
-        <TabsList className="mb-8 flex flex-wrap gap-2">
-          {tabs.map((tab) => (
-            <TabsTrigger
-              key={tab.key}
-              value={tab.key}
-              className="rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted data-[state=active]:bg-primary data-[state=active]:text-white"
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <TabsContent value={selectedTab}>
-          {isLoading && <div>Loading...</div>}
-          {error && <div>Error loading servers.</div>}
-          {!isLoading && !error && (
-            <ServerList mcpServers={discoverServers ?? []} />
-          )}
-        </TabsContent>
-      </Tabs>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {categories.map((cat) => (
+          <div
+            key={cat.key}
+            className="cursor-pointer rounded-lg border p-4 hover:bg-muted transition"
+            onClick={() => setSelectedTab(cat.key)}
+          >
+            <div className="flex gap-2">
+              <div className="text-2xl mb-2">{cat.icon}</div>
+              <div className="font-semibold">{cat.label}</div>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {cat.description}
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Use navigate to programmatically go to the server detail page */}
+      {import.meta.env.VITE_IS_DEV === "true" && (
+        <div
+          className="cursor-pointer text-blue-600 underline hover:text-blue-800"
+          onClick={() => navigate("/servers/milisp/automatisch-mcp-server")}
+        >
+          milisp/automatisch-mcp-server
+        </div>
+      )}
+      <div className="mt-8">
+        {isLoading && <div>Loading...</div>}
+        {error && <div>Error loading servers.</div>}
+        {!isLoading && !error && (
+          <ServerList mcpServers={discoverServers ?? []} />
+        )}
+      </div>
     </div>
   );
 }

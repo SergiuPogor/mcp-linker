@@ -9,10 +9,6 @@ interface ServerTemplateFormProps {
   serverType: string;
   setServerType: (value: string) => void;
   config: ServerConfig;
-  projectDescription: string;
-  setProjectDescription: (value: string) => void;
-  projectUrl: string;
-  setProjectUrl: (value: string) => void;
   handleArgsChange: (value: string) => void;
   handleCommandChange: (value: string) => void;
   handleUrl: (value: string) => void;
@@ -22,7 +18,6 @@ interface ServerTemplateFormProps {
   setEnvValues: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   headerValues: Record<string, string>;
   setHeaderValues: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  setSelectedCategoryId: (id: number) => void;
 }
 
 export const ServerTemplateForm = ({

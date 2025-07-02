@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 
 export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
   const [serverName, setServerName] = useState<string>("");
-  const [projectUrl, setProjectUrl] = useState<string>("");
-  const [projectDescription, setProjectDescription] = useState<string>("");
   const [serverType, setServerType] = useState<string>("stdio");
   const [envValues, setEnvValues] = useState<Record<string, string>>({});
   const [headerValues, setHeaderValues] = useState<Record<string, string>>({});
@@ -105,10 +103,6 @@ export const useServerConfig = (isOpen: boolean, selectedClient: string) => {
   return {
     serverName,
     setServerName,
-    projectUrl,
-    setProjectUrl,
-    projectDescription,
-    setProjectDescription,
     serverType,
     setServerType,
     config,

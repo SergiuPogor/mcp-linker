@@ -79,6 +79,7 @@ export const AppRoutes = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/servers/:id" element={<ServerPage />} />
+        <Route path="/servers/:owner/:repo" element={<ServerPage />} />
 
         {/* Protected routes */}
         {/* Use an array and map to simplify protected routes */}

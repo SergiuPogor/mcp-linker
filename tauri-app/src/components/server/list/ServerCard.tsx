@@ -140,14 +140,14 @@ export function ServerCard({
 
       <CardContent className="px-4 pt-0 pb-2 text-sm text-foreground max-h-24 overflow-y-scroll">
         {server.description || ""}
-        {server.tags && server.tags?.length > 0 && (
+        {server.tools && server.tools?.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
-            {server.tags.map((tag) => (
+            {server.tools.map((tool) => (
               <span
-                key={tag}
+                key={tool}
                 className="bg-gray-100 text-xs text-muted-foreground px-2 py-0.5 rounded"
               >
-                {tag}
+                {tool}
               </span>
             ))}
           </div>

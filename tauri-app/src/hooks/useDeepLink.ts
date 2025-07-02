@@ -39,16 +39,35 @@ export const useDeepLink = () => {
         const urlObj = new URL(url);
         const searchParams = new URLSearchParams(urlObj.search.substring(1));
 
+        debugLog(`got ${url}`);
+
         if (url.includes("/servers/")) {
-          const parts = url.split("/");
-          const id = parts[parts.length - 1];
-          navigate(`/servers/${id}`, { replace: true });
+          const pathParts = urlObj.pathname.split("/").filter(Boolean); // remove empty
+          const serversIndex = pathParts.indexOf("servers");
+          const afterServers = pathParts.slice(serversIndex + 1);
+
+          let targetPath = "";
+          if (afterServers.length === 1) {
+            // /servers/:id
+            targetPath = `/servers/${afterServers[0]}`;
+          } else if (afterServers.length === 2) {
+            // /servers/:owner/:repo
+            targetPath = `/servers/${afterServers[0]}/${afterServers[1]}`;
+          }
+
+          // Append query string if present
+          if (urlObj.search) {
+            targetPath += urlObj.search;
+          }
+
+          navigate(targetPath, { replace: true });
         }
 
         const code = searchParams.get("code");
         if (code && supabase) {
           const { data, error } =
             await supabase.auth.exchangeCodeForSession(code);
+          navigate("/manage");
           if (error) throw error;
           if (data.session) {
             toast.success("User authenticated successfully");

@@ -13,4 +13,5 @@ export type ServerType = {
   views: number;
   isFavorited: boolean;
   tags?: string[];
+  tools?: string[];
 };

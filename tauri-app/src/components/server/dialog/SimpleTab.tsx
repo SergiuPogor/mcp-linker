@@ -14,10 +14,6 @@ const SimpleTab: React.FC<SimpleTabProps> = ({ logic }) => (
       serverType={logic.serverType}
       setServerType={logic.setServerType}
       config={logic.config}
-      projectDescription={logic.projectDescription}
-      setProjectDescription={logic.setProjectDescription}
-      projectUrl={logic.projectUrl}
-      setProjectUrl={logic.setProjectUrl}
       handleArgsChange={logic.handleArgsChange}
       handleCommandChange={logic.handleCommandChange}
       handleUrl={logic.handleUrl}
@@ -27,7 +23,6 @@ const SimpleTab: React.FC<SimpleTabProps> = ({ logic }) => (
       setEnvValues={logic.setEnvValues}
       headerValues={logic.headerValues}
       setHeaderValues={logic.setHeaderValues}
-      setSelectedCategoryId={logic.setSelectedCategoryId}
     />
   </TabsContent>
 );

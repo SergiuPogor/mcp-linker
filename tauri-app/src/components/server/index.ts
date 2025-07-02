@@ -4,7 +4,6 @@ export * from "./list/ServerList";
 
 // Configuration components
 export * from "./config/ConfigTabs";
-export * from "./config/ServerInfoSection";
 export * from "./config/ServerTypeSelector";
 export * from "./config/StdioConfigSection";
 

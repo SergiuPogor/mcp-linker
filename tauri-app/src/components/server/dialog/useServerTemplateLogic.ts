@@ -16,7 +16,6 @@ export function useServerTemplateLogic(
   setIsDialogOpen: (open: boolean) => void,
 ) {
   const { selectedClient, selectedPath } = useClientPathStore();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
   const [githubUrl, setGithubUrl] = useState("");
   const { loading, error, fetchAllJsonBlocks } = useGithubReadmeJson();
   const { getTeamConfigPath } = useConfigFileStore();
@@ -27,10 +26,6 @@ export function useServerTemplateLogic(
   const {
     serverName,
     setServerName,
-    projectUrl,
-    setProjectUrl,
-    projectDescription,
-    setProjectDescription,
     serverType,
     setServerType,
     config,
@@ -108,10 +103,7 @@ export function useServerTemplateLogic(
   const { handleSubmit } = useServerTemplateSubmit({
     serverName,
     setIsDialogOpen,
-    projectUrl,
     config,
-    selectedCategoryId,
-    projectDescription,
     serverType,
     selectedClient,
     selectedPath: selectedPath || undefined,
@@ -195,8 +187,6 @@ export function useServerTemplateLogic(
   return {
     selectedClient,
     selectedPath,
-    selectedCategoryId,
-    setSelectedCategoryId,
     githubUrl,
     setGithubUrl,
     loading,
@@ -204,10 +194,6 @@ export function useServerTemplateLogic(
     fetchAllJsonBlocks,
     serverName,
     setServerName,
-    projectUrl,
-    setProjectUrl,
-    projectDescription,
-    setProjectDescription,
     serverType,
     setServerType,
     config,
