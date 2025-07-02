@@ -2,7 +2,7 @@ import { GlobalDialog } from "@/components/common/GlobalDialog";
 import CommandChecker from "@/components/settings/CommandChecker";
 import { ConsentDialog } from "@/components/settings/consent";
 import { ThemeProvider } from "@/components/theme-provider";
-import { useUnifiedDeepLink } from "@/hooks/useUnifiedDeepLink";
+import { useDeepLink } from "@/hooks/useDeepLink";
 import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const { } = useUnifiedDeepLink();
+  useDeepLink();
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const { open, type, hideDialog } = useGlobalDialogStore();
 
@@ -52,8 +52,8 @@ function App() {
         )}
         <ConsentDialog />
       </ThemeProvider>
-        <CommandChecker />
-        </QueryClientProvider>
+      <CommandChecker />
+    </QueryClientProvider>
   );
 }
 

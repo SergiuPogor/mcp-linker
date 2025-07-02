@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
 interface DeepLinkState {
-  pendingDeepLink: string | null;
-  setPendingDeepLink: (url: string | null) => void;
+  isHandlingDeepLink: boolean;
+  setIsHandlingDeepLink: (v: boolean) => void;
 }
 
 export const useDeepLinkStore = create<DeepLinkState>((set) => ({
-  pendingDeepLink: null,
-  setPendingDeepLink: (url) => set({ pendingDeepLink: url }),
-})); 
+  isHandlingDeepLink: false,
+  setIsHandlingDeepLink: (v) => set({ isHandlingDeepLink: v }),
+}));

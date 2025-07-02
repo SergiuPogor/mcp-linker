@@ -1,3 +1,4 @@
+// Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
 import Categories from "@/pages/categories";
 import Dashboard from "@/pages/Dashboard";
@@ -9,6 +10,7 @@ import Recently from "@/pages/recently";
 import SearchPage from "@/pages/search";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
+import { useDeepLinkStore } from "@/stores/deepLinkStore";
 import {
   Clock,
   Info,
@@ -37,16 +39,18 @@ function StartupRedirect() {
   const location = useLocation();
   const navigate = useNavigate();
   const redirected = useRef(false);
+  const isHandlingDeepLink = useDeepLinkStore((s) => s.isHandlingDeepLink);
 
   useEffect(() => {
     if (redirected.current) return;
+    if (isHandlingDeepLink) return; // Skip redirect if deep link navigation is in progress
     const lastRoute = localStorage.getItem("lastRoute");
     // Only redirect if not already at lastRoute, and lastRoute is not "/" and not current path
     if (lastRoute && lastRoute !== "/" && lastRoute !== location.pathname) {
       redirected.current = true;
       navigate(lastRoute, { replace: true });
     }
-  }, [location, navigate]);
+  }, [location, navigate, isHandlingDeepLink]);
 
   return null;
 }
@@ -77,48 +81,23 @@ export const AppRoutes = () => {
         <Route path="/servers/:id" element={<ServerPage />} />
 
         {/* Protected routes */}
-        <Route
-          path="/team"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <TeamPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/teams/:teamId/members"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <TeamMemberPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/favorites"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <Favorites />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/onboarding"
-          element={
-            <ProtectedRoute requireAuth={true}>
-              <OnBoarding />
-            </ProtectedRoute>
-          }
-        />
+        {/* Use an array and map to simplify protected routes */}
+        {[
+          { path: "/team", element: <TeamPage /> },
+          { path: "/teams/:teamId/members", element: <TeamMemberPage /> },
+          { path: "/favorites", element: <Favorites /> },
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/onboarding", element: <OnBoarding /> },
+        ].map(({ path, element }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute requireAuth={true}>{element}</ProtectedRoute>
+            }
+          />
+        ))}
 
-        {/* Catch all route - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

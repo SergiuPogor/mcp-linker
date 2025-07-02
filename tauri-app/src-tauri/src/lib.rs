@@ -6,9 +6,9 @@
 
 use std::env;
 use std::sync::{Arc, Mutex};
-
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use tauri_plugin_deep_link::DeepLinkExt;
 
 mod client;
 mod cmd;
@@ -71,6 +71,7 @@ pub fn run() {
             encryption::generate_encryption_key,
             encryption::encrypt_data,
             encryption::decrypt_data,
+            get_latest_deep_link,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {

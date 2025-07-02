@@ -1,10 +1,11 @@
+import AuthUnavailable from "@/components/common/AuthUnavailable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
-import { AlertCircle, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -91,26 +92,8 @@ export default function AuthPage() {
     }
   };
 
-  // Show message when authentication is disabled
   if (!isSupabaseEnabled) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen px-4 text-center">
-        <AlertCircle className="w-12 h-12 text-amber-500 mb-4" />
-        <h1 className="text-3xl font-bold mb-4">Authentication Unavailable</h1>
-        <p className="mb-6 text-gray-500 max-w-md">
-          Authentication features are currently disabled. Please configure
-          Supabase environment variables to enable user authentication.
-        </p>
-        <div className="bg-gray-100 p-4 rounded-lg text-sm text-left max-w-md">
-          <p className="font-semibold mb-2">Required environment variables:</p>
-          <code className="block text-xs">
-            VITE_SUPABASE_URL=your_supabase_url
-            <br />
-            VITE_SUPABASE_ANON_KEY=your_supabase_key
-          </code>
-        </div>
-      </div>
-    );
+    return <AuthUnavailable />;
   }
 
   return (
@@ -219,10 +202,6 @@ export default function AuthPage() {
           Continue with Google
         </Button>
       </div>
-      <span className="text-sm text-gray-500 mt-4">
-        We respect your privacy. Usage data may be collected to improve the
-        experience. which data we collect, server name and client name
-      </span>
     </div>
   );
 }
