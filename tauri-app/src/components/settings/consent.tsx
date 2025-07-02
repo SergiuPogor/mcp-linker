@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 
 export function ConsentDialog() {
   const hasAgreed = useConsentStore((state) => state.hasAgreedToTerms);
-  const agreeToTerms = useConsentStore((state) => state.agreeToTerms);
   const declineTerms = useConsentStore((state) => state.declineTerms);
 
   const [open, setOpen] = useState(false);
@@ -22,7 +21,6 @@ export function ConsentDialog() {
   }, [hasAgreed]);
 
   const handleAgree = () => {
-    agreeToTerms();
     setOpen(false);
   };
 
@@ -36,16 +34,16 @@ export function ConsentDialog() {
       <DialogContent>
         <DialogTitle>Terms and Conditions</DialogTitle>
         <div>
-          Please agree to the terms before using the app.
+          To use this app, please acknowledge the terms.
           <br />
           <br />
-          <b>
-            server name and client name data may be collected to improve the
-            experience.
-          </b>
+          <b>This app does not collect any data at this time.</b>
           <br />
-          By clicking Agree, you consent to the collection of usage data as
-          described. You can disable any time at setting page.
+          In the future, data may be collected to improve user experience, but
+          you will be notified and can opt out.
+          <br />
+          <br />
+          By clicking "Agree", you acknowledge this notice.
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleDecline}>
