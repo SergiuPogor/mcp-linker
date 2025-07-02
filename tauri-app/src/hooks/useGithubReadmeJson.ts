@@ -13,13 +13,15 @@ export function useGithubReadmeJson() {
    * @param githubUrl The GitHub repository URL
    * @returns Array of parsed JSON objects (or null for failed parses)
    */
-  const fetchAllJsonBlocks = async (githubUrl: string): Promise<any[] | null> => {
+  const fetchAllJsonBlocks = async (
+    githubUrl: string,
+  ): Promise<any[] | null> => {
     setError(null);
     setLoading(true);
     try {
       // Parse GitHub repo url
       const match = githubUrl.match(
-        /github.com\/(?<owner>[^/]+)\/(?<repo>[^/?#]+)(?:[/?#]|$)/
+        /github.com\/(?<owner>[^/]+)\/(?<repo>[^/?#]+)(?:[/?#]|$)/,
       );
       if (!match || !match.groups) {
         setError("Invalid GitHub repository URL");
@@ -78,4 +80,4 @@ export function useGithubReadmeJson() {
   };
 
   return { loading, error, fetchAllJsonBlocks, fetchJson };
-} 
+}

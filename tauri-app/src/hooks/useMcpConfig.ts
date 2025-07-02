@@ -107,7 +107,11 @@ export function useMcpConfig(
   }, [selectedClient, selectedPath, executeMcpOperation]);
 
   const updateConfig = useCallback(
-    async (key: string, updatedConfig: ConfigType["mcpServers"][string], isDisabled?: boolean) => {
+    async (
+      key: string,
+      updatedConfig: ConfigType["mcpServers"][string],
+      isDisabled?: boolean,
+    ) => {
       try {
         if (isDisabled) {
           await executeMcpOperation(
@@ -223,11 +227,11 @@ export function useMcpConfig(
       try {
         setIsLoading(true);
         setError(null);
-        
+
         // Get paths for both clients
         const fromPath = getClientPath(fromClient);
         const toPath = getClientPath(toClient);
-        
+
         await executeMcpOperation(
           invoke("sync_mcp_config", {
             fromClient,
@@ -251,7 +255,13 @@ export function useMcpConfig(
         setIsLoading(false);
       }
     },
-    [selectedClient, selectedPath, executeMcpOperation, loadConfig, getClientPath],
+    [
+      selectedClient,
+      selectedPath,
+      executeMcpOperation,
+      loadConfig,
+      getClientPath,
+    ],
   );
 
   const batchDeleteServers = useCallback(

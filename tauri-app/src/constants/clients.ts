@@ -11,4 +11,7 @@ const clients = [
 ];
 
 export const availableClients = clients;
-export const clientOptions = [...clients, { value: "custom", label: "Custom", free: true }];
+export const clientOptions = [
+  ...clients,
+  { value: "custom", label: "Custom", free: true },
+];

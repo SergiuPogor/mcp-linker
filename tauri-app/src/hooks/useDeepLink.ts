@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 function debugLog(msg: string) {
-  if (import.meta.env.VITE_IS_DEV === 'true') {
-    alert(msg)
+  if (import.meta.env.VITE_IS_DEV === "true") {
+    alert(msg);
   }
 }
 
@@ -16,7 +16,6 @@ const processedUrls = new Set<string>();
 export const useDeepLink = () => {
   const navigate = useNavigate();
   const [isHandlingDeepLink, setIsHandlingDeepLink] = useState(false);
-
 
   useEffect(() => {
     const urlObj = new URL(window.location.href);
@@ -48,7 +47,8 @@ export const useDeepLink = () => {
 
         const code = searchParams.get("code");
         if (code && supabase) {
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          const { data, error } =
+            await supabase.auth.exchangeCodeForSession(code);
           if (error) throw error;
           if (data.session) {
             toast.success("User authenticated successfully");

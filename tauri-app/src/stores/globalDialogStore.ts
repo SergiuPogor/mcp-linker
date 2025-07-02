@@ -17,4 +17,4 @@ export const useGlobalDialogStore = create<GlobalDialogState>((set) => ({
   type: null,
   showDialog: (type) => set({ open: true, type }),
   hideDialog: () => set({ open: false, type: null }),
-})); 
+}));

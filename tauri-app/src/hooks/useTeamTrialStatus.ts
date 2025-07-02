@@ -13,10 +13,13 @@ export function useTeamTrialStatus(providedUser?: any) {
 
   // Memoize the status calculation
   return useMemo(() => {
-    const trialExpired = actualUser?.trialActive && actualUser?.trialEndsAt && new Date(actualUser.trialEndsAt) <= new Date();
+    const trialExpired =
+      actualUser?.trialActive &&
+      actualUser?.trialEndsAt &&
+      new Date(actualUser.trialEndsAt) <= new Date();
     const hasTrial = actualUser?.trialActive;
     const isTeamUser = actualUser?.tier === "TEAM";
     const isTeamOrTrialActive = isTeamUser || (hasTrial && !trialExpired);
     return { trialExpired, hasTrial, isTeamUser, isTeamOrTrialActive };
   }, [actualUser]);
-} 
+}

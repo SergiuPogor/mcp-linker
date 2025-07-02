@@ -19,7 +19,9 @@ export function useTeamTrial() {
   const isTrialActive = !!user?.trialActive;
   // Whether the trial has expired
   const isTrialExpired =
-    isTrialActive && user?.trialEndsAt && new Date(user.trialEndsAt).getTime() <= Date.now();
+    isTrialActive &&
+    user?.trialEndsAt &&
+    new Date(user.trialEndsAt).getTime() <= Date.now();
   // Whether the user is eligible to start a trial
   const isEligibleForTrial = !isTeamUser && !isTrialActive;
 
@@ -35,7 +37,9 @@ export function useTeamTrial() {
         navigate(0);
       }, 1200);
     } catch (e: any) {
-      toast.error(e?.message || "Failed to start trial. Please try again later.");
+      toast.error(
+        e?.message || "Failed to start trial. Please try again later.",
+      );
       setLoading(false);
     }
   }, [navigate]);
@@ -50,4 +54,4 @@ export function useTeamTrial() {
     startTrial,
     fetchUser,
   };
-} 
+}

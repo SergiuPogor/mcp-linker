@@ -26,4 +26,4 @@ export const useStatsStore = create<StatsState>((set) => ({
   setPersonalStats: (stats) => set({ personalStats: stats }),
   teamStats: { total: 0 },
   setTeamStats: (stats) => set({ teamStats: stats }),
-})); 
+}));

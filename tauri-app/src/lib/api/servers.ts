@@ -65,7 +65,11 @@ export async function fetchServers(
   }
 }
 
-export async function incrementDownloads(serverId: string, clientName: string, serverName: string) {
+export async function incrementDownloads(
+  serverId: string,
+  clientName: string,
+  serverName: string,
+) {
   const { hasAgreedToTerms } = useConsentStore.getState();
   const payload = {
     client_name: clientName,
@@ -75,7 +79,10 @@ export async function incrementDownloads(serverId: string, clientName: string, s
   // only send client_name and server_name with hasAgreedToTerms
   if (hasAgreedToTerms) {
     try {
-      const response = await api.post(`/servers/${serverId}/download-count`, payload);
+      const response = await api.post(
+        `/servers/${serverId}/download-count`,
+        payload,
+      );
       console.log("Stats updated:", response.data);
     } catch (error) {
       console.error("Error updating server stats:", error);

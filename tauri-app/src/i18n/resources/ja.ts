@@ -78,7 +78,7 @@ const ja: { translation: TranslationSchema } = {
     downloads: "ダウンロード",
     descend: "降順",
     ascend: "昇順",
-    teamLocal: "Team Local"
+    teamLocal: "Team Local",
   },
 };
 

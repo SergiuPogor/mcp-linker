@@ -78,7 +78,7 @@ const zh: { translation: TranslationSchema } = {
     downloads: "下载量",
     descend: "降序",
     ascend: "升序",
-    teamLocal: "Team Local"
+    teamLocal: "Team Local",
   },
 };
 
