@@ -145,7 +145,7 @@ export function TeamCloudSyncDialog({
 
           <div className="grid grid-cols-2 gap-3">
             {localServersCount === 0 && (
-              <div className="text-sm text-destructive font-semibold col-span-2 text-center">
+              <div className="text-sm text-yellow-600 font-semibold col-span-2 text-center">
                 No local server configurations found. Please add at least one server before uploading to cloud.
               </div>
             )}
