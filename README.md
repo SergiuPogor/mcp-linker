@@ -4,6 +4,9 @@
 
 MCP manage, one-click install and sync MCP (Model Context Protocol) servers across AI clients like Claude Code and Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
+Planed use source [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome Claude Desktop Extensions (.dxt files), tools, and resources - by milisp
+
+
 <div align="center">
 
 ![MCP Linker Logo](./images/logo.png)
@@ -19,7 +22,13 @@ MCP manage, one-click install and sync MCP (Model Context Protocol) servers acro
 
 ### 🚀 Get Started in 30 Seconds
 
-[📥 **Download Now**](https://github.com/milisp/mcp-linker/releases) • [🚀 Quick Start](#quick-start)
+[🚀 Quick Start](#quick-start)
+
+[📥 **Download Now**](https://github.com/milisp/mcp-linker/releases) 
+  <span> and open then  one click</span>
+  <a href="https://mcp-linker.store/servers/modelcontextprotocol/sequentialthinking?autoSubmit=true">
+    <img src="https://img.shields.io/badge/Add%20sequentialthinking%20server%20To%20Client-%F0%9F%94%8D%20Click%20Here-blue?logo=link&style=for-the-badge" alt="Add to Client" />
+  </a>
 
 </div>
 
@@ -47,10 +56,6 @@ MCP Linker = Marketplace + One-click Installer + Config Sync
 - Sync MCP server configuration across all your MCP clients.
 - Pro users get 🔐 Encrypted Cloud Sync.
 - Team collaboration features!
-
-### A new way to install MCP server for CLaude Desktop
-
-[awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome Claude Desktop Extensions (.dxt files), tools, and resources - by milisp
 
 ## 🚀 Quick Start
 
