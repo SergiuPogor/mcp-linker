@@ -2,12 +2,19 @@ import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable } from "@/components/ui/data-table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useCloudSync } from "@/hooks/useCloudSync";
 import { api } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { ServerTableData } from "@/types";
 import { ColumnDef, RowSelectionState, Table } from "@tanstack/react-table";
 import { invoke } from "@tauri-apps/api/core";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CommandDisplay } from "./CommandDisplay";
@@ -111,7 +118,43 @@ export const PersonalCloudTable = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between items-center"></div>
+      <div className="flex justify-end">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <DeleteAlertDialog
+                  itemName={`all personal server configs`}
+                  onDelete={async () => {
+                    try {
+                      await api.delete(`/user-server-configs/`);
+                      setServersData([]);
+                      toast.success(
+                        `remove personal server configs in the cloud`,
+                      );
+                    } catch (e) {
+                      toast.error(JSON.stringify(e));
+                    }
+                  }}
+                  trigger={
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="flex items-center gap-1"
+                    >
+                      <Trash2 />
+                      Delete all personal Config
+                    </Button>
+                  }
+                />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              Only use if encryptionKey has changed.
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
       <DataTable
         columns={columns}
         data={serversData}

@@ -29,7 +29,7 @@ export const useTeamCloudSync = (servers: ServerTableData[]) => {
       const serverConfigs = await fetchTeamConfigs(teamId);
       return serverConfigs;
     } catch (e) {
-      toast.error("Cloud fetch failed");
+      toast.error(e instanceof Error ? e.message : "Cloud fetch failed");
     } finally {
       setIsSyncing(false);
     }

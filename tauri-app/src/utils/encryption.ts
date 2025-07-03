@@ -28,21 +28,18 @@ export async function decryptConfig(
 
 // Get encryption key for a specific team
 export function getEncryptionKey(teamId?: string): string | null {
-  const key = localStorage.getItem(`encryption_key_${teamId || "default"}`);
+  const key = localStorage.getItem(`encryption_key_${teamId || "personal"}`);
   return key;
 }
 
 // Store encryption key for a specific team
 export function storeEncryptionKey(key: string, teamId?: string): void {
-  localStorage.setItem(`encryption_key_${teamId || "default"}`, key);
+  localStorage.setItem(`encryption_key_${teamId || "personal"}`, key);
 }
 
 // Generate and store a new encryption key if one doesn't exist
-export async function ensureEncryptionKey(): Promise<string> {
-  let key = getEncryptionKey();
-  if (!key) {
-    key = await generateEncryptionKey();
-    storeEncryptionKey(key);
-  }
+export async function ensureEncryptionKey(teamId?: string): Promise<string> {
+  let key = getEncryptionKey(teamId);
+  if (!key) throw new Error("Encryption key not found for this team.");
   return key;
 }

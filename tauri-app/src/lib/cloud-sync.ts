@@ -5,6 +5,7 @@ import {
   decryptConfig,
   encryptConfig,
   ensureEncryptionKey,
+  getEncryptionKey,
 } from "@/utils/encryption";
 
 export interface CloudConfig {
@@ -53,7 +54,8 @@ export const uploadSingleConfig = async (
   const { name, ...serverConfig } = config;
 
   // Get encryption key and encrypt the config
-  const encryptionKey = await ensureEncryptionKey();
+  const encryptionKey = getEncryptionKey("personal");
+  if (!encryptionKey) throw new Error("Encryption key not found");
   // Stringify the config before encryption
   const configString = JSON.stringify(serverConfig);
   const encryptedConfig = await encryptConfig(configString, encryptionKey);

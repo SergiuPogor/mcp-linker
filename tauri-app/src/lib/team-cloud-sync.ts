@@ -5,6 +5,7 @@ import {
   decryptConfig,
   encryptConfig,
   ensureEncryptionKey,
+  getEncryptionKey,
 } from "@/utils/encryption";
 
 export interface CloudConfig {
@@ -25,7 +26,7 @@ export const uploadTeamConfigs = async (
   teamId: string,
   configs: ServerTableData[],
 ): Promise<void> => {
-  const encryptionKey = await ensureEncryptionKey();
+  const encryptionKey = await ensureEncryptionKey(teamId);
 
   const payload = await Promise.all(
     configs.map(async (config) => {
@@ -62,7 +63,9 @@ export const fetchTeamConfigs = async (
 
     console.log("team config data", data);
     const cloudConfigs: CloudConfig[] = data || [];
-    const encryptionKey = await ensureEncryptionKey();
+    const encryptionKey = getEncryptionKey(teamId);
+    if (!encryptionKey)
+      throw new Error("Encryption key not found for this team.");
 
     const serverConfigs: ServerTableData[] = (
       await Promise.all(
@@ -77,10 +80,18 @@ export const fetchTeamConfigs = async (
             return null;
           }
 
-          const decryptedString = await decryptConfig(
-            config.encryptConfigData,
-            encryptionKey,
-          );
+          let decryptedString;
+          try {
+            decryptedString = await decryptConfig(
+              config.encryptConfigData,
+              encryptionKey,
+            );
+          } catch (err) {
+            console.warn("Decryption failed for:", config.serverName, err);
+            throw new Error(
+              "Decryption failed. Encryption key may have changed.",
+            );
+          }
           const decryptedConfig = JSON.parse(decryptedString);
           return {
             name: config.serverName,

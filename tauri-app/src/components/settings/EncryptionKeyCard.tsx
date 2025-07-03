@@ -13,7 +13,7 @@ import {
   getEncryptionKey,
   storeEncryptionKey,
 } from "@/utils/encryption";
-import { Copy, Eye, EyeOff, RotateCcw, Save, User, Users } from "lucide-react";
+import { Copy, RotateCcw, Save, User, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -31,23 +31,29 @@ export default function EncryptionKeyCard({
   const [key, setKey] = useState<string>("");
   const [showKey, setShowKey] = useState(false);
   const [hasViewedGeneratedKey, setHasViewedGeneratedKey] = useState(false);
+  const [hasStoredKey, setHasStoredKey] = useState(false);
 
   useEffect(() => {
     const storedKey = getEncryptionKey(keyId);
     if (storedKey) {
-      setKey("•".repeat(16));
-      setHasViewedGeneratedKey(false);
+      setKey("");
+      setHasStoredKey(true);
+    } else {
+      setHasStoredKey(false);
     }
   }, [keyId]);
 
   const handleGenerateKey = async () => {
     try {
+      setHasStoredKey(false);
       const newKey = await generateEncryptionKey();
       setKey(newKey);
       setShowKey(true);
       setHasViewedGeneratedKey(true);
-      storeEncryptionKey(newKey, keyId);
-      toast.success(`New encryption key generated and saved for ${keyName}`);
+      // Do not store or set hasStoredKey here; wait until save
+      toast.success(
+        `New encryption key generated. Please copy and store it safely. You won't be able to view it again after saving.`,
+      );
     } catch (error) {
       console.error("Error generating key:", error);
       toast.error("Failed to generate encryption key");
@@ -62,7 +68,11 @@ export default function EncryptionKeyCard({
 
     try {
       storeEncryptionKey(key, keyId);
-      toast.success("Encryption key saved successfully");
+      setHasStoredKey(true);
+      // don't clear key here to allow copy after saving
+      toast.success(
+        "Encryption key saved successfully. You won't be able to view it again.",
+      );
     } catch (error) {
       console.error("Error saving key:", error);
       toast.error("Failed to save encryption key");
@@ -70,9 +80,11 @@ export default function EncryptionKeyCard({
   };
 
   const handleCopyKey = () => {
-    if (key) {
+    if (key && (showKey || hasViewedGeneratedKey)) {
       navigator.clipboard.writeText(key);
       toast.success("Key copied to clipboard");
+    } else {
+      toast.error("Please reveal or generate the key before copying");
     }
   };
 
@@ -90,49 +102,47 @@ export default function EncryptionKeyCard({
           {keyName} Encryption Key
         </CardTitle>
         <CardDescription>
-          View, generate or enter encryption key for {keyName}
+          {hasStoredKey
+            ? "Encryption key is set. You cannot view or retrieve it again. If you wish to change it, generate or enter a new key."
+            : `View, generate or enter encryption key for ${keyName}`}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor={`key-${keyId}`}>Encryption Key</Label>
-          <div className="flex gap-2">
-            <Input
-              id={`key-${keyId}`}
-              type={showKey ? "text" : "password"}
-              value={showKey || hasViewedGeneratedKey ? key : "•".repeat(16)}
-              onChange={(e) => {
-                setKey(e.target.value);
-                setHasViewedGeneratedKey(true);
-              }}
-              placeholder="Enter or generate encryption key"
-              className="font-mono text-sm"
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setShowKey(!showKey)}
-              title={showKey ? "Hide key" : "Show key"}
-            >
-              {showKey ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleCopyKey}
-              disabled={!key}
-              title="Copy key"
-            >
-              <Copy className="w-4 h-4" />
-            </Button>
-          </div>
-          {!key.trim() && !hasViewedGeneratedKey && (
+          {!hasStoredKey && (
+            <div className="flex gap-2">
+              <Input
+                id={`key-${keyId}`}
+                type={showKey ? "text" : "password"}
+                value={key}
+                onChange={(e) => {
+                  setKey(e.target.value);
+                  setHasViewedGeneratedKey(true);
+                }}
+                placeholder="Enter or generate encryption key"
+                className="font-mono text-sm"
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleCopyKey}
+                disabled={!key}
+                title="Copy key"
+              >
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
+          {!hasStoredKey && !key.trim() && !hasViewedGeneratedKey && (
             <p className="text-destructive text-sm mt-1">
               Please generate or enter an encryption key to save.
+            </p>
+          )}
+          {hasStoredKey && (
+            <p className="text-muted-foreground text-sm mt-1">
+              Key is securely stored. For security, you cannot view it again. To
+              set a new key, generate or enter and save a new key.
             </p>
           )}
         </div>
@@ -147,7 +157,7 @@ export default function EncryptionKeyCard({
           </Button>
           <Button
             onClick={handleSaveKey}
-            disabled={!key.trim() || !hasViewedGeneratedKey}
+            disabled={hasStoredKey || !key.trim()}
             className="flex items-center gap-2"
           >
             <Save className="w-4 h-4" />

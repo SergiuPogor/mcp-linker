@@ -2,6 +2,12 @@ import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTable } from "@/components/ui/data-table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useTeamCloudSync } from "@/hooks/useTeamCloudSync";
 import { api } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
@@ -9,6 +15,7 @@ import { useTeamStore } from "@/stores/team";
 import { ServerTableData } from "@/types";
 import { ColumnDef, RowSelectionState, Table } from "@tanstack/react-table";
 import { invoke } from "@tauri-apps/api/core";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CommandDisplay } from "../CommandDisplay";
@@ -19,7 +26,7 @@ export const TeamCloudTable = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [serversData, setServersData] = useState<ServerTableData[]>([]);
   const { selectedClient, selectedPath } = useClientPathStore();
-  const { selectedTeamId } = useTeamStore();
+  const { selectedTeamId, selectedTeamName } = useTeamStore();
 
   const { fetchCloudDownload } = useTeamCloudSync(serversData);
 
@@ -132,6 +139,45 @@ export const TeamCloudTable = () => {
 
   return (
     <div className="flex flex-col">
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-end">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <DeleteAlertDialog
+                    itemName={`all team **(${selectedTeamName})** server configs`}
+                    onDelete={async () => {
+                      try {
+                        await api.delete(`/teams/${selectedTeamId}/configs`);
+                        setServersData([]);
+                        toast.success(
+                          `remove team ${selectedTeamName} server configs in the cloud`,
+                        );
+                      } catch (e) {
+                        toast.error(JSON.stringify(e));
+                      }
+                    }}
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="flex items-center gap-1"
+                      >
+                        <Trash2 />
+                        Delete Team Config
+                      </Button>
+                    }
+                  />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Only use if encryptionKey has changed.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
       <DataTable
         columns={columns}
         data={serversData}
