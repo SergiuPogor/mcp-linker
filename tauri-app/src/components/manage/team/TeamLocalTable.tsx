@@ -23,6 +23,7 @@ export const TeamLocalTable = ({}: TeamLocalTableProps) => {
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
   const filePath = getTeamConfigPath(selectedTeamId) ?? null;
+  const key = getEncryptionKey(selectedTeamId);
 
   const [cloudSyncDialogOpen, setCloudSyncDialogOpen] = useState(false);
   const [isDeleting, _setIsDeleting] = useState(false);
@@ -121,6 +122,12 @@ export const TeamLocalTable = ({}: TeamLocalTableProps) => {
             Upload
             <Key className="h-3 w-3 opacity-60" />
           </Button>
+          {!key && (
+            <Button onClick={() => navigate("/settings")}>
+              <Cloud className="h-4 w-4" />
+              Go to generate encryption key for end to end sync to cloud
+            </Button>
+          )}
         </div>
         <BatchActionsDropdown
           hasSelectedRows={Object.keys(rowSelection).length > 0}

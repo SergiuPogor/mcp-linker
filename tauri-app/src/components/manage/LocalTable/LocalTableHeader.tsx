@@ -2,8 +2,10 @@
 // Always use English comments for code
 import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown";
 import { Button } from "@/components/ui/button";
+import { getEncryptionKey } from "@/utils/encryption";
 import { Cloud, Key, Monitor } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router";
 
 interface LocalTableHeaderProps {
   isSyncing: boolean;
@@ -26,6 +28,9 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
   handleBatchDisable,
   handleBatchDelete,
 }) => {
+  const key = getEncryptionKey();
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-3 items-center">
@@ -51,6 +56,13 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
           Cloud Sync
           <Key className="h-3 w-3 opacity-60" />
         </Button>
+
+        {!key && (
+          <Button onClick={() => navigate("/settings")}>
+            <Cloud className="h-4 w-4" />
+            Go to generate encryption key for end to end sync to cloud
+          </Button>
+        )}
       </div>
       <BatchActionsDropdown
         hasSelectedRows={Object.keys(rowSelection).length > 0}

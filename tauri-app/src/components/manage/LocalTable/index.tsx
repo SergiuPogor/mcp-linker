@@ -1,5 +1,4 @@
 // Main LocalTable component, refactored to use hooks and header component
-// Always use English comments for code
 import { CloudSyncDialog } from "@/components/manage/CloudSyncDialog";
 import { LocalSyncDialog } from "@/components/manage/LocalSyncDialog";
 import { RefreshMcpConfig } from "@/components/manage/RefreshMcpConfig";
@@ -43,6 +42,7 @@ export const LocalTable = ({ isAuthenticated, user }: LocalTableProps) => {
   const [showMissingKeyDialog, setShowMissingKeyDialog] = useState(false);
   const showGlobalDialog = useGlobalDialogStore((s) => s.showDialog);
   const navigate = useNavigate();
+  const key = getEncryptionKey();
 
   const {
     config,
@@ -140,7 +140,6 @@ export const LocalTable = ({ isAuthenticated, user }: LocalTableProps) => {
         return;
       }
     }
-    const key = getEncryptionKey();
     if (!key) {
       setShowMissingKeyDialog(true);
       return;
