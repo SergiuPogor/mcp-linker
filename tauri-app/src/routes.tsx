@@ -31,6 +31,7 @@ import {
 } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
+import { InstallAppPage } from "./pages/InstallApp";
 import TeamMemberPage from "./pages/TeamMemberPage";
 import TeamPage from "./pages/TeamPage";
 
@@ -79,6 +80,7 @@ export const AppRoutes = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/servers/:id" element={<ServerPage />} />
+        <Route path="/install-app" element={<InstallAppPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />
 
         {/* Protected routes */}
@@ -167,6 +169,12 @@ export const getNavigationRoutes = (
       id: "about",
       name: t("nav.about"),
       path: "/about",
+      icon: iconMap.about,
+    },
+    {
+      id: "install-app",
+      name: t("nav.installapp"),
+      path: "/install-app",
       icon: iconMap.about,
     },
   ];

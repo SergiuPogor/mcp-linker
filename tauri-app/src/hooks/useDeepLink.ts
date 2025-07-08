@@ -1,4 +1,5 @@
 import supabase from "@/utils/supabase";
+import { listen } from "@tauri-apps/api/event";
 import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,16 +31,25 @@ export const useDeepLink = () => {
       const url = Array.isArray(urls) ? urls[0] : urls;
       try {
         if (processedUrls.has(url)) {
-          return;
+          // return;
         }
-        debugLog(url);
         processedUrls.add(url);
 
         setIsHandlingDeepLink(true);
         const urlObj = new URL(url);
         const searchParams = new URLSearchParams(urlObj.search.substring(1));
 
-        debugLog(`got ${url}`);
+        // getCurrent().then(current => {
+        //   if (current) {
+        //     debugLog(`got ${url}`);
+        //   }
+        // })
+
+        if (url.includes("install-app")) {
+          const urlObj = new URL(url);
+          debugLog(`got ${urlObj.pathname + urlObj.search}`);
+          navigate(`/install-app${urlObj.pathname + urlObj.search}`, { replace: true });
+        }
 
         if (url.includes("/servers/")) {
           const pathParts = urlObj.pathname.split("/").filter(Boolean); // remove empty
@@ -85,6 +95,16 @@ export const useDeepLink = () => {
     };
 
     onOpenUrl((urls) => handleUrl(urls));
+
+    // Listen to Tauri emit events
+    const unlistenPromise = listen<string>("deep-link-received", (event) => {
+      handleUrl(event.payload);
+    });
+
+    return () => {
+      // Cleanup the listener
+      unlistenPromise.then((un) => un());
+    };
   }, [navigate]);
 
   return isHandlingDeepLink;

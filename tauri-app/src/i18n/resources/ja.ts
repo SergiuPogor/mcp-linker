@@ -35,6 +35,7 @@ const ja: { translation: TranslationSchema } = {
       favs: "お気に入り",
       settings: "設定",
       about: "关于",
+      installapp: "Add Server",
     },
     content: {
       discover: "注目のコンテンツを発見",

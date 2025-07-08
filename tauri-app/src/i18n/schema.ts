@@ -32,6 +32,7 @@ export interface TranslationSchema {
     settings: string;
     about: string;
     recentlyAdded: string;
+    installapp: string;
   };
   content: {
     discover: string;

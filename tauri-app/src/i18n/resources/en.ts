@@ -35,6 +35,7 @@ const en: { translation: TranslationSchema } = {
       manage: "Manage",
       updates: "Updates",
       recentlyAdded: "Recently Added",
+      installapp: "Add Server",
     },
     content: {
       discover: "Discover featured content",

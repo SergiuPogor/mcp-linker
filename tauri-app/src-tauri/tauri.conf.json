@@ -10,7 +10,6 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "MCP Linker",
@@ -24,11 +23,6 @@
         "trafficLightPosition": {
           "x": 12,
           "y": 22
-        },
-        "windowEffects": {
-          "effects": ["fullScreenUI", "mica", "tabbed", "blur", "acrylic"],
-          "state": "active",
-          "radius": 8
         }
       }
     ],

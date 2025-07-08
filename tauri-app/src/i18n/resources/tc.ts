@@ -36,6 +36,7 @@ const tc: { translation: TranslationSchema } = {
       manage: "管理",
       updates: "更新",
       recentlyAdded: "最近新增",
+      installapp: "Add Server",
     },
     content: {
       discover: "探索精選內容",
