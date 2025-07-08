@@ -33,8 +33,8 @@ const Layout = () => {
     <div className="flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 overflow-hidden">
       {/* Header Controls */}
       <div
-        id="titlebar"
-        className={`flex justify-between pt-2 ${
+        data-tauri-drag-region
+        className={`flex justify-between ${
           isMacOS ? "pl-20 pr-2" : "px-2"
         } shrink-0 items-center`}
       >
