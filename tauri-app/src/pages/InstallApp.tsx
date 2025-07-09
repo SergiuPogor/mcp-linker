@@ -93,7 +93,7 @@ export function InstallAppPage() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center gap-2">
-        <h1 className="text-xl font-semibold">Install Server</h1>
+        <h1 className="text-xl font-semibold">Add Server</h1>
         {serverName && (
           <span className="text-muted-foreground">
             {serverName} {repo && `(${repo})`}
@@ -103,7 +103,7 @@ export function InstallAppPage() {
 
       <div className="space-y-2">
         <label htmlFor="config" className="text-sm font-medium">
-          Server Configuration
+          MCP Server Configuration
         </label>
         <Textarea
           id="config"

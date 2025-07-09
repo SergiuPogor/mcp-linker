@@ -25,10 +25,13 @@ Planed use source [awesome-claude-dxt](https://github.com/milisp/awesome-claude-
 [🚀 Quick Start](#quick-start)
 
 [📥 **Download Now**](https://github.com/milisp/mcp-linker/releases) 
-  <span> and open then  one click</span>
-  <a href="https://mcp-linker.store/servers/modelcontextprotocol/sequentialthinking?autoSubmit=true">
-    <img src="https://img.shields.io/badge/Add%20sequentialthinking%20server%20To%20Client-%F0%9F%94%8D%20Click%20Here-blue?logo=link&style=for-the-badge" alt="Add to Client" />
-  </a>
+  <span> and one click</span>
+
+  [![mcp-linker-add](https://img.shields.io/badge/mcp--linker-add-blue?logo=link&style=for-the-badge)](https://www.mcp-linker.store/install-app?name=sequential-thinking&autoSubmit=true&config=eyJzZXF1ZW50aWFsLXRoaW5raW5nIjp7ImNvbW1hbmQiOiJucHgiLCJhcmdzIjpbIi15IiwiQG1vZGVsY29udGV4dHByb3RvY29sL3NlcnZlci1zZXF1ZW50aWFsLXRoaW5raW5nIl19fQ==)
+  
+  this will add sequential-thinking to your selected client
+
+  Want to share your MCP server? Use our [mcp-linker-add Badge](https://mcp-linker.store/install-app) to let others one-click add it!
 
 </div>
 
