@@ -37,6 +37,16 @@ Planed use source [awesome-claude-dxt](https://github.com/milisp/awesome-claude-
 
 ---
 
+## ⚠️ macOS "App is Damaged" Warning
+
+macOS may show a misleading “App is damaged” warning when you open this app.
+
+🎥 [How to Fix It (YouTube)](https://www.youtube.com/watch?v=MEHFd0PCQh4)
+
+More context: [Misleading macOS Warning Repo](https://github.com/milisp/misleading-macos-damaged-warning)
+
+---
+
 ## ✨ Why Choose MCP Linker?
 
 **The fastest way to supercharge your AI workflow**
@@ -51,7 +61,7 @@ MCP Linker = Marketplace + One-click Installer + Config Sync
 - **🔄 Multi-Client Support** — Claude Code and Desktop, Cursor, VS Code, Cline, Roo Code, Windsurf, and more
 - **📦 600+ Curated Servers** — The build-in MCP server marketplace
 - **🌐 Cross-Platform** — macOS, Windows, Linux (lightweight ~6MB)
-- **🔍 Smart Detection** — Auto-detect Python, Node.js, uv environments
+- **🔍 Smart Detection** — Auto-detect and install Python, Node.js, uv environments
 - **⚡ Built with Tauri** — Fast, secure, and resource-efficient
 
 ### 💎 Game-Changing Benefits
