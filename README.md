@@ -1,6 +1,10 @@
-[中文](./docs/README.zh-CN.md) | [Deutsch](./docs/README.de.md) | [es](./docs/README.es.md) | [fr](./docs/README.fr.md) | [日本語](./docs/README.ja-JP.md) | [繁體中文](./docs/README.zh-Han.md)
-
 # MCP Linker
+
+[中文](./docs/README.zh-CN.md) | [Deutsch](./docs/README.de.md) | [es](./docs/README.es.md) | [fr](./docs/README.fr.md) | [日本語](./docs/README.ja-JP.md) | [繁體中文](./docs/README.zh-Han.md)
+[![Stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
+[![Forks](https://img.shields.io/github/forks/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/network/members)
+[![License](https://img.shields.io/github/license/milisp/mcp-linker)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/milisp/mcp-linker)](https://github.com/milisp/mcp-linker/commits)
 
 MCP manage, one-click install and sync MCP (Model Context Protocol) servers across AI clients like Claude Code and Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
@@ -139,4 +143,4 @@ This version is **not yet signed or notarized** by Apple. You may see this warni
 Don’t worry — the app is safe. You can [follow this simple workaround](https://github.com/milisp/mcp-linker/issues/11) to bypass Gatekeeper and open it.
 
 🎯 Once the project reaches **200 stars**, a notarized version will be provided.  
-If you find this tool helpful, please support with a star! [![Star](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)s
+If you find this tool helpful, please support with a star! [![Star](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
