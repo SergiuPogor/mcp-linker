@@ -4,19 +4,17 @@
 
 MCP manage, one-click install and sync MCP (Model Context Protocol) servers across AI clients like Claude Code and Desktop, Cursor, and Cline — all via a lightweight Tauri GUI with a built-in MCP server marketplace.
 
-Planed use source [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome Claude Desktop Extensions (.dxt files), tools, and resources - by milisp
-
-
 <div align="center">
 
 ![MCP Linker Logo](./images/logo.png)
 
 ⚡️ **Say goodbye to copy-paste**
 
-[![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=for-the-badge&logo=github&color=yellow)](https://github.com/milisp/mcp-linker/stargazers)
 [![GitHub release](https://img.shields.io/github/release/milisp/mcp-linker.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
+[![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
 
-### 🌟 **Love this project? Give us a star!** 🌟
+### 🌟 **If this project is helpful to you, please give it a Star!** 🌟
+[![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=for-the-badge&logo=github&color=yellow)](https://github.com/milisp/mcp-linker/stargazers)
 
 ---
 
@@ -34,16 +32,6 @@ Planed use source [awesome-claude-dxt](https://github.com/milisp/awesome-claude-
   Want to share your MCP server? Use our [mcp-linker-add Badge](https://mcp-linker.store/install-app) to let others one-click add it!
 
 </div>
-
----
-
-## ⚠️ macOS "App is Damaged" Warning
-
-macOS may show a misleading “App is damaged” warning when you open this app.
-
-🎥 [How to Fix It (YouTube)](https://www.youtube.com/watch?v=MEHFd0PCQh4)
-
-More context: [Misleading macOS Warning Repo](https://github.com/milisp/misleading-macos-damaged-warning)
 
 ---
 
@@ -113,6 +101,7 @@ bun tauri dev
 We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
 **Found this helpful? Consider giving us a ⭐ to support the project!**
+[![Star](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
 
 
 ## 💬 Support & Community
@@ -135,8 +124,18 @@ We're grateful to our awesome community contributors who make MCP Linker better 
 
 Planned features for upcoming versions:
 
-- 📋 Copy Server Config — Easily copy configurations to share or backup
-- 📥 Import Server Config — Load server config from local files
-- 🌐 Auto Import via GitHub URL — Sync server config directly from a public GitHub link
-- 🧩 Input Args Form UI — Auto-generate simple forms based on inputArgs, like MCPhub Desktop
-- 🐳 One-Click Deploy to Docker — Launch server via MCPHub using Docker with one click
+- [ ] 📋 Copy Server Config — Easily copy configurations to share or backup
+- [ ] 📥 Import Server Config — Load server config from local files
+- [x] 🌐 Auto Import via GitHub URL — Sync server config directly from a public GitHub link
+- [ ] 🧩 Input Args Form UI — Auto-generate simple forms based on inputArgs, like MCPhub Desktop
+- [ ] 🐳 One-Click Deploy to Docker — Launch server via MCPHub using Docker with one click
+
+---
+
+## ⚠️ macOS "App is Damaged" Warning
+
+macOS may show a misleading “App is damaged” warning when you open this app.
+
+🎥 [How to Fix It (YouTube)](https://www.youtube.com/watch?v=MEHFd0PCQh4)
+
+More context: [Misleading macOS Warning Repo](https://github.com/milisp/misleading-macos-damaged-warning)
