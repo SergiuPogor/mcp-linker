@@ -132,10 +132,11 @@ Planned features for upcoming versions:
 
 ---
 
-## ⚠️ macOS "App is Damaged" Warning
+⚠️ macOS Users: Unsigned App Notice
 
-macOS may show a misleading “App is damaged” warning when you open this app.
+This version is **not yet signed or notarized** by Apple. You may see this warning when launching:
 
-🎥 [How to Fix It (YouTube)](https://www.youtube.com/watch?v=MEHFd0PCQh4)
+Don’t worry — the app is safe. You can [follow this simple workaround](https://github.com/milisp/mcp-linker/issues/11) to bypass Gatekeeper and open it.
 
-More context: [Misleading macOS Warning Repo](https://github.com/milisp/misleading-macos-damaged-warning)
+🎯 Once the project reaches **200 stars**, a notarized version will be provided.  
+If you find this tool helpful, please support with a star! [![Star](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)s
