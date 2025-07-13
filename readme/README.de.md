@@ -63,9 +63,9 @@ Nutze Cloud Sync und mehr!
 
 ## 📸 Screenshots
 
-| Verwalten                       | 🔍 Server entdecken             | ⚙️ Konfiguration                |
+| Verwalten                       | 🔍 Server entdecken             | ⚙️ Server hinzufügen                |
 | ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| ![Manage](../images/manage.png) | ![Discover](../images/discover.png) | ![Server hinzufügen](../images/add-server.png) |
 
 ---
 

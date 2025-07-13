@@ -31,9 +31,9 @@
 
 ## 截图展示
 
-| 管理服务器                    | 发现服务器                  | 配置界面                      |
+| 管理服务器                    | 发现服务器                  | 添加服务器                      |
 | ----------------------------- | --------------------------- | ----------------------------- |
-| ![管理](../images/manage.png) | ![发现](../images/home.png) | ![配置](../images/config.png) |
+| ![管理](../images/manage.png) | ![发现](../images/discover.png) | ![Add Server](../images/add-server.png) |
 
 ## 开发指南
 

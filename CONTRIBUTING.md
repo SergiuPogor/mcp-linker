@@ -1,7 +1,5 @@
 # Welcome to mcp-linker 🎉
 
-We are looking for collaborators!
-
 ## What needs help?
 - 🗂 Directory restructure and cleanup
 - ✨ UI component enhancement (ShadCN / Tailwind)

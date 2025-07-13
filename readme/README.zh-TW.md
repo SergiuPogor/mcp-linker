@@ -63,9 +63,9 @@
 
 ## 📸 畫面截圖
 
-| 管理介面                        | 🔍 探索伺服器                   | ⚙️ 設定頁                       |
+| 管理介面                        | 🔍 探索伺服器                   | ⚙️ 新增伺服器                       |
 | ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| ![Manage](../images/manage.png) | ![Discover](../images/discover.png) | ![Add Server](../images/add-server.png) |
 
 ---
 

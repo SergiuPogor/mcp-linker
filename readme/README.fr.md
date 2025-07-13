@@ -63,9 +63,9 @@ Accédez à la synchronisation cloud, et plus encore !
 
 ## 📸 Captures d'écran
 
-| Gérer                           | 🔍 Découverte des serveurs      | ⚙️ Configuration                |
+| Gérer                           | 🔍 Découverte des serveurs      | ⚙️ ajouter serveur                |
 | ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| ![Manage](../images/manage.png) | ![Discover](../images/discover.png) | ![ajouter-serveur](../images/add-server.png) |
 
 ---
 

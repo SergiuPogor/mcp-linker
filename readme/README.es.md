@@ -63,9 +63,9 @@ Accede a sincronización en la nube y más
 
 ## 📸 Capturas de pantalla
 
-| Administrar                     | 🔍 Descubrir servidores         | ⚙️ Configuración                |
+| Administrar                     | 🔍 Descubrir servidores         | ⚙️ aldoni servilon                |
 | ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| ![Manage](../images/manage.png) | ![Discover](../images/discover.png) | ![aldoni servilon](../images/add-server.png) |
 
 ---
 

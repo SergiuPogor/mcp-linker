@@ -28,9 +28,9 @@
 
 ## スクリーンショット
 
-| サーバー管理                    | サーバー探索                    | 設定                            |
+| サーバー管理                    | サーバー探索                    | サーバーを追加                            |
 | ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.png) | ![Discover](../images/home.png) | ![Config](../images/config.png) |
+| ![Manage](../images/manage.png) | ![Discover](../images/discover.png) | ![サーバーを追加](../images/add-server.png) |
 
 ## 開発手順
 
