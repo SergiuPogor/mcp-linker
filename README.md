@@ -23,6 +23,8 @@ Easily manage and sync Model Context Protocol servers across all your AI tools �
 
 MCP Linker Save hours of manual configuration, boosts your productivity, and helps you add 600+ curated mcp servers instantly.
 
+support [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome (not only Claude) Desktop Extensions - by milisp
+
 ### 🚀 **Get Started in 30 Seconds — Say Goodbye to Copy-Paste**
 
 <a href="https://github.com/milisp/mcp-linker/releases" target="_blank">
