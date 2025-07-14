@@ -31,6 +31,7 @@ import {
 } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
+import DxtPage from "./pages/DxtPage";
 import { InstallAppPage } from "./pages/InstallApp";
 import TeamMemberPage from "./pages/TeamMemberPage";
 import TeamPage from "./pages/TeamPage";
@@ -79,6 +80,7 @@ export const AppRoutes = () => {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/dxt" element={<DxtPage />} />
         <Route path="/servers/:id" element={<ServerPage />} />
         <Route path="/install-app" element={<InstallAppPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />
@@ -120,6 +122,7 @@ export const getNavigationRoutes = (
     favorites: <Star size={24} />,
     settings: <Settings size={24} />,
     about: <Info size={24} />,
+    dxt: <Info size={24} />,
   };
 
   return [
@@ -128,6 +131,12 @@ export const getNavigationRoutes = (
       name: t("nav.discover"),
       path: "/discover",
       icon: iconMap.discover,
+    },
+    {
+      id: "dxt",
+      name: t("nav.dxt"),
+      path: "/dxt",
+      icon: iconMap.dxt,
     },
     {
       id: "manage",

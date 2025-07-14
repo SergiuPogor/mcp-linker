@@ -19,6 +19,7 @@ mod json_manager;
 mod mcp_commands;
 mod mcp_crud;
 mod mcp_sync;
+mod dxt;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -30,7 +31,9 @@ struct Config {
 pub fn run() {
     env_path::update_env_path();
 
-    let mut builder = tauri::Builder::default();
+    let mut builder = tauri::Builder::default().plugin(
+        tauri_plugin_sql::Builder::default().build(),
+    );
 
     #[cfg(desktop)]
     {
@@ -69,6 +72,9 @@ pub fn run() {
             encryption::generate_encryption_key,
             encryption::encrypt_data,
             encryption::decrypt_data,
+            dxt::extract_manifests_zip,
+            dxt::read_binary_file,
+            dxt::download_file,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {
