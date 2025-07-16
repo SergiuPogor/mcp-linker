@@ -128,7 +128,7 @@ export default function TeamPage() {
             onClick={startTrial}
             disabled={teamTrialLoading}
           >
-            Start 7-day free Team Trial
+            Start 14-day free Team Trial, No credit card required
           </Button>
         ) : (
           <div className="border p-6 text-center rounded-lg text-muted-foreground">

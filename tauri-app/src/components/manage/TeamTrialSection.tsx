@@ -26,7 +26,7 @@ export function TeamTrialSection() {
   return (
     <div className="flex flex-col justify-center items-center h-full text-center space-y-3 text-muted-foreground mb-4">
       <Button onClick={startTrial} className="mt-2">
-        Start 7-day free Team Trial
+        Start 14-day free Team Trial, No credit card required
       </Button>
     </div>
   );

@@ -32,7 +32,7 @@ export function useTeamTrial() {
     setLoading(true);
     try {
       await api.post("/users/start-trial");
-      toast.success("Trial started! Enjoy your 7-day free access.");
+      toast.success("Trial started! Enjoy your 14-day free access.");
       setTimeout(() => {
         navigate(0);
       }, 1200);

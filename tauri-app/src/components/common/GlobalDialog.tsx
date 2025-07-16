@@ -39,7 +39,7 @@ export function GlobalDialog({
               ? "Sign In to Continue"
               : type === "upgrade"
                 ? "Unlock Pro Features"
-                : "Start Your Free 7-Day Trial!"}
+                : "Start Your Free 14-Day Trial, No credit card required!"}
           </DialogTitle>
         </DialogHeader>
         <div className="py-4">
@@ -47,7 +47,7 @@ export function GlobalDialog({
             ? "You need to login to use this feature."
             : type === "upgrade"
               ? "Upgrade to MCP Linker Pro to use this feature."
-              : "Start a 7-day free trial to unlock all features. No credit card required."}
+              : "Start a 14-day free trial to unlock all features. No credit card required."}
         </div>
         <DialogFooter>
           {type === "login" && (
@@ -77,7 +77,7 @@ export function GlobalDialog({
                 setLoading(true);
                 try {
                   await api.post("/users/start-trial");
-                  toast.success("Trial started! Enjoy your 7-day free access.");
+                  toast.success("Trial started! Enjoy your 14-day free access.");
                   setTimeout(() => {
                     onClose();
                     navigate(0);
