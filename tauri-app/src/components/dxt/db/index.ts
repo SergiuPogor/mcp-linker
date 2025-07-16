@@ -68,9 +68,7 @@ function parseManifestRow(row: any) {
   for (const boolField of ["tools_generated", "prompts_generated"]) {
     if (row[boolField] !== undefined && row[boolField] !== null) {
       if (typeof row[boolField] === "string") {
-        row[boolField] =
-          row[boolField] === "true" ||
-          row[boolField] === "1";
+        row[boolField] = row[boolField] === "true" || row[boolField] === "1";
       } else {
         row[boolField] = Boolean(row[boolField]);
       }
@@ -105,5 +103,23 @@ export async function getAllManifests() {
   } catch (err) {
     console.error("Get all manifests failed", err);
     return [];
+  }
+}
+
+// Get a single manifest by id
+export async function getManifestById(id: number) {
+  try {
+    const db = await getDb();
+    const rows = (await db.select(
+      "SELECT * FROM dxt_manifests WHERE id = ? LIMIT 1",
+      [id],
+    )) as any[];
+    if (rows.length > 0) {
+      return parseManifestRow(rows[0]);
+    }
+    return null;
+  } catch (err) {
+    console.error("Get manifest by id failed", err);
+    return null;
   }
 }

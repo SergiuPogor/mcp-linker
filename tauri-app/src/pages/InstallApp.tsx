@@ -34,12 +34,14 @@ function decodeAndFormatConfig(config: string): string {
 export function InstallAppPage() {
   const [searchParams] = useSearchParams();
   const serverName = searchParams.get("name") || "blender-map";
-  const config = searchParams.get("config") || "eyJibGVuZGVyLW1jcCI6eyJjb21tYW5kIjoidXZ4IGJsZW5kZXItbWNwIn19";
+  const config =
+    searchParams.get("config") ||
+    "eyJibGVuZGVyLW1jcCI6eyJjb21tYW5kIjoidXZ4IGJsZW5kZXItbWNwIn19";
   const autoSubmit = searchParams.get("autoSubmit");
   const repo = searchParams.get("repo");
   const { selectedClient, selectedPath } = useClientPathStore();
 
-  const [editableConfig, setEditableConfig] = useState('');
+  const [editableConfig, setEditableConfig] = useState("");
 
   // Initialize config on component mount
   useEffect(() => {
@@ -58,10 +60,9 @@ export function InstallAppPage() {
       try {
         const obj = JSON.parse(editableConfig);
         toast.error(
-          `No valid config found. serverName: ${serverName}, objKeys: ${Object.keys(obj).join(", ")}`
+          `No valid config found. serverName: ${serverName}, objKeys: ${Object.keys(obj).join(", ")}`,
         );
-      } catch (e) {
-      }
+      } catch (e) {}
       return;
     }
 
@@ -114,8 +115,8 @@ export function InstallAppPage() {
         />
       </div>
 
-      <Button 
-        onClick={addServer} 
+      <Button
+        onClick={addServer}
         disabled={!selectedClient || !serverName || !editableConfig}
         className="w-full"
       >

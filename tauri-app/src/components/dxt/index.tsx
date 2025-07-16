@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router";
 
 // DxtCard component to display manifest info
 export function DxtCard({ dxt }: { dxt: any }) {
@@ -7,17 +8,26 @@ export function DxtCard({ dxt }: { dxt: any }) {
   const toolsArray = Array.isArray(dxt.tools) ? dxt.tools : [];
   const showTools = toolsArray.slice(0, 3);
   const hasMore = toolsArray.length > 3;
-  console.log(dxt);
+  const navigate = useNavigate();
 
   return (
-    <Card className="w-full h-full flex flex-col justify-between">
+    <Card
+      className="w-full h-full flex flex-col justify-between cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={() => {
+        console.log("go to ", dxt.id);
+        navigate(`/dxt/${dxt.id}`);
+      }}
+    >
       <CardContent className="flex flex-col flex-1">
         <div className="flex gap-2">
           <img src={dxt.icon} alt="icon" className="w-10 h-10 rounded" />
           <div className="flex flex-col">
-            <span className="font-bold text-lg">{dxt.display_name}</span>
+            <div className="flex justify-between">
+              <span className="font-bold text-lg">{dxt.display_name}</span>
+              <ChevronRight />
+            </div>
             <div className="text-sm text-muted-foreground">
-              By {dxt.author?.name}
+              {dxt.author?.name}
             </div>
           </div>
         </div>
@@ -39,10 +49,8 @@ export function DxtCard({ dxt }: { dxt: any }) {
           )}
         </div>
       </CardContent>
-      {/* Add button at the bottom */}
-      <div className="p-2 pt-0 flex justify-end">
-        <Button size="sm">Add</Button>
-      </div>
     </Card>
   );
 }
+
+export { UserConfigForm } from "./user-config/UserConfigForm";

@@ -77,7 +77,9 @@ export function GlobalDialog({
                 setLoading(true);
                 try {
                   await api.post("/users/start-trial");
-                  toast.success("Trial started! Enjoy your 14-day free access.");
+                  toast.success(
+                    "Trial started! Enjoy your 14-day free access.",
+                  );
                   setTimeout(() => {
                     onClose();
                     navigate(0);

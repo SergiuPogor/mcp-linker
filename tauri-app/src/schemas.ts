@@ -77,6 +77,7 @@ export const DxtUserConfigValuesSchema = z.record(
 );
 
 export const DxtManifestSchema = z.strictObject({
+  id: z.string().or(z.number()).optional(),
   $schema: z.string().optional(),
   dxt_version: z.string(),
   name: z.string(),

@@ -10,7 +10,8 @@ export async function autoImportManifests() {
   const manifests = await getAllManifests();
   if (manifests.length > 0) return;
 
-  const url = "https://github.com/milisp/awesome-claude-dxt/releases/download/v1.0.0/manifests.json.zip";
+  const url =
+    "https://github.com/milisp/awesome-claude-dxt/releases/download/v1.0.0/manifests.json.zip";
 
   // 2. Download manifests.zip into the app‑cache directory
   const cacheDir = await appCacheDir();
@@ -18,15 +19,19 @@ export async function autoImportManifests() {
   await invoke("download_file", { url, destPath: zipPath });
 
   // 3. Extract the zip into the cache directory
-  const zipData: Uint8Array = await invoke("read_binary_file", { path: zipPath });
+  const zipData: Uint8Array = await invoke("read_binary_file", {
+    path: zipPath,
+  });
   await invoke("extract_manifests_zip", {
     zipData: Array.from(zipData),
-    targetDir: cacheDir
+    targetDir: cacheDir,
   });
 
   // 4. Read manifests.json that was just extracted
   const jsonPath = `${cacheDir}/manifests.json`;
-  const jsonBytes = await invoke<Array<number>>("read_binary_file", { path: jsonPath });
+  const jsonBytes = await invoke<Array<number>>("read_binary_file", {
+    path: jsonPath,
+  });
   const jsonStr = new TextDecoder().decode(new Uint8Array(jsonBytes));
   const manifestArr = JSON.parse(jsonStr);
   if (Array.isArray(manifestArr)) {

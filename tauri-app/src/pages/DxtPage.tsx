@@ -15,7 +15,7 @@ function normalizeManifest(obj: any) {
   for (const key in rest) {
     if (rest[key] === null) rest[key] = undefined;
   }
-  return rest;
+  return { id, ...rest };
 }
 
 export default function DxtPage() {
@@ -107,7 +107,7 @@ export default function DxtPage() {
         </button>
       </div>
       {/* Grid layout for DXT cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {dxtList.map((dxt, idx) => (
           <DxtCard key={idx} dxt={dxt} />
         ))}

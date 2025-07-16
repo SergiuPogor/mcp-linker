@@ -31,6 +31,7 @@ import {
 } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
+import DxtDetail from "./pages/DxtDetail";
 import DxtPage from "./pages/DxtPage";
 import { InstallAppPage } from "./pages/InstallApp";
 import TeamMemberPage from "./pages/TeamMemberPage";
@@ -81,6 +82,7 @@ export const AppRoutes = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/dxt" element={<DxtPage />} />
+        <Route path="/dxt/:id" element={<DxtDetail />} />
         <Route path="/servers/:id" element={<ServerPage />} />
         <Route path="/install-app" element={<InstallAppPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />
