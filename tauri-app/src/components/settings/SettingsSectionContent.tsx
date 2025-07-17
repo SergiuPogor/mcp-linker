@@ -1,7 +1,5 @@
 import EncryptionKeyCard from "@/components/settings/EncryptionKeyCard";
 import SecurityNoticeCard from "@/components/settings/SecurityNoticeCard";
-import { Switch } from "@/components/ui/switch";
-import { useConsentStore } from "@/stores/consentStore";
 import React from "react";
 
 interface Key {
@@ -21,11 +19,6 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
   keys,
 }) => {
   // Use zustand store for privacy state
-  const telemetryEnabled = useConsentStore((state) => state.telemetryEnabled);
-  const toggleTelemetry = useConsentStore((state) => state.toggleTelemetry);
-  const hasAgreedToTerms = useConsentStore((state) => state.hasAgreedToTerms);
-  const agreeToTerms = useConsentStore((state) => state.agreeToTerms);
-  const declineTerms = useConsentStore((state) => state.declineTerms);
 
   if (selectedSection === "encryption") {
     return (
@@ -40,28 +33,6 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
         ))}
         {/* Security Notice always at the bottom */}
         <SecurityNoticeCard />
-      </div>
-    );
-  }
-  if (selectedSection === "telemetry") {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Telemetry Management</h2>
-        <div className="flex items-center space-x-4">
-          <span>Allow anonymous usage data</span>
-          <Switch
-            checked={telemetryEnabled}
-            onCheckedChange={toggleTelemetry}
-          />
-        </div>
-        <div>Only server name and client name will be collect</div>
-        <div className="flex items-center space-x-4">
-          <span>I agree to terms</span>
-          <Switch
-            checked={hasAgreedToTerms}
-            onCheckedChange={(val) => (val ? agreeToTerms() : declineTerms())}
-          />
-        </div>
       </div>
     );
   }

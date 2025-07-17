@@ -12,7 +12,6 @@ interface Key {
 // Settings sections
 const SECTIONS = [
   { id: "encryption", label: "Encryption" },
-  { id: "telemetry", label: "Telemetry" },
   // Add more sections here in the future
 ];
 

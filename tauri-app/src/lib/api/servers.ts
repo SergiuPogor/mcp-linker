@@ -1,5 +1,4 @@
 import { api } from "@/lib/api";
-import { useConsentStore } from "@/stores/consentStore";
 import { toast } from "sonner";
 
 function buildQueryParams(
@@ -62,30 +61,5 @@ export async function fetchServers(
       hasNext: false,
       total: 0,
     };
-  }
-}
-
-export async function incrementDownloads(
-  serverId: string,
-  clientName: string,
-  serverName: string,
-) {
-  const { hasAgreedToTerms } = useConsentStore.getState();
-  const payload = {
-    client_name: clientName,
-    server_name: serverName,
-  };
-
-  // only send client_name and server_name with hasAgreedToTerms
-  if (hasAgreedToTerms) {
-    try {
-      const response = await api.post(
-        `/servers/${serverId}/download-count`,
-        payload,
-      );
-      console.log("Stats updated:", response.data);
-    } catch (error) {
-      console.error("Error updating server stats:", error);
-    }
   }
 }

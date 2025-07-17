@@ -1,5 +1,4 @@
 // useSaveServerConfig.ts
-import { incrementDownloads } from "@/lib/api/servers";
 import type { ServerConfig, ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
@@ -35,8 +34,7 @@ export function useSaveServerConfig() {
       } catch (e) {
         // already have
       }
-      incrementDownloads(currentServer.id, selectedClient, selectedServer);
-      console.log("add server", new Date(), server);
+      console.log("add server", new Date(), server, currentServer);
     } catch (error) {
       console.error(error);
       throw error;
