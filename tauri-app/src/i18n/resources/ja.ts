@@ -36,6 +36,7 @@ const ja: { translation: TranslationSchema } = {
       settings: "設定",
       about: "关于",
       installapp: "Add Server",
+      dxt: "dxt",
     },
     content: {
       discover: "注目のコンテンツを発見",

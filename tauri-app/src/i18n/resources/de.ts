@@ -36,6 +36,7 @@ const de: { translation: TranslationSchema } = {
       updates: "Updates",
       recentlyAdded: "Kürzlich hinzugefügt",
       installapp: "Add Server",
+      dxt: "dxt",
     },
     content: {
       discover: "Empfohlene Inhalte entdecken",

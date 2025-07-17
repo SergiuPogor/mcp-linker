@@ -37,6 +37,7 @@ const tc: { translation: TranslationSchema } = {
       updates: "更新",
       recentlyAdded: "最近新增",
       installapp: "Add Server",
+      dxt: "dxt",
     },
     content: {
       discover: "探索精選內容",
