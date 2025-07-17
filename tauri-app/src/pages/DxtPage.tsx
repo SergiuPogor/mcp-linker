@@ -6,6 +6,7 @@ import {
 } from "@/components/dxt/db";
 import autoImportManifests from "@/components/dxt/db/autoImport";
 import { DxtManifestSchema } from "@/schemas";
+import * as Progress from "@radix-ui/react-progress";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
@@ -23,6 +24,7 @@ export default function DxtPage() {
     [],
   );
   const [search, setSearch] = useState("");
+  const [progress, setProgress] = useState<{ step: number; total: number } | null>(null);
 
   // Ensure table is initialized and auto import manifests if needed
   useEffect(() => {
@@ -30,8 +32,10 @@ export default function DxtPage() {
       await initTable();
       // Auto import manifests if table is empty
       try {
-        await autoImportManifests();
+        await autoImportManifests((step, total) => setProgress({ step, total }));
+        setProgress(null); // Hide progress bar after import
       } catch (err) {
+        setProgress(null);
         console.error("Failed to auto import manifests:", err);
       }
       getAllManifests().then((result) => {
@@ -73,6 +77,20 @@ export default function DxtPage() {
 
   return (
     <div className="p-2">
+      {/* progress bar */}
+      {progress && (
+        <div className="mb-4">
+          <Progress.Root value={progress.step} max={progress.total} className="h-2 bg-gray-200 rounded overflow-hidden">
+            <Progress.Indicator
+              className="bg-green-500 h-2 rounded"
+              style={{ width: `${(progress.step / progress.total) * 100}%`, transition: 'width 0.3s' }}
+            />
+          </Progress.Root>
+          <div className="text-xs text-gray-500 mt-1">
+            Step {progress.step} of {progress.total}
+          </div>
+        </div>
+      )}
       {/* action */}
       <div className="flex gap-2 mb-4">
         <input

@@ -5,10 +5,14 @@ import { insertManifest } from "./create";
 import { getAllManifests } from "./index";
 
 // Auto import manifests if the dxt_manifests table is empty
-export async function autoImportManifests() {
+export async function autoImportManifests(onProgress?: (step: number, total: number) => void) {
+  const totalSteps = 5;
+  let currentStep = 0;
+
   // 1. Check if table is empty
   const manifests = await getAllManifests();
   if (manifests.length > 0) return;
+  onProgress?.(++currentStep, totalSteps);
 
   const url =
     "https://github.com/milisp/awesome-claude-dxt/releases/download/v1.0.0/manifests.json.zip";
@@ -17,6 +21,7 @@ export async function autoImportManifests() {
   const cacheDir = await appCacheDir();
   const zipPath = `${cacheDir}/manifests.json.zip`;
   await invoke("download_file", { url, destPath: zipPath });
+  onProgress?.(++currentStep, totalSteps);
 
   // 3. Extract the zip into the cache directory
   const zipData: Uint8Array = await invoke("read_binary_file", {
@@ -26,6 +31,7 @@ export async function autoImportManifests() {
     zipData: Array.from(zipData),
     targetDir: cacheDir,
   });
+  onProgress?.(++currentStep, totalSteps);
 
   // 4. Read manifests.json that was just extracted
   const jsonPath = `${cacheDir}/manifests.json`;
@@ -39,9 +45,11 @@ export async function autoImportManifests() {
       await insertManifest(manifest);
     }
   }
+  onProgress?.(++currentStep, totalSteps);
 
   // 5. Clean up the downloaded zip
   await remove(zipPath);
+  onProgress?.(++currentStep, totalSteps);
 }
 
 // Default export for convenience
