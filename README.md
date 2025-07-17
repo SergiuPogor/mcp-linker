@@ -2,8 +2,6 @@
 
 ![MCP Linker Logo](./images/logo.png)
 
-**Created by [milisp](https://github.com/milisp) — Building the AI tools of tomorrow**
-
 # MCP Linker
 
 [![English](https://img.shields.io/badge/English-Click-yellow)](README.md)
@@ -76,16 +74,6 @@ For mcp server users and creators
 👉 [**See Pro Plans →**](https://mcp-linker.store/pricing)
 
 <sub>Starts at less than the price of a coffee per month ☕</sub>
-
-## 👤 About the Creator
-
-**MCP Linker** is created and maintained by [**milisp**](https://github.com/milisp),  
-a passionate developer building tools at the frontier of AI + developer productivity.
-
-🔗 Check out other projects by milisp:  
-- [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) – Curated list of Claude Desktop Extensions  
-
-Follow me On [Twitter](https://x.com/mikelelisp) or ⭐ to stay updated on cutting-edge tools for the Claude/MCP ecosystem!
 
 ## 📚 Documentation
 
