@@ -2,6 +2,8 @@
 
 ![MCP Linker Logo](./images/logo.png)
 
+**Created by [milisp](https://github.com/milisp) — Building the AI tools of tomorrow**
+
 # MCP Linker
 
 [![English](https://img.shields.io/badge/English-Click-yellow)](README.md)
@@ -19,9 +21,7 @@
 
 **One-click add and sync MCP (Model Context Protocol) servers across AI clients like Claude Code, Desktop, Cursor, and Cline.**
 
-Easily manage and sync Model Context Protocol servers across all your AI tools — without editing a single config file.
-
-MCP Linker Save hours of manual configuration, boosts your productivity, and helps you add 600+ curated mcp servers instantly.
+![Demo](./images/demo.gif)
 
 support [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A curated list of awesome (not only Claude) Desktop Extensions - by milisp
 
@@ -31,7 +31,6 @@ support [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) - A c
   <img src="https://img.shields.io/badge/📥%20Download%20Latest-macOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=github" alt="Download MCP Linker" />
 </a>
 <br />
-<sub>Lightweight (~6MB) • No config files • Instant Claude enhancement</sub>
 
 [![mcp-linker-add](https://img.shields.io/badge/mcp--linker-add-blue?logo=link&style=for-the-badge)](https://www.mcp-linker.store/install-app?name=sequential-thinking&autoSubmit=true&config=eyJzZXF1ZW50aWFsLXRoaW5raW5nIjp7ImNvbW1hbmQiOiJucHgiLCJhcmdzIjpbIi15IiwiQG1vZGVsY29udGV4dHByb3RvY29sL3NlcnZlci1zZXF1ZW50aWFsLXRoaW5raW5nIl19fQ==)
 
@@ -71,10 +70,6 @@ For mcp server users and creators
 ### ⚙️ Add server
 ![Add server](./images/add-server.png)
 
-## 🖼️ Demo
-
-![Demo](./images/demo.gif)
-
 ## 🚀 Upgrade to Pro
 
 🔐 Want cloud sync, backup, and team support?  
@@ -82,11 +77,66 @@ For mcp server users and creators
 
 <sub>Starts at less than the price of a coffee per month ☕</sub>
 
+## 👤 About the Creator
+
+**MCP Linker** is created and maintained by [**milisp**](https://github.com/milisp),  
+a passionate developer building tools at the frontier of AI + developer productivity.
+
+🔗 Check out other projects by milisp:  
+- [awesome-claude-dxt](https://github.com/milisp/awesome-claude-dxt) – Curated list of Claude Desktop Extensions  
+
+Follow me On [Twitter](https://x.com/mikelelisp) or ⭐ to stay updated on cutting-edge tools for the Claude/MCP ecosystem!
+
 ## 📚 Documentation
 
-- [🛠️ Development Guide](./readme/DEVELOPMENT.md)
 - [📅 Roadmap](./readme/ROADMAP.md)
 - [🍎 macOS Notice](./readme/MACOS-NOTICE.md)
+
+## Install
+
+Just download and open
+
+### macOS special Install Information
+
+> Apple say "App is damaged"
+
+This is 100% opensource
+
+### How to Open Unsigned Apps on macOS
+
+> follow this or ask AI or search.
+
+1. Try to open the app normally
+2. If blocked, go to System Preferences → Security & Privacy
+3. Click "Open Anyway" next to the blocked app message
+4. Or use the command line: 
+
+```sh
+xattr -d com.apple.quarantine /path/to/MCPLinker.app
+```
+
+5. Or watch Youtube
+
+🎥 [Youtube Video: How to Fix It](https://www.youtube.com/watch?v=MEHFd0PCQh4)
+
+## 🛠️ Development Setup
+
+**Requirements:** Node.js 20+, Bun, Rust toolchain, [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/)
+
+### Getting Started
+
+```bash
+git clone https://github.com/milisp/mcp-linker
+cd mcp-linker/tauri-app
+bun install
+cp .env.example .env
+bun tauri dev
+```
+
+## 🏗️ Architecture
+
+- **Frontend:** Tauri + React + shadcn/ui
+- **Backend:** Optional FastAPI
 
 ## 💬 Support & Community
 
@@ -115,7 +165,7 @@ We're grateful to our awesome community contributors who make MCP Linker better 
 - **Local First**: All configurations are stored locally by default
 - **Optional Cloud Sync**: Pro users can opt-in to encrypted cloud synchronization
 - **Open Source**: Full transparency with public source code
-- **No Tracking now**: We maybe collect personal usage data to improve MCP Linker later
+- **No Tracking**: No collect personal usage data
 
 ## 📝 License
 
