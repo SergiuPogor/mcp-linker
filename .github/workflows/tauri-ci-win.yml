@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
     paths:
       - ".github/workflows/tauri-ci-win.yml"
       - "tauri-app/src/**"
@@ -74,3 +76,13 @@ jobs:
           path: |
             tauri-app/src-tauri/target/release/bundle/**/*.exe
             tauri-app/src-tauri/target/release/bundle/**/*.msi
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: |
+            tauri-app/src-tauri/target/release/bundle/**/*.exe
+            tauri-app/src-tauri/target/release/bundle/**/*.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
