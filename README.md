@@ -56,6 +56,10 @@ Or run: `xattr -d com.apple.quarantine /path/to/MCPLinker.app`
 ## What's MCP?
 Model Context Protocol is like USB-C for AI — a standard way to connect AI models to different data sources and tools.
 
+## 🧭 Related Projects
+
+Check out [**awesome-claude-dxt**](https://github.com/milisp/awesome-claude-dxt) — a curated list of Claude Desktop Extensions (dxt), tools, and resources
+
 ## 💬 Community & Support
 
 - [💬 Join Discussions](https://github.com/milisp/mcp-linker/discussions)
