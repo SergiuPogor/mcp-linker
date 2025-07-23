@@ -83,3 +83,7 @@ MIT License - see [LICENSE](LICENSE)
 
 ---
 **Found this helpful? Please ⭐ the project!**
+
+## 📈 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
