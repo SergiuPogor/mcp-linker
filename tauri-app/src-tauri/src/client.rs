@@ -42,6 +42,16 @@ impl ClientConfig {
                     PathBuf::from(home)
                         .join("Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
                 }
+                #[cfg(target_os = "windows")]
+                {
+                    PathBuf::from(home)
+                        .join("AppData/Roaming/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+                }
+                #[cfg(target_os = "linux")]
+                {
+                    PathBuf::from(home)
+                        .join(".config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+                }
                 #[cfg(not(any(target_os = "macos")))]
                 {
                     PathBuf::from("")
@@ -75,9 +85,18 @@ impl ClientConfig {
                 if base_path.is_empty() {
                     #[cfg(target_os = "macos")]
                     {
-                        // On macOS, use the globalStorage path for roo_code
                         PathBuf::from(&home)
                             .join("Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
+                    }
+                    #[cfg(target_os = "windows")]
+                    {
+                        PathBuf::from(&home)
+                            .join("AppData/Roaming/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
+                    }
+                    #[cfg(target_os = "linux")]
+                    {
+                        PathBuf::from(&home)
+                            .join(".config/Code/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
                     }
                     #[cfg(not(target_os = "macos"))]
                     {

@@ -3,7 +3,6 @@ import { ServerList } from "@/components/server";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
 const categories = [
   {
@@ -58,7 +57,6 @@ const categories = [
 
 export default function Discovery() {
   const [selectedTab, setSelectedTab] = useState<string>("featured");
-  const navigate = useNavigate();
 
   const {
     data: discoverServers,
@@ -96,15 +94,7 @@ export default function Discovery() {
           </div>
         ))}
       </div>
-      {/* Use navigate to programmatically go to the server detail page */}
-      {import.meta.env.VITE_IS_DEV === "true" && (
-        <div
-          className="cursor-pointer text-blue-600 underline hover:text-blue-800"
-          onClick={() => navigate("/servers/milisp/automatisch-mcp-server")}
-        >
-          milisp/automatisch-mcp-server
-        </div>
-      )}
+
       <div className="mt-8">
         {isLoading && <div>Loading...</div>}
         {error && <div>Error loading servers.</div>}

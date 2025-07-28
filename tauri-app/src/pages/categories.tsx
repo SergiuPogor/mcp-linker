@@ -2,7 +2,7 @@ import { ServerList } from "@/components/server";
 import { useMcpServers } from "@/hooks/useMcpServers";
 import { ServerType } from "@/types";
 import { CategoryType } from "@/types/cat";
-import { ChevronDown, ChevronLeft } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -155,14 +155,15 @@ export default function Categories() {
         </div>
       ) : (
         // Show categories grid
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {categories.map((category: CategoryType) => (
             <div
               key={category.id}
-              className="border rounded p-4 shadow cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="flex justify-between rounded p-2 shadow cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
               onClick={() => handleCategoryClick(category)}
             >
-              <h2 className="text-lg font-semibold">{category.name}</h2>
+              <span>{category.name}</span>
+              <ChevronRight />
             </div>
           ))}
         </div>
