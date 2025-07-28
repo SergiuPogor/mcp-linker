@@ -17,7 +17,7 @@ Unlike tools like Cline that need LLM integration just to add MCP servers, MCP L
 
 - **Local Sync** — Sync mcp server config across Multi-Client
 - **600+ Curated MCP Servers** — Built-in marketplace with sequential-thinking, desktop-commander, and more
-- **Multi-Client Support** — Claude Desktop/Code, Cursor, VS Code, Cline, Windsurf
+- **Multi-Client Support** — Claude Desktop/Code, Cursor, VS Code, Cline, Windsurf. [see Detail](./docs/clients.md)
 - **Cross-Platform** — macOS, Windows, Linux (~6MB)
 - **Smart Detection** — Auto-detect Python, Node.js, uv environments
 - **Cloud Sync** — Optional encrypted sync across devices (Pro)
