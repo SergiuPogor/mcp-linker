@@ -53,9 +53,7 @@ impl ClientConfig {
                         .join(".config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
                 }
                 #[cfg(not(any(target_os = "macos")))]
-                {
-                    PathBuf::from("")
-                }
+                PathBuf::from("")
             }
             ("vscode", Some(base_path)) => {
                 // For VSCode, we use the provided path + .vscode/mcp.json
@@ -99,10 +97,8 @@ impl ClientConfig {
                             .join(".config/Code/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
                     }
                     #[cfg(not(target_os = "macos"))]
-                    {
-                        // On other platforms, return empty path
-                        PathBuf::from("")
-                    }
+                    // On other platforms, return empty path
+                    PathBuf::from("")
                 } else {
                     // If a base path is provided, use base_path + .roo/mcp.json
                     PathBuf::from(base_path).join(".roo/mcp.json")
