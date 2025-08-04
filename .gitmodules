@@ -1,0 +1,3 @@
+[submodule "mcp-linker-api"]
+	path = mcp-linker-api
+	url = https://github.com/milisp/mcp-linker-api
