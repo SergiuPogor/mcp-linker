@@ -489,16 +489,6 @@ export default function Discovery() {
         >
           📂 Categories
         </button>
-        <button
-          onClick={() => handleTabChange("search")}
-          className={`px-4 py-2 rounded-md transition ${
-            selectedTab === "search"
-              ? "bg-white dark:bg-gray-700 shadow-sm"
-              : "hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          🔍 Search
-        </button>
       </div>
 
       {/* Content */}

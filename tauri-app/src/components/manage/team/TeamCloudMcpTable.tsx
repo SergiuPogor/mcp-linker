@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CommandDisplay } from "../CommandDisplay";
 
-export const TeamCloudTable = () => {
+export const TeamCloudMcpTable = () => {
   const [_tableInstance, setTableInstance] =
     useState<Table<ServerTableData> | null>(null);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});

@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Cloud } from "lucide-react";
 
 /**
- * Props for PersonalTabsSection component.
+ * Props for PersonalMcpSection component.
  */
-interface PersonalTabsSectionProps {
+interface PersonalMcpSectionProps {
   personalTab: string;
   setPersonalTab: (tab: string) => void;
   user: any;
@@ -17,16 +17,16 @@ interface PersonalTabsSectionProps {
 }
 
 /**
- * Component for rendering the personal tabs and tables.
+ * Component for rendering the personal MCP server management tabs and tables.
  */
-export function PersonalTabsSection({
+export function PersonalMcpSection({
   personalTab,
   setPersonalTab,
   user,
   isAuthenticated,
   encryptionKey,
   navigate,
-}: PersonalTabsSectionProps) {
+}: PersonalMcpSectionProps) {
   return (
     <Tabs
       value={personalTab}

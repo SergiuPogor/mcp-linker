@@ -1,5 +1,5 @@
-import { TeamCloudTable } from "@/components/manage/team/TeamCloudTable";
-import { TeamLocalTable } from "@/components/manage/team/TeamLocalTable";
+import { TeamCloudMcpTable } from "@/components/manage/team/TeamCloudMcpTable";
+import { TeamLocalMcpTable } from "@/components/manage/team/TeamLocalMcpTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -66,7 +66,7 @@ export function TeamTabsSection({
         )}
       </div>
       <TabsContent value="teamLocal" className="flex-1 min-h-0">
-        <TeamLocalTable />
+        <TeamLocalMcpTable />
       </TabsContent>
       <TabsContent value="teamCloud" className="flex-1 min-h-0">
         {!isAuthenticated ? (
@@ -88,7 +88,7 @@ export function TeamTabsSection({
             Loading user info...
           </div>
         ) : (
-          <TeamCloudTable />
+          <TeamCloudMcpTable />
         )}
       </TabsContent>
     </Tabs>

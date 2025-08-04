@@ -16,9 +16,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./TeamServerTableColumns";
 
-type TeamLocalTableProps = {};
+type TeamLocalMcpTableProps = {};
 
-export const TeamLocalTable = ({}: TeamLocalTableProps) => {
+export const TeamLocalMcpTable = ({}: TeamLocalMcpTableProps) => {
   const navigate = useNavigate();
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
