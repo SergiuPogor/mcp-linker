@@ -20,7 +20,7 @@ import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { UserWithTier } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useServerTableColumns } from "../ServerTableColumns";
 import { LocalTableHeader } from "./LocalTableHeader";
@@ -155,6 +155,30 @@ export const LocalTable = ({ isAuthenticated, user }: LocalTableProps) => {
     onEdit: handleEdit,
     onDelete: deleteConfig,
   });
+
+  // Listen for refresh events from the refresh context
+  useEffect(() => {
+    const handleServerListChanged = (event: CustomEvent) => {
+      const { client, path } = event.detail || {};
+      
+      // Refresh if this matches our current client/path or if no specific client/path is provided
+      if (!client || !path || (client === selectedClient && path === selectedPath)) {
+        loadConfig();
+      }
+    };
+
+    const handleDataRefresh = () => {
+      loadConfig();
+    };
+
+    window.addEventListener('mcpServerListChanged', handleServerListChanged as EventListener);
+    window.addEventListener('mcpDataRefresh', handleDataRefresh as EventListener);
+
+    return () => {
+      window.removeEventListener('mcpServerListChanged', handleServerListChanged as EventListener);
+      window.removeEventListener('mcpDataRefresh', handleDataRefresh as EventListener);
+    };
+  }, [selectedClient, selectedPath, loadConfig]);
 
   return (
     <div className="flex flex-col">

@@ -3,6 +3,7 @@ import type { ServerConfig, ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import { LOCAL_STORAGE_KEY } from "./useLocalDraft";
+import { useMcpRefresh } from "@/contexts/McpRefreshContext";
 
 interface SaveServerConfigParams {
   selectedClient: string;
@@ -11,9 +12,12 @@ interface SaveServerConfigParams {
   serverName: string;
   config: ServerConfig | null;
   setIsDialogOpen: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 export function useSaveServerConfig() {
+  const { refreshServerList } = useMcpRefresh();
+  
   async function updateConfig(
     selectedClient: string,
     selectedPath: string,
@@ -48,6 +52,7 @@ export function useSaveServerConfig() {
     serverName,
     config,
     setIsDialogOpen,
+    onSuccess,
   }: SaveServerConfigParams) => {
     if (selectedClient === "custom" && !selectedPath) {
       toast.error("Path is required");
@@ -96,9 +101,16 @@ export function useSaveServerConfig() {
         } catch (error) {
           console.error("Failed to save to myservers:", error);
         }
+        
+        // Use unified refresh system
+        refreshServerList(selectedClient, selectedPath);
+        
         setIsDialogOpen(false);
         toast.success("Configuration updated successfully");
         localStorage.removeItem(LOCAL_STORAGE_KEY);
+        
+        // Call custom success callback if provided
+        onSuccess?.();
       } catch (error) {
         console.error("Failed to update config:", error);
         const message = error instanceof Error ? error.message : String(error);

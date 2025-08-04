@@ -1,3 +1,4 @@
+import { useMcpRefresh } from "@/contexts/McpRefreshContext";
 import { useGithubReadmeJson } from "@/hooks/useGithubReadmeJson";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { useConfigFileStore } from "@/stores/configFileStore";
@@ -5,7 +6,6 @@ import { useTeamStore } from "@/stores/team";
 import { invoke } from "@tauri-apps/api/core";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useServerConfig } from "../hooks/useServerConfig";
 import { useServerTemplateSubmit } from "./useServerTemplateSubmit";
@@ -16,11 +16,11 @@ export function useServerTemplateLogic(
   setIsDialogOpen: (open: boolean) => void,
 ) {
   const { selectedClient, selectedPath } = useClientPathStore();
+  const { refreshServerList } = useMcpRefresh();
   const [githubUrl, setGithubUrl] = useState("");
   const { loading, error, fetchAllJsonBlocks } = useGithubReadmeJson();
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
-  const navigate = useNavigate();
 
   // Server config state and handlers
   const {
@@ -111,21 +111,22 @@ export function useServerTemplateLogic(
 
   const handleSubmitTeamLocal = async () => {
     try {
+      const teamConfigPath = getTeamConfigPath(selectedTeamId);
       await invoke("add_mcp_server", {
         clientName: "custom",
-        path: getTeamConfigPath(selectedTeamId),
+        path: teamConfigPath,
         serverName: serverName,
         serverConfig: config,
       });
+      
+      // Refresh team data automatically
+      refreshServerList("custom", teamConfigPath);
+      
       toast.success(`add to Team Local ok`);
-      setTimeout(() => {
-        navigate(0);
-      }, 1200);
+      setIsDialogOpen(false);
     } catch (e: any) {
       console.error(e);
       toast.error(e?.message || "fail to add to Team Local");
-    } finally {
-      setIsDialogOpen(false);
     }
   };
 

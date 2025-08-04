@@ -1,6 +1,7 @@
 import { GlobalDialog } from "@/components/common/GlobalDialog";
 import CommandChecker from "@/components/settings/CommandChecker";
 import { ThemeProvider } from "@/components/theme-provider";
+import { McpRefreshProvider } from "@/contexts/McpRefreshContext";
 import { useDeepLink } from "@/hooks/useDeepLink";
 import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,11 +24,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider storageKey="vite-ui-theme">
-        <Layout />
-        <GlobalDialog open={open} type={type || "login"} onClose={hideDialog} />
-      </ThemeProvider>
-      <CommandChecker />
+      <McpRefreshProvider>
+        <ThemeProvider storageKey="vite-ui-theme">
+          <Layout />
+          <GlobalDialog open={open} type={type || "login"} onClose={hideDialog} />
+        </ThemeProvider>
+        <CommandChecker />
+      </McpRefreshProvider>
     </QueryClientProvider>
   );
 }

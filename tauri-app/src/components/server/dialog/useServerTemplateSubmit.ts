@@ -1,3 +1,4 @@
+import { useMcpRefresh } from "@/contexts/McpRefreshContext";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import { transformConfig } from "../utils/transformConfig";
@@ -18,6 +19,8 @@ export function useServerTemplateSubmit({
   selectedClient: string;
   selectedPath: string | undefined;
 }) {
+  const { refreshServerList } = useMcpRefresh();
+  
   // Handle submit (add to local config)
   const handleSubmit = async () => {
     try {
@@ -28,6 +31,10 @@ export function useServerTemplateSubmit({
         serverName: serverName,
         serverConfig: finalConfig,
       });
+      
+      // Refresh the server list automatically
+      refreshServerList(selectedClient, selectedPath);
+      
       toast.success("Configuration updated successfully");
       setIsDialogOpen(false);
     } catch (error) {
