@@ -2,7 +2,6 @@ use dirs::home_dir;
 use std::path::{Path, PathBuf};
 
 pub struct ClientConfig {
-    pub name: String,
     pub path: PathBuf,
 }
 
@@ -44,10 +43,7 @@ impl ClientConfig {
             _ => PathBuf::new(),
         };
 
-        Self {
-            name: name.to_string(),
-            path,
-        }
+        Self { path }
     }
 
     fn claude_config_path(home: &Path) -> PathBuf {
@@ -60,28 +56,26 @@ impl ClientConfig {
         }
     }
 
-    fn cline_config_path(home: &Path) -> PathBuf {
-        if cfg!(target_os = "macos") {
-            home.join("Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+    fn vscode_global_storage_path(home: &Path, extension_id: &str, filename: &str) -> PathBuf {
+        let base_path = if cfg!(target_os = "macos") {
+            home.join("Library/Application Support/Code/User/globalStorage")
         } else if cfg!(target_os = "windows") {
-            home.join("AppData/Roaming/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+            home.join("AppData/Roaming/Code/User/globalStorage")
         } else if cfg!(target_os = "linux") {
-            home.join(".config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json")
+            home.join(".config/Code/User/globalStorage")
         } else {
-            PathBuf::new()
-        }
+            return PathBuf::new();
+        };
+        
+        base_path.join(extension_id).join("settings").join(filename)
+    }
+
+    fn cline_config_path(home: &Path) -> PathBuf {
+        Self::vscode_global_storage_path(home, "saoudrizwan.claude-dev", "cline_mcp_settings.json")
     }
 
     fn roo_config_path(home: &Path) -> PathBuf {
-        if cfg!(target_os = "macos") {
-            home.join("Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
-        } else if cfg!(target_os = "windows") {
-            home.join("AppData/Roaming/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
-        } else if cfg!(target_os = "linux") {
-            home.join(".config/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json")
-        } else {
-            PathBuf::new()
-        }
+        Self::vscode_global_storage_path(home, "rooveterinaryinc.roo-cline", "mcp_settings.json")
     }
 
     pub fn get_path(&self) -> &Path {

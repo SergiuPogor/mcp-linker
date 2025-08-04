@@ -1,18 +1,29 @@
 FROM nailyudha/tauri:latest
 
+ARG TARGET_PLATFORM=linux
+ARG BUILD_TARGET=""
+
 WORKDIR /home/nonroot
 
 COPY ./package.json ./bun.lock ./
-# cache bun
-RUN mkdir -p /home/nonroot/.bun
 
-ENV BUN_INSTALL_CACHE=/home/nonroot/.bun/install-cache
-ENV BUN_GLOBAL_CACHE_DIR=/home/nonroot/.bun/install-cache
-ENV XDG_CACHE_HOME=/home/nonroot/.bun/install-cache
+# Install dependencies with cache mount (no manual cache management needed)
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    for i in 1 2 3; do bun i --frozen-lockfile && break || sleep 5; done
 
-RUN apt-get update && apt-get install -y --no-install-recommends xdg-utils
-RUN for i in 1 2 3; do bun i --frozen-lockfile && break || sleep 5; done
+# Install Linux-specific dependencies only when needed
+RUN if [ "$TARGET_PLATFORM" = "linux" ]; then \
+        apt-get update && apt-get install -y --no-install-recommends xdg-utils && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
 
 COPY . .
-# For building Linux (Support for AMD64 & ARM64)
-RUN bun tauri build
+
+# Build based on target platform with cargo cache
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    if [ "$TARGET_PLATFORM" = "windows" ]; then \
+        NODE_ENV=production bun tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc; \
+    else \
+        bun tauri build; \
+    fi
