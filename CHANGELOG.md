@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.5.3] - 2025-08-04
+
+- Windows and Linux support for Cline and Roo clients
+- Improved client configuration and path handling
+- Enhanced cross-platform compatibility
+
 ## [1.3.2] - 2025-06-17
 
 - Personal and Team Encrypted sync to cloud.
