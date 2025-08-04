@@ -77,7 +77,7 @@ export const AppRoutes = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/dxt" element={<DxtPage />} />
-        <Route path="/dxt/:id" element={<DxtDetail />} />
+        <Route path="/dxt/:user/:repo" element={<DxtDetail />} />
         <Route path="/servers/:id" element={<ServerPage />} />
         <Route path="/install-app" element={<InstallAppPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />

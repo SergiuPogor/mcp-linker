@@ -10,26 +10,35 @@ export function DxtCard({ dxt }: { dxt: any }) {
   const hasMore = toolsArray.length > 3;
   const navigate = useNavigate();
 
+  // Extract user/repo from manifest - should match backend storage structure
+  const getUserRepo = () => {
+    // Backend stores using author.name and name fields
+    const user = dxt.author?.name || "unknown";
+    const repo = dxt.name || "unknown";
+
+    return { user, repo };
+  };
+
+  const { user, repo } = getUserRepo();
+
   return (
     <Card
       className="w-full h-full flex flex-col justify-between cursor-pointer hover:shadow-lg transition-shadow"
       onClick={() => {
-        console.log("go to ", dxt.id);
-        navigate(`/dxt/${dxt.id}`);
+        console.log("go to ", user, repo);
+        navigate(`/dxt/${user}/${repo}`);
       }}
     >
       <CardContent className="flex flex-col flex-1">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-start">
           <img src={dxt.icon} alt="icon" className="w-10 h-10 rounded" />
-          <div className="flex flex-col">
-            <div className="flex justify-between">
-              <span className="font-bold text-lg">{dxt.display_name}</span>
-              <ChevronRight />
-            </div>
+          <div className="flex flex-col flex-1">
+            <span className="font-bold text-lg">{dxt.display_name}</span>
             <div className="text-sm text-muted-foreground">
               {dxt.author?.name}
             </div>
           </div>
+          <ChevronRight className="flex-shrink-0" />
         </div>
         <CardDescription className="line-clamp-2">
           {dxt.description}

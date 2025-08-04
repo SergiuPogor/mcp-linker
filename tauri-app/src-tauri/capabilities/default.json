@@ -19,8 +19,6 @@
     "clipboard-manager:allow-read-text",
     "core:window:default",
     "core:window:allow-start-dragging",
-    "sql:default",
-    "sql:allow-execute",
     "fs:default",
     {
       "identifier": "fs:allow-appcache-read"

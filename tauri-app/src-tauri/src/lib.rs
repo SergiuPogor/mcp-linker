@@ -31,9 +31,7 @@ struct Config {
 pub fn run() {
     env_path::update_env_path();
 
-    let mut builder = tauri::Builder::default().plugin(
-        tauri_plugin_sql::Builder::default().build(),
-    );
+    let mut builder = tauri::Builder::default();
 
     #[cfg(desktop)]
     {
@@ -72,9 +70,13 @@ pub fn run() {
             encryption::generate_encryption_key,
             encryption::encrypt_data,
             encryption::decrypt_data,
-            dxt::extract_manifests_zip,
-            dxt::read_binary_file,
-            dxt::download_file,
+            dxt::load_manifests,
+            dxt::load_manifest,
+            dxt::fetch_and_save_manifest,
+            dxt::read_dxt_setting,
+            dxt::save_dxt_setting,
+            dxt::download_and_extract_manifests,
+            dxt::check_manifests_exist,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {
