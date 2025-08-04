@@ -36,8 +36,6 @@ jobs:
 
     runs-on: ${{ matrix.platform.os }}
     name: Build ${{ matrix.platform.name }}
-    # Skip Windows builds on PRs, only build all platforms on tag releases
-    if: ${{ matrix.platform.os != 'windows-latest' || startsWith(github.ref, 'refs/tags/v') }}
 
     steps:
       - name: Checkout code
