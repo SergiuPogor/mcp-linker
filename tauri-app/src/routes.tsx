@@ -1,13 +1,11 @@
 // Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
-import Categories from "@/pages/categories";
 import Dashboard from "@/pages/Dashboard";
 import Discover from "@/pages/Discover";
 import Favorites from "@/pages/favorites";
 import Manage from "@/pages/manage";
 import OnBoarding from "@/pages/OnBoarding";
 import Recently from "@/pages/recently";
-import SearchPage from "@/pages/search";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
 import { useDeepLinkStore } from "@/stores/deepLinkStore";
@@ -15,7 +13,6 @@ import {
   Clock,
   Info,
   LayoutDashboard,
-  LayoutGrid,
   Search,
   Settings,
   Star,
@@ -75,9 +72,7 @@ export const AppRoutes = () => {
         <Route path="/" element={<Discover />} />
         <Route path="/manage" element={<Manage />} />
         <Route path="/discover" element={<Discover />} />
-        <Route path="/categories" element={<Categories />} />
         <Route path="/recently" element={<Recently />} />
-        <Route path="/search" element={<SearchPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/about" element={<About />} />
@@ -117,7 +112,6 @@ export const getNavigationRoutes = (
 ) => {
   const iconMap = {
     discover: <Search size={24} />,
-    categories: <LayoutGrid size={24} />,
     manage: <LayoutDashboard size={24} />,
     team: <Users size={24} />,
     recently: <Clock size={24} />,
@@ -151,12 +145,6 @@ export const getNavigationRoutes = (
       name: t("nav.team"),
       path: "/team",
       icon: iconMap.team,
-    },
-    {
-      id: "categories",
-      name: t("nav.category"),
-      path: "/categories",
-      icon: iconMap.categories,
     },
     {
       id: "recently",

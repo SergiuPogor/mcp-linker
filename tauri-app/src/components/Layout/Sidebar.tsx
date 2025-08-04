@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { Nav } from "@/types";
-import { User, X } from "lucide-react";
-import { useState } from "react";
+import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ModeToggle } from "../ui/mode-toggle";
 
 interface SidebarProps {
@@ -16,8 +14,6 @@ interface SidebarProps {
 export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
   const { t } = useTranslation<"translation">();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
 
   const { user } = useAuth();
 
@@ -26,30 +22,6 @@ export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
       className={`flex flex-col justify-between h-screen bg-background border-r px-2 transition-all duration-300 ${isCollapsed ? "w-12" : "w-56"}`}
     >
       <div>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></span>
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && searchQuery.trim()) {
-                navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-              }
-            }}
-            placeholder={t("searchPlaceholder")}
-            className="w-full"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              <X />
-            </button>
-          )}
-        </div>
-
         <div className="flex flex-col gap-">
           {navs.map((nav) => (
             <Link key={nav.id} to={nav.path || `/${nav.id}`} className="w-full">
