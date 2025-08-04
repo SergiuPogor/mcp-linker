@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
+#[cfg(windows)]
+use tokio::process::Command as TokioCommand;
+
 mod uv_installer;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -236,16 +239,39 @@ async fn is_command_available(cmd: &str) -> bool {
         .unwrap_or(false)
 }
 
-// Fixed: Improved command existence check
+// Fixed: Improved command existence check with hidden window on Windows
 #[tauri::command]
 pub async fn check_command_exists(command: String) -> Result<bool, String> {
     let exists = match std::env::consts::OS {
-        "windows" => tokio::process::Command::new("cmd")
-            .args(&["/C", "where", &command])
-            .output()
-            .await
-            .map(|output| output.status.success())
-            .unwrap_or(false),
+        "windows" => {
+            use std::process::Stdio;
+            #[cfg(windows)]
+            {
+                use std::os::windows::process::CommandExt;
+                tokio::process::Command::new("cmd")
+                    .args(&["/C", "where", &command])
+                    .stdout(Stdio::null())
+                    .stderr(Stdio::null())
+                    .stdin(Stdio::null())
+                    .creation_flags(0x08000000) // CREATE_NO_WINDOW
+                    .output()
+                    .await
+                    .map(|output| output.status.success())
+                    .unwrap_or(false)
+            }
+            #[cfg(not(windows))]
+            {
+                tokio::process::Command::new("cmd")
+                    .args(&["/C", "where", &command])
+                    .stdout(Stdio::null())
+                    .stderr(Stdio::null())
+                    .stdin(Stdio::null())
+                    .output()
+                    .await
+                    .map(|output| output.status.success())
+                    .unwrap_or(false)
+            }
+        },
         _ => tokio::process::Command::new("which")
             .arg(&command)
             .output()
