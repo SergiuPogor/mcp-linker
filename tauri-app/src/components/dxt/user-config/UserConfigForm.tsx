@@ -22,7 +22,7 @@ function ConfigInput({
       return (
         <input
           type={option.sensitive ? "password" : "text"}
-          className="border px-2 py-1 rounded w-full"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1 rounded w-full"
           placeholder={option.description}
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
@@ -32,7 +32,7 @@ function ConfigInput({
       return (
         <input
           type="number"
-          className="border px-2 py-1 rounded w-full"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1 rounded w-full"
           placeholder={option.description}
           value={value ?? ""}
           min={option.min}
@@ -53,7 +53,7 @@ function ConfigInput({
         <div className="flex items-center gap-2">
           <input
             type="text"
-            className="border px-2 py-1 rounded w-full"
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1 rounded w-full"
             placeholder={option.description + " (file path)"}
             value={value ?? ""}
             onChange={(e) => onChange(e.target.value)}
@@ -143,7 +143,7 @@ function UserConfigField({
         ))}
         <button
           type="button"
-          className="mt-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm border"
+          className="mt-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded text-sm border border-gray-300 dark:border-gray-600"
           onClick={() =>
             onChange(name, [...values, option.type === "number" ? 0 : ""])
           }

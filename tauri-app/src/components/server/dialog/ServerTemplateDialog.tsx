@@ -30,9 +30,9 @@ export const ServerTemplateDialog = forwardRef<
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
-      <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
+      <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="dark:text-white">MCP config</DialogTitle>
+          <DialogTitle>MCP config</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
 

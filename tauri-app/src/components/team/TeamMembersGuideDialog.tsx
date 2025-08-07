@@ -38,7 +38,7 @@ export function TeamMembersGuideDialog({
         </DialogHeader>
         <div className="space-y-4">
           <div className="flex items-start gap-3">
-            <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
+            <div className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
               0
             </div>
             <div>
@@ -49,24 +49,24 @@ export function TeamMembersGuideDialog({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
+            <div className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
               1
             </div>
             <div>
               <p className="font-medium">Find Your Team</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Look for "{newlyCreatedTeamName}" in the teams list below
               </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
+            <div className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
               2
             </div>
             <div>
               <p className="font-medium">Click "Members" Icon Button</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Click the "Members" button in the team row to manage team
                 members
               </p>
@@ -74,12 +74,12 @@ export function TeamMembersGuideDialog({
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
+            <div className="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium">
               ✓
             </div>
             <div>
               <p className="font-medium">Add Members</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Click "Add Member" by email
               </p>
             </div>

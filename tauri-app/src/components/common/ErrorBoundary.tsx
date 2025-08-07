@@ -30,7 +30,7 @@ class ErrorBoundary extends Component<Props, State> {
           <h1 className="text-2xl font-bold mb-4 text-red-600">
             Something went wrong
           </h1>
-          <p className="mb-4 text-gray-600">
+          <p className="mb-4 text-gray-600 dark:text-gray-400">
             The application encountered an error. This might be due to missing
             configuration.
           </p>
@@ -38,12 +38,12 @@ class ErrorBoundary extends Component<Props, State> {
             <summary className="cursor-pointer font-semibold">
               Error Details
             </summary>
-            <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
+            <pre className="mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs overflow-auto">
               {this.state.error?.message}
             </pre>
           </details>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded"
             onClick={() => window.location.reload()}
           >
             Reload Application

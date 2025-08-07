@@ -198,26 +198,26 @@ export default function DxtPage() {
       {/* loading indicator */}
       {loading && (
         <div className="mb-4 text-center">
-          <div className="text-sm text-gray-500">Loading manifests...</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">Loading manifests...</div>
         </div>
       )}
       {/* action */}
       <div className="flex gap-2 mb-4">
         <input
-          className="border px-2 py-1 rounded"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-2 py-1 rounded"
           placeholder="Search by name or keyword"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button
-          className="px-3 py-1 bg-green-500 text-white rounded"
+          className="px-3 py-1 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded"
           onClick={handleSearch}
         >
           Search
         </button>
         <button
-          className="px-3 py-1 bg-gray-400 text-white rounded"
+          className="px-3 py-1 bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded"
           onClick={async () => {
             setSearch("");
             await loadManifests();
@@ -226,7 +226,7 @@ export default function DxtPage() {
           Reset
         </button>
         <button
-          className="px-3 py-1 bg-blue-500 text-white rounded"
+          className="px-3 py-1 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded"
           onClick={async () => {
             setLoading(true);
             try {

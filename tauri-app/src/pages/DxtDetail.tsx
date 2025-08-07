@@ -237,12 +237,12 @@ export default function DxtDetail() {
           <h1 className="text-2xl font-bold mb-2">
             {manifest.display_name ?? manifest.name}
           </h1>
-          <p className="text-gray-700 mb-1">{manifest.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 mb-1">{manifest.description}</p>
         </div>
         {!isInstalled && (
           <button
             onClick={addMcpConfig}
-            className="px-4 py-2 bg-blue-600 text-white rounded shadow"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white rounded shadow"
           >
             Install
           </button>

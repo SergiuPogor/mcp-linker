@@ -15,7 +15,7 @@ export const ServerConfigDialogHeader = ({
 }: ServerConfigDialogHeaderProps) => {
   return (
     <DialogHeader>
-      <DialogTitle className="dark:text-white">{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogDescription></DialogDescription>
     </DialogHeader>
   );

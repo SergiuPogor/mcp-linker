@@ -159,16 +159,16 @@ export function LocalSyncDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 dark:text-gray-100">
+          <DialogTitle>
             Local Sync Configuration
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <label className="text-sm font-medium">
               From Client:
             </label>
             <Select
@@ -176,10 +176,9 @@ export function LocalSyncDialog({
               onValueChange={setSyncFromClient}
               disabled={isSyncing}
             >
-              <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+              <SelectTrigger>
                 <SelectValue
                   placeholder="Select source client"
-                  className="text-gray-900 dark:text-gray-100"
                 />
               </SelectTrigger>
               <SelectContent>
@@ -215,7 +214,7 @@ export function LocalSyncDialog({
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <label className="text-sm font-medium">
               To Client:
             </label>
             <Select
@@ -223,10 +222,9 @@ export function LocalSyncDialog({
               onValueChange={setSyncToClient}
               disabled={isSyncing || syncFromClient === syncToClient}
             >
-              <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
+              <SelectTrigger>
                 <SelectValue
                   placeholder="Select target client"
-                  className="text-gray-900 dark:text-gray-100"
                 />
               </SelectTrigger>
               <SelectContent>
@@ -265,13 +263,13 @@ export function LocalSyncDialog({
             />
             <label
               htmlFor="override-mode"
-              className="text-sm font-medium text-gray-900 dark:text-gray-100"
+              className="text-sm font-medium"
             >
               Override all (replace existing configs)
             </label>
           </div>
 
-          <div className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-muted-foreground">
             {overrideMode
               ? "This will completely replace all MCP server configurations in the target client."
               : "This will merge configurations, keeping existing ones and adding new ones from source."}
@@ -282,7 +280,7 @@ export function LocalSyncDialog({
               variant="outline"
               onClick={handleCancel}
               disabled={isSyncing}
-              className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className=""
             >
               Cancel
             </Button>

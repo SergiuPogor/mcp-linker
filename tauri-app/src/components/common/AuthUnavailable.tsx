@@ -6,12 +6,12 @@ export default function AuthUnavailable() {
       <AlertCircle className="w-12 h-12 text-amber-500 mb-4" />
       <h1 className="text-3xl font-bold mb-4">Authentication Unavailable</h1>
       {/* Description */}
-      <p className="mb-6 text-gray-500 max-w-md">
+      <p className="mb-6 text-gray-500 dark:text-gray-400 max-w-md">
         Authentication features are currently disabled. Please configure
         Supabase environment variables to enable user authentication.
       </p>
       {/* Environment variable instructions */}
-      <div className="bg-gray-100 p-4 rounded-lg text-sm text-left max-w-md">
+      <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-sm text-left max-w-md">
         <p className="font-semibold mb-2">Required environment variables:</p>
         <code className="block text-xs">
           VITE_SUPABASE_URL=your_supabase_url

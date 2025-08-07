@@ -165,7 +165,7 @@ export const ServerConfigDialog = forwardRef<
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
-      <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl bg-background dark:bg-gray-800">
+      <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl">
         <ServerConfigDialogHeader />
 
         {/* Main server config form extracted to a reusable component */}

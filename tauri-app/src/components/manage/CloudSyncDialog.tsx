@@ -94,17 +94,17 @@ export function CloudSyncDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-gray-900 dark:text-gray-100">
+          <DialogTitle>
             Cloud Sync Configuration
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-3">
+          <div className="bg-muted p-4 rounded-lg space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              <span className="text-sm font-medium">
                 Local Configurations:
               </span>
               <Badge variant="secondary">{localServersCount} servers</Badge>
@@ -113,7 +113,7 @@ export function CloudSyncDialog({
             {cloudSyncStatus && (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  <span className="text-sm font-medium">
                     Cloud Configurations:
                   </span>
                   <Badge variant="secondary">
@@ -123,10 +123,10 @@ export function CloudSyncDialog({
 
                 {cloudSyncStatus.lastSync && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <span className="text-sm font-medium">
                       Last Sync:
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       {new Date(cloudSyncStatus.lastSync).toLocaleString()}
                     </span>
                   </div>
@@ -153,13 +153,13 @@ export function CloudSyncDialog({
             />
             <label
               htmlFor="cloud-override-mode"
-              className="text-sm font-medium text-gray-900 dark:text-gray-100"
+              className="text-sm font-medium"
             >
               Override mode (replace all configurations)
             </label>
           </div>
 
-          <div className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-muted-foreground">
             {cloudOverrideMode
               ? "This will completely replace all configurations on the target."
               : "This will merge configurations, keeping existing ones and adding new ones."}
@@ -170,7 +170,7 @@ export function CloudSyncDialog({
               variant="outline"
               onClick={handleCloudUpload}
               disabled={isUploading || isDownloading || localServersCount === 0}
-              className="flex items-center gap-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="flex items-center gap-2"
             >
               {isUploading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -186,7 +186,7 @@ export function CloudSyncDialog({
               disabled={
                 isDownloading || isUploading || cloudSyncStatus?.total === 0
               }
-              className="flex items-center gap-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="flex items-center gap-2"
             >
               {isDownloading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -202,7 +202,6 @@ export function CloudSyncDialog({
               variant="outline"
               onClick={handleCancel}
               disabled={isUploading || isDownloading}
-              className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Close
             </Button>

@@ -33,7 +33,7 @@ export function DeleteAlertDialog({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
           >
             <Trash2 className="h-4 w-4" />
             <span className="sr-only">{t ? t("delete") : "Delete"}</span>
@@ -52,7 +52,7 @@ export function DeleteAlertDialog({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={onDelete}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"
           >
             Delete
           </AlertDialogAction>
