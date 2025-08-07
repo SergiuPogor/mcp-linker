@@ -7,6 +7,8 @@
 
 [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
 
+- [milisp/plux](https://github.com/milisp/plux) - Better gui for everyone use AI, File tree + plus button, One-click + your files to AI. AI finder/explorer
+
 ## 🚀 Why MCP Linker?
 
 **Instant Setup**: Click → Add → Done. No manual config editing or LLM calls required.
