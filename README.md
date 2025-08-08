@@ -7,7 +7,10 @@
 
 [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
 
-- [milisp/plux](https://github.com/milisp/plux) - Better gui for everyone use AI, File tree + plus button, One-click + your files to AI. AI finder/explorer
+## 🌟 Featured Project
+
+[**milisp/plux**](https://github.com/milisp/plux) — The fastest way to connect your files to AI.  
+Think file explorer + “add to AI” button — discover, send, and manage your files with one click.
 
 ## 🚀 Why MCP Linker?
 
