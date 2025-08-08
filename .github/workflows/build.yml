@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         platform:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             name: Linux x86_64
             artifact-name: tauri-app-linux-x64
@@ -43,7 +43,7 @@ jobs:
 
       # Linux dependencies
       - name: Install Linux dependencies
-        if: matrix.platform.os == 'ubuntu-22.04'
+        if: matrix.platform.os == 'ubuntu-latest'
         run: |
           sudo apt update
           sudo apt install -y \
@@ -70,7 +70,7 @@ jobs:
 
       # Install Bun - different methods for Linux vs Windows
       - name: Install Bun (Linux)
-        if: matrix.platform.os == 'ubuntu-22.04'
+        if: matrix.platform.os == 'ubuntu-latest'
         uses: oven-sh/setup-bun@v1
 
       - name: Install Bun (Windows)
@@ -89,7 +89,7 @@ jobs:
         working-directory: tauri-app
 
       - name: Set environment variables (Linux)
-        if: matrix.platform.os == 'ubuntu-22.04'
+        if: matrix.platform.os == 'ubuntu-latest'
         run: |
           echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> $GITHUB_ENV
           echo "VITE_REDIRECT_URL=${{ secrets.VITE_REDIRECT_URL }}" >> $GITHUB_ENV
@@ -106,7 +106,7 @@ jobs:
         shell: pwsh
 
       - name: Build Tauri App (Linux)
-        if: matrix.platform.os == 'ubuntu-22.04'
+        if: matrix.platform.os == 'ubuntu-latest'
         run: bun tauri build --target ${{ matrix.platform.target }}
         working-directory: tauri-app
 
