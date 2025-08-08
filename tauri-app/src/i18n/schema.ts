@@ -34,6 +34,7 @@ export interface TranslationSchema {
     recentlyAdded: string;
     installapp: string;
     dxt: string;
+    client: string;
   };
   content: {
     discover: string;

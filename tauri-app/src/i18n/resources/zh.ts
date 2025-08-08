@@ -37,6 +37,7 @@ const zh: { translation: TranslationSchema } = {
       about: "关于",
       installapp: "添加服务器",
       dxt: "dxt",
+      client: "客户端",
     },
     content: {
       discover: "发现精选内容",

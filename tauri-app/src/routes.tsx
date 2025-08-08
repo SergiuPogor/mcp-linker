@@ -1,6 +1,7 @@
 // Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
 import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
+import ClientPage from "@/pages/client";
 import Dashboard from "@/pages/Dashboard";
 import Discover from "@/pages/Discover";
 import Favorites from "@/pages/favorites";
@@ -19,6 +20,7 @@ import {
   Settings,
   Star,
   Users,
+  Monitor,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
@@ -83,6 +85,7 @@ export const AppRoutes = () => {
         <Route path="/dxt/:user/:repo" element={<DxtDetail />} />
         <Route path="/servers/:id" element={<ServerPage />} />
         <Route path="/install-app" element={<InstallAppPage />} />
+        <Route path="/client" element={<ClientPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />
 
         {/* Protected routes */}
@@ -123,6 +126,7 @@ export const getNavigationRoutes = (
     settings: <Settings size={24} />,
     about: <Info size={24} />,
     dxt: <Info size={24} />,
+    client: <Monitor size={24} />,
   };
 
   return [
@@ -185,6 +189,12 @@ export const getNavigationRoutes = (
       name: t("nav.installapp"),
       path: "/install-app",
       icon: iconMap.about,
+    },
+    {
+      id: "client",
+      name: t("nav.client"),
+      path: "/client",
+      icon: iconMap.client,
     },
   ];
 };
