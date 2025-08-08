@@ -10,6 +10,7 @@ use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager};
 
 mod client;
+mod claude_code_commands;
 mod cmd;
 mod encryption;
 mod env_path;
@@ -77,6 +78,11 @@ pub fn run() {
             dxt::save_dxt_setting,
             dxt::download_and_extract_manifests,
             dxt::check_manifests_exist,
+            claude_code_commands::claude_mcp_list,
+            claude_code_commands::claude_mcp_get,
+            claude_code_commands::claude_mcp_add,
+            claude_code_commands::claude_mcp_remove,
+            claude_code_commands::check_claude_cli_available,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {

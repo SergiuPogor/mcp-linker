@@ -1,5 +1,6 @@
 // Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
+import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
 import Dashboard from "@/pages/Dashboard";
 import Discover from "@/pages/Discover";
 import Favorites from "@/pages/favorites";
@@ -11,6 +12,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import { useDeepLinkStore } from "@/stores/deepLinkStore";
 import {
   Clock,
+  Code,
   Info,
   LayoutDashboard,
   Search,
@@ -71,6 +73,7 @@ export const AppRoutes = () => {
         {/* Public routes */}
         <Route path="/" element={<Discover />} />
         <Route path="/manage" element={<Manage />} />
+        <Route path="/claude-code-manage" element={<ClaudeCodeManage />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/recently" element={<Recently />} />
         <Route path="/settings" element={<SettingsPage />} />
@@ -113,6 +116,7 @@ export const getNavigationRoutes = (
   const iconMap = {
     discover: <Search size={24} />,
     manage: <LayoutDashboard size={24} />,
+    "claude-code-manage": <Code size={24} />,
     team: <Users size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
@@ -139,6 +143,12 @@ export const getNavigationRoutes = (
       name: t("nav.manage"),
       path: "/manage",
       icon: iconMap.manage,
+    },
+    {
+      id: "claude-code-manage",
+      name: "Claude Code",
+      path: "/claude-code-manage",
+      icon: iconMap["claude-code-manage"],
     },
     {
       id: "team",
