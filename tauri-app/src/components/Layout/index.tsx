@@ -1,4 +1,3 @@
-import { usePlatform } from "@/hooks/usePlatform";
 import { needspathClient } from "@/lib/data";
 import { AppRoutes, getNavigationRoutes } from "@/routes";
 import { useConfigScopeStore } from "@/stores";
@@ -23,8 +22,6 @@ const Layout = () => {
   const { t } = useTranslation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const { isMacOS } = usePlatform();
-
   // Get navigation routes with icons
   const navs = getNavigationRoutes(t as (key: string, options?: any) => string);
 
@@ -35,7 +32,7 @@ const Layout = () => {
       <div
         data-tauri-drag-region
         className={`flex justify-between ${
-          isMacOS ? "pl-20 pr-2" : "px-2"
+          sidebarCollapsed ?  "pl-20" : "pl-50 pr-2"
         } shrink-0 items-center`}
       >
         <span className="flex">

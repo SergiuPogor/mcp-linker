@@ -16,11 +16,13 @@ import {
   Code,
   Info,
   LayoutDashboard,
+  Monitor,
+  PlugIcon,
+  PlusCircle,
   Search,
   Settings,
   Star,
-  Users,
-  Monitor,
+  Users
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
@@ -125,8 +127,9 @@ export const getNavigationRoutes = (
     favorites: <Star size={24} />,
     settings: <Settings size={24} />,
     about: <Info size={24} />,
-    dxt: <Info size={24} />,
+    dxt: <PlugIcon size={24} />,
     client: <Monitor size={24} />,
+    download: <PlusCircle size={24} />,
   };
 
   return [
@@ -188,7 +191,7 @@ export const getNavigationRoutes = (
       id: "install-app",
       name: t("nav.installapp"),
       path: "/install-app",
-      icon: iconMap.about,
+      icon: iconMap.download,
     },
     {
       id: "client",
