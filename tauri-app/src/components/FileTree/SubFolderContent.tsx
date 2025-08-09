@@ -20,6 +20,7 @@ interface SubFolderContentProps {
   onSetWorkingFolder: (path: string) => void;
   onCalculateTokens: (path: string) => Promise<number | null>;
   isFiltered: (entry: FileEntry) => boolean;
+  fixedFile?: string | null;
 }
 
 export function SubFolderContent({
@@ -32,6 +33,7 @@ export function SubFolderContent({
   onSetWorkingFolder,
   onCalculateTokens,
   isFiltered,
+  fixedFile,
 }: SubFolderContentProps) {
   const [subEntries, setSubEntries] = useState<FileEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -79,6 +81,7 @@ export function SubFolderContent({
           onSetWorkingFolder={onSetWorkingFolder}
           onCalculateTokens={onCalculateTokens}
           isFiltered={isFiltered}
+          fixedFile={fixedFile}
         />
       ))}
     </>

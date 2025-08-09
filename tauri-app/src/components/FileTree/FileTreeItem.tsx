@@ -34,6 +34,7 @@ interface FileTreeItemProps {
   onSetWorkingFolder: (path: string) => void;
   onCalculateTokens: (path: string) => Promise<number | null>;
   isFiltered: (entry: FileEntry) => boolean;
+  fixedFile?: string | null;
 }
 
 export function FileTreeItem({
@@ -46,6 +47,7 @@ export function FileTreeItem({
   onSetWorkingFolder,
   onCalculateTokens,
   isFiltered,
+  fixedFile,
 }: FileTreeItemProps) {
   const [tokens, setTokens] = useState<number | null>(null);
   const [loadingTokens, setLoadingTokens] = useState(false);
@@ -61,19 +63,25 @@ export function FileTreeItem({
 
   if (isFiltered(entry)) return null;
 
+  const isFixedItem = fixedFile && entry.path === fixedFile;
+
   return (
     <div
       className="group"
       style={{ marginLeft: `${level * 2}px` }}
       onMouseEnter={handleMouseEnter}
     >
-      <div className="flex items-center gap-0.5 py-1 px-1 hover:bg-gray-100 rounded">
+      <div className={`flex items-center gap-0.5 py-1 px-1 hover:bg-gray-100 rounded ${isFixedItem ? 'bg-blue-50 border border-blue-200' : ''}`}>
         {entry.is_directory && (
           <Button
             variant="ghost"
             size="icon"
             className="p-0.5 w-4 h-4"
-            onClick={() => onToggleFolder(entry.path)}
+            onClick={() => {
+              // Clear filter and fix position when toggling folder
+              onFileClick(entry.path, entry.is_directory);
+              onToggleFolder(entry.path);
+            }}
           >
             {expandedFolders.has(entry.path) ? (
               <ChevronDown className="w-3 h-3" />
@@ -88,10 +96,11 @@ export function FileTreeItem({
         <span
           className="flex-1 text-sm cursor-pointer hover:text-blue-600"
           onClick={() => {
+            // Always call onFileClick to handle filter clearing and fixing
+            onFileClick(entry.path, entry.is_directory);
+            
             if (entry.is_directory) {
               onToggleFolder(entry.path);
-            } else {
-              onFileClick(entry.path, entry.is_directory);
             }
           }}
         >
@@ -154,6 +163,7 @@ export function FileTreeItem({
           onSetWorkingFolder={onSetWorkingFolder}
           onCalculateTokens={onCalculateTokens}
           isFiltered={isFiltered}
+          fixedFile={fixedFile}
         />
       )}
     </div>

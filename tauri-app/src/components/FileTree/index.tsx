@@ -34,6 +34,7 @@ export function FileTree({
   const [error, setError] = useState<string | null>(null);
   const [filterText, setFilterText] = useState("");
   const [showFilter, setShowFilter] = useState(false);
+  const [fixedFile, setFixedFile] = useState<string | null>(null);
   
   // Mock exclude folders for now - in a real app this would come from settings
   const excludeFolders = ["node_modules", ".git", "dist", "build"];
@@ -84,6 +85,10 @@ export function FileTree({
   };
 
   const handleFileClick = (path: string, isDirectory: boolean) => {
+    // Clear filter and fix the position of the clicked item (both files and folders)
+    setFilterText("");
+    setFixedFile(path);
+    
     if (!isDirectory) {
       // Set the file for viewing
       setSelectedFile(path);
@@ -101,10 +106,16 @@ export function FileTree({
   const handleSetWorkingFolder = (folderPath: string) => {
     setCurrentFolder(folderPath);
     setFilterText("");
+    setFixedFile(null);
     loadDirectory(folderPath);
   };
 
   const isFiltered = (entry: FileEntry): boolean => {
+    // Always show the fixed item (clicked file or folder) regardless of filter
+    if (fixedFile && entry.path === fixedFile) {
+      return false;
+    }
+
     if (
       filterText &&
       !entry.name.toLowerCase().includes(filterText.toLowerCase())
@@ -117,6 +128,14 @@ export function FileTree({
     }
 
     return false;
+  };
+
+  const handleFilterTextChange = (text: string) => {
+    setFilterText(text);
+    // Clear fixed item when user manually changes filter
+    if (text !== filterText) {
+      setFixedFile(null);
+    }
   };
 
   useEffect(() => {
@@ -138,7 +157,7 @@ export function FileTree({
       <FileTreeHeader
         currentFolder={storeCurrentFolder || currentFolder}
         filterText={filterText}
-        onFilterTextChange={setFilterText}
+        onFilterTextChange={handleFilterTextChange}
         showFilter={showFilter}
         onToggleFilter={() => setShowFilter(!showFilter)}
         onRefresh={() => loadDirectory()}
@@ -157,6 +176,7 @@ export function FileTree({
             onSetWorkingFolder={handleSetWorkingFolder}
             onCalculateTokens={calculateTokens}
             isFiltered={isFiltered}
+            fixedFile={fixedFile}
           />
         ))}
       </div>
