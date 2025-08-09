@@ -1,5 +1,7 @@
 import { useConversationStore } from "@/hooks/useConversationStore";
+import { open } from "@tauri-apps/plugin-shell";
 import { Bot, MessageSquare } from "lucide-react";
+import { Button } from "../ui/button";
 
 export function WelcomeMessage() {
   const getCurrentConversation = useConversationStore(
@@ -60,6 +62,17 @@ export function WelcomeMessage() {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
+          <p className="mb-2">Want the full file tree & plus button feature?</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => open("https://github.com/milisp/plux")}
+          >
+            Try Plux
+          </Button>
         </div>
 
         <div className="text-sm text-gray-500 border-t pt-4">
