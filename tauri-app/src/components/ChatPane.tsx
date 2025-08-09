@@ -12,7 +12,7 @@ import { SettingsDialog } from "./chat/SettingsDialog";
 import { NoteList } from "./notes/NoteList";
 import { NoteEditor } from "./notes/NoteEditor";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Input } from "./ui/input";
 import { Plus, MessageSquare, Settings, Star, Trash2, Heart, Search, PanelLeftClose, PanelLeft, FileText } from "lucide-react";
 

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
 import type { Provider } from "@/types/chat";
+import { useCallback, useEffect, useState } from "react";
 
 export interface ProviderConfig {
   value: Provider;
@@ -21,12 +21,12 @@ const PROVIDERS: ProviderConfig[] = [
       "claude-3.5-sonnet",
       "claude-3.5-haiku",
     ],
-    defaultBaseUrl: "https://api.anthropic.com/v1/messages",
+    defaultBaseUrl: "https://api.anthropic.com/v1/chat/completions",
   },
   {
     value: "openai",
     label: "OpenAI",
-    models: ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"],
+    models: ["gpt-5", "gpt-4o", "gpt-4-turbo", "gpt-4o-mini", "gpt-3.5-turbo"],
     defaultBaseUrl: "https://api.openai.com/v1/chat/completions",
   },
   {

@@ -1,5 +1,5 @@
 import { useConversationStore } from "@/hooks/useConversationStore";
-import { MessageSquare, Bot } from "lucide-react";
+import { Bot, MessageSquare } from "lucide-react";
 
 export function WelcomeMessage() {
   const getCurrentConversation = useConversationStore(
@@ -17,7 +17,7 @@ export function WelcomeMessage() {
     },
     agent: {
       icon: Bot,
-      title: "Agent Mode",
+      title: "Agent Mode (preview not complete yet)",
       description: "AI assistant can use tools to complete complex tasks",
       features: [
         "Tool usage",
