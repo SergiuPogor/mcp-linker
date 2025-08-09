@@ -1,4 +1,5 @@
 import AddServerDialog from "@/components/claude-code/AddServerDialog";
+import PreConfiguredServersDialog from "@/components/claude-code/PreConfiguredServersDialog";
 import ServerDetailsDialog from "@/components/claude-code/ServerDetailsDialog";
 import ServerTable from "@/components/claude-code/ServerTable";
 import { Button } from "@/components/ui/button";
@@ -129,6 +130,7 @@ export default function ClaudeCodeManage() {
               <RefreshCcw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
               Refresh
             </Button>
+            <PreConfiguredServersDialog onAddServer={handleAddServer} />
             <AddServerDialog onAddServer={handleAddServer} />
           </div>
         </div>

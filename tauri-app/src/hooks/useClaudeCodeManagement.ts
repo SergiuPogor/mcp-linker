@@ -26,6 +26,7 @@ interface ServerFormData {
   url: string;
   command: string;
   args: string;
+  env?: Record<string, string>;
 }
 
 export function useClaudeCodeManagement() {
@@ -80,7 +81,7 @@ export function useClaudeCodeManagement() {
 
   const addServer = async (formData: ServerFormData) => {
     try {
-      const { name, type, url, command, args } = formData;
+      const { name, type, url, command, args, env } = formData;
       
       if (!name.trim()) {
         toast({
@@ -119,6 +120,10 @@ export function useClaudeCodeManagement() {
         if (args.trim()) {
           request.args = args.trim().split(/\s+/);
         }
+      }
+
+      if (env && Object.keys(env).length > 0) {
+        request.env = env;
       }
 
       const response = await invoke<{success: boolean, message: string}>("claude_mcp_add", { 
