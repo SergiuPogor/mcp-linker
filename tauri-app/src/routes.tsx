@@ -1,11 +1,13 @@
 // Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
+import ChatPage from "@/pages/ChatPage";
 import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
 import ClientPage from "@/pages/client";
 import Dashboard from "@/pages/Dashboard";
 import Discover from "@/pages/Discover";
 import Favorites from "@/pages/favorites";
 import Manage from "@/pages/manage";
+import NotesPage from "@/pages/NotesPage";
 import OnBoarding from "@/pages/OnBoarding";
 import Recently from "@/pages/recently";
 import { ServerPage } from "@/pages/ServerPage";
@@ -16,7 +18,9 @@ import {
   Code,
   Info,
   LayoutDashboard,
+  MessageCircle,
   Monitor,
+  NotebookPen,
   PlugIcon,
   PlusCircle,
   Search,
@@ -88,6 +92,8 @@ export const AppRoutes = () => {
         <Route path="/servers/:id" element={<ServerPage />} />
         <Route path="/install-app" element={<InstallAppPage />} />
         <Route path="/client" element={<ClientPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/notes" element={<NotesPage />} />
         <Route path="/servers/:owner/:repo" element={<ServerPage />} />
 
         {/* Protected routes */}
@@ -122,6 +128,8 @@ export const getNavigationRoutes = (
     discover: <Search size={24} />,
     manage: <LayoutDashboard size={24} />,
     "claude-code-manage": <Code size={24} />,
+    chat: <MessageCircle size={24} />,
+    notes: <NotebookPen size={24} />,
     team: <Users size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
@@ -138,6 +146,18 @@ export const getNavigationRoutes = (
       name: t("nav.discover"),
       path: "/discover",
       icon: iconMap.discover,
+    },
+    {
+      id: "chat",
+      name: "Chat",
+      path: "/chat",
+      icon: iconMap.chat,
+    },
+    {
+      id: "notes",
+      name: "Notes",
+      path: "/notes",
+      icon: iconMap.notes,
     },
     {
       id: "dxt",

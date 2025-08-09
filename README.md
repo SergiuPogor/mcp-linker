@@ -5,12 +5,11 @@
 [![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total.svg)](https://github.com/milisp/mcp-linker/releases)
 [![Stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
 
-[🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
+[中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
 
 ## 🌟 Featured Project
 
-[**milisp/plux**](https://github.com/milisp/plux) — The fastest way to connect your files to AI.  
-Think file explorer + “add to AI” button — discover, send, and manage your files with one click.
+[**milisp/plux**](https://github.com/milisp/plux) — 💡 File tree & plus button, One-click add your files to AI. Built-in notepad saves insights. 
 
 ## 🚀 Why MCP Linker?
 
