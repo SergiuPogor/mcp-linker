@@ -82,7 +82,9 @@ pub fn run() {
             claude_code_commands::claude_mcp_get,
             claude_code_commands::claude_mcp_add,
             claude_code_commands::claude_mcp_remove,
+            claude_code_commands::claude_list_projects,
             claude_code_commands::check_claude_cli_available,
+            claude_code_commands::check_claude_config_exists,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {
