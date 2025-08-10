@@ -27,9 +27,18 @@ export default function ClaudeCodeManage() {
 
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState<any>(null);
+  const [addServerDialogOpen, setAddServerDialogOpen] = useState(false);
 
   const handleAddServer = async (formData: any) => {
-    return await addServer(formData);
+    const result = await addServer(formData);
+    if (result) {
+      setAddServerDialogOpen(false);
+    }
+    return result;
+  };
+
+  const handleAddServerFromTable = () => {
+    setAddServerDialogOpen(true);
   };
 
   const handleGetServerDetails = async (serverName: string) => {
@@ -95,8 +104,9 @@ export default function ClaudeCodeManage() {
           <div>
             <h1 className="text-3xl font-bold">Claude Code MCP Management</h1>
             <p className="text-muted-foreground mt-1">
-              Manage MCP servers for Claude Code CLI client (backup at ~/.claude.json.backup.timestamp)
+              Manage MCP servers for Claude Code CLI client
             </p>
+            <p>(backup at ~/.claude.json.backup.timestamp)</p>
 
             <div className="mt-2 flex">
               <Label className="text-sm font-medium">Working Directory:</Label>
@@ -131,7 +141,11 @@ export default function ClaudeCodeManage() {
               Refresh
             </Button>
             <PreConfiguredServersDialog onAddServer={handleAddServer} />
-            <AddServerDialog onAddServer={handleAddServer} />
+            <AddServerDialog 
+              onAddServer={handleAddServer}
+              open={addServerDialogOpen}
+              onOpenChange={setAddServerDialogOpen}
+            />
           </div>
         </div>
 
@@ -141,7 +155,7 @@ export default function ClaudeCodeManage() {
           onRefresh={loadServers}
           onViewDetails={handleGetServerDetails}
           onRemoveServer={removeServer}
-          onAddServer={() => {}}
+          onAddServer={handleAddServerFromTable}
         />
 
         <ServerDetailsDialog

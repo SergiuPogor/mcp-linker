@@ -16,10 +16,14 @@ interface ServerFormData {
 
 interface AddServerDialogProps {
   onAddServer: (formData: ServerFormData) => Promise<boolean>;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export default function AddServerDialog({ onAddServer }: AddServerDialogProps) {
-  const [open, setOpen] = useState(false);
+export default function AddServerDialog({ onAddServer, open: controlledOpen, onOpenChange }: AddServerDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange !== undefined ? onOpenChange : setInternalOpen;
   const [formData, setFormData] = useState<ServerFormData>({
     name: "",
     type: "http",

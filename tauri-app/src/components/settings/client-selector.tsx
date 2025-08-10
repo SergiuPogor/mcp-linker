@@ -8,20 +8,33 @@ import {
 import { clientOptions } from "@/constants/clients";
 import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
+import { useNavigate } from "react-router-dom";
 
 export function ClientSelector() {
   const { selectedClient, setSelectedClient } = useClientPathStore();
+  const navigate = useNavigate();
+
+  function handleChange(value: string) {
+    if (value === "claude_code") {
+      navigate("/claude-code-manage");
+    } else {
+      setSelectedClient(value);
+    }
+  }
 
   return (
     <div className="z-50">
-      <Select value={selectedClient} onValueChange={setSelectedClient}>
+      <Select value={selectedClient} onValueChange={handleChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a client" />
         </SelectTrigger>
         <SelectContent>
           {clientOptions.map((option) => {
             return (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem
+                key={option.value}
+                value={option.value}
+              >
                 {option.label}
               </SelectItem>
             );

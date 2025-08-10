@@ -51,15 +51,17 @@ const Layout = () => {
         ) : (
           <ConfigFileSelector />
         )}
-        <LangSelect />
-        <button
-          onClick={() => open("https://mcp-linker.store/feedback")}
-          className="flex ml-2 hover:text-blue-500 items-center whitespace-nowrap"
-          title={t("feedback")}
-        >
-          <MessageCircle size={20} className="mr-1" />
-          {t("feedback")}
-        </button>
+        <span className="flex">
+          <LangSelect />
+          <button
+            onClick={() => open("https://mcp-linker.store/feedback")}
+            className="flex ml-2 hover:text-blue-500 items-center whitespace-nowrap"
+            title={t("feedback")}
+          >
+            <MessageCircle size={20} className="mr-1" />
+            {t("feedback")}
+          </button>
+        </span>
       </div>
 
       {/* Main content area: sidebar + main */}
