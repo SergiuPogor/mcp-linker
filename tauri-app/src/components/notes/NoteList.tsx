@@ -188,6 +188,17 @@ export function NoteList() {
                 <>
                   <p>No notes yet</p>
                   <p className="text-xs mt-1">Create your first note to get started</p>
+                  <div className="mt-4 space-y-3 px-4">
+                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-blue-200 pl-3">
+                      "AI doesn't replace humans, but humans with AI will replace humans without AI." - Karim Lakhani
+                    </blockquote>
+                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-green-200 pl-3">
+                      "The Model Context Protocol bridges the gap between AI and tools, creating seamless workflows." - Anthropic Team
+                    </blockquote>
+                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-purple-200 pl-3">
+                      "plux transforms file management into AI collaboration - one click to enhance your workflow with intelligent insights." - milisp
+                    </blockquote>
+                  </div>
                 </>
               ) : (
                 <p>No notes to display</p>
