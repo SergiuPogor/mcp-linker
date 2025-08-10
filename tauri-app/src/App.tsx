@@ -1,5 +1,6 @@
 import { GlobalDialog } from "@/components/common/GlobalDialog";
 import CommandChecker from "@/components/settings/CommandChecker";
+import { UpdateChecker } from "@/components/UpdateChecker";
 import { ThemeProvider } from "@/components/theme-provider";
 import { McpRefreshProvider } from "@/contexts/McpRefreshContext";
 import { useDeepLink } from "@/hooks/useDeepLink";
@@ -28,6 +29,7 @@ function App() {
         <ThemeProvider storageKey="vite-ui-theme">
           <Layout />
           <GlobalDialog open={open} type={type || "login"} onClose={hideDialog} />
+          <UpdateChecker />
         </ThemeProvider>
         <CommandChecker />
       </McpRefreshProvider>

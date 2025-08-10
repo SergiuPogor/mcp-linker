@@ -271,7 +271,7 @@ pub async fn check_command_exists(command: String) -> Result<bool, String> {
                     .map(|output| output.status.success())
                     .unwrap_or(false)
             }
-        },
+        }
         _ => tokio::process::Command::new("which")
             .arg(&command)
             .output()

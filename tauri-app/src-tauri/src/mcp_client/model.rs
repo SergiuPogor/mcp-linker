@@ -64,7 +64,11 @@ impl Tool {
     pub fn openai_format(name: String, description: String, parameters: serde_json::Value) -> Self {
         Self {
             r#type: Some("function".to_string()),
-            function: Some(ToolDefinition { name, description, parameters }),
+            function: Some(ToolDefinition {
+                name,
+                description,
+                parameters,
+            }),
             name: None,
             description: None,
             parameters: None,
@@ -75,7 +79,11 @@ impl Tool {
     pub fn gemini_format(name: String, description: String, parameters: serde_json::Value) -> Self {
         Self {
             r#type: Some("function".to_string()),
-            function: Some(ToolDefinition { name, description, parameters }),
+            function: Some(ToolDefinition {
+                name,
+                description,
+                parameters,
+            }),
             name: None,
             description: None,
             parameters: None,

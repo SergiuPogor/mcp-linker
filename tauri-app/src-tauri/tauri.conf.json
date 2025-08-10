@@ -33,6 +33,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -46,6 +47,12 @@
       "desktop": {
         "schemes": ["mcp-linker"]
       }
+    },
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNCM0Q1ODU3RTRGMkJFRgpSV1R2SzA5K2hkV3pBNHI0NlpIYzYyb2tvR09wWFJIMWhsRE5teHRCL0RzQWsvY1F4WWZzdGtXdwo=",
+      "endpoints": [
+        "https://github.com/milisp/mcp-linker/releases/download/{{version}}/updater.json"
+      ]
     }
   }
 }

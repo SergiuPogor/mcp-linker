@@ -6,7 +6,7 @@ use serde_json;
 use super::{
     client::common::ChatClient,
     model::{CompletionRequest, Message, Tool, ToolFunction},
-    tool::{ToolSet},
+    tool::ToolSet,
 };
 
 pub struct ChatSession {
@@ -24,7 +24,7 @@ impl ChatSession {
             model,
             messages: Vec::new(),
         }
-    } 
+    }
 
     pub fn add_system_prompt(&mut self, prompt: impl ToString) {
         self.messages.push(Message::system(prompt));
@@ -93,7 +93,6 @@ impl ChatSession {
         }
         // call tool
         for tool_call in tool_calls_func {
-
             let tool = self.tool_set.get_tool(&tool_call.name);
             if let Some(tool) = tool {
                 // call tool
@@ -112,7 +111,7 @@ impl ChatSession {
                             }
                             result.content.iter().for_each(|content| {
                                 println!("Processing content: {:?}", content);
-                                
+
                                 // Extract text from different possible content formats
                                 let text_content = if let Some(content_text) = content.as_text() {
                                     Some(content_text.text.clone())
@@ -129,16 +128,19 @@ impl ChatSession {
                                         None
                                     }
                                 };
-                                
+
                                 if let Some(text) = text_content {
                                     println!("Extracted text: {}", text);
                                     // Try to parse as JSON, but fallback to plain text
-                                    let result_text = if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
-                                        serde_json::to_string_pretty(&json_val).unwrap_or(text.clone())
+                                    let result_text = if let Ok(json_val) =
+                                        serde_json::from_str::<serde_json::Value>(&text)
+                                    {
+                                        serde_json::to_string_pretty(&json_val)
+                                            .unwrap_or(text.clone())
                                     } else {
                                         text.clone()
                                     };
-                                    
+
                                     println!("call tool result: {}", result_text);
                                     self.messages.push(Message::user(format!(
                                         "Tool result: {}",
@@ -181,11 +183,9 @@ impl ChatSession {
                 Some(
                     tools
                         .iter()
-                        .map(|tool| Tool::openai_format(
-                            tool.name(),
-                            tool.description(),
-                            tool.parameters(),
-                        ))
+                        .map(|tool| {
+                            Tool::openai_format(tool.name(), tool.description(), tool.parameters())
+                        })
                         .collect(),
                 )
             } else {
@@ -210,7 +210,7 @@ impl ChatSession {
             .choices
             .first()
             .ok_or_else(|| anyhow::anyhow!("No choice in response"))?;
-        
+
         self.messages.push(choice.message.clone());
 
         let original_message_len = self.messages.len();

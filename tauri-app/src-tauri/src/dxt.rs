@@ -15,7 +15,9 @@ pub async fn load_manifests() -> Result<serde_json::Value, String> {
         if base_path.exists() {
             for entry in glob(pattern.to_str().unwrap())? {
                 let path = entry?;
-                let parent_dir = path.parent().ok_or_else(|| anyhow::anyhow!("Invalid path"))?;
+                let parent_dir = path
+                    .parent()
+                    .ok_or_else(|| anyhow::anyhow!("Invalid path"))?;
                 let repo = parent_dir
                     .file_name()
                     .ok_or_else(|| anyhow::anyhow!("Invalid path"))?
@@ -117,7 +119,11 @@ pub async fn read_dxt_setting(user: String, repo: String) -> Result<serde_json::
 }
 
 #[tauri::command]
-pub async fn save_dxt_setting(user: String, repo: String, content: serde_json::Value) -> Result<(), String> {
+pub async fn save_dxt_setting(
+    user: String,
+    repo: String,
+    content: serde_json::Value,
+) -> Result<(), String> {
     async {
         let home = dirs::home_dir().ok_or_else(|| anyhow::anyhow!("Cannot find home directory"))?;
         let settings_dir = home.join(".config/finder/dxt-settings");
@@ -196,7 +202,7 @@ pub async fn download_and_extract_manifests() -> Result<(), String> {
 pub async fn check_manifests_exist() -> Result<bool, String> {
     let home = dirs::home_dir().ok_or("Cannot find home directory")?;
     let dxt_base_path = home.join(".config/finder/dxt");
-    
+
     if !dxt_base_path.exists() {
         return Ok(false);
     }

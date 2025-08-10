@@ -14,10 +14,11 @@ use mcp_client::tool::ToolSet;
 
 pub struct GlobalToolSet(pub Arc<ToolSet>);
 
-mod client;
 mod claude_code_commands;
+mod client;
 mod cmd;
 mod config;
+mod dxt;
 mod encryption;
 mod env_path;
 mod filesystem;
@@ -28,7 +29,6 @@ mod mcp_client;
 mod mcp_commands;
 mod mcp_crud;
 mod mcp_sync;
-mod dxt;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -40,7 +40,8 @@ struct Config {
 pub fn run() {
     env_path::update_env_path();
 
-    let mut builder = tauri::Builder::default();
+    let mut builder =
+        tauri::Builder::default().plugin(tauri_plugin_updater::Builder::new().build());
 
     #[cfg(desktop)]
     {
@@ -130,7 +131,7 @@ pub fn run() {
                 }
                 tool_set.set_clients(mcp_clients);
                 println!("{:?}", tool_set);
-                
+
                 app_handle.manage(GlobalToolSet(Arc::new(tool_set)));
             });
 

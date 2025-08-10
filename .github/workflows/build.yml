@@ -95,6 +95,8 @@ jobs:
           echo "VITE_REDIRECT_URL=${{ secrets.VITE_REDIRECT_URL }}" >> $GITHUB_ENV
           echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
           echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+          echo "TAURI_SIGNING_PRIVATE_KEY=${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}" >> $GITHUB_ENV
+          echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD=${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Set environment variables (Windows)
         if: matrix.platform.os == 'windows-latest'
@@ -103,6 +105,8 @@ jobs:
           echo "VITE_REDIRECT_URL=${{ secrets.VITE_REDIRECT_URL }}" >> $env:GITHUB_ENV
           echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $env:GITHUB_ENV
           echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $env:GITHUB_ENV
+          echo "TAURI_SIGNING_PRIVATE_KEY=${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}" >> $env:GITHUB_ENV
+          echo "TAURI_SIGNING_PRIVATE_KEY_PASSWORD=${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}" >> $env:GITHUB_ENV
         shell: pwsh
 
       - name: Build Tauri App (Linux)
@@ -121,9 +125,52 @@ jobs:
           name: ${{ matrix.platform.artifact-name }}
           path: ${{ matrix.platform.artifact-path }}
 
-      - name: Upload to GitHub Release
+      - name: Generate updater manifest
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.platform.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          # Extract tag name
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          
+          # Find generated update artifacts with signatures
+          LINUX_SIG_FILE=$(find tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/bundle -name "*.AppImage.tar.gz.sig" | head -1)
+          LINUX_SIG=""
+          if [ -f "$LINUX_SIG_FILE" ]; then
+            LINUX_SIG=$(cat "$LINUX_SIG_FILE")
+          fi
+          
+          # Create updater.json manifest
+          cat > updater.json << EOF
+          {
+            "version": "$TAG_NAME",
+            "notes": "Update to version $TAG_NAME",
+            "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "platforms": {
+              "linux-x86_64": {
+                "signature": "$LINUX_SIG",
+                "url": "https://github.com/milisp/mcp-linker/releases/download/$TAG_NAME/tauri-app-linux-x64.AppImage.tar.gz"
+              },
+              "windows-x86_64": {
+                "signature": "",
+                "url": "https://github.com/milisp/mcp-linker/releases/download/$TAG_NAME/MCP-Linker-Windows.msi.zip"
+              }
+            }
+          }
+          EOF
+
+      - name: Upload to GitHub Release (with updater manifest)
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.platform.os == 'ubuntu-latest'
+        with:
+          files: |
+            ${{ matrix.platform.artifact-path }}
+            updater.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to GitHub Release (Windows)
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.platform.os == 'windows-latest'
         with:
           files: ${{ matrix.platform.artifact-path }}
         env:

@@ -1,14 +1,17 @@
 use crate::{
     mcp_client::{
         chat::ChatSession,
-        client::{common::{ChatClient, StreamingChatClient}, llm::LlmClient},
+        client::{
+            common::{ChatClient, StreamingChatClient},
+            llm::LlmClient,
+        },
     },
     GlobalToolSet,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::sync::Mutex;
-use tauri::{State, Emitter};
+use tauri::{Emitter, State};
 
 pub struct ChatState {
     pub session: Mutex<Option<ChatSession>>,
@@ -40,20 +43,32 @@ pub async fn send_message(
         let mut session_guard = state.session.lock().unwrap();
         let session_model = session_guard.as_ref().map(|s| s.get_model());
 
-        let should_recreate_session = session_guard.is_none()
-            || session_model.is_some_and(|m| m != request.model);
+        let should_recreate_session =
+            session_guard.is_none() || session_model.is_some_and(|m| m != request.model);
 
         if should_recreate_session {
-            println!("Creating new session with provider: {}, api_key length: {}", 
-                     request.provider, request.api_key.len());
+            println!(
+                "Creating new session with provider: {}, api_key length: {}",
+                request.provider,
+                request.api_key.len()
+            );
             let client: Arc<dyn ChatClient> = if request.provider == "google" {
-                Arc::new(LlmClient::new_gemini(request.api_key.clone(), request.base_url.clone(), None))
+                Arc::new(LlmClient::new_gemini(
+                    request.api_key.clone(),
+                    request.base_url.clone(),
+                    None,
+                ))
             } else {
-                Arc::new(LlmClient::new_openai(request.api_key.clone(), request.base_url.clone(), None))
+                Arc::new(LlmClient::new_openai(
+                    request.api_key.clone(),
+                    request.base_url.clone(),
+                    None,
+                ))
             };
             let mut new_session = ChatSession::new(client, (*tool_set.0).clone(), request.model);
-            new_session
-                .add_system_prompt("you are a assistant, you can help user to complete various tasks.");
+            new_session.add_system_prompt(
+                "you are a assistant, you can help user to complete various tasks.",
+            );
             new_session
         } else {
             session_guard.take().unwrap()
@@ -118,20 +133,32 @@ pub async fn send_message_stream(
         let mut session_guard = state.session.lock().unwrap();
         let session_model = session_guard.as_ref().map(|s| s.get_model());
 
-        let should_recreate_session = session_guard.is_none()
-            || session_model.is_some_and(|m| m != request.model);
+        let should_recreate_session =
+            session_guard.is_none() || session_model.is_some_and(|m| m != request.model);
 
         if should_recreate_session {
-            println!("Creating new session with provider: {}, api_key length: {}", 
-                     request.provider, request.api_key.len());
+            println!(
+                "Creating new session with provider: {}, api_key length: {}",
+                request.provider,
+                request.api_key.len()
+            );
             let client: Arc<dyn ChatClient> = if request.provider == "google" {
-                Arc::new(LlmClient::new_gemini(request.api_key.clone(), request.base_url.clone(), None))
+                Arc::new(LlmClient::new_gemini(
+                    request.api_key.clone(),
+                    request.base_url.clone(),
+                    None,
+                ))
             } else {
-                Arc::new(LlmClient::new_openai(request.api_key.clone(), request.base_url.clone(), None))
+                Arc::new(LlmClient::new_openai(
+                    request.api_key.clone(),
+                    request.base_url.clone(),
+                    None,
+                ))
             };
             let mut new_session = ChatSession::new(client, (*tool_set.0).clone(), request.model);
-            new_session
-                .add_system_prompt("you are a assistant, you can help user to complete various tasks.");
+            new_session.add_system_prompt(
+                "you are a assistant, you can help user to complete various tasks.",
+            );
             new_session
         } else {
             session_guard.take().unwrap()
@@ -154,18 +181,20 @@ pub async fn send_message_stream(
 
     // Create a direct request for streaming
     session.add_user_message(&request.message);
-    
+
     let tool_definitions = {
         let tools = session.get_tool_set().tools();
         if !tools.is_empty() {
             Some(
                 tools
                     .iter()
-                    .map(|tool| crate::mcp_client::model::Tool::openai_format(
-                        tool.name(),
-                        tool.description(),
-                        tool.parameters(),
-                    ))
+                    .map(|tool| {
+                        crate::mcp_client::model::Tool::openai_format(
+                            tool.name(),
+                            tool.description(),
+                            tool.parameters(),
+                        )
+                    })
                     .collect(),
             )
         } else {
@@ -181,15 +210,23 @@ pub async fn send_message_stream(
     };
 
     // Call streaming method directly based on provider type
-    println!("🔥 Calling streaming method for provider: {}", request.provider);
+    println!(
+        "🔥 Calling streaming method for provider: {}",
+        request.provider
+    );
     let result = if request.provider == "google" {
         println!("📡 Using Gemini streaming");
-        let llm_client = LlmClient::new_gemini(request.api_key.clone(), request.base_url.clone(), None);
+        let llm_client =
+            LlmClient::new_gemini(request.api_key.clone(), request.base_url.clone(), None);
         llm_client.complete_stream(stream_request, callback).await
     } else {
-        println!("📡 Using OpenAI-compatible streaming for provider: {}", request.provider);
+        println!(
+            "📡 Using OpenAI-compatible streaming for provider: {}",
+            request.provider
+        );
         // OpenAI-compatible providers (OpenAI, Ollama, OpenRouter, Anthropic, etc.)
-        let llm_client = LlmClient::new_openai(request.api_key.clone(), request.base_url.clone(), None);
+        let llm_client =
+            LlmClient::new_openai(request.api_key.clone(), request.base_url.clone(), None);
         llm_client.complete_stream(stream_request, callback).await
     };
     println!("🎯 Streaming method result: {:?}", result.is_ok());
@@ -198,19 +235,19 @@ pub async fn send_message_stream(
     if let Ok(response) = &result {
         if let Some(choice) = response.choices.first() {
             println!("🔧 Checking for tool calls in streaming response");
-            
+
             // Add the assistant's response message to the session
             session.add_assistant_message(choice.message.clone());
-            
+
             // Process tool calls if they exist
             if choice.message.tool_calls.is_some() {
                 println!("🔧 Found tool calls in streaming response, processing...");
-                
+
                 let messages_before = session.get_messages().len();
-                
+
                 // Analyze and execute tool calls
                 session.analyze_tool_call(&choice.message).await;
-                
+
                 // Stream any new tool result messages back to the frontend
                 let messages_after = session.get_messages();
                 for message in &messages_after[messages_before..] {
@@ -257,6 +294,6 @@ pub async fn send_message_stream(
             };
             let _ = app_handle.emit("chat_stream", &error_msg);
             Err(e.to_string())
-        },
+        }
     }
 }

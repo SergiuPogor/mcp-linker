@@ -64,7 +64,7 @@ impl ClientConfig {
         } else {
             return PathBuf::new();
         };
-        
+
         base_path.join(extension_id).join("settings").join(filename)
     }
 
