@@ -82,6 +82,7 @@ const en: { translation: TranslationSchema } = {
     descend: "Descending",
     ascend: "Ascending",
     teamLocal: "Team Local",
+    feedback: "Feedback",
   },
 };
 

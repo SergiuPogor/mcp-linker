@@ -22,7 +22,7 @@ const tc: { translation: TranslationSchema } = {
     install: "安裝",
     addTo: "加入到",
     back: "返回",
-    mcpLinker: "MCP 連結器",
+    mcpLinker: "MCP Linker",
     nav: {
       discover: "探索",
       category: "分類",
@@ -36,7 +36,7 @@ const tc: { translation: TranslationSchema } = {
       manage: "管理",
       updates: "更新",
       recentlyAdded: "最近新增",
-      installapp: "Add Server",
+      installapp: "新增伺服器",
       dxt: "dxt",
       client: "用戶端",
     },
@@ -83,6 +83,7 @@ const tc: { translation: TranslationSchema } = {
     descend: "遞減",
     ascend: "遞增",
     teamLocal: "Team Local",
+    feedback: "意見回饋",
   },
 };
 

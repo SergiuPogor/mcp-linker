@@ -34,8 +34,8 @@ const ja: { translation: TranslationSchema } = {
       recentlyAdded: "最近追加",
       favs: "お気に入り",
       settings: "設定",
-      about: "关于",
-      installapp: "Add Server",
+      about: "アプリについて",
+      installapp: "サーバーを追加",
       dxt: "dxt",
       client: "クライアント",
     },
@@ -66,10 +66,10 @@ const ja: { translation: TranslationSchema } = {
       startSearching: "検索を開始",
     },
     serverForm: {
-      command: "Command",
-      arguments: "Arguments",
+      command: "コマンド",
+      arguments: "引数",
       addEnv: "環境変数を追加",
-      env: "Environment Variables",
+      env: "環境変数",
       headers: "headers",
       url: "url",
     },
@@ -82,6 +82,7 @@ const ja: { translation: TranslationSchema } = {
     descend: "降順",
     ascend: "昇順",
     teamLocal: "Team Local",
+    feedback: "フィードバック",
   },
 };
 

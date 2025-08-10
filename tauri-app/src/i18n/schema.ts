@@ -79,4 +79,5 @@ export interface TranslationSchema {
   descend: string;
   ascend: string;
   teamLocal: string;
+  feedback: string;
 }

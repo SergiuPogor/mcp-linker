@@ -19,7 +19,7 @@ export function WelcomeMessage() {
     },
     agent: {
       icon: Bot,
-      title: "Agent Mode (preview not complete yet)",
+      title: "Agent Mode (preview, some features are still in development)",
       description: "AI assistant can use tools to complete complex tasks",
       features: [
         "Tool usage",

@@ -35,9 +35,9 @@ const de: { translation: TranslationSchema } = {
       manage: "Verwalten",
       updates: "Updates",
       recentlyAdded: "Kürzlich hinzugefügt",
-      installapp: "Add Server",
+      installapp: "Server hinzufügen",
       dxt: "dxt",
-      client: "Klient",
+      client: "Client",
     },
     content: {
       discover: "Empfohlene Inhalte entdecken",
@@ -82,6 +82,7 @@ const de: { translation: TranslationSchema } = {
     descend: "Absteigend",
     ascend: "Aufsteigend",
     teamLocal: "Team Local",
+    feedback: "Feedback",
   },
 };
 

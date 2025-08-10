@@ -9,9 +9,9 @@ const zh: { translation: TranslationSchema } = {
     loadMore: "加载更多",
     loading: "加载中",
     searchPlaceholder: "搜索",
-    sellServer: "出售服务器",
+    sellServer: "销售服务器",
     loginRequired: "需要登录",
-    addCustomServer: "添加定制的服务器",
+    addCustomServer: "添加自定义服务器",
     noServerTip: "无服务器提示",
     confirmDeletion: "确认删除",
     deleteConfirmation: "您确定要删除{{serverKey}}吗？",
@@ -20,7 +20,7 @@ const zh: { translation: TranslationSchema } = {
     delete: "删除",
     install: "安装",
     addTo: "添加到",
-    back: "回去",
+    back: "返回",
     mcpLinker: "MCP Linker",
     nav: {
       discover: "发现",
@@ -82,6 +82,7 @@ const zh: { translation: TranslationSchema } = {
     descend: "降序",
     ascend: "升序",
     teamLocal: "Team Local",
+    feedback: "反馈",
   },
 };
 

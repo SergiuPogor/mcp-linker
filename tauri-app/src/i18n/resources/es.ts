@@ -35,7 +35,7 @@ const es: { translation: TranslationSchema } = {
       manage: "Gestionar",
       updates: "Actualizaciones",
       recentlyAdded: "Recientemente añadido",
-      installapp: "Add Server",
+      installapp: "Agregar servidor",
       dxt: "dxt",
       client: "Cliente",
     },
@@ -82,6 +82,7 @@ const es: { translation: TranslationSchema } = {
     descend: "Descendente",
     ascend: "Ascendente",
     teamLocal: "Team Local",
+    feedback: "Comentarios",
   },
 };
 

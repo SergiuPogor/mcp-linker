@@ -2,7 +2,8 @@ import { needspathClient } from "@/lib/data";
 import { AppRoutes, getNavigationRoutes } from "@/routes";
 import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { PanelLeft } from "lucide-react";
+import { open } from "@tauri-apps/plugin-shell";
+import { MessageCircle, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
@@ -51,6 +52,14 @@ const Layout = () => {
           <ConfigFileSelector />
         )}
         <LangSelect />
+        <button
+          onClick={() => open("https://mcp-linker.store/feedback")}
+          className="flex ml-2 hover:text-blue-500 items-center whitespace-nowrap"
+          title={t("feedback")}
+        >
+          <MessageCircle size={20} className="mr-1" />
+          {t("feedback")}
+        </button>
       </div>
 
       {/* Main content area: sidebar + main */}
