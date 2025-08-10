@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { Nav } from "@/types";
-import { FolderTree, Navigation, User } from "lucide-react";
+import { FolderTree, Navigation, User, Folder } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { FileTree } from "../FileTree";
 import { ModeToggle } from "../ui/mode-toggle";
+import { FoldersTab } from "./FoldersTab";
 
 interface SidebarProps {
   navs: Nav[];
@@ -18,16 +20,23 @@ export const Sidebar = ({ navs, isCollapsed, onTabChange }: SidebarProps) => {
   const { t } = useTranslation<"translation">();
   const location = useLocation();
   const navigate = useNavigate();
+  const [currentTab, setCurrentTab] = useState("navigation");
 
   const { user } = useAuth();
 
   const handleTabChange = (tab: string) => {
+    setCurrentTab(tab);
     if (tab === "files") {
       navigate("/chat");
     }
     if (onTabChange) {
       onTabChange(tab);
     }
+  };
+
+  const handleSwitchToFilesTab = () => {
+    setCurrentTab("files");
+    navigate("/chat");
   };
 
   if (isCollapsed) {
@@ -77,11 +86,15 @@ export const Sidebar = ({ navs, isCollapsed, onTabChange }: SidebarProps) => {
 
   return (
     <div className="flex flex-col h-screen bg-background border-r transition-all duration-300 w-56">
-      <Tabs defaultValue="navigation" className="flex flex-col h-full min-h-0" onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-2 shrink-0">
+      <Tabs value={currentTab} className="flex flex-col h-full min-h-0" onValueChange={handleTabChange}>
+        <TabsList className="grid w-full grid-cols-3 shrink-0">
           <TabsTrigger value="navigation" className="flex items-center gap-1">
             <Navigation className="w-3 h-3" />
             <span className="text-xs">Nav</span>
+          </TabsTrigger>
+          <TabsTrigger value="folders" className="flex items-center gap-1">
+            <Folder className="w-3 h-3" />
+            <span className="text-xs">Folders</span>
           </TabsTrigger>
           <TabsTrigger value="files" className="flex items-center gap-1">
             <FolderTree className="w-3 h-3" />
@@ -136,6 +149,12 @@ export const Sidebar = ({ navs, isCollapsed, onTabChange }: SidebarProps) => {
             <div className="shrink-0">
               <ModeToggle />
             </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="folders" className="flex-1 flex flex-col mt-0 min-h-0">
+          <div className="flex-1 min-h-0">
+            <FoldersTab onSwitchToFilesTab={handleSwitchToFilesTab} />
           </div>
         </TabsContent>
         
