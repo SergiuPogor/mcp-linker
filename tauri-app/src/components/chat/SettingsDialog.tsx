@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProvider } from "@/hooks/useProvider";
+import { useProviderStore } from "@/stores/providerStore";
 import {
   Dialog,
   DialogContent,
@@ -31,34 +32,37 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
     selectedProvider,
     setSelectedProvider,
     apiKey,
-    setApiKey,
     models,
     selectedModel,
     setSelectedModel,
     baseUrl,
-    setBaseUrl,
     selectedProviderConfig,
   } = useProvider();
+
+  const { setApiKey: setStoreApiKey, setBaseUrl: setStoreBaseUrl } = useProviderStore();
 
   const [showApiKey, setShowApiKey] = useState(false);
   const [tempApiKey, setTempApiKey] = useState(apiKey);
   const [tempBaseUrl, setTempBaseUrl] = useState(baseUrl);
 
+  // Sync temp values when provider or values change
+  useEffect(() => {
+    setTempApiKey(apiKey);
+  }, [apiKey]);
+
+  useEffect(() => {
+    setTempBaseUrl(baseUrl);
+  }, [baseUrl]);
+
   const handleSave = () => {
-    setApiKey(tempApiKey);
-    setBaseUrl(tempBaseUrl);
+    setStoreApiKey(selectedProvider, tempApiKey);
+    setStoreBaseUrl(selectedProvider, tempBaseUrl);
   };
 
   const handleProviderChange = (provider: Provider) => {
     setSelectedProvider(provider);
-    // Load the API key for the new provider
-    const providerApiKey = localStorage.getItem(`${provider}_API_KEY`) || "";
-    setTempApiKey(providerApiKey);
-    
-    // Load the base URL for the new provider
-    const providerConfig = providers.find((p) => p.value === provider);
-    const storedUrl = localStorage.getItem(`${provider}_BASE_URL`);
-    setTempBaseUrl(storedUrl || providerConfig?.defaultBaseUrl || "");
+    // The useProvider hook will automatically update apiKey and baseUrl
+    // No need to manually load from localStorage anymore
   };
 
   return (

@@ -1,20 +1,21 @@
-import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
 import { useChatStore, useCurrentMessages } from "@/hooks/useChatStore";
 import { useConversationStore } from "@/hooks/useConversationStore";
 import { useProvider } from "@/hooks/useProvider";
-import { MessageList } from "./chat/MessageList";
+import { formatDate } from "@/utils/date";
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
+import { FileText, Heart, MessageSquare, PanelLeft, PanelLeftClose, Plus, Search, Settings, Star, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { ChatInput } from "./chat/ChatInput";
-import { WelcomeMessage } from "./chat/WelcomeMessage";
-import { LlmProviderSelector } from "./chat/LlmProviderSelector";
+import { MessageList } from "./chat/MessageList";
 import { SettingsDialog } from "./chat/SettingsDialog";
-import { NoteList } from "./notes/NoteList";
+import { WelcomeMessage } from "./chat/WelcomeMessage";
 import { NoteEditor } from "./notes/NoteEditor";
+import { NoteList } from "./notes/NoteList";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Input } from "./ui/input";
-import { Plus, MessageSquare, Settings, Star, Trash2, Heart, Search, PanelLeftClose, PanelLeft, FileText } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+
 
 interface ChatRequest extends Record<string, unknown> {
   message: string;
@@ -147,18 +148,6 @@ export function ChatPane() {
 
   const handleToggleFavorite = (id: string) => {
     toggleFavorite(id);
-  };
-
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffTime = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Yesterday";
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
   };
 
   return (
@@ -330,10 +319,6 @@ export function ChatPane() {
             {/* Model Selector */}
             <div className="p-4 border-b bg-gray-50">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Model:</span>
-                <div className="flex-1">
-                  <LlmProviderSelector />
-                </div>
                 {!apiKey && (
                   <span className="text-sm text-red-500">API Key Required</span>
                 )}
