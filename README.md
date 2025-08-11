@@ -7,10 +7,6 @@
 
 [中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
 
-## 🌟 Featured Project
-
-[**milisp/plux**](https://github.com/milisp/plux) — 💡 File tree & plus button, One-click add your files to AI. Built-in notepad saves insights. 
-
 ## 🚀 Why MCP Linker?
 
 **Instant Setup**: Click → Add → Done. No manual config editing or LLM calls required.
@@ -25,6 +21,7 @@ Unlike tools like Cline that need LLM integration just to add MCP servers, MCP L
 - **Cross-Platform** — macOS, Windows, Linux (~6MB)
 - **Smart Detection** — Auto-detect Python, Node.js, uv environments
 - **Cloud Sync** — Optional encrypted sync across devices (Pro)
+- **File tree & plus button + Magic notepad** - One-click add your files to AI Built-in magic notepad saves insights. power from [**milisp/plux**](https://github.com/milisp/plux)
 
 ## 🚀 Quick Start
 
