@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { useToast } from "@/hooks/use-toast";
+import { useCCProjectStore } from "@/stores/ccProject";
+import { invoke } from "@tauri-apps/api/core";
+import { useCallback, useState } from "react";
 
 interface ClaudeCodeServer {
   name: string;
@@ -31,11 +32,10 @@ interface ServerFormData {
 
 export function useClaudeCodeManagement() {
   const { toast } = useToast();
+  const { selectedProject, setProjects, setSelectedProject } = useCCProjectStore();
   const [servers, setServers] = useState<ClaudeCodeServer[]>([]);
   const [loading, setLoading] = useState(true);
   const [claudeCliAvailable, setClaudeCliAvailable] = useState(false);
-  const [projects, setProjects] = useState<string[]>([]);
-  const [selectedProject, setSelectedProject] = useState<string>("");
 
   const checkClaudeCliAvailability = useCallback(async () => {
     try {
@@ -217,9 +217,6 @@ export function useClaudeCodeManagement() {
     servers,
     loading,
     claudeCliAvailable,
-    projects,
-    selectedProject,
-    setSelectedProject,
     checkClaudeCliAvailability,
     loadServers,
     addServer,

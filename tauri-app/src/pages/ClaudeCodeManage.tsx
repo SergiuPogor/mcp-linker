@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useClaudeCodeManagement } from "@/hooks/useClaudeCodeManagement";
+import { useCCProjectStore } from "@/stores/ccProject";
 import { AlertCircle, Globe, RefreshCcw, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -14,9 +15,6 @@ export default function ClaudeCodeManage() {
     servers,
     loading,
     claudeCliAvailable,
-    projects,
-    selectedProject,
-    setSelectedProject,
     checkClaudeCliAvailability,
     loadServers,
     addServer,
@@ -24,6 +22,8 @@ export default function ClaudeCodeManage() {
     getServerDetails,
     listProjects
   } = useClaudeCodeManagement();
+
+  const { projects, selectedProject, setSelectedProject } = useCCProjectStore();
 
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState<any>(null);
@@ -111,7 +111,7 @@ export default function ClaudeCodeManage() {
             <div className="mt-2 flex">
               <Label className="text-sm font-medium">Working Directory:</Label>
               <Select
-                value={selectedProject}
+                value={selectedProject || undefined}
                 onValueChange={setSelectedProject}
               >
                 <SelectTrigger>
