@@ -6,7 +6,7 @@ export default function ChatPage() {
   const { selectedFile, setSelectedFile } = useFileViewerStore();
 
   return (
-    <div className="h-screen flex">
+    <div className="h-full flex">
       {selectedFile ? (
         <>
           {/* File content on the left */}
