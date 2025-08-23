@@ -1,17 +1,28 @@
 # MCP Linker
 
-**One-click add and sync MCP servers across AI clients — No LLM calls needed**
-
 [![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total.svg)](https://github.com/milisp/mcp-linker/releases)
 [![Stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
+[![Forks](https://img.shields.io/github/forks/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/network/members)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 [中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
+
+**One-click add and sync MCP servers across AI clients — No LLM calls needed**
+
+> [!TIP]
+> **⭐ Star the repo and follow [milisp](https://x.com/lisp_mi) on X and [github](https://github.com/milisp) for more**.
+
+![demo](./images/demo.gif)
 
 ## 🚀 Why MCP Linker?
 
 **Instant Setup**: Click → Add → Done. No manual config editing or LLM calls required.
 
 Unlike tools like Cline that need LLM integration just to add MCP servers, MCP Linker provides direct, instant configuration management.
+
+## News
+
+- **build-in mcp chat** - AI Finder/explorer @files from FileTree + notepad. powered by [**milisp/plux**](https://github.com/milisp/plux)
 
 ## ✨ Features
 
@@ -21,7 +32,6 @@ Unlike tools like Cline that need LLM integration just to add MCP servers, MCP L
 - **Cross-Platform** — macOS, Windows, Linux (~6MB)
 - **Smart Detection** — Auto-detect Python, Node.js, uv environments
 - **Cloud Sync** — Optional encrypted sync across devices (Pro)
-- **File tree & plus button + Magic notepad** - One-click add your files to AI Built-in magic notepad saves insights. power from [**milisp/plux**](https://github.com/milisp/plux)
 
 ## 🚀 Quick Start
 
@@ -39,10 +49,6 @@ Unlike tools like Cline that need LLM integration just to add MCP servers, MCP L
 | Server Discovery | Add Configuration |
 |-----------------|-------------------|
 | ![Discover](./images/discover.png) | ![Add server](./images/add-server.png) |
-
-## Demo
-
-![demo](./images/demo.gif)
 
 ## Installation Notes
 
