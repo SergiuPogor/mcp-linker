@@ -23,6 +23,7 @@ Unlike tools like Cline that need LLM integration just to add MCP servers, MCP L
 ## News
 
 - **build-in mcp chat** - AI Finder/explorer @files from FileTree + notepad. powered by [**milisp/plux**](https://github.com/milisp/plux)
+- [milisp/codexia](http://github.com/milisp/codexia) - The missing GUI for the OpenAI Codex CLI, (FileTree + notepad + git diff + plan mode) all in a lightweight Tauri desktop app.
 
 ## ✨ Features
 
