@@ -1,6 +1,4 @@
 use crate::adapter::ClientAdapter;
-use crate::client::ClientConfig;
-use crate::json_manager::JsonManager;
 use serde_json::Value;
 
 #[tauri::command]

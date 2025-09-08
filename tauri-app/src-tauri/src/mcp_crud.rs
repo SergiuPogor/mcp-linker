@@ -1,6 +1,4 @@
 use crate::adapter::ClientAdapter;
-use crate::client::ClientConfig;
-use crate::json_manager::JsonManager;
 use serde_json::Value;
 
 pub(crate) fn normalize_codex_config(mut server_config: Value) -> Result<Value, String> {
