@@ -20,6 +20,7 @@ mod cmd;
 mod config;
 mod dxt;
 mod codex;
+mod adapter;
 mod encryption;
 mod env_path;
 mod filesystem;

@@ -10,7 +10,7 @@ use crate::codex::McpServerConfig;
 pub struct CodexConfig {
     #[serde(default)]
     pub projects: HashMap<String, serde_json::Value>,
-    #[serde(default, rename = "mcp_servers")]
+    #[serde(default, rename = "mcp_servers", alias = "mcpServers")]
     pub mcp_servers: HashMap<String, McpServerConfig>,
     #[serde(default, rename = "disabled_mcp_servers")]
     pub disabled_mcp_servers: HashMap<String, McpServerConfig>,

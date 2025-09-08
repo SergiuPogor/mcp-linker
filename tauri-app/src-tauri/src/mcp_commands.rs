@@ -1,5 +1,5 @@
+use crate::adapter::ClientAdapter;
 use crate::client::ClientConfig;
-use crate::codex as codex_cmds;
 use crate::json_manager::JsonManager;
 use serde_json::Value;
 
@@ -9,15 +9,8 @@ pub async fn disable_mcp_server(
     path: Option<String>,
     server_name: String,
 ) -> Result<Value, String> {
-    if client_name == "codex" {
-        codex_cmds::disable(&server_name)?;
-        let disabled = codex_cmds::list_disabled()?;
-        return Ok(serde_json::to_value(disabled).unwrap_or_default());
-    }
-    let app_config = ClientConfig::new(&client_name, path.as_deref());
-    let file_path = app_config.get_path();
-
-    JsonManager::disable_mcp_server(file_path, &client_name, &server_name).await
+    let adapter = ClientAdapter::new(&client_name, path.as_deref());
+    adapter.disable(server_name).await
 }
 
 #[tauri::command]
@@ -26,15 +19,8 @@ pub async fn enable_mcp_server(
     path: Option<String>,
     server_name: String,
 ) -> Result<Value, String> {
-    if client_name == "codex" {
-        codex_cmds::enable(&server_name)?;
-        let disabled = codex_cmds::list_disabled()?;
-        return Ok(serde_json::to_value(disabled).unwrap_or_default());
-    }
-    let app_config = ClientConfig::new(&client_name, path.as_deref());
-    let file_path = app_config.get_path();
-
-    JsonManager::enable_mcp_server(file_path, &client_name, &server_name).await
+    let adapter = ClientAdapter::new(&client_name, path.as_deref());
+    adapter.enable(server_name).await
 }
 
 #[tauri::command]
@@ -42,14 +28,8 @@ pub async fn list_disabled_servers(
     client_name: String,
     path: Option<String>,
 ) -> Result<Value, String> {
-    if client_name == "codex" {
-        let disabled = codex_cmds::list_disabled()?;
-        return Ok(serde_json::to_value(disabled).unwrap_or_default());
-    }
-    let app_config = ClientConfig::new(&client_name, path.as_deref());
-    let file_path = app_config.get_path();
-
-    JsonManager::list_disabled_servers(file_path, &client_name).await
+    let adapter = ClientAdapter::new(&client_name, path.as_deref());
+    adapter.list_disabled().await
 }
 
 #[tauri::command]
@@ -59,16 +39,6 @@ pub async fn update_disabled_mcp_server(
     server_name: String,
     server_config: Value,
 ) -> Result<Value, String> {
-    if client_name == "codex" {
-        let cfg: crate::codex::McpServerConfig = serde_json::from_value(server_config)
-            .map_err(|e| format!("Invalid server config for codex: {}", e))?;
-        codex_cmds::update_disabled(&server_name, cfg)?;
-        let disabled = codex_cmds::list_disabled()?;
-        return Ok(serde_json::to_value(disabled).unwrap_or_default());
-    }
-    let app_config = ClientConfig::new(&client_name, path.as_deref());
-    let file_path = app_config.get_path();
-
-    JsonManager::update_disabled_mcp_server(file_path, &client_name, &server_name, server_config)
-        .await
+    let adapter = ClientAdapter::new(&client_name, path.as_deref());
+    adapter.update_disabled(server_name, server_config).await
 }

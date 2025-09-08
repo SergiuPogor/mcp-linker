@@ -204,7 +204,8 @@ pub async fn sync_mcp_config(
 async fn read_from_client(client: &str, path: Option<&str>) -> Result<JsonValue, String> {
     if client == "codex" {
         let servers = codex_cmds::read_mcp_servers().await?;
-        let j = json!({ "mcpServers": servers, "__disabled": {} });
+        let disabled = codex_cmds::list_disabled().await?;
+        let j = json!({ "mcpServers": servers, "__disabled": disabled });
         Ok(j)
     } else {
         let cfg = ClientConfig::new(client, path);
