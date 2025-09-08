@@ -1,4 +1,5 @@
 use crate::client::ClientConfig;
+use crate::codex as codex_cmds;
 use crate::json_manager::JsonManager;
 use serde_json::Value;
 
@@ -8,6 +9,11 @@ pub async fn disable_mcp_server(
     path: Option<String>,
     server_name: String,
 ) -> Result<Value, String> {
+    if client_name == "codex" {
+        codex_cmds::disable(&server_name)?;
+        let disabled = codex_cmds::list_disabled()?;
+        return Ok(serde_json::to_value(disabled).unwrap_or_default());
+    }
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
@@ -20,6 +26,11 @@ pub async fn enable_mcp_server(
     path: Option<String>,
     server_name: String,
 ) -> Result<Value, String> {
+    if client_name == "codex" {
+        codex_cmds::enable(&server_name)?;
+        let disabled = codex_cmds::list_disabled()?;
+        return Ok(serde_json::to_value(disabled).unwrap_or_default());
+    }
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
@@ -31,6 +42,10 @@ pub async fn list_disabled_servers(
     client_name: String,
     path: Option<String>,
 ) -> Result<Value, String> {
+    if client_name == "codex" {
+        let disabled = codex_cmds::list_disabled()?;
+        return Ok(serde_json::to_value(disabled).unwrap_or_default());
+    }
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 
@@ -44,6 +59,13 @@ pub async fn update_disabled_mcp_server(
     server_name: String,
     server_config: Value,
 ) -> Result<Value, String> {
+    if client_name == "codex" {
+        let cfg: crate::codex::McpServerConfig = serde_json::from_value(server_config)
+            .map_err(|e| format!("Invalid server config for codex: {}", e))?;
+        codex_cmds::update_disabled(&server_name, cfg)?;
+        let disabled = codex_cmds::list_disabled()?;
+        return Ok(serde_json::to_value(disabled).unwrap_or_default());
+    }
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 

@@ -1,10 +1,18 @@
 use crate::client::ClientConfig;
+use crate::codex as codex_cmds;
 use crate::json_manager::JsonManager;
 use serde_json::{json, Value};
 use std::path::PathBuf;
 
 #[tauri::command]
 pub async fn read_json_file(client_name: String, path: Option<String>) -> Result<Value, String> {
+    if client_name == "codex" {
+        // Read from ~/.codex/config.toml via codex commands
+        let servers = codex_cmds::read_mcp_servers().await?;
+        let json = json!({ "mcpServers": servers });
+        return Ok(json);
+    }
+
     let app_config = ClientConfig::new(&client_name, path.as_deref());
     let file_path = app_config.get_path();
 

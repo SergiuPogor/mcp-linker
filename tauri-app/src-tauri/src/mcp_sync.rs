@@ -1,6 +1,8 @@
 use crate::client::ClientConfig;
 use crate::json_manager::utils::{is_cherrystudio_client, is_per_server_disabled_client};
 use crate::json_manager::JsonManager;
+use crate::codex as codex_cmds;
+use serde_json::Value as JsonValue;
 use serde_json::json;
 
 #[tauri::command]
@@ -11,19 +13,28 @@ pub async fn sync_mcp_config(
     to_path: Option<String>,
     override_all: bool,
 ) -> Result<(), String> {
-    let from_config = ClientConfig::new(&from_client, from_path.as_deref());
-    let to_config = ClientConfig::new(&to_client, to_path.as_deref());
-
-    let from_path = from_config.get_path();
-    let to_path = to_config.get_path();
-
-    let from_json = JsonManager::read_json_file(from_path).await?;
-    let mut to_json = JsonManager::read_json_file(to_path)
+    // Load source and target
+    let from_json = read_from_client(&from_client, from_path.as_deref()).await?;
+    let mut to_json = read_from_client(&to_client, to_path.as_deref())
         .await
         .unwrap_or_else(|_| json!({}));
 
-    let from_servers = from_json.get("mcpServers").cloned().unwrap_or(json!({}));
+    let mut from_servers = from_json.get("mcpServers").cloned().unwrap_or(json!({}));
     let from_disabled = from_json.get("__disabled").cloned().unwrap_or(json!({}));
+
+    // If syncing to codex (no disabled concept), filter out disabled servers from source
+    if to_client == "codex" {
+        if is_per_server_disabled_client(&from_client) {
+            if let Some(obj) = from_servers.as_object_mut() {
+                obj.retain(|_, v| !v.get("disabled").and_then(|d| d.as_bool()).unwrap_or(false));
+            }
+        }
+        if is_cherrystudio_client(&from_client) {
+            if let Some(obj) = from_servers.as_object_mut() {
+                obj.retain(|_, v| v.get("isActive").and_then(|d| d.as_bool()) != Some(false));
+            }
+        }
+    }
 
     if override_all {
         to_json["mcpServers"] = from_servers;
@@ -186,5 +197,66 @@ pub async fn sync_mcp_config(
         }
     }
 
-    JsonManager::write_json_file(to_path, &to_json).await
+    // If writing to codex, perform codex-aware write
+    write_to_client(&to_client, to_path.as_deref(), to_json, override_all).await
+}
+
+async fn read_from_client(client: &str, path: Option<&str>) -> Result<JsonValue, String> {
+    if client == "codex" {
+        let servers = codex_cmds::read_mcp_servers().await?;
+        let j = json!({ "mcpServers": servers, "__disabled": {} });
+        Ok(j)
+    } else {
+        let cfg = ClientConfig::new(client, path);
+        let p = cfg.get_path();
+        JsonManager::read_json_file(p).await
+    }
+}
+
+async fn write_to_client(
+    client: &str,
+    path: Option<&str>,
+    content: JsonValue,
+    override_all: bool,
+) -> Result<(), String> {
+    if client == "codex" {
+        let from_servers = content.get("mcpServers").cloned().unwrap_or(json!({}));
+        let from_map = from_servers.as_object().cloned().unwrap_or_default();
+
+        // Load current codex servers
+        let current = codex_cmds::read_mcp_servers().await?;
+
+        if override_all {
+            // Delete servers not in new set
+            for old in current.keys() {
+                if !from_map.contains_key(old) {
+                    let _ = codex_cmds::delete_mcp_server(old.clone()).await;
+                }
+            }
+            // Upsert all provided
+            for (name, cfg_val) in from_map {
+                let normalized = crate::mcp_crud::normalize_codex_config(cfg_val)
+                    .map_err(|e| format!("Invalid server config for codex: {}", e))?;
+                let parsed: crate::codex::McpServerConfig = serde_json::from_value(normalized)
+                    .map_err(|e| format!("Invalid server config for codex: {}", e))?;
+                codex_cmds::add_mcp_server(name, parsed).await?;
+            }
+        } else {
+            // Merge only missing names
+            for (name, cfg_val) in from_map {
+                if !current.contains_key(&name) {
+                    let normalized = crate::mcp_crud::normalize_codex_config(cfg_val)
+                        .map_err(|e| format!("Invalid server config for codex: {}", e))?;
+                    let parsed: crate::codex::McpServerConfig = serde_json::from_value(normalized)
+                        .map_err(|e| format!("Invalid server config for codex: {}", e))?;
+                    codex_cmds::add_mcp_server(name, parsed).await?;
+                }
+            }
+        }
+        Ok(())
+    } else {
+        let cfg = ClientConfig::new(client, path);
+        let p = cfg.get_path();
+        JsonManager::write_json_file(p, &content).await
+    }
 }

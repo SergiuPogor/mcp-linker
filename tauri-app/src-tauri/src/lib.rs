@@ -19,6 +19,7 @@ mod client;
 mod cmd;
 mod config;
 mod dxt;
+mod codex;
 mod encryption;
 mod env_path;
 mod filesystem;

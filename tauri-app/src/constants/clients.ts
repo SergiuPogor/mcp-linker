@@ -53,6 +53,12 @@ const clients = [
     url: "https://github.com/robitx/mcphub.nvim", 
     desc: "Neovim plugin for Model Context Protocol integration and server management" 
   },
+  { 
+    value: "codex", 
+    label: "Codex", 
+    url: "", 
+    desc: "Reads/writes MCP servers in ~/.codex/config.toml" 
+  },
 ];
 
 export const availableClients = clients;
