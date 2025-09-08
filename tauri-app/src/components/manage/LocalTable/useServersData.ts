@@ -25,6 +25,10 @@ export function useServersData(
           return !(
             "disabled" in serverConfig && (serverConfig as any).disabled
           );
+        } else if (selectedClient === "claude_code") {
+          // Exclude entries present in disabledServers
+          // const name = (serverConfig as any).name; // name not present in config; compare by key instead
+          return true; // filter by key below
         }
         return true;
       })
@@ -36,8 +40,11 @@ export function useServersData(
               ? serverConfig
               : {}),
           }) as ServerTableData,
+      )
+      .filter((s) =>
+        selectedClient === "claude_code" ? !(s.name in (disabledServers || {})) : true,
       );
-  }, [config?.mcpServers, selectedClient]);
+  }, [config?.mcpServers, selectedClient, disabledServers]);
 
   const disabledServersData = useMemo(() => {
     return Object.entries(disabledServers ?? {}).map(

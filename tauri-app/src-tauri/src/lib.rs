@@ -21,6 +21,7 @@ mod config;
 mod dxt;
 mod codex;
 mod adapter;
+mod claude_disabled;
 mod encryption;
 mod env_path;
 mod filesystem;
@@ -96,6 +97,10 @@ pub fn run() {
             claude_code_commands::claude_list_projects,
             claude_code_commands::check_claude_cli_available,
             claude_code_commands::check_claude_config_exists,
+            claude_disabled::claude_list_disabled,
+            claude_disabled::claude_disable_server,
+            claude_disabled::claude_enable_server,
+            claude_disabled::claude_update_disabled,
             filesystem::read_directory,
             filesystem::get_default_directories,
             filesystem::read_file_content,

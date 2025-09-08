@@ -16,6 +16,7 @@ import { ConfigFileSelector } from "../settings/ConfigFileSelector";
 import LangSelect from "../settings/LangSelect";
 import { PathSelector } from "../settings/PathSelector";
 import { Sidebar } from "./Sidebar";
+import { ProjectSelector } from "@/components/claude-code/ProjectSelector";
 
 const Layout = () => {
   const { selectedClient } = useClientPathStore();
@@ -47,7 +48,14 @@ const Layout = () => {
           {scope === "personal" ? <ClientSelector /> : <TeamSelector />}
         </span>
         {scope === "personal" ? (
-          <>{needspathClient.includes(selectedClient) && <PathSelector />}</>
+          <>
+            {needspathClient.includes(selectedClient) && <PathSelector />}
+            {selectedClient === "claude_code" && (
+              <span className="ml-2">
+                <ProjectSelector />
+              </span>
+            )}
+          </>
         ) : (
           <ConfigFileSelector />
         )}

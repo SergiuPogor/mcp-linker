@@ -1,7 +1,7 @@
 import { ProviderConfig } from "@/types/provider";
 
-export const needspathClient = ["cursor", "custom", "vscode", "claude_code"];
-export const mustHavePathClients = ["custom", "vscode", "claude_code"];
+export const needspathClient = ["cursor", "custom", "vscode"];
+export const mustHavePathClients = ["custom", "vscode"];
 
 export const PROVIDERS: ProviderConfig[] = [
     {

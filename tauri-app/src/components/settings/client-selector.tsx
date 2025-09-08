@@ -8,18 +8,14 @@ import {
 import { clientOptions } from "@/constants/clients";
 import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { useNavigate } from "react-router-dom";
 
 export function ClientSelector() {
   const { selectedClient, setSelectedClient } = useClientPathStore();
-  const navigate = useNavigate();
 
   function handleChange(value: string) {
-    if (value === "claude_code") {
-      navigate("/claude-code-manage");
-    } else {
-      setSelectedClient(value);
-    }
+    // Allow claude_code to work like other clients in Manage without forcing navigation.
+    // The dedicated page remains available at /claude-code-manage if users open it explicitly.
+    setSelectedClient(value);
   }
 
   return (

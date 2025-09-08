@@ -1,9 +1,10 @@
 // useSaveServerConfig.ts
+import { useMcpRefresh } from "@/contexts/McpRefreshContext";
+import { useCCProjectStore } from "@/stores/ccProject";
 import type { ServerConfig, ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import { LOCAL_STORAGE_KEY } from "./useLocalDraft";
-import { useMcpRefresh } from "@/contexts/McpRefreshContext";
 
 interface SaveServerConfigParams {
   selectedClient: string;
@@ -17,6 +18,7 @@ interface SaveServerConfigParams {
 
 export function useSaveServerConfig() {
   const { refreshServerList } = useMcpRefresh();
+  const { selectedProject } = useCCProjectStore();
   
   async function updateConfig(
     selectedClient: string,
@@ -26,19 +28,49 @@ export function useSaveServerConfig() {
     value: ServerConfig,
   ) {
     try {
-      const server = {
-        clientName: selectedClient,
-        path: selectedPath,
-        serverName: selectedServer,
-        serverConfig: value,
-      };
-      await invoke("add_mcp_server", server);
+      // Save to selected client
+      if (selectedClient === "claude_code") {
+        // Map to Claude Code add request
+        if (!selectedProject) {
+          toast.error("Please select a Claude Code project in header");
+          throw new Error("Claude Code project not selected");
+        }
+        const req: any = { name: selectedServer };
+        if ((value as any).command) {
+          req.type = "stdio";
+          req.command = (value as any).command;
+          req.args = (value as any).args || [];
+          if ((value as any).env) req.env = (value as any).env;
+        } else if ((value as any).url) {
+          req.type = (value as any).type || "http";
+          req.url = (value as any).url;
+        } else {
+          throw new Error("Unsupported config for Claude Code");
+        }
+        await invoke("claude_mcp_add", {
+          request: req,
+          workingDir: selectedProject,
+        });
+      } else {
+        await invoke("add_mcp_server", {
+          clientName: selectedClient,
+          path: selectedPath,
+          serverName: selectedServer,
+          serverConfig: value,
+        });
+      }
+      // Always append to mcplinker history
       try {
-        await invoke("add_mcp_server", { ...server, clientName: "mcplinker" });
+        await invoke("add_mcp_server", {
+          clientName: "mcplinker",
+          path: "",
+          serverName: selectedServer,
+          serverConfig: value,
+        });
       } catch (e) {
         // already have
       }
-      console.log("add server", new Date(), server, currentServer);
+      console.log("add server", new Date(), currentServer);
     } catch (error) {
       console.error(error);
       throw error;
