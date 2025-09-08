@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2025-09-08
+
+- add codex client - add, edit, delete local sync
+- claude code - local sync, add mcp server from marketplace
+
+## [1.6.0] - 2025-08-11
+
+- add claude code client - add and delete mcp server
+- add plux note and chat with mcp server system
 
 ## [1.5.3] - 2025-08-04
 
