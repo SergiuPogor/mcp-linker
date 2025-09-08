@@ -4,7 +4,7 @@
 [![Stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
 [![Forks](https://img.shields.io/github/forks/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/network/members)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/)
+[中文](docs/README.zh-CN.md) | [🌍 Other Languages](./docs/)
 
 **One-click add and sync MCP servers across AI clients — No LLM calls needed**
 
