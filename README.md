@@ -4,8 +4,7 @@
 [![Stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/stargazers)
 [![Forks](https://img.shields.io/github/forks/milisp/mcp-linker?style=social)](https://github.com/milisp/mcp-linker/network/members)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-[中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/) • [💬 Discussions](https://github.com/milisp/mcp-linker/discussions) • [🐛 Issues](https://github.com/milisp/mcp-linker/issues) •  [💡 Ideas](https://github.com/milisp/mcp-linker/discussions/categories/ideas)
+[中文](readme/README.zh-CN.md) | [🌍 Other Languages](./readme/)
 
 **One-click add and sync MCP servers across AI clients — No LLM calls needed**
 
@@ -76,15 +75,19 @@ Check out [**awesome-claude-dxt**](https://github.com/milisp/awesome-claude-dxt)
 
 ## 🛠️ Development
 
-**Requirements:** Node.js 20+, Bun, Rust, [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/)
+For development commands, and contribution guidance, see [CONTRIBUTING](CONTRIBUTING.md)
 
-```bash
-git clone https://github.com/milisp/mcp-linker
-cd mcp-linker/tauri-app
-bun install
-cp .env.example .env
-bun tauri dev
-```
+## 🔍 Troubleshooting
+
+see the [Wiki](https://github.com/milisp/mcp-linker/wiki)
+
+## 💖 Contributors
+
+Thanks to all our wonderful contributors!
+
+<a href="https://github.com/milisp/mcp-linker/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=milisp/mcp-linker" />
+</a>
 
 ## License
 MIT License - see [LICENSE](LICENSE)
