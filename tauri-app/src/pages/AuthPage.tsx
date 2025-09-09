@@ -1,28 +1,26 @@
 import AuthUnavailable from "@/components/common/AuthUnavailable";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuthStore } from "@/stores/authStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
 import { Github } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Badge } from "@/components/ui/badge";
 
 export default function AuthPage() {
-  const [email, setEmail] = useState(localStorage.getItem("email") || "");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  type Provider = "github" | "google";
+  const lastProvider = useAuthStore((s) => s.lastOAuthProvider);
+  const setLastOAuthProvider = useAuthStore((s) => s.setLastOAuthProvider);
 
-  const handleOAuthLogin = async (provider: "github" | "google") => {
+  const handleOAuthLogin = async (provider: Provider) => {
     if (!isSupabaseEnabled || !supabase) {
       console.error("Authentication is not configured");
       return;
     }
 
     try {
+      // Remember last used provider via zustand store
+      setLastOAuthProvider(provider);
+
       const { data } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -43,164 +41,47 @@ export default function AuthPage() {
     }
   };
 
-  const handleEmailSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isSupabaseEnabled || !supabase) {
-      setError("Authentication is not configured");
-      return;
-    }
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      alert("Please check your email for the confirmation link!");
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEmailSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isSupabaseEnabled || !supabase) {
-      setError("Authentication is not configured");
-      return;
-    }
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      console.log("nav to onboarding after email login");
-      navigate("/onboarding");
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!isSupabaseEnabled) {
     return <AuthUnavailable />;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen px-4 text-center">
+    <div className="flex flex-col items-center justify-center h-full px-4 text-center">
       <h1 className="text-3xl font-bold mb-4">Welcome to MCP Linker</h1>
       <p className="mb-6 text-gray-500 dark:text-gray-400">Sign in to get more</p>
 
       <div className="w-full max-w-sm">
-        {import.meta.env.DEV && (
-          <Tabs defaultValue="signin" className="w-full mb-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            <TabsContent value="signin">
-              <form onSubmit={handleEmailSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      localStorage.setItem("email", e.target.value);
-                    }}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Loading..." : "Sign In"}
-                </Button>
-              </form>
-            </TabsContent>
-            <TabsContent value="signup">
-              <form onSubmit={handleEmailSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      // localStorage.setItem("email", e.target.value);
-                    }}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Loading..." : "Sign Up"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        )}
+        {/* OAuth providers */}
+        <div className="relative mb-4">
+          <Button
+            onClick={() => handleOAuthLogin("github")}
+            className="w-full flex items-center justify-center gap-2"
+          >
+            <Github />
+            Continue with GitHub
+          </Button>
+          {lastProvider === "github" && (
+            <Badge variant="outline" className="absolute -top-2 -right-2 text-xs bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300">
+              Last used
+            </Badge>
+          )}
+        </div>
 
-        {import.meta.env.DEV && (
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-        )}
-
-        <Button
-          onClick={() => handleOAuthLogin("github")}
-          className="w-full flex items-center justify-center gap-2 mb-4"
-        >
-          <Github />
-          Continue with GitHub
-        </Button>
-        <Button
-          onClick={() => handleOAuthLogin("google")}
-          className="w-full flex items-center justify-center gap-2"
-          variant="outline"
-        >
-          <span className="text-sm">🔍</span>
-          Continue with Google
-        </Button>
+        <div className="relative">
+          <Button
+            onClick={() => handleOAuthLogin("google")}
+            className="w-full flex items-center justify-center gap-2"
+            variant="outline"
+          >
+            <span className="text-sm">🔍</span>
+            Continue with Google
+          </Button>
+          {lastProvider === "google" && (
+            <Badge variant="outline" className="absolute -top-2 -right-2 text-xs bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300">
+              Last used
+            </Badge>
+          )}
+        </div>
       </div>
     </div>
   );
