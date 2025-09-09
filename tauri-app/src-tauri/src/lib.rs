@@ -123,17 +123,35 @@ pub fn run() {
             let app_handle = app.handle().clone();
 
             tauri::async_runtime::spawn(async move {
-                let mcp_config = config::McpConfig::load(&app_handle).await.unwrap();
-                let mcp_clients = mcp_config.create_mcp_clients().await.unwrap();
+                let mcp_config = match config::McpConfig::load(&app_handle).await {
+                    Ok(cfg) => cfg,
+                    Err(e) => {
+                        eprintln!("Failed to load MCP config: {e}. Using default empty config.");
+                        Default::default()
+                    }
+                };
+
+                let mcp_clients = match mcp_config.create_mcp_clients().await {
+                    Ok(clients) => clients,
+                    Err(e) => {
+                        eprintln!("Failed to create MCP clients: {e}. Continuing without MCP clients.");
+                        std::collections::HashMap::new()
+                    }
+                };
 
                 let mut tool_set = mcp_client::tool::ToolSet::default();
                 for (name, client) in mcp_clients.iter() {
                     println!("load MCP tool: {}", name);
                     let server = client.peer().clone();
-                    let tools = mcp_client::tool::get_mcp_tools(server).await.unwrap();
-
-                    for tool in tools {
-                        tool_set.add_tool(tool);
+                    match mcp_client::tool::get_mcp_tools(server).await {
+                        Ok(tools) => {
+                            for tool in tools {
+                                tool_set.add_tool(tool);
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!("Failed to load tools for '{}': {e}", name);
+                        }
                     }
                 }
                 tool_set.set_clients(mcp_clients);
