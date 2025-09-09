@@ -23,18 +23,23 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             name: Linux x86_64
-            artifact-name: tauri-app-linux-x64
+            artifact-name: MCPLinker-linux-x64
             artifact-path: |
               tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.deb
               tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.rpm
               tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.AppImage
+              tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.deb.sig
+              tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.rpm.sig
+              tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/**/*.AppImage.sig
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             name: Windows x86_64
-            artifact-name: MCP-Linker-Windows
+            artifact-name: MCPLinker_Windows_x64
             artifact-path: |
               tauri-app/src-tauri/target/release/bundle/**/*.exe
               tauri-app/src-tauri/target/release/bundle/**/*.msi
+              tauri-app/src-tauri/target/release/bundle/**/*.exe.sig
+              tauri-app/src-tauri/target/release/bundle/**/*.msi.sig
 
     runs-on: ${{ matrix.platform.os }}
     name: Build ${{ matrix.platform.name }}
@@ -47,22 +52,15 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y \
-            libwebkit2gtk-4.1-dev \
-            build-essential \
-            curl \
-            wget \
-            file \
-            libxdo-dev \
-            libssl-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            pkg-config \
-            libglib2.0-dev \
-            libgtk-3-dev
+          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -70,7 +68,7 @@ jobs:
           node-version: 20
 
       - name: Install Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
         run: bun install
@@ -86,41 +84,11 @@ jobs:
           name: ${{ matrix.platform.artifact-name }}
           path: ${{ matrix.platform.artifact-path }}
 
-      - name: Generate updater manifest
-        if: startsWith(github.ref, 'refs/tags/v') && runner.os == 'Linux'
-        run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          
-          LINUX_SIG_FILE=$(find tauri-app/src-tauri/target/x86_64-unknown-linux-gnu/release/bundle -name "*.AppImage.tar.gz.sig" | head -1)
-          LINUX_SIG=""
-          if [ -f "$LINUX_SIG_FILE" ]; then
-            LINUX_SIG=$(cat "$LINUX_SIG_FILE")
-          fi
-          
-          cat > updater.json << EOF
-          {
-            "version": "$TAG_NAME",
-            "notes": "Update to version $TAG_NAME",
-            "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "platforms": {
-              "linux-x86_64": {
-                "signature": "$LINUX_SIG",
-                "url": "https://github.com/milisp/mcp-linker/releases/download/$TAG_NAME/tauri-app-linux-x64.AppImage.tar.gz"
-              },
-              "windows-x86_64": {
-                "signature": "",
-                "url": "https://github.com/milisp/mcp-linker/releases/download/$TAG_NAME/MCP-Linker-Windows.msi.zip"
-              }
-            }
-          }
-          EOF
-
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
             ${{ matrix.platform.artifact-path }}
-            ${{ runner.os == 'Linux' && 'updater.json' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
