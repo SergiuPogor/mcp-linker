@@ -1,15 +1,49 @@
 import AuthUnavailable from "@/components/common/AuthUnavailable";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
+import authService from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
+import { useUserStore } from "@/stores/userStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { open } from "@tauri-apps/plugin-shell";
 import { Github } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function AuthPage() {
   type Provider = "github" | "google";
   const lastProvider = useAuthStore((s) => s.lastOAuthProvider);
   const setLastOAuthProvider = useAuthStore((s) => s.setLastOAuthProvider);
+  const { fetchUser } = useUserStore();
+
+  // After successful login, automatically start trial if eligible
+  // and show a small toast. Navigation is handled by useAuth elsewhere.
+  // We scope this to AuthPage per request.
+  useEffect(() => {
+    if (!isSupabaseEnabled || !supabase) return;
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (event) => {
+        if (event === "SIGNED_IN") {
+          try {
+            const user = await authService.getCurrentUser();
+            const tier = user?.tier?.toUpperCase?.();
+            const hasTrial = !!user?.trialActive;
+            const isPaid = tier !== "FREE";
+            if (!isPaid && !hasTrial) {
+              await api.post("/users/start-trial");
+              toast.success("Trial started! Enjoy your 14-day access.");
+              await fetchUser();
+            }
+          } catch (_) {
+            // Ignore errors; user can still use the app
+          }
+        }
+      },
+    );
+
+    return () => subscription.subscription.unsubscribe();
+  }, [fetchUser]);
 
   const handleOAuthLogin = async (provider: Provider) => {
     if (!isSupabaseEnabled || !supabase) {

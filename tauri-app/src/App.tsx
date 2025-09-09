@@ -8,6 +8,7 @@ import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
 import Layout from "./components/Layout";
+import LicenseNag from "@/components/common/LicenseNag";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ function App() {
         <ThemeProvider storageKey="vite-ui-theme">
           <Layout />
           <GlobalDialog open={open} type={type || "login"} onClose={hideDialog} />
+          <LicenseNag />
           <UpdateChecker />
         </ThemeProvider>
         <CommandChecker />
