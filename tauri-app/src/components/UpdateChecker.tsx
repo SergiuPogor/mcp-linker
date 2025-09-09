@@ -1,5 +1,3 @@
-import { check, Update } from "@tauri-apps/plugin-updater";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,6 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { open } from "@tauri-apps/plugin-shell";
+import { check, Update } from "@tauri-apps/plugin-updater";
+import { useEffect, useState } from "react";
 
 interface UpdateState {
   available: boolean;
@@ -208,10 +209,16 @@ export function UpdateChecker() {
               >
                 Remind me later
               </Button>
-              <Button onClick={downloadAndInstall}>
-                Update Now
-              </Button>
-            </div>
+              {import.meta.env.DEV ?
+                <Button onClick={downloadAndInstall}>
+                  Update Now (no ok, under test)
+                </Button>
+                : 
+                <Button onClick={() => open('https://github.com/milisp/mcp-linker/releases')}>
+                  Go to Download page
+                </Button>
+              }
+              </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
