@@ -244,7 +244,6 @@ pub async fn check_command_exists(command: String) -> Result<bool, String> {
             use std::process::Stdio;
             #[cfg(windows)]
             {
-                use std::os::windows::process::CommandExt;
                 tokio::process::Command::new("cmd")
                     .args(&["/C", "where", &command])
                     .stdout(Stdio::null())
