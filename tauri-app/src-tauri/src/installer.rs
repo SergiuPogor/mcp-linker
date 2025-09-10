@@ -1,9 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
-#[cfg(windows)]
-use tokio::process::Command as TokioCommand;
-
 mod uv_installer;
 
 #[derive(Debug, Serialize, Deserialize)]

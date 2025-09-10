@@ -7,16 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { open } from "@tauri-apps/plugin-shell";
 import { check, Update } from "@tauri-apps/plugin-updater";
 import { useEffect, useState } from "react";
+import { relaunch } from '@tauri-apps/plugin-process';
 
 interface UpdateState {
-  available: boolean;
   update?: Update;
-  downloading: boolean;
-  progress: number;
   error?: string;
 }
 
@@ -30,13 +26,8 @@ const CHECK_INTERVAL_HOURS = 24; // Check for updates every 24 hours
 const REMIND_LATER_HOURS = 24; // Remind later interval 24 hours
 
 export function UpdateChecker() {
-  const [updateState, setUpdateState] = useState<UpdateState>({
-    available: false,
-    downloading: false,
-    progress: 0,
-  });
+  const [updateState, setUpdateState] = useState<UpdateState>({});
   const [showDialog, setShowDialog] = useState(false);
-  const [showProgress, setShowProgress] = useState(false);
 
   // Get list of skipped versions
   const getSkippedVersions = (): string[] => {
@@ -55,6 +46,7 @@ export function UpdateChecker() {
 
   // Check if update dialog should be shown
   const shouldShowUpdateDialog = (version: string): boolean => {
+    if (import.meta.env.DEV) return true;
     // Check if version is in skip list
     const skippedVersions = getSkippedVersions();
     if (skippedVersions.includes(version)) {
@@ -76,6 +68,8 @@ export function UpdateChecker() {
 
   // Check update frequency control
   const shouldCheckForUpdates = (): boolean => {
+    // In development, always allow checks so it's easy to verify UI
+    if (import.meta.env.DEV) return true;
     const lastCheckTime = localStorage.getItem(STORAGE_KEYS.LAST_CHECK_TIME);
     if (!lastCheckTime) return true;
 
@@ -96,10 +90,9 @@ export function UpdateChecker() {
       const update = await check();
       localStorage.setItem(STORAGE_KEYS.LAST_CHECK_TIME, new Date().toISOString());
       
-      if (update?.available && update.version && shouldShowUpdateDialog(update.version)) {
+      if (update && update.version && shouldShowUpdateDialog(update.version)) {
         setUpdateState(prev => ({
           ...prev,
-          available: true,
           update,
         }));
         setShowDialog(true);
@@ -117,49 +110,22 @@ export function UpdateChecker() {
     if (!updateState.update) return;
 
     setShowDialog(false);
-    setShowProgress(true);
-    setUpdateState(prev => ({
-      ...prev,
-      downloading: true,
-      progress: 0,
-    }));
 
     try {
-      await updateState.update.downloadAndInstall((event) => {
-        switch (event.event) {
-          case "Started":
-            setUpdateState(prev => ({ ...prev, progress: 0 }));
-            break;
-          case "Progress":
-            const progress = event.data.chunkLength ? Math.min(Math.round((event.data.chunkLength / 1000000) * 100), 100) : 0;
-            setUpdateState(prev => ({ ...prev, progress }));
-            break;
-          case "Finished":
-            setUpdateState(prev => ({ ...prev, progress: 100 }));
-            break;
-        }
-      });
-
-      // Update completed - user will need to restart manually
-      setShowProgress(false);
-      alert('Update installed successfully! Please restart the application.');
+      await updateState.update.downloadAndInstall();
     } catch (error) {
       console.error("Failed to download and install update:", error);
       setUpdateState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : "Update failed",
-        downloading: false,
       }));
-      setShowProgress(false);
+      return;
     }
   };
 
   // Check for updates on app startup
   useEffect(() => {
-    // Only check in production builds
-    if (import.meta.env.PROD) {
-      checkForUpdates();
-    }
+    checkForUpdates();
   }, []);
 
   return (
@@ -209,44 +175,21 @@ export function UpdateChecker() {
               >
                 Remind me later
               </Button>
-              {import.meta.env.DEV ?
-                <Button onClick={downloadAndInstall}>
-                  Update Now (no ok, under test)
-                </Button>
-                : 
-                <Button onClick={() => open('https://github.com/milisp/mcp-linker/releases')}>
-                  Go to Download page
-                </Button>
-              }
+              <Button
+                onClick={async () => {
+                  await downloadAndInstall();
+                  // Relaunch the app after successful install to apply update
+                  await relaunch();
+                }}
+              >
+                Update Now
+              </Button>
               </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Download progress dialog */}
-      <Dialog open={showProgress} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Downloading Update</DialogTitle>
-            <DialogDescription>
-              Please wait while the update is being downloaded and installed...
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="mt-4 space-y-2">
-            <Progress value={updateState.progress} className="w-full" />
-            <div className="text-sm text-center text-muted-foreground">
-              {updateState.progress}%
-            </div>
-          </div>
-
-          {updateState.error && (
-            <div className="mt-4 text-sm text-destructive">
-              Error: {updateState.error}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* No progress UI; app will relaunch after install */}
     </>
   );
 }

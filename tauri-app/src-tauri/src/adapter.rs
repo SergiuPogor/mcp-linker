@@ -4,7 +4,10 @@ use crate::json_manager::JsonManager;
 use serde_json::Value;
 
 pub enum ClientAdapter<'a> {
-    Json { client: &'a str, path: Option<&'a str> },
+    Json {
+        client: &'a str,
+        path: Option<&'a str>,
+    },
     Codex,
 }
 
@@ -40,7 +43,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] add server: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] add server: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::add_mcp_server(&path, client_name.as_str(), &name, cfg).await
             }
         }
@@ -56,7 +64,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] remove server: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] remove server: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::remove_mcp_server(&path, client_name.as_str(), &name).await
             }
         }
@@ -75,7 +88,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] update server: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] update server: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::update_mcp_server(&path, client_name.as_str(), &name, cfg).await
             }
         }
@@ -93,7 +111,11 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] batch delete -> {}", client_name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] batch delete -> {}",
+                    client_name,
+                    path.display()
+                );
                 JsonManager::batch_delete_mcp_servers(&path, client_name.as_str(), names).await
             }
         }
@@ -108,7 +130,11 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] list disabled -> {}", client_name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] list disabled -> {}",
+                    client_name,
+                    path.display()
+                );
                 JsonManager::list_disabled_servers(&path, client_name.as_str()).await
             }
         }
@@ -124,7 +150,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] disable: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] disable: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::disable_mcp_server(&path, client_name.as_str(), &name).await
             }
         }
@@ -140,7 +171,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] enable: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] enable: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::enable_mcp_server(&path, client_name.as_str(), &name).await
             }
         }
@@ -158,7 +194,12 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path().unwrap();
-                println!("[Adapter][JSON:{}] update disabled: {} -> {}", client_name, name, path.display());
+                println!(
+                    "[Adapter][JSON:{}] update disabled: {} -> {}",
+                    client_name,
+                    name,
+                    path.display()
+                );
                 JsonManager::update_disabled_mcp_server(&path, client_name.as_str(), &name, cfg)
                     .await
             }

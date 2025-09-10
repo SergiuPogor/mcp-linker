@@ -49,7 +49,10 @@ pub async fn read_mcp_servers() -> Result<HashMap<String, McpServerConfig>, Stri
 async fn load_config() -> Result<CodexConfig, String> {
     let config_path = get_config_path()?;
     if !config_path.exists() {
-        println!("[Codex] load default config (no file): {}", config_path.display());
+        println!(
+            "[Codex] load default config (no file): {}",
+            config_path.display()
+        );
         return Ok(CodexConfig::default());
     }
     let content = fs::read_to_string(&config_path)
@@ -157,10 +160,7 @@ pub async fn enable(name: &str) -> Result<(), String> {
     println!(
         "[Codex] enable request: {} | disabled_keys={:?}",
         name,
-        config
-            .disabled_mcp_servers
-            .keys()
-            .collect::<Vec<_>>()
+        config.disabled_mcp_servers.keys().collect::<Vec<_>>()
     );
     if let Some(server) = config.disabled_mcp_servers.remove(name) {
         config.mcp_servers.insert(name.to_string(), server);
@@ -179,9 +179,7 @@ pub async fn update_disabled(name: &str, server: McpServerConfig) -> Result<(), 
         name,
         config.disabled_mcp_servers.keys().collect::<Vec<_>>()
     );
-    config
-        .disabled_mcp_servers
-        .insert(name.to_string(), server);
+    config.disabled_mcp_servers.insert(name.to_string(), server);
     println!(
         "[Codex] update_disabled saved | disabled_keys(after)={:?}",
         config.disabled_mcp_servers.keys().collect::<Vec<_>>()

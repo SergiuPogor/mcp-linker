@@ -15,7 +15,8 @@ fn read_disabled_file() -> Result<Value, String> {
         return Ok(json!({"projects": {}}));
     }
     let content = fs::read_to_string(&path).map_err(|e| format!("Read disabled file: {}", e))?;
-    let v: Value = serde_json::from_str(&content).map_err(|e| format!("Parse disabled file: {}", e))?;
+    let v: Value =
+        serde_json::from_str(&content).map_err(|e| format!("Parse disabled file: {}", e))?;
     Ok(v)
 }
 
@@ -24,7 +25,8 @@ fn write_disabled_file(v: &Value) -> Result<(), String> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|e| format!("Create dir failed: {}", e))?;
     }
-    fs::write(&path, serde_json::to_string_pretty(v).unwrap()).map_err(|e| format!("Write disabled file: {}", e))
+    fs::write(&path, serde_json::to_string_pretty(v).unwrap())
+        .map_err(|e| format!("Write disabled file: {}", e))
 }
 
 #[command]
@@ -52,15 +54,24 @@ pub async fn claude_disable_server(working_dir: String, name: String) -> Result<
     if let Some(s) = servers.into_iter().find(|s| s.name == name) {
         // Convert to JSON matching Manage shape
         let mut cfg = json!({"type": s.r#type});
-        if let Some(url) = s.url { cfg["url"] = json!(url); }
-        if let Some(cmd) = s.command { cfg["command"] = json!(cmd); }
-        if let Some(args) = s.args { cfg["args"] = json!(args); }
-        if let Some(env) = s.env { cfg["env"] = json!(env); }
+        if let Some(url) = s.url {
+            cfg["url"] = json!(url);
+        }
+        if let Some(cmd) = s.command {
+            cfg["command"] = json!(cmd);
+        }
+        if let Some(args) = s.args {
+            cfg["args"] = json!(args);
+        }
+        if let Some(env) = s.env {
+            cfg["env"] = json!(env);
+        }
         disabled["projects"][&working_dir][&name] = cfg;
         write_disabled_file(&disabled)?;
 
         // Remove from ~/.claude.json active list
-        let _ = crate::claude_code_commands::claude_mcp_remove(name.clone(), working_dir.clone()).await;
+        let _ =
+            crate::claude_code_commands::claude_mcp_remove(name.clone(), working_dir.clone()).await;
     }
     Ok(disabled["projects"][&working_dir].clone())
 }
@@ -85,7 +96,10 @@ pub async fn claude_enable_server(working_dir: String, name: String) -> Result<V
                 .and_then(|v| v.as_str())
                 .unwrap_or("http")
                 .to_string(),
-            url: cfg.get("url").and_then(|v| v.as_str()).map(|s| s.to_string()),
+            url: cfg
+                .get("url")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
             command: cfg
                 .get("command")
                 .and_then(|v| v.as_str())
@@ -112,17 +126,19 @@ pub async fn claude_enable_server(working_dir: String, name: String) -> Result<V
     }
     write_disabled_file(&disabled)?;
 
-    Ok(
-        disabled
-            .get("projects")
-            .and_then(|p| p.get(&working_dir))
-            .cloned()
-            .unwrap_or(json!({})),
-    )
+    Ok(disabled
+        .get("projects")
+        .and_then(|p| p.get(&working_dir))
+        .cloned()
+        .unwrap_or(json!({})))
 }
 
 #[command]
-pub async fn claude_update_disabled(working_dir: String, name: String, server_config: Value) -> Result<Value, String> {
+pub async fn claude_update_disabled(
+    working_dir: String,
+    name: String,
+    server_config: Value,
+) -> Result<Value, String> {
     let mut disabled = read_disabled_file()?;
     if !disabled["projects"].is_object() {
         disabled["projects"] = json!({});

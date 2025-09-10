@@ -14,14 +14,14 @@ use mcp_client::tool::ToolSet;
 
 pub struct GlobalToolSet(pub Arc<ToolSet>);
 
+mod adapter;
 mod claude_code_commands;
+mod claude_disabled;
 mod client;
 mod cmd;
+mod codex;
 mod config;
 mod dxt;
-mod codex;
-mod adapter;
-mod claude_disabled;
 mod encryption;
 mod env_path;
 mod filesystem;
@@ -43,8 +43,9 @@ struct Config {
 pub fn run() {
     env_path::update_env_path();
 
-    let mut builder =
-        tauri::Builder::default().plugin(tauri_plugin_updater::Builder::new().build());
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build());
 
     #[cfg(desktop)]
     {
@@ -134,7 +135,9 @@ pub fn run() {
                 let mcp_clients = match mcp_config.create_mcp_clients().await {
                     Ok(clients) => clients,
                     Err(e) => {
-                        eprintln!("Failed to create MCP clients: {e}. Continuing without MCP clients.");
+                        eprintln!(
+                            "Failed to create MCP clients: {e}. Continuing without MCP clients."
+                        );
                         std::collections::HashMap::new()
                     }
                 };

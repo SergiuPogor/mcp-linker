@@ -1,10 +1,10 @@
+use crate::claude_code_commands;
 use crate::client::ClientConfig;
+use crate::codex as codex_cmds;
 use crate::json_manager::utils::{is_cherrystudio_client, is_per_server_disabled_client};
 use crate::json_manager::JsonManager;
-use crate::claude_code_commands;
-use crate::codex as codex_cmds;
-use serde_json::Value as JsonValue;
 use serde_json::json;
+use serde_json::Value as JsonValue;
 
 #[tauri::command]
 pub async fn sync_mcp_config(
@@ -215,10 +215,18 @@ async fn read_from_client(client: &str, path: Option<&str>) -> Result<JsonValue,
         for s in list {
             let mut v = serde_json::Map::new();
             v.insert("type".into(), json!(s.r#type));
-            if let Some(u) = s.url { v.insert("url".into(), json!(u)); }
-            if let Some(c) = s.command { v.insert("command".into(), json!(c)); }
-            if let Some(a) = s.args { v.insert("args".into(), json!(a)); }
-            if let Some(e) = s.env { v.insert("env".into(), json!(e)); }
+            if let Some(u) = s.url {
+                v.insert("url".into(), json!(u));
+            }
+            if let Some(c) = s.command {
+                v.insert("command".into(), json!(c));
+            }
+            if let Some(a) = s.args {
+                v.insert("args".into(), json!(a));
+            }
+            if let Some(e) = s.env {
+                v.insert("env".into(), json!(e));
+            }
             mapped.insert(s.name, json!(v));
         }
         Ok(json!({"mcpServers": mapped}))
@@ -277,11 +285,14 @@ async fn write_to_client(
         let from_map = from_servers.as_object().cloned().unwrap_or_default();
         // Load current
         let current = claude_code_commands::claude_mcp_list(workdir.to_string()).await?;
-        let current_names: std::collections::HashSet<String> = current.iter().map(|s| s.name.clone()).collect();
+        let current_names: std::collections::HashSet<String> =
+            current.iter().map(|s| s.name.clone()).collect();
         if override_all {
             for name in current_names.iter() {
                 if !from_map.contains_key(name) {
-                    let _ = claude_code_commands::claude_mcp_remove(name.clone(), workdir.to_string()).await;
+                    let _ =
+                        claude_code_commands::claude_mcp_remove(name.clone(), workdir.to_string())
+                            .await;
                 }
             }
         }
@@ -303,13 +314,27 @@ async fn write_to_client(
                 .unwrap_or_else(|| "http".to_string());
 
             // map cfg_val to ClaudeCodeServer
-            let server = claude_code_commands::ClaudeCodeServer{
+            let server = claude_code_commands::ClaudeCodeServer {
                 name: name.clone(),
                 r#type: inferred_type,
-                url: cfg_val.get("url").and_then(|v| v.as_str()).map(|s| s.to_string()),
-                command: cfg_val.get("command").and_then(|v| v.as_str()).map(|s| s.to_string()),
-                args: cfg_val.get("args").and_then(|v| v.as_array()).map(|arr| arr.iter().filter_map(|x| x.as_str().map(|s| s.to_string())).collect()),
-                env: cfg_val.get("env").and_then(|v| v.as_object()).map(|m| m.iter().filter_map(|(k,v)| v.as_str().map(|s| (k.clone(), s.to_string()))).collect()),
+                url: cfg_val
+                    .get("url")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.to_string()),
+                command: cfg_val
+                    .get("command")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.to_string()),
+                args: cfg_val.get("args").and_then(|v| v.as_array()).map(|arr| {
+                    arr.iter()
+                        .filter_map(|x| x.as_str().map(|s| s.to_string()))
+                        .collect()
+                }),
+                env: cfg_val.get("env").and_then(|v| v.as_object()).map(|m| {
+                    m.iter()
+                        .filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string())))
+                        .collect()
+                }),
             };
             let _ = claude_code_commands::claude_mcp_add(server, workdir.to_string()).await;
         }
