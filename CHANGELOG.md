@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2025-09-08
+## [1.7.1] - 2025-09-10
+
+- Improved Update Experience
+- Added in-app update check and automatic update functionality.
+- New update dialog integrated into Settings and UpdateChecker components for a smoother user experience.
+- Optimized GitHub Workflow
+- Migrated to tauri-apps/tauri-action@v0 for more reliable CI/CD.
+- Corrected workspace path and refined build setup for consistent cross-platform builds.
+- Version & Dependency Updates
+- Bumped project version to v1.7.1.
+- Updated Tauri plugins, Radix UI, and other dependencies for improved performance and security.
+
+## [1.7.0] - 2025-09-08
 
 - add codex client - add, edit, delete local sync
 - claude code - local sync, add mcp server from marketplace
