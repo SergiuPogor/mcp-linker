@@ -45,24 +45,15 @@ futures = "0.3"
 futures-util = "0.3"
 
 once_cell = "1.21.3"
-tiktoken-rs = "0.7.0"
-pdf-extract = "0.7.12"
-csv = "1.3"
-calamine = "0.25"
 toml = "0.9.5"
 tauri-plugin-process = "2"
 toml_edit = "0.23.7"
-nosleep = "0.2.1"
-notify = "8.2.0"
-walkdir = "2.5.0"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-single-instance = { version = "2.0.0", features = ["deep-link"] }
 tauri-plugin-updater = "2"
 
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
-codex-bindings = { git = "https://github.com/milisp/codexia", package = "codex-bindings"}
-codex-client = { git = "https://github.com/milisp/codexia", package = "codex-client" }
 
 [dev-dependencies]
 tempfile = "3.8"

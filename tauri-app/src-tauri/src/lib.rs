@@ -6,10 +6,8 @@
 use std::env;
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager};
-use sleep::{allow_sleep, prevent_sleep, SleepState};
 
 mod adapter;
-mod codex_commands;
 mod claude_code_commands;
 mod claude_disabled;
 mod client;
@@ -19,34 +17,12 @@ mod config;
 mod dxt;
 mod encryption;
 mod env_path;
-mod filesystem;
 mod git;
 mod installer;
 mod json_manager;
 mod mcp_commands;
 mod mcp_crud;
 mod mcp_sync;
-mod sleep;
-mod state;
-
-use codex_commands::CodexState;
-use state::WatchState;
-use filesystem::{
-    directory_ops::{canonicalize_path, get_default_directories, read_directory, search_files},
-    file_analysis::calculate_file_tokens,
-    file_io::{read_file, write_file},
-    file_parsers::{csv::read_csv_content, pdf::read_pdf_content, xlsx::read_xlsx_content},
-    git_diff::get_git_file_diff,
-    git_status::get_git_status,
-    git_worktree::{
-        prepare_git_worktree,
-        git_commit_changes,
-        apply_reverse_patch,
-        commit_changes_to_worktree,
-        delete_git_worktree,
-    },
-    watch::{start_watch_directory, stop_watch_directory},
-};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -111,80 +87,14 @@ pub fn run() {
             claude_disabled::claude_disable_server,
             claude_disabled::claude_enable_server,
             claude_disabled::claude_update_disabled,
-            read_directory,
-            get_default_directories,
-            search_files,
-            canonicalize_path,
-            calculate_file_tokens,
-            read_file,
-            write_file,
-            read_pdf_content,
-            read_csv_content,
-            read_xlsx_content,
-            get_git_file_diff,
-            get_git_status,
-            prepare_git_worktree,
-            git_commit_changes,
-            apply_reverse_patch,
-            delete_git_worktree,
-            commit_changes_to_worktree,
-            start_watch_directory,
-            stop_watch_directory,
-            codex_commands::check::check_codex_version,
-            codex_commands::read_codex_config,
-            codex_commands::get_project_name,
-            codex_commands::is_version_controlled,
-            codex_commands::set_project_trust,
-            codex_commands::read_model_providers,
-            codex_commands::read_profiles,
-            codex_commands::get_provider_config,
-            codex_commands::get_profile_config,
-            codex_commands::add_or_update_profile,
-            codex_commands::delete_profile,
-            codex_commands::add_or_update_model_provider,
-            codex_commands::delete_model_provider,
-            codex_commands::send_user_message,
-            codex_commands::turn_start,
-            codex_commands::new_conversation,
-            codex_commands::resume_conversation,
-            codex_commands::interrupt_conversation,
-            codex_commands::respond_exec_command_request,
-            codex_commands::respond_apply_patch_request,
-            codex_commands::get_account,
-            codex_commands::login_account_chatgpt,
-            codex_commands::login_account_api_key,
-            codex_commands::cancel_login_account,
-            codex_commands::logout_account,
-            codex_commands::add_conversation_listener,
-            codex_commands::remove_conversation_listener,
-            codex_commands::get_account_rate_limits,
-            codex_commands::initialize_client,
-            codex_commands::scan_projects,
-            codex_commands::load_project_sessions,
-            codex_commands::update_cache_title,
-            codex_commands::update_project_favorites,
-            codex_commands::remove_project_session,
-            codex_commands::read_token_usage,
-            prevent_sleep,
-            allow_sleep,
         ])
         .manage(Arc::new(Mutex::new(None::<String>)))
-        .manage(CodexState::new())
-        .manage(SleepState::default())
-        .manage(WatchState::new())
-        .setup(|app| {
+        .setup(|_app| {
             #[cfg(any(windows, target_os = "linux"))]
             {
                 use tauri_plugin_deep_link::DeepLinkExt;
-                app.deep_link().register_all()?;
+                _app.deep_link().register_all()?;
             }
-
-            let codex_state = app.state::<CodexState>();
-            codex_commands::setup_event_bridge(
-                app.handle().clone(),
-                codex_state.client_state.clone(),
-            );
-
             Ok(())
         })
         .run(tauri::generate_context!())
