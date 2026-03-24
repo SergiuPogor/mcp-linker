@@ -15,7 +15,6 @@ mod codex;
 mod config;
 mod dxt;
 mod encryption;
-mod env_path;
 mod git;
 mod installer;
 mod json_manager;
@@ -26,8 +25,6 @@ mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    env_path::update_env_path();
-
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build());
@@ -64,7 +61,6 @@ pub fn run() {
             mcp_sync::sync_mcp_config,
             installer::check_command_exists,
             installer::install_command,
-            env_path::get_path_env,
             git::git_clone,
             encryption::generate_encryption_key,
             encryption::encrypt_data,
