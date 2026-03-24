@@ -50,7 +50,7 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          workspaces: tauri-app/src-tauri
+          workspaces: src-tauri
 
       - name: install dependencies (ubuntu only)
         if: runner.os == 'Linux'
@@ -60,13 +60,6 @@ jobs:
 
       - name: install frontend dependencies
         run: bun install
-        working-directory: tauri-app
-
-      - name: codex export bindings
-        run: |
-          cargo install --git https://github.com/milisp/codexia codex-bindings
-          codex_export_bindings
-        working-directory: tauri-app
 
       - uses: tauri-apps/tauri-action@v0
         env:

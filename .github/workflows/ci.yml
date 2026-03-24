@@ -6,16 +6,16 @@ on:
       - main
     paths:
       - ".github/workflows/ci.yml"
-      - "tauri-app/src/**"
-      - "tauri-app/src-tauri/**"
-      - "tauri-app/package.json"
+      - "src/**"
+      - "src-tauri/**"
+      - "package.json"
   pull_request:
     branches:
       - main
     paths:
-      - "tauri-app/src/**"
-      - "tauri-app/src-tauri/**"
-      - "tauri-app/package.json"
+      - "src/**"
+      - "src-tauri/**"
+      - "package.json"
 
 env:
   VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
@@ -46,7 +46,7 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          workspaces: tauri-app/src-tauri
+          workspaces: src-tauri
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -58,18 +58,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-        working-directory: tauri-app
 
       - name: Check Tauri version
         run: bun tauri --version
-        working-directory: tauri-app
-
-      - name: codex export bindings
-        run: |
-          cargo install --git https://github.com/milisp/codexia codex-bindings
-          codex_export_bindings
-        working-directory: tauri-app
 
       - name: Build Tauri App
         run: bun tauri build --target x86_64-unknown-linux-gnu --bundles deb
-        working-directory: tauri-app
