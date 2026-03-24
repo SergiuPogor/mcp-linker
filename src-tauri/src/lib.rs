@@ -5,6 +5,7 @@
 )]
 use std::env;
 use std::sync::{Arc, Mutex};
+#[cfg(any(target_os = "windows", target_os = "linux"))]
 use tauri::{AppHandle, Emitter, Manager};
 
 mod adapter;
@@ -32,7 +33,7 @@ pub fn run() {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build());
 
-    #[cfg(desktop)]
+    #[cfg(any(target_os = "windows", target_os = "linux"))]
     {
         builder = builder.plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
             show_window(app, argv);
@@ -101,6 +102,7 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
+#[cfg(any(target_os = "windows", target_os = "linux"))]
 fn show_window(app: &AppHandle, args: Vec<String>) {
     let windows = app.webview_windows();
     let main_window = windows.values().next().expect("Sorry, no window found");
