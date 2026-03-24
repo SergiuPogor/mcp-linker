@@ -5,8 +5,6 @@
 )]
 use std::env;
 use std::sync::{Arc, Mutex};
-#[cfg(any(target_os = "windows", target_os = "linux"))]
-use tauri::{AppHandle, Emitter, Manager};
 
 mod adapter;
 mod claude_code_commands;
@@ -24,6 +22,7 @@ mod json_manager;
 mod mcp_commands;
 mod mcp_crud;
 mod mcp_sync;
+mod window;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -36,7 +35,7 @@ pub fn run() {
     #[cfg(any(target_os = "windows", target_os = "linux"))]
     {
         builder = builder.plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
-            show_window(app, argv);
+            window::show_window(app, argv);
         }));
     }
 
@@ -100,24 +99,4 @@ pub fn run() {
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-#[cfg(any(target_os = "windows", target_os = "linux"))]
-fn show_window(app: &AppHandle, args: Vec<String>) {
-    let windows = app.webview_windows();
-    let main_window = windows.values().next().expect("Sorry, no window found");
-
-    main_window
-        .set_focus()
-        .expect("Can't Bring Window to Focus");
-
-    dbg!(args.clone());
-    if args.len() > 1 {
-        let url = args[1].clone();
-
-        dbg!(url.clone());
-        if url.starts_with("mcp-linker://") {
-            let _ = main_window.emit("deep-link-received", url);
-        }
-    }
 }
