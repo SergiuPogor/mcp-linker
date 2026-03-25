@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table"
 import * as React from "react"
 
+import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -24,6 +25,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+interface BatchActionsProps {
+  handleBatchEnable?: () => void;
+  handleBatchDisable?: () => void;
+  handleBatchDelete: () => void;
+  isDeleting: boolean;
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -34,6 +42,7 @@ interface DataTableProps<TData, TValue> {
   rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
   onTableInstanceChange?: (table: Table<TData>) => void;
+  batchActions?: BatchActionsProps;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +52,7 @@ export function DataTable<TData, TValue>({
   rowSelection,
   setRowSelection,
   onTableInstanceChange,
+  batchActions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -73,16 +83,27 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      {searchKey && (
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Search..."
-            value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+      {(searchKey || batchActions) && (
+        <div className="flex items-center justify-between py-4">
+          {searchKey && (
+            <Input
+              placeholder="Search..."
+              value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn(searchKey)?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          )}
+          {batchActions && (
+            <BatchActionsDropdown
+              hasSelectedRows={Object.keys(rowSelection).length > 0}
+              handleBatchEnable={batchActions.handleBatchEnable}
+              handleBatchDisable={batchActions.handleBatchDisable}
+              handleBatchDelete={batchActions.handleBatchDelete}
+              isDeleting={batchActions.isDeleting}
+            />
+          )}
         </div>
       )}
       <div className="rounded-md border">

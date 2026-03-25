@@ -1,7 +1,6 @@
 // Header component for LocalTable actions
 // Always use English comments for code
 import { UpgradePlanButton } from "@/components/common/UpgradePlanButton";
-import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { useTier } from "@/hooks/useTier";
 import { useViewStore } from "@/stores/viewStore";
@@ -11,24 +10,14 @@ import React from "react";
 
 interface LocalTableHeaderProps {
   isSyncing: boolean;
-  rowSelection: Record<string, unknown>;
-  isDeleting: boolean;
   onLocalSync: () => void;
   onCloudSync: () => void;
-  handleBatchEnable: () => void;
-  handleBatchDisable: () => void;
-  handleBatchDelete: () => void;
 }
 
 export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
   isSyncing,
-  rowSelection,
-  isDeleting,
   onLocalSync,
   onCloudSync,
-  handleBatchEnable,
-  handleBatchDisable,
-  handleBatchDelete,
 }) => {
   const key = getEncryptionKey();
   const { navigate } = useViewStore();
@@ -38,8 +27,7 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
   const canUseLocalSync = hasMinimumTier("LIFETIME") || import.meta.env.DEV;
 
   return (
-    <div className="flex justify-between items-center">
-      <div className="flex gap-3 items-center">
+    <div className="flex gap-3 items-center">
         {canUseLocalSync ? (
           <Button
             variant="outline"
@@ -87,14 +75,6 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
             <UpgradePlanButton />
           </div>
         )}
-      </div>
-      <BatchActionsDropdown
-        hasSelectedRows={Object.keys(rowSelection).length > 0}
-        handleBatchEnable={handleBatchEnable}
-        handleBatchDisable={handleBatchDisable}
-        handleBatchDelete={handleBatchDelete}
-        isDeleting={isDeleting}
-      />
     </div>
   );
 };

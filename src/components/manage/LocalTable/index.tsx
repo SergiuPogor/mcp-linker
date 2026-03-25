@@ -173,13 +173,8 @@ export const LocalTable = () => {
     <div className="flex flex-col">
       <LocalTableHeader
         isSyncing={isSyncing}
-        rowSelection={rowSelection}
-        isDeleting={isDeleting}
         onLocalSync={handleLocalSync}
         onCloudSync={handleCloudSync}
-        handleBatchEnable={handleBatchEnable}
-        handleBatchDisable={handleBatchDisable}
-        handleBatchDelete={handleBatchDelete}
       />
       {error ? (
         <RefreshMcpConfig error={error} onRetry={loadConfig} />
@@ -192,6 +187,12 @@ export const LocalTable = () => {
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
             onTableInstanceChange={setTableInstance}
+            batchActions={{
+              handleBatchEnable,
+              handleBatchDisable,
+              handleBatchDelete,
+              isDeleting,
+            }}
           />
           <LocalSyncDialog
             open={localSyncDialogOpen}
