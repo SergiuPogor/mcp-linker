@@ -1,7 +1,7 @@
 use crate::claude_code_commands;
 use crate::client::ClientConfig;
 use crate::codex as codex_cmds;
-use crate::json_manager::utils::{is_cherrystudio_client, is_per_server_disabled_client};
+use crate::json_manager::utils::is_per_server_disabled_client;
 use crate::json_manager::JsonManager;
 use serde_json::json;
 use serde_json::Value as JsonValue;
@@ -28,11 +28,6 @@ pub async fn sync_mcp_config(
         if is_per_server_disabled_client(&from_client) {
             if let Some(obj) = from_servers.as_object_mut() {
                 obj.retain(|_, v| !v.get("disabled").and_then(|d| d.as_bool()).unwrap_or(false));
-            }
-        }
-        if is_cherrystudio_client(&from_client) {
-            if let Some(obj) = from_servers.as_object_mut() {
-                obj.retain(|_, v| v.get("isActive").and_then(|d| d.as_bool()) != Some(false));
             }
         }
     }
@@ -113,26 +108,6 @@ pub async fn sync_mcp_config(
         // Clear __disabled
         to_json["__disabled"] = json!({});
     }
-    // If to_client is cherrystudio, move all __disabled servers to mcpServers with isActive: false, then clear __disabled
-    if is_cherrystudio_client(&to_client) {
-        // English comment: Move all servers from __disabled to mcpServers with isActive: false, then clear __disabled
-        if let Some(disabled_map) = to_json["__disabled"].as_object() {
-            let mut to_add = vec![];
-            for (k, v) in disabled_map.iter() {
-                let mut server = v.clone();
-                server["isActive"] = json!(false);
-                to_add.push((k.clone(), server));
-            }
-            // Insert into mcpServers
-            if let Some(servers_map) = to_json["mcpServers"].as_object_mut() {
-                for (k, server) in to_add {
-                    servers_map.insert(k, server);
-                }
-            }
-        }
-        // Clear __disabled
-        to_json["__disabled"] = json!({});
-    }
     // If from_client is cline/roo_code, move all mcpServers with "disabled": true to __disabled and remove from mcpServers
     if is_per_server_disabled_client(&from_client) {
         // English comment: Move all servers with "disabled": true from mcpServers to __disabled, then remove them from mcpServers
@@ -165,39 +140,6 @@ pub async fn sync_mcp_config(
             }
         }
     }
-    // If from_client is cherrystudio, move all mcpServers with isActive: false to __disabled and remove from mcpServers
-    if is_cherrystudio_client(&from_client) {
-        // English comment: Move all servers with isActive: false from mcpServers to __disabled, then remove them from mcpServers
-        let mut to_move = vec![];
-        if let Some(servers_map) = to_json["mcpServers"].as_object() {
-            for (k, v) in servers_map.iter() {
-                if v.get("isActive").and_then(|d| d.as_bool()) == Some(false) {
-                    to_move.push((k.clone(), v.clone()));
-                }
-            }
-        }
-
-        // Remove from mcpServers and add to __disabled
-        if let Some(servers_map) = to_json["mcpServers"].as_object_mut() {
-            for (k, _) in &to_move {
-                servers_map.remove(k);
-            }
-        }
-
-        if let Some(disabled_map) = to_json["__disabled"].as_object_mut() {
-            for (k, server) in to_move {
-                let mut server_no_isactived = server;
-                if server_no_isactived.is_object() {
-                    server_no_isactived
-                        .as_object_mut()
-                        .unwrap()
-                        .remove("isActive");
-                }
-                disabled_map.insert(k, server_no_isactived);
-            }
-        }
-    }
-
     // If writing to codex, perform codex-aware write
     write_to_client(&to_client, to_path.as_deref(), to_json, override_all).await
 }

@@ -3,7 +3,7 @@ use std::path::Path;
 
 use super::file_io::{read_json_file, write_json_file};
 use super::utils::{
-    get_key_by_client, is_cherrystudio_client, is_per_server_disabled_client,
+    get_key_by_client, is_per_server_disabled_client,
     normalize_response_key,
 };
 
@@ -29,22 +29,6 @@ pub async fn update_disabled_mcp_server(
         let mut config_with_disabled = config;
         config_with_disabled["disabled"] = json!(true);
         json[key][name] = config_with_disabled;
-        write_json_file(path, &json).await?;
-        return normalize_response_key(json, client);
-    }
-
-    // cherrystudio: update mcpServers with isActive: false
-    if is_cherrystudio_client(client) {
-        if !json.is_object() {
-            json = json!({});
-        }
-        if !json.as_object().unwrap().contains_key(key) {
-            json[key] = json!({});
-        }
-        // Set config and isActive: false
-        let mut config_with_isactive = config;
-        config_with_isactive["isActive"] = json!(false);
-        json[key][name] = config_with_isactive;
         write_json_file(path, &json).await?;
         return normalize_response_key(json, client);
     }
@@ -86,20 +70,6 @@ pub async fn disable_mcp_server(path: &Path, client: &str, name: &str) -> Result
         }
         // Set disabled: true
         json[key][name]["disabled"] = json!(true);
-        write_json_file(path, &json).await?;
-        return normalize_response_key(json, client);
-    }
-
-    // cherrystudio: set isActive: false in mcpServers
-    if is_cherrystudio_client(client) {
-        if !json.as_object().unwrap().contains_key(key)
-            || !json[key].is_object()
-            || !json[key].as_object().unwrap().contains_key(name)
-        {
-            return Err(format!("Server '{}' not found in active servers", name));
-        }
-        // Set isActive: false
-        json[key][name]["isActive"] = json!(false);
         write_json_file(path, &json).await?;
         return normalize_response_key(json, client);
     }
@@ -156,41 +126,6 @@ pub async fn enable_mcp_server(path: &Path, client: &str, name: &str) -> Result<
         json[key][name].as_object_mut().unwrap().remove("disabled");
         write_json_file(path, &json).await?;
         return normalize_response_key(json, client);
-    }
-
-    // cherrystudio: set isActive: true in mcpServers, or move from __disabled if not found
-    if is_cherrystudio_client(client) {
-        if json.as_object().unwrap().contains_key(key)
-            && json[key].is_object()
-            && json[key].as_object().unwrap().contains_key(name)
-        {
-            // Set isActive: true
-            json[key][name]["isActive"] = json!(true);
-            write_json_file(path, &json).await?;
-            return normalize_response_key(json, client);
-        }
-        // If not found in mcpServers, try to move from __disabled
-        if json.as_object().unwrap().contains_key("__disabled")
-            && json["__disabled"].is_object()
-            && json["__disabled"].as_object().unwrap().contains_key(name)
-        {
-            let mut server_config = json["__disabled"][name].clone();
-            server_config["isActive"] = json!(true);
-            json["__disabled"].as_object_mut().unwrap().remove(name);
-            if json["__disabled"].as_object().unwrap().is_empty() {
-                json.as_object_mut().unwrap().remove("__disabled");
-            }
-            if !json.as_object().unwrap().contains_key(key) {
-                json[key] = json!({});
-            }
-            json[key][name] = server_config;
-            write_json_file(path, &json).await?;
-            return normalize_response_key(json, client);
-        }
-        return Err(format!(
-            "Server '{}' not found in active or disabled servers",
-            name
-        ));
     }
 
     // Default: move from __disabled section to active
@@ -250,21 +185,6 @@ pub async fn list_disabled_servers(path: &Path, client: &str) -> Result<Value, S
                         .and_then(|v| v.as_bool())
                         .unwrap_or(false)
                     {
-                        disabled.insert(name.clone(), server.clone());
-                    }
-                }
-            }
-        }
-        return Ok(Value::Object(disabled));
-    }
-
-    // cherrystudio: return all mcpServers with isActive: false
-    if is_cherrystudio_client(client) {
-        let mut disabled = serde_json::Map::new();
-        if json.is_object() && json.as_object().unwrap().contains_key(key) {
-            if let Some(servers_obj) = json[key].as_object() {
-                for (name, server) in servers_obj {
-                    if server.get("isActive").and_then(|v| v.as_bool()) == Some(false) {
                         disabled.insert(name.clone(), server.clone());
                     }
                 }

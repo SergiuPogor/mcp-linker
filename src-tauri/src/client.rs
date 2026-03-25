@@ -27,8 +27,7 @@ impl ClientConfig {
             ("cursor", _) => home.join(".cursor/mcp.json"),
             ("mcphub", _) => home.join(".config/mcphub/servers.json"),
             ("windsurf", _) => home.join(".codeium/windsurf/mcp_config.json"),
-            ("cherrystudio", _) => home.join(".config/cherrystudio/mcp.json"),
-            ("mcplinker", _) => home.join(".config/mcplinker/mcp.json"),
+("mcplinker", _) => home.join(".config/mcplinker/mcp.json"),
             (_, Some(path_str)) if !path_str.is_empty() => {
                 let given_path = PathBuf::from(path_str);
                 if given_path.is_file() || given_path.extension().map_or(false, |ext| ext == "json")
