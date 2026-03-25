@@ -1,6 +1,3 @@
 export { useClientPathStore } from "./clientPathStore";
-export {
-  useLayoutStore,
-  useThemeStore,
-  useSettingsStore,
-} from "./settings";
+export { useThemeStore } from "./settings";
+
