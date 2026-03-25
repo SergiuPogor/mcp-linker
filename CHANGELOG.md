@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-03-25
+
+### New Features
+- **Server limits for free/unauthenticated users** — enforces per-tier MCP server caps with UI feedback
+- **AArch64 Windows support** — added `aarch64-pc-windows-msvc` build target to the release workflow
+- **`fix-path-env` crate** — replaced custom environment path management with the `fix-path-env` crate; Tauri devtools now enabled in dev builds
+- **claude-node agent** — added `claw-army/claude-node` (Python subprocess bridge for Claude Code CLI) to the agent list
+
+### Refactoring & Cleanup
+- Consolidated navigation and route state into a dedicated store, removing `react-router` / `react-router-dom` dependencies
+- Simplified auth flow: inlined redirect logic in `ProtectedRoute`, added `sessionChecked` guard to prevent duplicate session checks, removed `AuthDebug` component
+- Moved window-focus and deep-link handling into a dedicated module
+- Adjusted global layout for full-height rendering and controlled scroll behavior
+- Improved responsiveness and refactored the Claude Code page header layout
+- Removed team management functionality and associated components
+- Removed the `mcp-linker-api` Python backend submodule
+- Removed the sleep-prevention Tauri module and its associated commands
+- Removed the Codex agent entry
+
+### Infrastructure
+- Refactored CI/CD to remove the `tauri-app` subdirectory prefix; deleted Dockerfile and `.dockerignore`
+- Updated dependencies and refined platform-specific conditional compilation
+- Upgraded Rust edition from 2021 to 2024
+- Removed Rust cache setup step from the release workflow
+
+## [2.0.1] - 2026-03-10
+
 ## [1.7.1] - 2025-09-10
 
 - Improved Update Experience
