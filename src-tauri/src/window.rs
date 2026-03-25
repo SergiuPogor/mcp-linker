@@ -2,7 +2,7 @@
 use tauri::{AppHandle, Emitter, Manager};
 
 #[cfg(any(target_os = "windows", target_os = "linux"))]
-fn show_window(app: &AppHandle, args: Vec<String>) {
+pub fn show_window(app: &AppHandle, args: Vec<String>) {
     let windows = app.webview_windows();
     let main_window = windows.values().next().expect("Sorry, no window found");
 
