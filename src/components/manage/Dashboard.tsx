@@ -89,19 +89,19 @@ export const Dashboard = ({ personalStats }: DashboardProps) => {
   // Prepare stat card data
   const statCards = [
     {
-      title: "Personal Total",
+      title: "Total",
       value: personalStats.total,
       variant: "default" as const,
       icon: <Server className="h-4 w-4" />,
     },
     {
-      title: "Personal Active",
+      title: "Active",
       value: personalStats.active,
       variant: "secondary" as const,
       icon: <Activity className="h-4 w-4" />,
     },
     {
-      title: "Personal Disabled",
+      title: "Disabled",
       value: personalStats.disabled,
       variant: "destructive" as const,
       icon: <Cloud className="h-4 w-4" />,
