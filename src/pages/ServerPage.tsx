@@ -8,8 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGithubReadmeJson } from "@/hooks/useGithubReadmeJson";
 import { api } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { useConfigFileStore } from "@/stores/configFileStore";
-import { useTeamStore } from "@/stores/team";
 import type { ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { ChevronLeft, Download, Eye, Github, Star, User } from "lucide-react";
@@ -23,8 +21,6 @@ export function ServerPage() {
   const { navigate } = useViewStore();
 
   const { selectedClient, selectedPath } = useClientPathStore();
-  const { getTeamConfigPath } = useConfigFileStore();
-  const { selectedTeamId } = useTeamStore();
 
   // Always call hooks at the top level
   const {
@@ -45,7 +41,6 @@ export function ServerPage() {
   const onConfigChange = (c: any, _i: number) => setConfig(c);
   const onSseConfigChange = (c: any) => setConfig(c);
 
-  // Move onSubmit and handleSubmitTeamLocal below useServerConfig so they can access serverName
   const onSubmit = async () => {
     try {
       if (serverName) {
@@ -63,23 +58,6 @@ export function ServerPage() {
       console.error(e);
       toast.error(
         `add server Failed: ${e instanceof Error ? e.message : "Unknown error"}`,
-      );
-    }
-  };
-
-  const handleSubmitTeamLocal = async () => {
-    try {
-      await invoke("add_mcp_server", {
-        clientName: "custom",
-        path: getTeamConfigPath(selectedTeamId),
-        serverName: serverName,
-        serverConfig: config,
-      });
-      toast.success(`add to Team Local ok`);
-    } catch (e: any) {
-      console.error(e);
-      toast.error(
-        `add to Team Failed: ${e instanceof Error ? e.message : "Unknown error"}`,
       );
     }
   };
@@ -261,7 +239,6 @@ export function ServerPage() {
         onSseConfigChange={onSseConfigChange}
         onSubmit={onSubmit}
         selectedClient={selectedClient}
-        onSubmitTeamLocal={handleSubmitTeamLocal}
       />
     </div>
   );

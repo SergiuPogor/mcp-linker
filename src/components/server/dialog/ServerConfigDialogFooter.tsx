@@ -6,13 +6,11 @@ import { useTranslation } from "react-i18next";
 
 interface ServerConfigDialogFooterProps {
   onSubmit: () => Promise<void>;
-  onSubmitTeamLocal?: () => Promise<void>;
   selectedClient: string;
 }
 
 export const ServerConfigDialogFooter = ({
   onSubmit,
-  onSubmitTeamLocal,
   selectedClient,
 }: ServerConfigDialogFooterProps) => {
   const { t } = useTranslation();
@@ -27,14 +25,6 @@ export const ServerConfigDialogFooter = ({
         }}
       >
         {t("addTo")} {capitalizeFirstLetter(selectedClient)}
-      </Button>
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          onSubmitTeamLocal?.();
-        }}
-      >
-        {t("addTo")} {t("teamLocal")}
       </Button>
 
       <Button

@@ -7,9 +7,6 @@ import { toast } from "sonner";
 
 import { fetchServerConfig } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { useConfigFileStore } from "@/stores/configFileStore";
-import { useTeamStore } from "@/stores/team";
-import { invoke } from "@tauri-apps/api/core";
 import { ServerConfigForm } from "../form/ServerConfigForm";
 import {
   useLocalDraft,
@@ -30,8 +27,6 @@ export const ServerConfigDialog = forwardRef<
 >(({ isOpen, setIsDialogOpen, currentServer }, _ref) => {
   const { selectedClient, selectedPath } = useClientPathStore();
   const { saveServerConfig } = useSaveServerConfig();
-  const { getTeamConfigPath } = useConfigFileStore();
-  const { selectedTeamId } = useTeamStore();
 
   const queryResult = useQuery({
     queryKey: ["configs", currentServer?.id],
@@ -146,23 +141,6 @@ export const ServerConfigDialog = forwardRef<
     clearDraft(); // Clear the draft after successful save
   };
 
-  const handleSubmitTeamLocal = async () => {
-    try {
-      await invoke("add_mcp_server", {
-        clientName: "custom",
-        path: getTeamConfigPath(selectedTeamId),
-        serverName: serverName,
-        serverConfig: config,
-      });
-      toast.success(`add to Team Local ok`);
-    } catch (e: any) {
-      console.error(e);
-      toast.error(e?.message || "fail to add to Team Local");
-    } finally {
-      setIsDialogOpen(false);
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="overflow-y-auto max-h-[90vh] w-[90vw] max-w-3xl">
@@ -186,7 +164,6 @@ export const ServerConfigDialog = forwardRef<
           onSseConfigChange={handleSseConfigChange}
           onSubmit={handleSubmit}
           selectedClient={selectedClient}
-          onSubmitTeamLocal={handleSubmitTeamLocal}
         />
       </DialogContent>
     </Dialog>

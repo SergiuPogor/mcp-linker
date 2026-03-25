@@ -25,7 +25,6 @@ export interface TranslationSchema {
     arcade: string;
     create: string;
     work: string;
-    team: string;
     manage: string;
     updates: string;
     favs: string;
@@ -78,6 +77,5 @@ export interface TranslationSchema {
   viewDetail: string;
   descend: string;
   ascend: string;
-  teamLocal: string;
   feedback: string;
 }

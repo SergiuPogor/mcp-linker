@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/select";
 import { clientOptions } from "@/constants/clients";
 import { useTier } from "@/hooks/useTier";
-import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { UpgradePlanButton } from "../common/UpgradePlanButton";
 
@@ -81,28 +80,3 @@ export function ClientSelector() {
   );
 }
 
-const configScopes = [
-  { label: "Personal", value: "personal" },
-  { label: "Team", value: "team" },
-];
-
-export function ConfigScopeSelector() {
-  const { scope, setScope } = useConfigScopeStore();
-
-  return (
-    <div className="z-50">
-      <Select value={scope} onValueChange={setScope}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select scope" />
-        </SelectTrigger>
-        <SelectContent>
-          {configScopes.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}

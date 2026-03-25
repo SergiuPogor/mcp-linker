@@ -27,7 +27,6 @@ const ja: { translation: TranslationSchema } = {
       category: "カテゴリ",
       arcade: "アーケード",
       create: "作成",
-      team: "チーム",
       work: "仕事",
       manage: "管理",
       updates: "アップデート",
@@ -81,7 +80,6 @@ const ja: { translation: TranslationSchema } = {
     downloads: "ダウンロード",
     descend: "降順",
     ascend: "昇順",
-    teamLocal: "Team Local",
     feedback: "フィードバック",
   },
 };

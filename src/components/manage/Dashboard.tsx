@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Activity, Cloud, Server, Users } from "lucide-react";
+import { Activity, Cloud, Server } from "lucide-react";
 import { ReactNode } from "react";
 
 interface DashboardProps {
@@ -7,9 +7,6 @@ interface DashboardProps {
     total: number;
     active: number;
     disabled: number;
-  };
-  teamStats: {
-    total: number;
   };
 }
 
@@ -88,7 +85,7 @@ const StatCard = ({ title, value, variant, icon }: StatCardProps) => {
   );
 };
 
-export const Dashboard = ({ personalStats, teamStats }: DashboardProps) => {
+export const Dashboard = ({ personalStats }: DashboardProps) => {
   // Prepare stat card data
   const statCards = [
     {
@@ -108,12 +105,6 @@ export const Dashboard = ({ personalStats, teamStats }: DashboardProps) => {
       value: personalStats.disabled,
       variant: "destructive" as const,
       icon: <Cloud className="h-4 w-4" />,
-    },
-    {
-      title: "Team Total",
-      value: teamStats.total,
-      variant: "outline" as const,
-      icon: <Users className="h-4 w-4" />,
     },
   ];
 

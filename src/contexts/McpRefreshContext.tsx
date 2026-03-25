@@ -37,7 +37,6 @@ export function McpRefreshProvider({ children }: { children: React.ReactNode }) 
   const refreshCloudData = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['cloud-servers'] });
     queryClient.invalidateQueries({ queryKey: ['personal-cloud'] });
-    queryClient.invalidateQueries({ queryKey: ['team-cloud'] });
     window.dispatchEvent(new CustomEvent('mcpCloudDataChanged'));
   }, [queryClient]);
 

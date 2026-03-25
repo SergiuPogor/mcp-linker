@@ -1,7 +1,6 @@
 import SettingsSectionContent from "@/components/settings/SettingsSectionContent";
 import SettingsSidebar from "@/components/settings/SettingsSidebar";
-import { useTeam } from "@/hooks/useTeam";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { check, Update } from "@tauri-apps/plugin-updater";
@@ -11,7 +10,6 @@ import { toast } from "sonner";
 interface Key {
   id: string;
   name: string;
-  type: "personal" | "team";
 }
 
 // Settings sections
@@ -20,29 +18,13 @@ const SECTIONS = [
   // Add more sections here in the future
 ];
 
+const DEFAULT_KEYS: Key[] = [{ id: "personal", name: "Personal" }];
+
 export default function SettingPage() {
-  const { teams, fetchMyTeams } = useTeam();
-  const [keys, setKeys] = useState<Key[]>([]);
   const [selectedSection, setSelectedSection] = useState<string>("encryption");
   const [checkingUpdate, setCheckingUpdate] = useState(false);
   const [update, setUpdate] = useState<Update | null>(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-
-  useEffect(() => {
-    fetchMyTeams();
-  }, []);
-  useEffect(() => {
-    // Update keys when teams change
-    const updatedKeys: Key[] = [
-      { id: "personal", name: "Personal", type: "personal" },
-      ...teams.map((team) => ({
-        id: team.id,
-        name: team.name,
-        type: "team" as const,
-      })),
-    ];
-    setKeys(updatedKeys);
-  }, [teams]);
 
   // Main render
   return (
@@ -89,7 +71,7 @@ export default function SettingPage() {
         <div className="flex-1 space-y-6">
           <SettingsSectionContent
             selectedSection={selectedSection}
-            keys={keys}
+            keys={DEFAULT_KEYS}
           />
         </div>
       </div>

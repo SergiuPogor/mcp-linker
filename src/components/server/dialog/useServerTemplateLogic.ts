@@ -1,9 +1,5 @@
-import { useMcpRefresh } from "@/contexts/McpRefreshContext";
 import { useGithubReadmeJson } from "@/hooks/useGithubReadmeJson";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { useConfigFileStore } from "@/stores/configFileStore";
-import { useTeamStore } from "@/stores/team";
-import { invoke } from "@tauri-apps/api/core";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -16,11 +12,8 @@ export function useServerTemplateLogic(
   setIsDialogOpen: (open: boolean) => void,
 ) {
   const { selectedClient, selectedPath } = useClientPathStore();
-  const { refreshServerList } = useMcpRefresh();
   const [githubUrl, setGithubUrl] = useState("");
   const { loading, error, fetchAllJsonBlocks } = useGithubReadmeJson();
-  const { getTeamConfigPath } = useConfigFileStore();
-  const { selectedTeamId } = useTeamStore();
 
   // Server config state and handlers
   const {
@@ -109,27 +102,6 @@ export function useServerTemplateLogic(
     selectedPath: selectedPath || undefined,
   });
 
-  const handleSubmitTeamLocal = async () => {
-    try {
-      const teamConfigPath = getTeamConfigPath(selectedTeamId);
-      await invoke("add_mcp_server", {
-        clientName: "custom",
-        path: teamConfigPath,
-        serverName: serverName,
-        serverConfig: config,
-      });
-      
-      // Refresh team data automatically
-      refreshServerList("custom", teamConfigPath);
-      
-      toast.success(`add to Team Local ok`);
-      setIsDialogOpen(false);
-    } catch (e: any) {
-      console.error(e);
-      toast.error(e?.message || "fail to add to Team Local");
-    }
-  };
-
   // Find all server config objects with 'command' or 'url' under mcpServers (max 3 levels)
   function findCommandOrUrlObjectsSimple(
     obj: any,
@@ -215,7 +187,6 @@ export function useServerTemplateLogic(
     handlePasteJson,
     handleJsonBlur,
     handleSubmit,
-    handleSubmitTeamLocal,
     handleLoadFromGithub,
     setIsDialogOpen,
   };

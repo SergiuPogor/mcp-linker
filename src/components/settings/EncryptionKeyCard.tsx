@@ -13,20 +13,18 @@ import {
   getEncryptionKey,
   storeEncryptionKey,
 } from "@/utils/encryption";
-import { Copy, RotateCcw, Save, User, Users } from "lucide-react";
+import { Copy, RotateCcw, Save, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface KeyCardProps {
   keyId: string;
   keyName: string;
-  type: "personal" | "team";
 }
 
 export default function EncryptionKeyCard({
   keyId,
   keyName,
-  type,
 }: KeyCardProps) {
   const [key, setKey] = useState<string>("");
   const [showKey, setShowKey] = useState(false);
@@ -92,13 +90,7 @@ export default function EncryptionKeyCard({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          {type === "personal" ? (
-            <User className="w-5 h-5" />
-          ) : (
-            <span className="flex gap-2 items-center">
-              <Users className="w-5 h-5" /> Team
-            </span>
-          )}
+          <User className="w-5 h-5" />
           {keyName} Encryption Key
         </CardTitle>
         <CardDescription>

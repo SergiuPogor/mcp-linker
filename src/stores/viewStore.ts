@@ -14,8 +14,6 @@ export type ViewName =
   | "install-app"
   | "client"
   | "notes"
-  | "team"
-  | "team-members"
   | "favorites"
   | "dashboard"
   | "onboarding";
@@ -40,7 +38,6 @@ const ROUTES: Array<{ re: RegExp; view: ViewName; keys: string[] }> = [
   { re: /^\/dxt\/([^/?]+)\/([^/?]+)/, view: "dxt-detail", keys: ["user", "repo"] },
   { re: /^\/servers\/([^/?]+)\/([^/?]+)/, view: "server", keys: ["owner", "repo"] },
   { re: /^\/servers\/([^/?]+)/, view: "server", keys: ["id"] },
-  { re: /^\/teams\/([^/?]+)\/members/, view: "team-members", keys: ["teamId"] },
   { re: /^\/(discover)?$/, view: "discover", keys: [] },
   { re: /^\/manage/, view: "manage", keys: [] },
   { re: /^\/claude-code-manage/, view: "claude-code-manage", keys: [] },
@@ -52,7 +49,6 @@ const ROUTES: Array<{ re: RegExp; view: ViewName; keys: string[] }> = [
   { re: /^\/install-app/, view: "install-app", keys: [] },
   { re: /^\/client/, view: "client", keys: [] },
   { re: /^\/notes/, view: "notes", keys: [] },
-  { re: /^\/team/, view: "team", keys: [] },
   { re: /^\/favorites/, view: "favorites", keys: [] },
   { re: /^\/dashboard/, view: "dashboard", keys: [] },
   { re: /^\/onboarding/, view: "onboarding", keys: [] },
@@ -94,9 +90,6 @@ export function entryToPath({ view, params, search }: ViewEntry): string {
       break;
     case "dxt-detail":
       path = `/dxt/${params.user}/${params.repo}`;
-      break;
-    case "team-members":
-      path = `/teams/${params.teamId}/members`;
       break;
     case "discover":
       path = "/";

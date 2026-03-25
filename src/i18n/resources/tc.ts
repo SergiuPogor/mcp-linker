@@ -31,7 +31,6 @@ const tc: { translation: TranslationSchema } = {
       favs: "收藏",
       settings: "設定",
       about: "關於",
-      team: "團隊",
       work: "工作",
       manage: "管理",
       updates: "更新",
@@ -82,7 +81,6 @@ const tc: { translation: TranslationSchema } = {
     downloads: "下載次數",
     descend: "遞減",
     ascend: "遞增",
-    teamLocal: "Team Local",
     feedback: "意見回饋",
   },
 };

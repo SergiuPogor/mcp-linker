@@ -21,7 +21,6 @@ interface ServerConfigFormProps {
   onSseConfigChange: (newConfig: SseConfig) => void;
   onSubmit: () => Promise<void>;
   selectedClient: string;
-  onSubmitTeamLocal?: () => Promise<void>;
 }
 
 export const ServerConfigForm: React.FC<ServerConfigFormProps> = ({
@@ -39,7 +38,6 @@ export const ServerConfigForm: React.FC<ServerConfigFormProps> = ({
   onSseConfigChange,
   onSubmit,
   selectedClient,
-  onSubmitTeamLocal,
 }) => {
   return (
     <>
@@ -79,7 +77,6 @@ export const ServerConfigForm: React.FC<ServerConfigFormProps> = ({
       <ServerConfigDialogFooter
         onSubmit={onSubmit}
         selectedClient={selectedClient}
-        onSubmitTeamLocal={onSubmitTeamLocal}
       />
     </>
   );

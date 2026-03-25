@@ -30,7 +30,6 @@ const en: { translation: TranslationSchema } = {
       favs: "Favorites",
       settings: "Settings",
       about: "About",
-      team: "Team",
       work: "Work",
       manage: "Manage",
       updates: "Updates",
@@ -81,7 +80,6 @@ const en: { translation: TranslationSchema } = {
     downloads: "Downloads",
     descend: "Descending",
     ascend: "Ascending",
-    teamLocal: "Team Local",
     feedback: "Feedback",
   },
 };

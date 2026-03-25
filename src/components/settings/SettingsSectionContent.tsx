@@ -5,7 +5,6 @@ import React from "react";
 interface Key {
   id: string;
   name: string;
-  type: "personal" | "team";
 }
 
 interface SettingsSectionContentProps {
@@ -28,7 +27,6 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
             key={key.id}
             keyId={key.id}
             keyName={key.name}
-            type={key.type}
           />
         ))}
         {/* Security Notice always at the bottom */}

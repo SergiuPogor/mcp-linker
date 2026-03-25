@@ -22,15 +22,12 @@ import {
   Search,
   Settings,
   Star,
-  Users,
 } from "lucide-react";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
 import DxtDetail from "./pages/DxtDetail";
 import DxtPage from "./pages/DxtPage";
 import { InstallAppPage } from "./pages/InstallApp";
-import TeamMemberPage from "./pages/TeamMemberPage";
-import TeamPage from "./pages/TeamPage";
 import { useViewStore } from "./stores/viewStore";
 
 export const AppRoutes = () => {
@@ -63,18 +60,6 @@ export const AppRoutes = () => {
       return <ClientPage />;
     case "notes":
       return <NotesPage />;
-    case "team":
-      return (
-        <ProtectedRoute>
-          <TeamPage />
-        </ProtectedRoute>
-      );
-    case "team-members":
-      return (
-        <ProtectedRoute>
-          <TeamMemberPage />
-        </ProtectedRoute>
-      );
     case "favorites":
       return (
         <ProtectedRoute>
@@ -107,7 +92,6 @@ export const getNavigationRoutes = (
     manage: <LayoutDashboard size={24} />,
     "claude-code-manage": <Code size={24} />,
     notes: <NotebookPen size={24} />,
-    team: <Users size={24} />,
     recently: <Clock size={24} />,
     favorites: <Star size={24} />,
     settings: <Settings size={24} />,
@@ -147,12 +131,6 @@ export const getNavigationRoutes = (
       name: "Claude Code",
       path: "/claude-code-manage",
       icon: iconMap["claude-code-manage"],
-    },
-    {
-      id: "team",
-      name: t("nav.team"),
-      path: "/team",
-      icon: iconMap.team,
     },
     {
       id: "recently",

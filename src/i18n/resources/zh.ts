@@ -27,7 +27,6 @@ const zh: { translation: TranslationSchema } = {
       category: "分类",
       arcade: "Arcade",
       create: "创作",
-      team: "团队",
       work: "工作",
       manage: "管理",
       updates: "更新",
@@ -81,7 +80,6 @@ const zh: { translation: TranslationSchema } = {
     downloads: "下载量",
     descend: "降序",
     ascend: "升序",
-    teamLocal: "Team Local",
     feedback: "反馈",
   },
 };

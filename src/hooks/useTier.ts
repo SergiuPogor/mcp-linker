@@ -63,14 +63,10 @@ export function useTier() {
     // Cloud sync is available for PROFESSIONAL and TEAM tiers only (not for students)
     const canUseCloudSync = hasMinimumTier("PRO");
 
-    // Team features are only available for TEAM tier
-    const canUseTeamFeatures = tier === "TEAM";
-
     // Check specific tier types
     const isLifetimeBasic = tier === "LIFETIME";
     const isLifetimePro = tier === "LIFETIME_PRO";
     const isProfessional = tier === "PRO";
-    const isTeam = tier === "TEAM";
 
     return {
       tier,
@@ -84,11 +80,9 @@ export function useTier() {
       hasMinimumTier,
       canAccessClient,
       canUseCloudSync,
-      canUseTeamFeatures,
       isLifetimeBasic,
       isLifetimePro,
       isProfessional,
-      isTeam,
     };
   }, [user, loading]);
 }

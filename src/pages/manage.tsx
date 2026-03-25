@@ -8,7 +8,7 @@ import { useStatsStore } from "@/stores/statsStore";
 import { useTabStore } from "@/stores/tabStore";
 import { UserWithTier, useUserStore } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
-import { RefreshCcw, Users } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +19,6 @@ export default function McpManage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
   const personalStats = useStatsStore((s) => s.personalStats);
-  const teamStats = useStatsStore((s) => s.teamStats);
   const { navigate } = useViewStore();
   const { user, fetchUser } = useUserStore();
 
@@ -54,20 +53,11 @@ export default function McpManage() {
               <RefreshCcw /> Refresh
             </Button>
             <Button onClick={handleAddServer}>{t("addCustomServer")}</Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                navigate("/team");
-              }}
-            >
-              <Users className="mr-2 h-4 w-4" />
-              Team Management
-            </Button>
           </span>
         </div>
 
         {/* Dashboard */}
-        <Dashboard personalStats={personalStats} teamStats={teamStats} />
+        <Dashboard personalStats={personalStats} />
 
         <div className="flex-1 min-h-0">
           <PersonalMcpSection

@@ -3,7 +3,6 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { useTier } from "@/hooks/useTier";
 import { needspathClient } from "@/lib/data";
 import { AppRoutes, getNavigationRoutes } from "@/routes";
-import { useConfigScopeStore } from "@/stores";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { open } from "@tauri-apps/plugin-shell";
 import { MessageCircle, PanelLeft } from "lucide-react";
@@ -11,18 +10,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
 import { UpgradePlanButton } from "../common/UpgradePlanButton";
-import { TeamSelector } from "../manage/team/TeamSelector";
-import {
-  ClientSelector,
-  ConfigScopeSelector,
-} from "../settings/client-selector";
-import { ConfigFileSelector } from "../settings/ConfigFileSelector";
+import { ClientSelector } from "../settings/client-selector";
 import LangSelect from "../settings/LangSelect";
 import { PathSelector } from "../settings/PathSelector";
 
 const Layout = () => {
   const { selectedClient } = useClientPathStore();
-  const { scope } = useConfigScopeStore();
   const { t } = useTranslation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { hasPaidTier } = useTier();
@@ -47,21 +40,16 @@ const Layout = () => {
           >
             <PanelLeft size={20} />
           </button>
-          <ConfigScopeSelector />
-          {scope === "personal" ? <ClientSelector /> : <TeamSelector />} {!hasPaidTier && <UpgradePlanButton />}
+          <ClientSelector /> {!hasPaidTier && <UpgradePlanButton />}
         </span>
-        {scope === "personal" ? (
-          <>
-            {needspathClient.includes(selectedClient) && <PathSelector />}
-            {selectedClient === "claude_code" && (
-              <span className="ml-2">
-                <ProjectSelector />
-              </span>
-            )}
-          </>
-        ) : (
-          <ConfigFileSelector />
-        )}
+        <>
+          {needspathClient.includes(selectedClient) && <PathSelector />}
+          {selectedClient === "claude_code" && (
+            <span className="ml-2">
+              <ProjectSelector />
+            </span>
+          )}
+        </>
         <span className="flex">
           <LangSelect />
           <button

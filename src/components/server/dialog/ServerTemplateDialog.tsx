@@ -40,15 +40,6 @@ export const ServerTemplateDialog = forwardRef<
         <ServerTemplateTabs logic={logic} />
 
         <DialogFooter>
-          <Button
-            onClick={async (e) => {
-              e.preventDefault();
-              logic.handleSubmitTeamLocal();
-            }}
-          >
-            {t("addTo")} {t("teamLocal")}
-          </Button>
-
           {/* Submit button for add */}
           <Button
             onClick={async (e) => {
