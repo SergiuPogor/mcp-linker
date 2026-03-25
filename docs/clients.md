@@ -74,17 +74,6 @@ This document describes the supported MCP clients and their configuration file p
   ```
   ~/.codeium/windsurf/mcp_config.json
   ```
-
----
-
-## CherryStudio
-
-- **Scope**: Global
-- **Supported Platforms**: Cross-platform
-- **Path**:
-  ```
-  ~/.config/cherrystudio/mcp.json
-  ```
 ---
 
 ## Roo Code

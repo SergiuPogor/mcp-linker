@@ -16,12 +16,7 @@ export function useServersData(
       .filter(([_, serverConfig]) => {
         if (typeof serverConfig !== "object" || serverConfig === null)
           return false;
-        if (selectedClient === "cherrystudio") {
-          return !(
-            "isActive" in serverConfig &&
-            (serverConfig as any).isActive === false
-          );
-        } else if (["cline", "roo_code"].includes(selectedClient)) {
+        if (["cline", "roo_code"].includes(selectedClient)) {
           return !(
             "disabled" in serverConfig && (serverConfig as any).disabled
           );
