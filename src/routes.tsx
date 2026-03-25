@@ -1,4 +1,3 @@
-// Remove window global augmentation, use Zustand store instead
 import AuthPage from "@/pages/AuthPage";
 import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
 import ClientPage from "@/pages/client";
@@ -11,7 +10,6 @@ import OnBoarding from "@/pages/OnBoarding";
 import Recently from "@/pages/recently";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
-import { useDeepLinkStore } from "@/stores/deepLinkStore";
 import {
   Clock,
   Code,
@@ -24,16 +22,8 @@ import {
   Search,
   Settings,
   Star,
-  Users
+  Users,
 } from "lucide-react";
-import { useEffect, useRef } from "react";
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
 import DxtDetail from "./pages/DxtDetail";
@@ -41,80 +31,71 @@ import DxtPage from "./pages/DxtPage";
 import { InstallAppPage } from "./pages/InstallApp";
 import TeamMemberPage from "./pages/TeamMemberPage";
 import TeamPage from "./pages/TeamPage";
-
-// Component to redirect to last visited route only on initial load
-function StartupRedirect() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const redirected = useRef(false);
-  const isHandlingDeepLink = useDeepLinkStore((s) => s.isHandlingDeepLink);
-
-  useEffect(() => {
-    if (redirected.current) return;
-    if (isHandlingDeepLink) return; // Skip redirect if deep link navigation is in progress
-    const lastRoute = localStorage.getItem("lastRoute");
-    // Only redirect if not already at lastRoute, and lastRoute is not "/" and not current path
-    if (lastRoute && lastRoute !== "/" && lastRoute !== location.pathname) {
-      redirected.current = true;
-      navigate(lastRoute, { replace: true });
-    }
-  }, [location, navigate, isHandlingDeepLink]);
-
-  return null;
-}
+import { useViewStore } from "./stores/viewStore";
 
 export const AppRoutes = () => {
-  const location = useLocation();
+  const { view } = useViewStore();
 
-  // Save current path to localStorage on every route change
-  useEffect(() => {
-    localStorage.setItem("lastRoute", location.pathname + location.search);
-  }, [location]);
-
-  return (
-    <>
-      {/* Only redirect to last visited route on initial load */}
-      <StartupRedirect />
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Discover />} />
-        <Route path="/manage" element={<Manage />} />
-        <Route path="/claude-code-manage" element={<ClaudeCodeManage />} />
-        <Route path="/discover" element={<Discover />} />
-        <Route path="/recently" element={<Recently />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/dxt" element={<DxtPage />} />
-        <Route path="/dxt/:user/:repo" element={<DxtDetail />} />
-        <Route path="/servers/:id" element={<ServerPage />} />
-        <Route path="/install-app" element={<InstallAppPage />} />
-        <Route path="/client" element={<ClientPage />} />
-        <Route path="/notes" element={<NotesPage />} />
-        <Route path="/servers/:owner/:repo" element={<ServerPage />} />
-
-        {/* Protected routes */}
-        {/* Use an array and map to simplify protected routes */}
-        {[
-          { path: "/team", element: <TeamPage /> },
-          { path: "/teams/:teamId/members", element: <TeamMemberPage /> },
-          { path: "/favorites", element: <Favorites /> },
-          { path: "/dashboard", element: <Dashboard /> },
-          { path: "/onboarding", element: <OnBoarding /> },
-        ].map(({ path, element }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <ProtectedRoute requireAuth={true}>{element}</ProtectedRoute>
-            }
-          />
-        ))}
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
-  );
+  switch (view) {
+    case "discover":
+      return <Discover />;
+    case "manage":
+      return <Manage />;
+    case "claude-code-manage":
+      return <ClaudeCodeManage />;
+    case "recently":
+      return <Recently />;
+    case "settings":
+      return <SettingsPage />;
+    case "auth":
+      return <AuthPage />;
+    case "about":
+      return <About />;
+    case "dxt":
+      return <DxtPage />;
+    case "dxt-detail":
+      return <DxtDetail />;
+    case "server":
+      return <ServerPage />;
+    case "install-app":
+      return <InstallAppPage />;
+    case "client":
+      return <ClientPage />;
+    case "notes":
+      return <NotesPage />;
+    case "team":
+      return (
+        <ProtectedRoute>
+          <TeamPage />
+        </ProtectedRoute>
+      );
+    case "team-members":
+      return (
+        <ProtectedRoute>
+          <TeamMemberPage />
+        </ProtectedRoute>
+      );
+    case "favorites":
+      return (
+        <ProtectedRoute>
+          <Favorites />
+        </ProtectedRoute>
+      );
+    case "dashboard":
+      return (
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      );
+    case "onboarding":
+      return (
+        <ProtectedRoute>
+          <OnBoarding />
+        </ProtectedRoute>
+      );
+    default:
+      return <Discover />;
+  }
 };
 
 // Route configuration for navigation

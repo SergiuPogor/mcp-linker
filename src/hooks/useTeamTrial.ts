@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 import { useUserStore } from "@/stores/userStore";
+import { useViewStore } from "@/stores/viewStore";
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 /**
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 export function useTeamTrial() {
   const { user, loading: userLoading, fetchUser } = useUserStore();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   // Whether the user is a TEAM user
   const isTeamUser = user?.tier === "TEAM";

@@ -1,18 +1,17 @@
+import { useViewStore } from "@/stores/viewStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // Start as true to prevent race conditions
+  const [loading, setLoading] = useState(true);
   const [sessionCheckComplete, setSessionCheckComplete] = useState(false);
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   useEffect(() => {
     console.log("useAuth useEffect triggered");
 
-    // If Supabase is not enabled, allow access without auth
     if (!isSupabaseEnabled || !supabase) {
       console.log("Supabase not enabled in useAuth");
       setUser(null);
@@ -21,9 +20,8 @@ export const useAuth = () => {
       return;
     }
 
-    let isMounted = true; // Prevent state updates after unmount
+    let isMounted = true;
 
-    // Get initial session with retry mechanism for Windows timing issues
     const getInitialSession = async () => {
       console.log("Attempting to get initial session...");
       try {
@@ -61,7 +59,6 @@ export const useAuth = () => {
       }
     };
 
-    // Add small delay for Windows to ensure proper initialization
     const initDelay = navigator.platform.toLowerCase().includes("win")
       ? 100
       : 0;
@@ -70,7 +67,6 @@ export const useAuth = () => {
       getInitialSession();
     }, initDelay);
 
-    // Listen for auth changes with enhanced error handling
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -88,7 +84,6 @@ export const useAuth = () => {
         return;
       }
 
-      // Handle different auth events
       switch (event) {
         case "SIGNED_IN":
         case "TOKEN_REFRESHED":
@@ -97,7 +92,6 @@ export const useAuth = () => {
             "Auth state changed to SIGNED_IN/TOKEN_REFRESHED. User:",
             !!session?.user,
           );
-          // Navigate to onboarding after successful sign in
           if (event === "SIGNED_IN") {
             navigate("/manage", { replace: true });
           }
@@ -105,12 +99,10 @@ export const useAuth = () => {
         case "SIGNED_OUT":
           setUser(null);
           console.log("Auth state changed to SIGNED_OUT. User: null");
-          // Reset sessionCheckComplete to false to ensure initial session is re-evaluated on next load/login
           setSessionCheckComplete(false);
           navigate("/auth", { replace: true });
           break;
         case "INITIAL_SESSION":
-          // Only update if we haven't completed initial session check
           if (!sessionCheckComplete) {
             setUser(session?.user ?? null);
             setSessionCheckComplete(true);
@@ -149,6 +141,6 @@ export const useAuth = () => {
     loading,
     isAuthenticated: !!user,
     isAuthEnabled: isSupabaseEnabled,
-    sessionCheckComplete, // Export this for other components to use
+    sessionCheckComplete,
   };
 };

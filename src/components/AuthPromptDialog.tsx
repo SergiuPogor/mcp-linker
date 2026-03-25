@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useTabStore } from "@/stores/tabStore";
-import { useNavigate } from "react-router-dom";
+import { useViewStore } from "@/stores/viewStore";
 
 interface AuthPromptDialogProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export const AuthPromptDialog = ({
   isOpen,
   onClose,
 }: AuthPromptDialogProps) => {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const { setMainTab, setPersonalTab } = useTabStore();
 
   const handleGoToPersonal = () => {

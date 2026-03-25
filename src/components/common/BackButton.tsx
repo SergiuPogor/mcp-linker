@@ -1,8 +1,8 @@
+import { useViewStore } from "@/stores/viewStore";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 export function BackButton() {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   return (
     <button

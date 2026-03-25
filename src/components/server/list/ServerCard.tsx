@@ -1,27 +1,27 @@
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavoriteServers } from "@/stores/favoriteServers";
+import { useViewStore } from "@/stores/viewStore";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
 import {
-  Github,
-  Loader2,
-  SquareArrowOutUpRight,
-  Star,
-  StarOff,
-  Trash2,
+    Github,
+    Loader2,
+    SquareArrowOutUpRight,
+    Star,
+    StarOff,
+    Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface ServerCardProps {
@@ -41,7 +41,7 @@ export function ServerCard({
   const [isFavoriteLoading, setIiFavoriteLoading] = useState(false);
   const toggleFavorite = useFavoriteServers((state) => state.toggleFavorite);
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   const showGithubIcon =
     server.source && server.source.startsWith("https://github.com");

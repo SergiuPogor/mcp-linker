@@ -1,8 +1,8 @@
+import { useViewStore } from "@/stores/viewStore";
 import supabase from "@/utils/supabase";
 import { listen } from "@tauri-apps/api/event";
 import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 function debugLog(msg: string) {
@@ -15,7 +15,7 @@ const processedUrls = new Set<string>();
 
 // useDeepLink hook: handles deep link authentication and navigation
 export const useDeepLink = () => {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const [isHandlingDeepLink, setIsHandlingDeepLink] = useState(false);
 
   useEffect(() => {
@@ -39,33 +39,26 @@ export const useDeepLink = () => {
         const urlObj = new URL(url);
         const searchParams = new URLSearchParams(urlObj.search.substring(1));
 
-        // getCurrent().then(current => {
-        //   if (current) {
-        //     debugLog(`got ${url}`);
-        //   }
-        // })
-
         if (url.includes("install-app")) {
           const urlObj = new URL(url);
           debugLog(`got ${urlObj.pathname + urlObj.search}`);
-          navigate(`/install-app${urlObj.pathname + urlObj.search}`, { replace: true });
+          navigate(`/install-app${urlObj.pathname + urlObj.search}`, {
+            replace: true,
+          });
         }
 
         if (url.includes("/servers/")) {
-          const pathParts = urlObj.pathname.split("/").filter(Boolean); // remove empty
+          const pathParts = urlObj.pathname.split("/").filter(Boolean);
           const serversIndex = pathParts.indexOf("servers");
           const afterServers = pathParts.slice(serversIndex + 1);
 
           let targetPath = "";
           if (afterServers.length === 1) {
-            // /servers/:id
             targetPath = `/servers/${afterServers[0]}`;
           } else if (afterServers.length === 2) {
-            // /servers/:owner/:repo
             targetPath = `/servers/${afterServers[0]}/${afterServers[1]}`;
           }
 
-          // Append query string if present
           if (urlObj.search) {
             targetPath += urlObj.search;
           }
@@ -102,7 +95,6 @@ export const useDeepLink = () => {
     });
 
     return () => {
-      // Cleanup the listener
       unlistenPromise.then((un) => un());
     };
   }, [navigate]);

@@ -3,8 +3,8 @@ import { TeamLocalMcpTable } from "@/components/manage/team/TeamLocalMcpTable";
 import { TeamSelector } from "@/components/manage/team/TeamSelector";
 import { ConfigFileSelector } from "@/components/settings/ConfigFileSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useViewStore } from "@/stores/viewStore";
 import { Cloud } from "lucide-react";
-import { useNavigate } from "react-router";
 
 /**
  * Props for TeamTabsSection component.
@@ -28,7 +28,7 @@ export function TeamTabsSection({
   isAuthenticated,
   userLoading,
 }: TeamTabsSectionProps) {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   return (
     <Tabs

@@ -1,3 +1,4 @@
+import { useViewStore } from "@/stores/viewStore";
 import { ContentLoadingFallback } from "@/components/common/LoadingConfig";
 import { ServerConfigForm } from "@/components/server/form/ServerConfigForm";
 import { useServerConfig } from "@/components/server/hooks/useServerConfig";
@@ -13,14 +14,13 @@ import type { ServerType } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
 import { ChevronLeft, Download, Eye, Github, Star, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export function ServerPage() {
   const [server, setServer] = useState<ServerType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { id, owner, repo } = useParams();
-  const navigate = useNavigate();
+  const { id, owner, repo } = useViewStore((s) => s.params);
+  const { navigate } = useViewStore();
 
   const { selectedClient, selectedPath } = useClientPathStore();
   const { getTeamConfigPath } = useConfigFileStore();

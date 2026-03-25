@@ -1,3 +1,4 @@
+import { useViewStore } from "@/stores/viewStore";
 import { TeamTrialSection } from "@/components/manage/TeamTrialSection";
 import { TeamMcpSection } from "@/components/manage/TeamMcpSection";
 import { useTeamColumns } from "@/components/team/TeamColumns";
@@ -18,11 +19,10 @@ import { RowSelectionState } from "@tanstack/react-table";
 import { open } from "@tauri-apps/plugin-shell";
 import { Plus, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function TeamPage() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const { user, loading: userLoading, fetchUser } = useUserStore();
   const { isAuthenticated } = useAuth();
   const { selectedTeamId } = useTeamStore();

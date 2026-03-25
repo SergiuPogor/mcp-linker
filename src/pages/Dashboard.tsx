@@ -1,8 +1,8 @@
+import { useViewStore } from "@/stores/viewStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentUser, signOut } from "@/services/auth";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 type userInfo = {
   email: string,
@@ -15,7 +15,7 @@ type userInfo = {
 }
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const handleLogout = async () => {
     try {
       await signOut();

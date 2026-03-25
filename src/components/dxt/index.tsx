@@ -1,6 +1,6 @@
+import { useViewStore } from "@/stores/viewStore";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router";
 
 // DxtCard component to display manifest info
 export function DxtCard({ dxt }: { dxt: any }) {
@@ -8,7 +8,7 @@ export function DxtCard({ dxt }: { dxt: any }) {
   const toolsArray = Array.isArray(dxt.tools) ? dxt.tools : [];
   const showTools = toolsArray.slice(0, 3);
   const hasMore = toolsArray.length > 3;
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   // Extract user/repo from manifest - should match backend storage structure
   const getUserRepo = () => {

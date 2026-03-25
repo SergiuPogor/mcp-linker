@@ -8,18 +8,18 @@ import { useTeamCloudSync } from "@/hooks/useTeamCloudSync";
 import { useConfigFileStore } from "@/stores/configFileStore";
 import { useStatsStore } from "@/stores/statsStore";
 import { useTeamStore } from "@/stores/team";
+import { useViewStore } from "@/stores/viewStore";
 import { ServerConfig, ServerTableData } from "@/types";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
 import { Cloud, Key } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useServerTableColumns } from "./TeamServerTableColumns";
 
 type TeamLocalMcpTableProps = {};
 
 export const TeamLocalMcpTable = ({}: TeamLocalMcpTableProps) => {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const { getTeamConfigPath } = useConfigFileStore();
   const { selectedTeamId } = useTeamStore();
   const filePath = getTeamConfigPath(selectedTeamId) ?? null;

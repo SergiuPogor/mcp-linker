@@ -1,3 +1,4 @@
+import { useViewStore } from "@/stores/viewStore";
 import { Dashboard } from "@/components/manage/Dashboard";
 import { PersonalMcpSection } from "@/components/manage/PersonalMcpSection";
 import { ServerTemplateDialog } from "@/components/server";
@@ -10,7 +11,6 @@ import { getEncryptionKey } from "@/utils/encryption";
 import { RefreshCcw, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 export default function McpManage() {
   const { personalTab, setPersonalTab } = useTabStore();
@@ -20,7 +20,7 @@ export default function McpManage() {
   const [encryptionKey, setEncryptionKey] = useState<string | null>(null);
   const personalStats = useStatsStore((s) => s.personalStats);
   const teamStats = useStatsStore((s) => s.teamStats);
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const { user, fetchUser } = useUserStore();
 
   useEffect(() => {

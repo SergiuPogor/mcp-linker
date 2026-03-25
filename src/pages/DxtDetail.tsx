@@ -5,11 +5,11 @@ import { ToolPrompt } from "@/components/dxt/tool-prompt";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { DxtManifestSchema } from "@/schemas";
+import { useViewStore } from "@/stores/viewStore";
 import { useClientPathStore } from "@/stores";
 import { ConfigType } from "@/types/mcpConfig";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { z } from "zod";
 
 // Helper function to validate URLs
@@ -103,7 +103,7 @@ function sanitizeManifest(raw: any) {
 
 export default function DxtDetail() {
   const { selectedClient, selectedPath } = useClientPathStore();
-  const { user, repo } = useParams<{ user: string; repo: string }>();
+  const { user, repo } = useViewStore((s) => s.params);
   const [manifest, setManifest] = useState<z.infer<
     typeof DxtManifestSchema
   > | null>(null);

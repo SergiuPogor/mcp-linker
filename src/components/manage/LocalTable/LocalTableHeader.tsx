@@ -4,10 +4,10 @@ import { UpgradePlanButton } from "@/components/common/UpgradePlanButton";
 import { BatchActionsDropdown } from "@/components/manage/BatchActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { useTier } from "@/hooks/useTier";
+import { useViewStore } from "@/stores/viewStore";
 import { getEncryptionKey } from "@/utils/encryption";
 import { Cloud, Key, Monitor } from "lucide-react";
 import React from "react";
-import { useNavigate } from "react-router";
 
 interface LocalTableHeaderProps {
   isSyncing: boolean;
@@ -31,7 +31,7 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
   handleBatchDelete,
 }) => {
   const key = getEncryptionKey();
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const { hasMinimumTier, canUseCloudSync } = useTier();
 
   // Local sync requires LIFETIME or higher

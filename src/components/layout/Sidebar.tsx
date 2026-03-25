@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useViewStore } from "@/stores/viewStore";
 import { Nav } from "@/types";
 import { User } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
 import { ModeToggle } from "../ui/mode-toggle";
 
 interface SidebarProps {
@@ -13,41 +13,37 @@ interface SidebarProps {
 
 export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
   const { t } = useTranslation<"translation">();
-  const location = useLocation();
-
+  const view = useViewStore((s) => s.view);
+  const { navigate } = useViewStore();
   const { user } = useAuth();
 
   if (isCollapsed) {
-    // Collapsed view - show only navigation buttons
     return (
       <div className="flex flex-col justify-between h-screen bg-background border-r px-2 transition-all duration-300 w-12">
         <div>
           <div className="flex flex-col gap-1">
             {navs.map((nav) => (
-              <Link
+              <button
                 key={nav.id}
-                to={nav.path || `/${nav.id}`}
+                onClick={() => navigate(nav.path || `/${nav.id}`)}
                 className="w-full"
               >
                 <Button
-                  variant={
-                    location.pathname === (nav.path || `/${nav.id}`)
-                      ? "secondary"
-                      : "ghost"
-                  }
+                  variant={view === nav.id ? "secondary" : "ghost"}
                   className="w-full justify-center p-2"
+                  asChild={false}
                 >
                   <span className="text-xl">{nav.icon}</span>
                 </Button>
-              </Link>
+              </button>
             ))}
           </div>
         </div>
 
         {/* user info */}
         <div className="flex items-center justify-center mb-12">
-          <Link
-            to={user ? "/dashboard" : "/auth"}
+          <button
+            onClick={() => navigate(user ? "/dashboard" : "/auth")}
             className="flex items-center justify-center"
           >
             {user?.user_metadata.avatar_url ? (
@@ -60,7 +56,7 @@ export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
                 <User className="w-4 h-4" />
               </div>
             )}
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -72,31 +68,28 @@ export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
         <div className="flex-1 px-2 overflow-y-auto">
           <div className="flex flex-col gap-1">
             {navs.map((nav) => (
-              <Link
+              <button
                 key={nav.id}
-                to={nav.path || `/${nav.id}`}
+                onClick={() => navigate(nav.path || `/${nav.id}`)}
                 className="w-full"
               >
                 <Button
-                  variant={
-                    location.pathname === (nav.path || `/${nav.id}`)
-                      ? "secondary"
-                      : "ghost"
-                  }
+                  variant={view === nav.id ? "secondary" : "ghost"}
                   className="w-full justify-start p-2"
+                  asChild={false}
                 >
                   <span className="text-xl">{nav.icon}</span>
                   <span>{nav.name}</span>
                 </Button>
-              </Link>
+              </button>
             ))}
           </div>
         </div>
 
         {/* User info */}
         <div className="shrink-0 flex items-center gap-3 mb-12 border-t">
-          <Link
-            to={user ? "/dashboard" : "/auth"}
+          <button
+            onClick={() => navigate(user ? "/dashboard" : "/auth")}
             className="flex items-center gap-3 flex-grow min-w-0"
           >
             {user?.user_metadata.avatar_url ? (
@@ -115,7 +108,7 @@ export const Sidebar = ({ navs, isCollapsed }: SidebarProps) => {
                 user?.user_metadata.email?.slice(0, 2) ||
                 t("guest")}
             </p>
-          </Link>
+          </button>
           <div className="shrink-0">
             <ModeToggle />
           </div>

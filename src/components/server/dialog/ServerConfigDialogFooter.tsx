@@ -1,8 +1,8 @@
 // ServerConfigDialogFooter.tsx
 import { Button } from "@/components/ui/button";
+import { useViewStore } from "@/stores/viewStore";
 import capitalizeFirstLetter from "@/utils/title";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 interface ServerConfigDialogFooterProps {
   onSubmit: () => Promise<void>;
@@ -16,7 +16,7 @@ export const ServerConfigDialogFooter = ({
   selectedClient,
 }: ServerConfigDialogFooterProps) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
 
   return (
     <div className="flex gap-2">

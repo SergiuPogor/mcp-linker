@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useClientPathStore } from "@/stores";
+import { useViewStore } from "@/stores/viewStore";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 function getConfigObj(editableConfig: string, serverName: string) {
@@ -32,13 +32,13 @@ function decodeAndFormatConfig(config: string): string {
 }
 
 export function InstallAppPage() {
-  const [searchParams] = useSearchParams();
-  const serverName = searchParams.get("name") || "blender-map";
+  const { search } = useViewStore();
+  const serverName = search.name || "blender-map";
   const config =
-    searchParams.get("config") ||
+    search.config ||
     "eyJibGVuZGVyLW1jcCI6eyJjb21tYW5kIjoidXZ4IGJsZW5kZXItbWNwIn19";
-  const autoSubmit = searchParams.get("autoSubmit");
-  const repo = searchParams.get("repo");
+  const autoSubmit = search.autoSubmit;
+  const repo = search.repo;
   const { selectedClient, selectedPath } = useClientPathStore();
 
   const [editableConfig, setEditableConfig] = useState("");

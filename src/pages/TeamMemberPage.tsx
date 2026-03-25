@@ -1,3 +1,4 @@
+import { useViewStore } from "@/stores/viewStore";
 import { AddTeamMemberForm } from "@/components/team/AddTeamMemberForm";
 import {
   AlertDialog,
@@ -18,11 +19,10 @@ import { TeamMember, TeamMemberRole } from "@/types/team";
 import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function TeamMembers() {
-  const { teamId } = useParams<{ teamId: string }>();
+  const { teamId } = useViewStore((s) => s.params);
   const id = teamId!;
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);

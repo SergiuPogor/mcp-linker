@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { api } from "@/lib/api";
+import { useViewStore } from "@/stores/viewStore";
 import { open as openUrl } from "@tauri-apps/plugin-shell";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 /**
@@ -27,7 +27,7 @@ export function GlobalDialog({
   type: "login" | "upgrade" | "startTrial";
   onClose: () => void;
 }) {
-  const navigate = useNavigate();
+  const { navigate } = useViewStore();
   const [loading, setLoading] = useState(false);
 
   return (
