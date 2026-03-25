@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useNoteStore } from "@/hooks/useNoteStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Save, Edit3 } from "lucide-react";
+import { useNoteStore } from "@/hooks/useNoteStore";
+import { Edit3, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function NoteEditor() {
   const {
@@ -51,11 +51,11 @@ export function NoteEditor() {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center space-y-4 max-w-md">
-          <Edit3 className="w-12 h-12 text-gray-400 mx-auto" />
-          <h2 className="text-xl font-semibold text-gray-800">
+          <Edit3 className="w-12 h-12 text-muted-foreground mx-auto" />
+          <h2 className="text-xl font-semibold text-foreground">
             No note selected
           </h2>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Select a note from the list or create a new one to start writing.
           </p>
         </div>
@@ -66,7 +66,7 @@ export function NoteEditor() {
   return (
     <div className="flex flex-col h-full">
       {/* Note Header */}
-      <div className="flex items-center gap-3 p-4 border-b bg-white">
+      <div className="flex items-center gap-3 p-4 border-b">
         <div className="flex-1 min-w-0">
           {isEditing ? (
             <Input
@@ -83,8 +83,8 @@ export function NoteEditor() {
               }}
             />
           ) : (
-            <h1 
-              className="text-lg font-medium text-gray-900 truncate cursor-text hover:bg-gray-50 px-2 py-1 rounded"
+            <h1
+              className="text-lg font-medium text-foreground truncate cursor-text hover:bg-muted/50 px-2 py-1 rounded"
               onClick={() => setIsEditing(true)}
               title="Click to edit title"
             >
@@ -111,13 +111,13 @@ export function NoteEditor() {
           value={content}
           onChange={(e) => handleContentChange(e.target.value)}
           placeholder="Start writing your note..."
-          className="w-full h-full resize-none border-0 outline-none text-sm leading-relaxed bg-transparent"
+          className="w-full h-full resize-none border-0 outline-none text-sm leading-relaxed bg-transparent text-foreground placeholder:text-muted-foreground"
           style={{ fontFamily: 'inherit' }}
         />
       </div>
 
       {/* Footer with metadata */}
-      <div className="px-4 py-2 border-t bg-gray-50 text-xs text-gray-500 flex justify-between items-center">
+      <div className="px-4 py-2 border-t text-xs flex justify-between items-center text-muted-foreground">
         <span>
           Created: {new Date(currentNote.createdAt).toLocaleDateString()}
         </span>

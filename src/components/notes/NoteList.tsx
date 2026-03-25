@@ -76,28 +76,28 @@ export function NoteList() {
     <div
       key={note.id}
       className={cn(
-        "group relative p-3 rounded-lg cursor-pointer border transition-all hover:bg-white hover:shadow-sm",
+        "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-sm",
         currentNoteId === note.id
-          ? "bg-blue-50 border-blue-200 shadow-sm"
-          : "bg-white border-transparent hover:border-gray-200"
+          ? "bg-primary/10 border-primary/30 shadow-sm"
+          : "bg-background border-transparent hover:bg-muted/50 hover:border-border"
       )}
       onClick={() => setCurrentNote(note.id)}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="text-sm font-medium text-gray-900 truncate flex-1">
+            <h4 className="text-sm font-medium text-foreground truncate flex-1">
               {note.title}
             </h4>
             {note.isFavorited && (
               <Star className="h-3 w-3 text-yellow-500 fill-current" />
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
             {note.content || "Empty note"}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted-foreground/70">
               {formatDate(note.updatedAt)}
             </span>
           </div>
@@ -132,7 +132,7 @@ export function NoteList() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={(e) => handleDeleteNote(note.id, e)}
-                  className="text-red-600 hover:text-red-700"
+                  className="text-destructive hover:text-destructive/90"
                 >
                   <Trash2 className="h-3 w-3 mr-2" />
                   Delete
@@ -146,10 +146,10 @@ export function NoteList() {
   );
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-muted/30">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-white">
-        <h3 className="text-sm font-medium text-gray-900">Notes</h3>
+      <div className="flex items-center justify-between p-3 border-b bg-background">
+        <h3 className="text-sm font-medium text-foreground">Notes</h3>
         <Button
           onClick={handleCreateNote}
           size="sm"
@@ -160,9 +160,9 @@ export function NoteList() {
       </div>
 
       {/* Search */}
-      <div className="p-3 bg-white border-b">
+      <div className="p-3 bg-background border-b">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
           <Input
             placeholder="Search notes..."
             value={searchQuery}
@@ -181,7 +181,7 @@ export function NoteList() {
         
         <TabsContent value="history" className="flex-1 overflow-y-auto mt-0">
           {filteredNotes.length === 0 ? (
-            <div className="text-center text-gray-500 text-sm">
+            <div className="text-center text-muted-foreground text-sm">
               {searchQuery ? (
                 <p>No notes match your search</p>
               ) : notes.length === 0 ? (
@@ -189,13 +189,13 @@ export function NoteList() {
                   <p>No notes yet</p>
                   <p className="text-xs mt-1">Create your first note to get started</p>
                   <div className="mt-4 space-y-3 px-4">
-                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-blue-200 pl-3">
+                    <blockquote className="text-xs italic text-muted-foreground border-l-2 border-primary/30 pl-3">
                       "AI doesn't replace humans, but humans with AI will replace humans without AI." - Karim Lakhani
                     </blockquote>
-                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-green-200 pl-3">
+                    <blockquote className="text-xs italic text-muted-foreground border-l-2 border-primary/30 pl-3">
                       "The Model Context Protocol bridges the gap between AI and tools, creating seamless workflows." - Anthropic Team
                     </blockquote>
-                    <blockquote className="text-xs italic text-gray-600 border-l-2 border-purple-200 pl-3">
+                    <blockquote className="text-xs italic text-muted-foreground border-l-2 border-primary/30 pl-3">
                       "plux transforms file management into AI collaboration - one click to enhance your workflow with intelligent insights." - milisp
                     </blockquote>
                   </div>
@@ -213,7 +213,7 @@ export function NoteList() {
         
         <TabsContent value="favorites" className="flex-1 overflow-y-auto mt-0">
           {filteredNotes.length === 0 ? (
-            <div className="p-4 text-center text-gray-500 text-sm">
+            <div className="p-4 text-center text-muted-foreground text-sm">
               {searchQuery ? (
                 <p>No favorite notes match your search</p>
               ) : (
