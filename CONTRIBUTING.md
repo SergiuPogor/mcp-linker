@@ -11,37 +11,30 @@ Prerequisites:
 
 ## Installation
 
-Clone and install dependencies:
+### Clone and install dependencies:
 ```bash
 git clone https://github.com/milisp/mcp-linker
-cd mcp-linker/tauri-app
+cd mcp-linker
 bun install
 cp .env.example .env
 ```
 
-Enter tauri-app folder:
-```sh
-cd tauri-app
-```
-
-### These command should use in tauri-app folder
-
-Install dependencies:
+### Install dependencies:
 ```sh
 bun install
 ```
 
-Run the app in development:
+### Run the app in development:
 ```sh
 bun tauri dev
 ```
 
-Build the frontend only:
+### Build the frontend only:
 ```sh
 bun run build
 ```
 
-Rust checks and formatting:
+### Rust checks and formatting:
 ```sh
 cd src-tauri && cargo check
 cd src-tauri && cargo fmt --all
