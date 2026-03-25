@@ -8,31 +8,20 @@ interface ProtectedRouteProps {
   requireAuth?: boolean;
 }
 
-function RedirectToAuth() {
-  const { navigate } = useViewStore();
-  useEffect(() => {
-    navigate("/auth", { replace: true });
-  }, []);
-  return <ContentLoadingFallback />;
-}
-
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAuth = true,
 }) => {
   const { user, loading, isAuthEnabled } = useAuth();
+  const { navigate } = useViewStore();
 
-  if (!isAuthEnabled) {
-    return <>{children}</>;
-  }
+  useEffect(() => {
+    if (!loading && isAuthEnabled && requireAuth && !user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [loading, isAuthEnabled, requireAuth, user, navigate]);
 
-  if (loading) {
-    return <ContentLoadingFallback />;
-  }
-
-  if (requireAuth && !user) {
-    return <RedirectToAuth />;
-  }
-
+  if (!isAuthEnabled) return <>{children}</>;
+  if (loading || (requireAuth && !user)) return <ContentLoadingFallback />;
   return <>{children}</>;
 };

@@ -21,10 +21,9 @@ export const AuthPromptDialog = ({
   onClose,
 }: AuthPromptDialogProps) => {
   const { navigate } = useViewStore();
-  const { setMainTab, setPersonalTab } = useTabStore();
+  const { setPersonalTab } = useTabStore();
 
   const handleGoToPersonal = () => {
-    setMainTab("personal");
     setPersonalTab("personalLocal");
     onClose();
   };
