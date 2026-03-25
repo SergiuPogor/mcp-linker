@@ -13,12 +13,12 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DataTable } from "@/components/ui/data-table";
+import { useAuth } from "@/hooks/useAuth";
 import { useCloudSync } from "@/hooks/useCloudSync";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useTier } from "@/hooks/useTier";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { useGlobalDialogStore } from "@/stores/globalDialogStore";
-import { UserWithTier } from "@/stores/userStore";
 import { useViewStore } from "@/stores/viewStore";
 import { getEncryptionKey } from "@/utils/encryption";
 import { RowSelectionState, Table } from "@tanstack/react-table";
@@ -28,12 +28,8 @@ import { LocalTableHeader } from "./LocalTableHeader";
 import { useServersData } from "./useServersData";
 import { useSyncHandlers } from "./useSyncHandlers";
 
-interface LocalTableProps {
-  isAuthenticated: boolean;
-  user: UserWithTier;
-}
-
-export const LocalTable = ({ isAuthenticated, user: _user }: LocalTableProps) => {
+export const LocalTable = () => {
+  const { isAuthenticated } = useAuth();
   const { selectedClient, selectedPath } = useClientPathStore();
   const [localSyncDialogOpen, setLocalSyncDialogOpen] = useState(false);
   const [cloudSyncDialogOpen, setCloudSyncDialogOpen] = useState(false);

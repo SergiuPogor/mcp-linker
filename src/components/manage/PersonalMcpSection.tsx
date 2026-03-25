@@ -2,33 +2,19 @@ import { LocalTable } from "@/components/manage/LocalTable/index";
 import { PersonalCloudTable } from "@/components/manage/PersonalCloudTable";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/useAuth";
 import { useTier } from "@/hooks/useTier";
+import { useTabStore } from "@/stores/tabStore";
+import { useViewStore } from "@/stores/viewStore";
+import { getEncryptionKey } from "@/utils/encryption";
 import { Cloud } from "lucide-react";
 
-/**
- * Props for PersonalMcpSection component.
- */
-interface PersonalMcpSectionProps {
-  personalTab: string;
-  setPersonalTab: (tab: string) => void;
-  user: any;
-  isAuthenticated: boolean;
-  encryptionKey: string | null;
-  navigate: (to: any) => void;
-}
-
-/**
- * Component for rendering the personal MCP server management tabs and tables.
- */
-export function PersonalMcpSection({
-  personalTab,
-  setPersonalTab,
-  user,
-  isAuthenticated,
-  encryptionKey,
-  navigate,
-}: PersonalMcpSectionProps) {
+export function PersonalMcpSection() {
+  const { personalTab, setPersonalTab } = useTabStore();
+  const { isAuthenticated } = useAuth();
+  const { navigate } = useViewStore();
   const { canUseCloudSync } = useTier();
+  const encryptionKey = getEncryptionKey();
 
   return (
     <Tabs
@@ -44,7 +30,7 @@ export function PersonalMcpSection({
         </TabsTrigger>
       </TabsList>
       <TabsContent forceMount value="personalLocal" className="flex-1 min-h-0 data-[state=inactive]:hidden">
-        <LocalTable user={user} isAuthenticated={isAuthenticated} />
+        <LocalTable />
       </TabsContent>
       <TabsContent value="personalCloud" className="flex-1 min-h-0">
         {isAuthenticated ? (
