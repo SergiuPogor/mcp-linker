@@ -15,7 +15,6 @@ export default defineConfig({
         manualChunks: {
           // Core React chunks
           "react-core": ["react", "react-dom"],
-          "react-router": ["react-router-dom"],
 
           // State management
           zustand: ["zustand"],
