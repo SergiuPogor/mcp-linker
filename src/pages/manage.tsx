@@ -4,7 +4,9 @@ import { PersonalMcpSection } from "@/components/manage/PersonalMcpSection";
 import { ServerTemplateDialog } from "@/components/server";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsFreeUser } from "@/hooks/useTier";
 import { useStatsStore } from "@/stores/statsStore";
+import { useGlobalDialogStore } from "@/stores/globalDialogStore";
 import { useTabStore } from "@/stores/tabStore";
 import { UserWithTier, useUserStore } from "@/stores/userStore";
 import { getEncryptionKey } from "@/utils/encryption";
@@ -21,6 +23,8 @@ export default function McpManage() {
   const personalStats = useStatsStore((s) => s.personalStats);
   const { navigate } = useViewStore();
   const { user, fetchUser } = useUserStore();
+  const isFreeUser = useIsFreeUser();
+  const showGlobalDialog = useGlobalDialogStore((s) => s.showDialog);
 
   useEffect(() => {
     async function fetchKey() {
@@ -34,7 +38,14 @@ export default function McpManage() {
     fetchUser(); // Fetch user info (with tier) on mount
   }, [fetchUser]);
 
+  const FREE_SERVER_LIMIT = 1;
+  const isLimitedUser = !isAuthenticated || isFreeUser;
+
   const handleAddServer = () => {
+    if (isLimitedUser && personalStats.total >= FREE_SERVER_LIMIT) {
+      showGlobalDialog(isAuthenticated ? "upgrade" : "login");
+      return;
+    }
     setIsDialogOpen(true);
   };
 

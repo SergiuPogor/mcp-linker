@@ -43,7 +43,7 @@ export function PersonalMcpSection({
           Cloud {!canUseCloudSync && "🔒"}
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="personalLocal" className="flex-1 min-h-0">
+      <TabsContent forceMount value="personalLocal" className="flex-1 min-h-0 data-[state=inactive]:hidden">
         <LocalTable user={user} isAuthenticated={isAuthenticated} />
       </TabsContent>
       <TabsContent value="personalCloud" className="flex-1 min-h-0">

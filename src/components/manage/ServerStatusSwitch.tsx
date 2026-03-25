@@ -1,12 +1,8 @@
 import { Switch } from "@/components/ui/switch";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useTier } from "@/hooks/useTier";
+import { useAuth } from "@/hooks/useAuth";
+import { useIsFreeUser } from "@/hooks/useTier";
 import { useGlobalDialogStore } from "@/stores/globalDialogStore";
+import { useStatsStore } from "@/stores/statsStore";
 
 interface ServerStatusSwitchProps {
   serverName: string;
@@ -21,45 +17,25 @@ export function ServerStatusSwitch({
   onEnable,
   onDisable,
 }: ServerStatusSwitchProps) {
-  const { hasMinimumTier } = useTier();
+  const { isAuthenticated } = useAuth();
+  const isFreeUser = useIsFreeUser();
+  const personalStats = useStatsStore((s) => s.personalStats);
   const showGlobalDialog = useGlobalDialogStore((s) => s.showDialog);
 
-  // Enable/disable servers instantly requires LIFETIME or higher
-  const canToggle = hasMinimumTier("LIFETIME") || import.meta.env.DEV;
+  const isLimitedUser = !isAuthenticated || isFreeUser;
 
   const handleChange = (checked: boolean) => {
-    if (!canToggle) {
-      showGlobalDialog("upgrade");
+    // Limited users can only have 1 active server at a time
+    if (checked && isLimitedUser && personalStats.active >= 1) {
+      showGlobalDialog(isAuthenticated ? "upgrade" : "login");
       return;
     }
-
     if (checked) {
       onEnable(serverName);
     } else {
       onDisable(serverName);
     }
   };
-
-  if (!canToggle) {
-    return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center">
-              <Switch
-                checked={isActive}
-                disabled={true}
-                className="data-[state=checked]:bg-green-600 opacity-50 cursor-not-allowed"
-              />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Upgrade to Lifetime Basic or higher to enable/disable servers instantly</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
-  }
 
   return (
     <div className="flex items-center">
