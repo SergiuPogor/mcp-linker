@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useTier } from "@/hooks/useTier";
-import { useTabStore } from "@/stores/tabStore";
 import { useViewStore } from "@/stores/viewStore";
 import { getEncryptionKey } from "@/utils/encryption";
 import { Cloud } from "lucide-react";
+import { useState } from "react";
 
 export function PersonalMcpSection() {
-  const { personalTab, setPersonalTab } = useTabStore();
+  const [personalTab, setPersonalTab] = useState("personalLocal");
   const { isAuthenticated } = useAuth();
   const { navigate } = useViewStore();
   const { canUseCloudSync } = useTier();

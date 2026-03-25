@@ -8,7 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useTabStore } from "@/stores/tabStore";
 import { useViewStore } from "@/stores/viewStore";
 
 interface AuthPromptDialogProps {
@@ -21,12 +20,6 @@ export const AuthPromptDialog = ({
   onClose,
 }: AuthPromptDialogProps) => {
   const { navigate } = useViewStore();
-  const { setPersonalTab } = useTabStore();
-
-  const handleGoToPersonal = () => {
-    setPersonalTab("personalLocal");
-    onClose();
-  };
 
   const handleLogin = () => {
     navigate("/auth");
@@ -44,7 +37,7 @@ export const AuthPromptDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleGoToPersonal}>
+          <AlertDialogCancel onClick={onClose}>
             Go to Personal
           </AlertDialogCancel>
           <AlertDialogAction onClick={handleLogin}>Log In</AlertDialogAction>
