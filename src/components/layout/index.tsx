@@ -69,11 +69,8 @@ const Layout = () => {
         <Sidebar navs={navs} isCollapsed={sidebarCollapsed} />
 
         {/* Main content on the right */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Main Content */}
-          <div className="flex-1 overflow-auto">
-            <AppRoutes />
-          </div>
+        <div className="flex-1 overflow-auto">
+          <AppRoutes />
         </div>
       </div>
 
