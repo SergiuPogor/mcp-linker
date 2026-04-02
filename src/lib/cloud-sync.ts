@@ -1,5 +1,5 @@
-// Cloud sync API functions for MCP server configurations
-import { api } from "@/lib/api";
+// Cloud sync functions for MCP server configurations (via Supabase)
+import supabase from "@/utils/supabase";
 import { ServerTableData } from "@/types";
 import {
   decryptConfig,
@@ -22,217 +22,172 @@ export interface CloudSyncStatus {
   hasChanges: boolean;
 }
 
-const methodMap = {
-  GET: api.get.bind(api),
-  POST: api.post.bind(api),
-  PUT: api.put.bind(api),
-  DELETE: api.delete.bind(api),
-};
-
-const callCloudApi = async <T>(
-  endpoint: string,
-  method: keyof typeof methodMap = "GET",
-  body: object | null = null,
-): Promise<T> => {
-  try {
-    const fn = methodMap[method];
-    const response =
-      method === "GET" || method === "DELETE"
-        ? await fn(endpoint)
-        : await fn(endpoint, body || {});
-    return response.data as T;
-  } catch (error: any) {
-    throw new Error(`API call to ${endpoint} failed: ${error.message}`);
-  }
-};
+async function getUserId(): Promise<string> {
+  if (!supabase) throw new Error("Supabase not initialized");
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) throw new Error("Not authenticated");
+  return session.user.id;
+}
 
 // Upload a single configuration to cloud
 export const uploadSingleConfig = async (
   config: ServerTableData,
-  overrideAll: boolean,
+  _overrideAll: boolean,
 ) => {
-  const { name, ...serverConfig } = config;
+  if (!supabase) throw new Error("Supabase not initialized");
+  const userId = await getUserId();
 
-  // Get encryption key and encrypt the config
+  const { name, ...serverConfig } = config;
   const encryptionKey = getEncryptionKey("personal");
   if (!encryptionKey) throw new Error("Encryption key not found");
-  // Stringify the config before encryption
-  const configString = JSON.stringify(serverConfig);
-  const encryptedConfig = await encryptConfig(configString, encryptionKey);
+  const encryptedConfig = await encryptConfig(
+    JSON.stringify(serverConfig),
+    encryptionKey,
+  );
 
-  const payload = {
-    serverName: name,
-    encryptConfigData: encryptedConfig,
-  };
-  try {
-    await callCloudApi(`/user-server-configs/`, "POST", payload);
-  } catch (error: any) {
-    if (error.message.includes("status 409") && !overrideAll) {
-      await updateCloudConfig(name, encryptedConfig);
-    } else {
-      throw new Error(`Failed to upload config ${name}: ${error.message}`);
-    }
-  }
+  const { error } = await supabase.from("user_server_configs").upsert(
+    {
+      user_id: userId,
+      server_name: name,
+      encrypt_config_data: encryptedConfig,
+    },
+    { onConflict: "user_id,server_name" },
+  );
+
+  if (error) throw new Error(`Failed to upload config ${name}: ${error.message}`);
 };
 
-// Upload configurations to cloud using batch sync endpoint
+// Upload configurations to cloud (batch)
 export const uploadConfigsToCloud = async (
   configs: ServerTableData[],
   overrideAll: boolean = false,
 ): Promise<void> => {
-  try {
-    // If override mode, delete existing configs first
-    if (overrideAll) {
-      await deleteAllCloudConfigs();
-    }
+  if (!supabase) throw new Error("Supabase not initialized");
+  const userId = await getUserId();
 
-    // Prepare payload for batch sync
-    const encryptionKey = await ensureEncryptionKey();
-    const batchPayload = await Promise.all(
-      configs.map(async (config) => {
-        const { name, ...serverConfig } = config;
-        const configString = JSON.stringify(serverConfig);
-        const encryptedConfig = await encryptConfig(
-          configString,
-          encryptionKey,
-        );
-        return {
-          serverName: name,
-          encryptConfigData: encryptedConfig,
-        };
-      }),
-    );
-
-    // Call batch sync API
-    await callCloudApi(
-      `/user-server-configs/batch-sync?override_existing=${overrideAll}`,
-      "POST",
-      batchPayload,
-    );
-  } catch (error) {
-    console.error("Upload to cloud failed:", error);
-    throw error;
+  if (overrideAll) {
+    await deleteAllCloudConfigs();
   }
+
+  const encryptionKey = await ensureEncryptionKey();
+  const rows = await Promise.all(
+    configs.map(async (config) => {
+      const { name, ...serverConfig } = config;
+      const encryptedConfig = await encryptConfig(
+        JSON.stringify(serverConfig),
+        encryptionKey,
+      );
+      return {
+        user_id: userId,
+        server_name: name,
+        encrypt_config_data: encryptedConfig,
+      };
+    }),
+  );
+
+  const { error } = await supabase
+    .from("user_server_configs")
+    .upsert(rows, { onConflict: "user_id,server_name" });
+
+  if (error) throw new Error(`Batch upload failed: ${error.message}`);
 };
 
 // Download configurations from cloud
-export const downloadConfigsFromCloud = async (): Promise<
-  ServerTableData[]
-> => {
-  try {
-    const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/`,
-    );
-    console.log("cloud data", data);
-    const cloudConfigs: CloudConfig[] = data.configs || [];
+export const downloadConfigsFromCloud = async (): Promise<ServerTableData[]> => {
+  if (!supabase) throw new Error("Supabase not initialized");
+  const userId = await getUserId();
 
-    // Get encryption key for decryption
-    const encryptionKey = await ensureEncryptionKey();
+  const { data, error } = await supabase
+    .from("user_server_configs")
+    .select()
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
-    // Convert cloud configs to ServerTableData format and decrypt
-    const serverConfigs: ServerTableData[] = (
-      await Promise.all(
-        cloudConfigs.map(async (config) => {
-          if (
-            !config.encryptConfigData ||
-            typeof config.encryptConfigData !== "string"
-          ) {
-            console.warn(
-              `Missing or invalid encrypted data for config: ${config.serverName}`,
-            );
-            return null;
-          }
+  if (error) throw new Error(`Download from cloud failed: ${error.message}`);
 
-          const decryptedString = await decryptConfig(
-            config.encryptConfigData,
-            encryptionKey,
+  const encryptionKey = await ensureEncryptionKey();
+
+  const serverConfigs: ServerTableData[] = (
+    await Promise.all(
+      (data || []).map(async (row) => {
+        if (
+          !row.encrypt_config_data ||
+          typeof row.encrypt_config_data !== "string"
+        ) {
+          console.warn(
+            `Missing or invalid encrypted data for config: ${row.server_name}`,
           );
-          const decryptedConfig = JSON.parse(decryptedString);
-          return {
-            name: config.serverName,
-            ...decryptedConfig,
-            id: config.id,
-          };
-        }),
-      )
-    ).filter((item): item is ServerTableData => item !== null);
+          return null;
+        }
+        const decryptedString = await decryptConfig(
+          row.encrypt_config_data,
+          encryptionKey,
+        );
+        const decryptedConfig = JSON.parse(decryptedString);
+        return { name: row.server_name, ...decryptedConfig, id: row.id };
+      }),
+    )
+  ).filter((item): item is ServerTableData => item !== null);
 
-    console.log("serverConfigs: ", serverConfigs);
-
-    return serverConfigs;
-  } catch (error) {
-    console.error("Download from cloud failed:", error);
-    throw error;
-  }
+  console.log("serverConfigs: ", serverConfigs);
+  return serverConfigs;
 };
 
 // Get cloud sync status
 export const getCloudSyncStatus = async (): Promise<CloudSyncStatus> => {
+  if (!supabase) return { total: 0, lastSync: null, hasChanges: false };
   try {
-    const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/`,
-    );
-    const configs: CloudConfig[] = data.configs || [];
+    const userId = await getUserId();
 
+    const { data, error } = await supabase
+      .from("user_server_configs")
+      .select("updated_at")
+      .eq("user_id", userId);
+
+    if (error) return { total: 0, lastSync: null, hasChanges: false };
+
+    const rows = data || [];
     const lastSync =
-      configs.length > 0
-        ? configs.reduce((latest, config) => {
-            const configDate = new Date(config.updatedAt);
-            return configDate > new Date(latest) ? config.updatedAt : latest;
-          }, configs[0].updatedAt)
+      rows.length > 0
+        ? rows.reduce((latest, row) => {
+            const d = new Date(row.updated_at);
+            return d > new Date(latest) ? row.updated_at : latest;
+          }, rows[0].updated_at)
         : null;
 
-    return {
-      total: configs.length,
-      lastSync,
-      hasChanges: false, // This would require comparing local vs cloud configs
-    };
-  } catch (error) {
-    console.error("Failed to get cloud sync status:", error);
+    return { total: rows.length, lastSync, hasChanges: false };
+  } catch {
     return { total: 0, lastSync: null, hasChanges: false };
   }
 };
 
-// Update existing cloud configuration
-const updateCloudConfig = async (
-  serverName: string,
-  encryptedConfig: string,
-): Promise<void> => {
-  try {
-    // First, get the config ID
-    const existingConfig: CloudConfig = await callCloudApi(
-      `/user-server-configs/by-server-name/?serverName=${encodeURIComponent(serverName)}`,
-    );
+// Delete a single cloud config by id
+export const deleteCloudConfig = async (configId: string): Promise<void> => {
+  if (!supabase) throw new Error("Supabase not initialized");
+  const userId = await getUserId();
 
-    // Update the configuration
-    await callCloudApi(`/user-server-configs/${existingConfig.id}`, "PUT", {
-      encryptConfigData: encryptedConfig,
-    });
-  } catch (error) {
-    console.error("Update cloud config failed:", error);
-    throw error;
-  }
+  const { error } = await supabase
+    .from("user_server_configs")
+    .delete()
+    .eq("id", configId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Failed to delete config: ${error.message}`);
 };
 
-const deleteAllCloudConfigs = async (): Promise<void> => {
-  try {
-    const data: { configs: CloudConfig[] } = await callCloudApi(
-      `/user-server-configs/`,
-    );
-    const configs: CloudConfig[] = data.configs || [];
+// Delete all cloud configs for the current user
+export const deleteAllCloudConfigs = async (): Promise<void> => {
+  if (!supabase) throw new Error("Supabase not initialized");
+  const userId = await getUserId();
 
-    // Delete each configuration
-    for (const config of configs) {
-      try {
-        await callCloudApi(`/user-server-configs/${config.id}`, "DELETE");
-      } catch (error) {
-        console.warn(`Failed to delete config ${config.serverName}:`, error);
-      }
-    }
-  } catch (error) {
-    console.error("Delete all cloud configs failed:", error);
-    throw error;
-  }
+  const { error } = await supabase
+    .from("user_server_configs")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Failed to delete all configs: ${error.message}`);
 };
 
 // Compare local and cloud configurations to detect changes
@@ -242,10 +197,7 @@ export const detectConfigChanges = async (
   try {
     const cloudConfigs = await downloadConfigsFromCloud();
 
-    // Simple comparison - in a real implementation, you might want more sophisticated diffing
-    if (localConfigs.length !== cloudConfigs.length) {
-      return true;
-    }
+    if (localConfigs.length !== cloudConfigs.length) return true;
 
     const localConfigMap = new Map(
       localConfigs.map((config) => [config.name, config]),
@@ -262,8 +214,7 @@ export const detectConfigChanges = async (
     }
 
     return false;
-  } catch (error) {
-    console.error("Failed to detect config changes:", error);
+  } catch {
     return false;
   }
 };

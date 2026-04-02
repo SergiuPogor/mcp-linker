@@ -1,14 +1,16 @@
-import { fetchWithFallback } from "./common";
+import supabase from "@/utils/supabase";
 
-export function fetchServerConfig(server_id: string) {
-  const path = `/server_configs/?server_id=${server_id}`;
+export async function fetchServerConfig(server_id: string) {
+  if (!supabase) return [];
 
-  return fetchWithFallback(path, (data) => {
-    // Check if the data already has the correct format
-    if (Array.isArray(data)) {
-      return data;
-    }
-    // Otherwise try to extract from server_id key
-    return data[server_id] || [];
-  });
+  const { data, error } = await supabase
+    .from("server_configs")
+    .select("config_items")
+    .eq("server_id", server_id)
+    .single();
+
+  if (error || !data) return [];
+
+  const items = data.config_items;
+  return Array.isArray(items) ? items : [];
 }

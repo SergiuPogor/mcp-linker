@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useCloudSync } from "@/hooks/useCloudSync";
-import { api } from "@/lib/api";
+import { deleteAllCloudConfigs, deleteCloudConfig } from "@/lib/cloud-sync";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { ServerTableData } from "@/types";
 import { ColumnDef, RowSelectionState, Table } from "@tanstack/react-table";
@@ -100,7 +100,8 @@ export const PersonalCloudTable = () => {
               itemName={`the server "${serverName}"`}
               onDelete={async () => {
                 try {
-                  await api.delete(`/user-server-configs/${serverId}`);
+                  if (!serverId) throw new Error("Missing server id");
+                  await deleteCloudConfig(serverId);
                   setServersData((prevData) =>
                     prevData.filter((server) => server.id !== serverId),
                   );
@@ -127,7 +128,7 @@ export const PersonalCloudTable = () => {
                   itemName={`all personal server configs`}
                   onDelete={async () => {
                     try {
-                      await api.delete(`/user-server-configs/`);
+                      await deleteAllCloudConfigs();
                       setServersData([]);
                       toast.success(
                         `remove personal server configs in the cloud`,
