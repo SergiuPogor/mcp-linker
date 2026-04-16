@@ -49,7 +49,7 @@ export const AppSidebar = () => {
                 isActive={view === nav.id}
                 onClick={() => navigate(nav.path || `/${nav.id}`)}
               >
-                <span className="text-xl">{nav.icon}</span>
+                {nav.icon}
                 <span>{nav.name}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
