@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,7 @@ import {
 import { useAuth } from "@/hooks/useAuth"
 import { cn } from "@/lib/utils"
 import { getNavigationRoutes } from "@/routes"
+import { signOut } from "@/services/auth"
 import { useViewStore } from "@/stores/viewStore"
 import { platform } from "@tauri-apps/plugin-os"
 import { open } from "@tauri-apps/plugin-shell"
@@ -72,21 +72,26 @@ export const AppSidebar = () => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
-                {user?.email ? (
-                  <DropdownMenuItem>
-                    <span className="truncate">{user.email}</span>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem>
-                    <Button variant="ghost" onClick={() => navigate("/auth")}>Login</Button>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => open("https://mcp-linker.store/feedback")}
                 >
                   <span>{t("feedback")}</span>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {user?.email ? (
+                  <DropdownMenuItem>
+                    <span className="truncate">{user.email}</span>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => navigate("/auth")}>
+                    Login
+                  </DropdownMenuItem>
+                )}
+                {user && (
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Logout
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
