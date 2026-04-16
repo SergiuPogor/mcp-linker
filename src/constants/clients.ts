@@ -18,6 +18,20 @@ const clients: ClientInfo[] = [
     requiredTier: "FREE"
   },
   {
+    value: "claude_code",
+    label: "Claude Code",
+    url: "https://docs.anthropic.com/en/docs/claude-code",
+    desc: "Anthropic's official CLI tool for Claude with MCP integration support",
+    requiredTier: "LIFETIME_PRO"
+  },
+  {
+    value: "codex",
+    label: "Codex",
+    url: "https://github.com/openai/codex",
+    desc: "Codex CLI is a coding agent from OpenAI that runs locally on your computer.",
+    requiredTier: "LIFETIME_PRO"
+  },
+  {
     value: "windsurf",
     label: "Windsurf",
     url: "https://codeium.com/windsurf",
@@ -46,32 +60,11 @@ const clients: ClientInfo[] = [
     requiredTier: "LIFETIME"
   },
   {
-    value: "vscode",
-    label: "VSCode",
+    value: "copilot",
+    label: "Github Copilot",
     url: "https://code.visualstudio.com/",
     desc: "Microsoft's popular code editor with extensive extension ecosystem including MCP support",
     requiredTier: "LIFETIME"
-  },
-  {
-    value: "plux",
-    label: "Plux",
-    url: "https://github.com/milisp/plux",
-    desc: "One-click add any local file to AI context with a visual file tree. Built-in notepad saves insights — no more copy-paste hassles.",
-    requiredTier: "LIFETIME"
-  },
-  {
-    value: "codex",
-    label: "Codex",
-    url: "https://github.com/openai/codex",
-    desc: "Codex CLI is a coding agent from OpenAI that runs locally on your computer.",
-    requiredTier: "LIFETIME_PRO"
-  },
-  {
-    value: "claude_code",
-    label: "Claude Code",
-    url: "https://docs.anthropic.com/en/docs/claude-code",
-    desc: "Anthropic's official CLI tool for Claude with MCP integration support",
-    requiredTier: "LIFETIME_PRO"
   },
   {
     value: "mcphub",

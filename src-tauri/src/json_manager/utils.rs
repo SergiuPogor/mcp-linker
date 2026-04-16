@@ -2,7 +2,7 @@ use serde_json::Value;
 
 /// Normalize response key to mcpServers for consistent client API
 pub fn normalize_response_key(mut json: Value, client: &str) -> Result<Value, String> {
-    if client == "vscode" && json.is_object() {
+    if client == "copilot" && json.is_object() {
         let servers_key = "servers";
         let mcp_servers_key = "mcpServers";
 
@@ -21,7 +21,7 @@ pub fn normalize_response_key(mut json: Value, client: &str) -> Result<Value, St
 
 /// Get the appropriate key name based on client type
 pub fn get_key_by_client(client: &str) -> &str {
-    if client == "vscode" {
+    if client == "copilot" {
         "servers"
     } else {
         "mcpServers"

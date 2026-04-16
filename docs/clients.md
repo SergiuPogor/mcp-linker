@@ -35,7 +35,7 @@ This document describes the supported MCP clients and their configuration file p
 
 ---
 
-## VS Code
+## Copilot
 
 - **Scope**: Project-level or fallback to Global if base path is empty
 - **Supported Platforms**: Cross-platform

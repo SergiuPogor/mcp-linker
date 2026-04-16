@@ -10,17 +10,16 @@ impl ClientConfig {
         let home = home_dir().expect("Failed to get home directory");
 
         let path = match (name, path) {
-            ("plux", _) => home.join(".config/plux/mcp.json"),
             ("claude", _) => Self::claude_config_path(&home),
             ("cline", _) => Self::cline_config_path(&home),
             ("roo_code", Some(base_path)) if !base_path.is_empty() => {
                 PathBuf::from(base_path).join(".roo/mcp.json")
             }
             ("roo_code", _) => Self::roo_config_path(&home),
-            ("vscode", Some(base_path)) if !base_path.is_empty() => {
+            ("copilot", Some(base_path)) if !base_path.is_empty() => {
                 PathBuf::from(base_path).join(".vscode/mcp.json")
             }
-            ("vscode", _) => home.join(".vscode/mcp.json"),
+            ("copilot", _) => home.join(".vscode/mcp.json"),
             ("cursor", Some(base_path)) if !base_path.is_empty() => {
                 PathBuf::from(base_path).join(".cursor/mcp.json")
             }

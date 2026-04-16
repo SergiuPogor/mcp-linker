@@ -25,7 +25,7 @@ pub async fn read_json_file(client_name: String, path: Option<String>) -> Result
     }
 
     // Handle client-specific key normalization
-    if client_name == "vscode" {
+    if client_name == "copilot" {
         // For VS Code, ensure both "servers" and "mcpServers" exist
         if !json.as_object().unwrap().contains_key("servers") {
             json["servers"] = json!({});
