@@ -5,6 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ModeToggle } from "@/components/ui/mode-toggle"
 import {
   Sidebar,
   SidebarContent,
@@ -61,16 +62,17 @@ export const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
+            <span className="flex">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground">
                   <User className="w-4 h-4" />
-                  <span>
+                  {open && <span>
                     {user?.user_metadata.full_name ||
                       user?.user_metadata.user_name ||
                       user?.user_metadata.email?.slice(0, 2) ||
                       t("guest")}
-                  </span>
+                  </span>}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
@@ -99,6 +101,8 @@ export const AppSidebar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {open && <ModeToggle />}
+            </span>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
