@@ -47,7 +47,7 @@ export const AppSidebar = () => {
             <SidebarMenuItem key={nav.id}>
               <SidebarMenuButton
                 isActive={view === nav.id}
-                onClick={() => navigate(nav.path || `/${nav.id}`)}
+                onClick={() => navigate(`/${nav.id}`)}
               >
                 {nav.icon}
                 <span>{nav.name}</span>

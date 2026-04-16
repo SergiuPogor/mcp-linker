@@ -34,22 +34,17 @@ interface ViewStore extends ViewEntry {
 
 // Order matters: more specific patterns first
 const ROUTES: Array<{ re: RegExp; view: ViewName; keys: string[] }> = [
-  { re: /^\/dxt\/([^/?]+)\/([^/?]+)/, view: "dxt-detail", keys: ["user", "repo"] },
-  { re: /^\/servers\/([^/?]+)\/([^/?]+)/, view: "server", keys: ["owner", "repo"] },
+  {
+    re: /^\/dxt\/([^/?]+)\/([^/?]+)/,
+    view: "dxt-detail",
+    keys: ["user", "repo"],
+  },
+  {
+    re: /^\/servers\/([^/?]+)\/([^/?]+)/,
+    view: "server",
+    keys: ["owner", "repo"],
+  },
   { re: /^\/servers\/([^/?]+)/, view: "server", keys: ["id"] },
-  { re: /^\/(discover)?$/, view: "discover", keys: [] },
-  { re: /^\/manage/, view: "manage", keys: [] },
-  { re: /^\/claude-code-manage/, view: "claude-code-manage", keys: [] },
-  { re: /^\/recently/, view: "recently", keys: [] },
-  { re: /^\/settings/, view: "settings", keys: [] },
-  { re: /^\/auth/, view: "auth", keys: [] },
-  { re: /^\/about/, view: "about", keys: [] },
-  { re: /^\/dxt/, view: "dxt", keys: [] },
-  { re: /^\/install-app/, view: "install-app", keys: [] },
-  { re: /^\/notes/, view: "notes", keys: [] },
-  { re: /^\/favorites/, view: "favorites", keys: [] },
-  { re: /^\/dashboard/, view: "dashboard", keys: [] },
-  { re: /^\/onboarding/, view: "onboarding", keys: [] },
 ];
 
 export function parsePath(path: string): ViewEntry {
@@ -75,7 +70,12 @@ export function parsePath(path: string): ViewEntry {
     }
   }
 
-  return { view: "discover", params: {}, search: {} };
+  const segment = pathPart.split("/").filter(Boolean)[0] as ViewName;
+  if (!segment || segment === "discover") {
+    return { view: "discover", params: {}, search: search };
+  }
+
+  return { view: segment, params: {}, search };
 }
 
 export function entryToPath({ view, params, search }: ViewEntry): string {

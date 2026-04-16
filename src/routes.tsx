@@ -100,61 +100,51 @@ export const getNavigationRoutes = (
     {
       id: "discover",
       name: t("nav.discover"),
-      path: "/discover",
       icon: iconMap.discover,
     },
     {
       id: "manage",
       name: t("nav.manage"),
-      path: "/manage",
       icon: iconMap.manage,
     },
     {
       id: "dxt",
       name: t("nav.dxt"),
-      path: "/dxt",
       icon: iconMap.dxt,
     },
     {
       id: "notes",
       name: "Notes",
-      path: "/notes",
       icon: iconMap.notes,
     },
     {
       id: "claude-code-manage",
       name: "Claude Code",
-      path: "/claude-code-manage",
       icon: iconMap["claude-code-manage"],
     },
     {
       id: "recently",
       name: t("nav.recentlyAdded"),
-      path: "/recently",
       icon: iconMap.recently,
     },
     {
       id: "favorites",
       name: t("nav.favs"),
-      path: "/favorites",
       icon: iconMap.favorites,
     },
     {
       id: "settings",
       name: t("nav.settings"),
-      path: "/settings",
       icon: iconMap.settings,
     },
     {
       id: "about",
       name: t("nav.about"),
-      path: "/about",
       icon: iconMap.about,
     },
     {
       id: "install-app",
       name: t("nav.installapp"),
-      path: "/install-app",
       icon: iconMap.download,
     },
   ];
