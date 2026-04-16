@@ -81,6 +81,9 @@ const es: { translation: TranslationSchema } = {
     descend: "Descendente",
     ascend: "Ascendente",
     feedback: "Comentarios",
+    general: "General",
+    language: "Idioma",
+    encryption: "Encriptación",
   },
 };
 

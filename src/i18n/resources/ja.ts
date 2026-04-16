@@ -81,6 +81,9 @@ const ja: { translation: TranslationSchema } = {
     descend: "降順",
     ascend: "昇順",
     feedback: "フィードバック",
+    general: "一般",
+    language: "言語",
+    encryption: "暗号化",
   },
 };
 

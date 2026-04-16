@@ -1,8 +1,18 @@
-import { Globe } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const languages = [
   { code: "en", label: "English" },
@@ -14,7 +24,7 @@ const languages = [
 ];
 
 export default function LangSelect() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [currentLang, setCurrentLang] = useState(i18n.language);
 
   const changeLanguage = (lng: string) => {
@@ -23,33 +33,27 @@ export default function LangSelect() {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Change language"
-          className="w-10 h-10"
-        >
-          <Globe className="w-4 h-4" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="w-32 p-1">
-        <ul className="text-sm space-y-1">
-          {languages.map((lang) => (
-            <li key={lang.code}>
-              <button
-                onClick={() => changeLanguage(lang.code)}
-                className={`w-full px-3 py-2 text-left hover:bg-accent ${
-                  currentLang === lang.code ? "font-semibold" : ""
-                }`}
-              >
+    <Card>
+      <CardContent className="flex justify-between items-center">
+        <span className="flex flex-col">
+          <CardTitle className="flex items-center gap-2">
+            {t("language", "Language")}
+          </CardTitle>
+          <CardDescription>Language for the app UI</CardDescription>
+        </span>
+        <Select value={currentLang} onValueChange={changeLanguage}>
+          <SelectTrigger className="w-full max-w-[200px]">
+            <SelectValue placeholder="Select Language" />
+          </SelectTrigger>
+          <SelectContent>
+            {languages.map((lang) => (
+              <SelectItem key={lang.code} value={lang.code}>
                 {lang.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </PopoverContent>
-    </Popover>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardContent>
+    </Card>
   );
 }

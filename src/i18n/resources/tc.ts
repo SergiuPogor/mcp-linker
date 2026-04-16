@@ -82,6 +82,9 @@ const tc: { translation: TranslationSchema } = {
     descend: "遞減",
     ascend: "遞增",
     feedback: "意見回饋",
+    general: "通用",
+    language: "語言",
+    encryption: "加密",
   },
 };
 

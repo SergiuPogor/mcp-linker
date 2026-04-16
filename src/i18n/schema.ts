@@ -78,4 +78,7 @@ export interface TranslationSchema {
   descend: string;
   ascend: string;
   feedback: string;
+  general: string;
+  language: string;
+  encryption: string;
 }

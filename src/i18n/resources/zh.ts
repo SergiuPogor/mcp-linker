@@ -81,6 +81,9 @@ const zh: { translation: TranslationSchema } = {
     descend: "降序",
     ascend: "升序",
     feedback: "反馈",
+    general: "通用",
+    language: "语言",
+    encryption: "加密",
   },
 };
 

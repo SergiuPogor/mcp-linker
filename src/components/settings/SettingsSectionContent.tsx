@@ -1,6 +1,7 @@
 import EncryptionKeyCard from "@/components/settings/EncryptionKeyCard";
 import SecurityNoticeCard from "@/components/settings/SecurityNoticeCard";
 import React from "react";
+import LangSelect from "./LangSelect";
 
 interface Key {
   id: string;
@@ -31,6 +32,14 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
         ))}
         {/* Security Notice always at the bottom */}
         <SecurityNoticeCard />
+      </div>
+    );
+  }
+
+  if (selectedSection === "general") {
+    return (
+      <div className="space-y-4">
+        <LangSelect />
       </div>
     );
   }
