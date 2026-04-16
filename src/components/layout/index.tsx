@@ -45,7 +45,7 @@ const Layout = () => {
             </>
           </div>
 
-          <main className="flex-1">
+          <main className="flex-1 overflow-auto">
             <AppRoutes />
           </main>
 
