@@ -1,2 +1,0 @@
-export { useThemeStore } from "./ThemeStore";
-
