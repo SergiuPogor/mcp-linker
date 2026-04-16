@@ -8,14 +8,22 @@ import { useUserStore } from "@/stores/userStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Github, Google } from "@lobehub/icons";
 import { open } from "@tauri-apps/plugin-shell";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 export default function AuthPage() {
   type Provider = "github" | "google";
   const lastProvider = useAuthStore((s) => s.lastOAuthProvider);
   const setLastOAuthProvider = useAuthStore((s) => s.setLastOAuthProvider);
   const { fetchUser } = useUserStore();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   // After successful login, automatically start trial if eligible
   // and show a small toast. Navigation is handled by useAuth elsewhere.
@@ -103,6 +111,34 @@ export default function AuthPage() {
     }
   };
 
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isSupabaseEnabled || !supabase) return;
+
+    setLoading(true);
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success("Registration successful! Check your email for a confirmation link.");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success("Successfully logged in!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isSupabaseEnabled) {
     return <AuthUnavailable />;
   }
@@ -155,6 +191,49 @@ export default function AuthPage() {
             )}
           </div>
         ))}
+
+        <div className="flex items-center gap-2 py-2">
+          <Separator className="flex-1" />
+          <span className="text-xs text-muted-foreground uppercase">or</span>
+          <Separator className="flex-1" />
+        </div>
+
+        <form onSubmit={handleEmailAuth} className="space-y-4 text-left">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+          </Button>
+          <div className="text-sm text-center">
+            <button
+              type="button"
+              className="text-blue-600 hover:underline dark:text-blue-400"
+              onClick={() => setIsSignUp(!isSignUp)}
+            >
+              {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
