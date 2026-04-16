@@ -83,69 +83,56 @@ export const AppRoutes = () => {
 export const getNavigationRoutes = (
   t: (key: string, options?: any) => string,
 ) => {
-  const iconMap = {
-    discover: <Search size={24} />,
-    manage: <LayoutDashboard size={24} />,
-    "claude-code-manage": <Code size={24} />,
-    notes: <NotebookPen size={24} />,
-    recently: <Clock size={24} />,
-    favorites: <Star size={24} />,
-    settings: <Settings size={24} />,
-    about: <Info size={24} />,
-    dxt: <PlugIcon size={24} />,
-    download: <PlusCircle size={24} />,
-  };
-
   return [
     {
       id: "discover",
       name: t("nav.discover"),
-      icon: iconMap.discover,
+      icon: <Search />,
     },
     {
       id: "manage",
       name: t("nav.manage"),
-      icon: iconMap.manage,
+      icon: <LayoutDashboard />,
     },
     {
       id: "dxt",
       name: t("nav.dxt"),
-      icon: iconMap.dxt,
+      icon: <PlugIcon />,
     },
     {
       id: "notes",
       name: "Notes",
-      icon: iconMap.notes,
+      icon: <NotebookPen />,
     },
     {
       id: "claude-code-manage",
       name: "Claude Code",
-      icon: iconMap["claude-code-manage"],
+      icon: <Code />,
     },
     {
       id: "recently",
       name: t("nav.recentlyAdded"),
-      icon: iconMap.recently,
+      icon: <Clock />,
     },
     {
       id: "favorites",
       name: t("nav.favs"),
-      icon: iconMap.favorites,
+      icon: <Star />,
     },
     {
       id: "settings",
       name: t("nav.settings"),
-      icon: iconMap.settings,
+      icon: <Settings />,
     },
     {
       id: "about",
       name: t("nav.about"),
-      icon: iconMap.about,
+      icon: <Info />,
     },
     {
       id: "install-app",
       name: t("nav.installapp"),
-      icon: iconMap.download,
+      icon: <PlusCircle />,
     },
   ];
 };
