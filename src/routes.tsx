@@ -1,6 +1,5 @@
 import AuthPage from "@/pages/AuthPage";
 import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
-import ClientPage from "@/pages/client";
 import Dashboard from "@/pages/Dashboard";
 import Discover from "@/pages/Discover";
 import Favorites from "@/pages/favorites";
@@ -15,7 +14,6 @@ import {
   Code,
   Info,
   LayoutDashboard,
-  Monitor,
   NotebookPen,
   PlugIcon,
   PlusCircle,
@@ -56,8 +54,6 @@ export const AppRoutes = () => {
       return <ServerPage />;
     case "install-app":
       return <InstallAppPage />;
-    case "client":
-      return <ClientPage />;
     case "notes":
       return <NotesPage />;
     case "favorites":
@@ -97,7 +93,6 @@ export const getNavigationRoutes = (
     settings: <Settings size={24} />,
     about: <Info size={24} />,
     dxt: <PlugIcon size={24} />,
-    client: <Monitor size={24} />,
     download: <PlusCircle size={24} />,
   };
 
@@ -161,12 +156,6 @@ export const getNavigationRoutes = (
       name: t("nav.installapp"),
       path: "/install-app",
       icon: iconMap.download,
-    },
-    {
-      id: "client",
-      name: t("nav.client"),
-      path: "/client",
-      icon: iconMap.client,
     },
   ];
 };

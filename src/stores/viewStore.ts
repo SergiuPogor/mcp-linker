@@ -12,7 +12,6 @@ export type ViewName =
   | "dxt-detail"
   | "server"
   | "install-app"
-  | "client"
   | "notes"
   | "favorites"
   | "dashboard"
@@ -47,7 +46,6 @@ const ROUTES: Array<{ re: RegExp; view: ViewName; keys: string[] }> = [
   { re: /^\/about/, view: "about", keys: [] },
   { re: /^\/dxt/, view: "dxt", keys: [] },
   { re: /^\/install-app/, view: "install-app", keys: [] },
-  { re: /^\/client/, view: "client", keys: [] },
   { re: /^\/notes/, view: "notes", keys: [] },
   { re: /^\/favorites/, view: "favorites", keys: [] },
   { re: /^\/dashboard/, view: "dashboard", keys: [] },
