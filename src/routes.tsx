@@ -18,8 +18,7 @@ import {
   PlugIcon,
   PlusCircle,
   Search,
-  Settings,
-  Star,
+  Star
 } from "lucide-react";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import About from "./pages/About";
@@ -118,11 +117,6 @@ export const getNavigationRoutes = (
       id: "favorites",
       name: t("nav.favs"),
       icon: <Star />,
-    },
-    {
-      id: "settings",
-      name: t("nav.settings"),
-      icon: <Settings />,
     },
     {
       id: "about",

@@ -73,7 +73,7 @@ export const AppSidebar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
                 <DropdownMenuItem
-                  onClick={() => open("https://mcp-linker.store/feedback")}
+                  onClick={() => open("https://github.com/milisp/mcp-linker/issues")}
                 >
                   <span>{t("feedback")}</span>
                 </DropdownMenuItem>
@@ -92,6 +92,9 @@ export const AppSidebar = () => {
                     Logout
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                  Settings
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
