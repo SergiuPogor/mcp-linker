@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import type { Quote } from "@/data/quotes";
 import { getRandomOfflineQuote } from "@/data/quotes";
+import { useTier } from "@/hooks/useTier";
 import { api } from "@/lib/api";
 import { useUserStore } from "@/stores/userStore";
-import { useTier } from "@/hooks/useTier";
-import { open as openUrl } from "@tauri-apps/plugin-shell";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useMemo, useState } from "react";
 // import { toast } from "sonner";
 

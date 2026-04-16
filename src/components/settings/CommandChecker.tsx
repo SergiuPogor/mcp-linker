@@ -1,8 +1,8 @@
+import { Notification, Notifications } from "@/components/ui/Notifications";
 import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-shell";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Notification, Notifications } from "@/components/ui/Notifications";
 
 type ToolStatus = {
   name: string;
@@ -285,7 +285,7 @@ export default function CommandChecker() {
           ? {
               label: "Manual Install",
               onClick: () => {
-                open(tool.fallbackUrl!);
+                openUrl(tool.fallbackUrl!);
               },
             }
           : undefined,

@@ -1,5 +1,5 @@
 // utils/urlHelper.ts
-import { open } from "@tauri-apps/plugin-shell";
+import { openUrl as open } from "@tauri-apps/plugin-opener";
 
 export function openUrl(url: string) {
   open(url + "?from=mcp-linker");

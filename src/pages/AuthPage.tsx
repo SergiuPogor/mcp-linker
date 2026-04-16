@@ -1,18 +1,18 @@
 import AuthUnavailable from "@/components/common/AuthUnavailable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api";
 import authService from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
 import { Github, Google } from "@lobehub/icons";
-import { open } from "@tauri-apps/plugin-shell";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 
 export default function AuthPage() {
   type Provider = "github" | "google";
@@ -104,7 +104,7 @@ export default function AuthPage() {
       });
 
       if (!data?.url) throw new Error("No auth URL returned");
-      open(data.url);
+      openUrl(data.url);
     } catch (error) {
       console.error(`Error signing in with ${provider}:`, error);
       throw error;

@@ -9,7 +9,6 @@
     "core:default",
     "opener:default",
     "opener:default",
-    "shell:default",
     "dialog:default",
     "dialog:allow-ask",
     "dialog:allow-message",
@@ -31,7 +30,14 @@
     },
     {
       "identifier": "fs:allow-app-read",
-      "allow": [{ "path": "$HOME/.codex/*" },{ "path": "$HOME/.codex/sessions/**/*" }]
+      "allow": [
+        {
+          "path": "$HOME/.codex/*"
+        },
+        {
+          "path": "$HOME/.codex/sessions/**/*"
+        }
+      ]
     }
   ]
 }

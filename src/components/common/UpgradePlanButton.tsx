@@ -1,11 +1,11 @@
-import { open } from "@tauri-apps/plugin-shell";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 export function UpgradePlanButton() {
   return (
     <Button
       onClick={() => {
-        open("https://mcp-linker.store/pricing");
+        openUrl("https://mcp-linker.store/pricing");
       }}
       size="sm"
       variant="secondary"

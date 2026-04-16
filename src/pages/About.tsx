@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Github } from "@lobehub/icons";
-import { open } from "@tauri-apps/plugin-shell";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   Download,
   ExternalLink,
@@ -58,7 +58,7 @@ export default function About() {
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">
           <button
-            onClick={() => open("https://mcp-linker.store")}
+            onClick={() => openUrl("https://mcp-linker.store")}
             className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent underline"
           >
             MCP Linker
@@ -115,7 +115,7 @@ export default function About() {
           <CardContent>
             <div className="space-y-3">
               <Button
-                onClick={() => open("https://github.com/milisp/mcp-linker")}
+                onClick={() => openUrl("https://github.com/milisp/mcp-linker")}
                 className="w-full"
               >
                 <Github className="h-4 w-4 mr-2" />
@@ -124,7 +124,7 @@ export default function About() {
               <Button
                 variant="outline"
                 onClick={() =>
-                  open("https://github.com/milisp/mcp-linker/releases")
+                  openUrl("https://github.com/milisp/mcp-linker/releases")
                 }
                 className="w-full"
               >
@@ -148,7 +148,7 @@ export default function About() {
           <CardContent>
             <div className="space-y-3">
               <Button
-                onClick={() => open("https://discord.gg/UqXeVqUKQq")}
+                onClick={() => openUrl("https://discord.gg/UqXeVqUKQq")}
                 className="w-full"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
@@ -157,7 +157,7 @@ export default function About() {
               <Button
                 variant="outline"
                 onClick={() =>
-                  open("https://github.com/milisp/mcp-linker/issues")
+                  openUrl("https://github.com/milisp/mcp-linker/issues")
                 }
                 className="w-full"
               >
@@ -204,7 +204,7 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Button
               onClick={() =>
-                open(
+                openUrl(
                   "https://twitter.com/intent/tweet?text=Check%20out%20MCP%20Linker%20-%20the%20ultimate%20tool%20for%20managing%20MCP%20servers%20with%20a%20beautiful%20Tauri%20UI!%20https%3A%2F%2Fgithub.com%2Fmilisp%2Fmcp-linker",
                 )
               }
@@ -216,7 +216,7 @@ export default function About() {
             <Button
               variant="outline"
               onClick={() =>
-                open(
+                openUrl(
                   "https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/milisp/mcp-linker",
                 )
               }
