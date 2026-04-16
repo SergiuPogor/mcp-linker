@@ -7,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Github } from "@lobehub/icons";
 import { open } from "@tauri-apps/plugin-shell";
 import {
   Download,
   ExternalLink,
-  Github,
   Globe,
   Heart,
   MessageCircle,

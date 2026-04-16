@@ -1,0 +1,100 @@
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { useAuth } from "@/hooks/useAuth"
+import { cn } from "@/lib/utils"
+import { useViewStore } from "@/stores/viewStore"
+import { Nav } from "@/types"
+import { platform } from "@tauri-apps/plugin-os"
+import { open } from "@tauri-apps/plugin-shell"
+import { User } from "lucide-react"
+import { useTranslation } from "react-i18next"
+
+interface AppSidebarProps {
+  navs: Nav[]
+}
+
+export const AppSidebar = ({ navs }: AppSidebarProps) => {
+  const { t } = useTranslation<"translation">()
+  const { view, navigate } = useViewStore()
+  const { user } = useAuth()
+  const platformName = platform()
+  const isMacOS = platformName === "macos"
+
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader
+        data-tauri-drag-region
+        className={cn(isMacOS && "min-h-11 pt-3")}
+      >
+        {!isMacOS && <SidebarTrigger />}
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+          {navs.map((nav) => (
+            <SidebarMenuItem key={nav.id}>
+              <SidebarMenuButton
+                isActive={view === nav.id}
+                onClick={() => navigate(nav.path || `/${nav.id}`)}
+              >
+                <span className="text-xl">{nav.icon}</span>
+                <span>{nav.name}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground">
+                  <User className="w-4 h-4" />
+                  <span>
+                    {user?.user_metadata.full_name ||
+                      user?.user_metadata.user_name ||
+                      user?.user_metadata.email?.slice(0, 2) ||
+                      t("guest")}
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" align="start" className="w-56">
+                {user?.email ? (
+                  <DropdownMenuItem>
+                    <span className="truncate">{user.email}</span>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem>
+                    <Button variant="ghost" onClick={() => navigate("/auth")}>Login</Button>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => open("https://mcp-linker.store/feedback")}
+                >
+                  <span>{t("feedback")}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  )
+}

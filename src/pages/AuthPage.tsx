@@ -6,8 +6,8 @@ import authService from "@/services/auth";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
 import supabase, { isSupabaseEnabled } from "@/utils/supabase";
+import { Github, Google } from "@lobehub/icons";
 import { open } from "@tauri-apps/plugin-shell";
-import { Github } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -134,38 +134,27 @@ export default function AuthPage() {
         </p>
       </div>
 
-      <div className="w-full max-w-sm">
-        {/* OAuth providers */}
-        <div className="relative mb-4">
-          <Button
-            onClick={() => handleOAuthLogin("github")}
-            className="w-full flex items-center justify-center gap-2"
-          >
-            <Github />
-            Continue with GitHub
-          </Button>
-          {lastProvider === "github" && (
-            <Badge variant="outline" className="absolute -top-2 -right-2 text-xs bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300">
-              Last used
-            </Badge>
-          )}
-        </div>
-
-        <div className="relative">
-          <Button
-            onClick={() => handleOAuthLogin("google")}
-            className="w-full flex items-center justify-center gap-2"
-            variant="outline"
-          >
-            <span className="text-sm">🔍</span>
-            Continue with Google
-          </Button>
-          {lastProvider === "google" && (
-            <Badge variant="outline" className="absolute -top-2 -right-2 text-xs bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300">
-              Last used
-            </Badge>
-          )}
-        </div>
+      <div className="w-full max-w-sm space-y-3">
+        {([
+          { id: "github", icon: Github, label: "GitHub", variant: "default" as const },
+          { id: "google", icon: Google, label: "Google", variant: "outline" as const },
+        ] as const).map(({ id, icon: Icon, label, variant }) => (
+          <div key={id} className="relative">
+            <Button
+              onClick={() => handleOAuthLogin(id)}
+              className="w-full flex items-center justify-center gap-2"
+              variant={variant}
+            >
+              <Icon />
+              Continue with {label}
+            </Button>
+            {lastProvider === id && (
+              <Badge variant="outline" className="absolute -top-2 -right-2 text-xs bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300">
+                Last used
+              </Badge>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
