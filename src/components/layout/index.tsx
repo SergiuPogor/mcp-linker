@@ -6,27 +6,22 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { needspathClient } from "@/lib/data";
-import { AppRoutes, getNavigationRoutes } from "@/routes";
+import { AppRoutes } from "@/routes";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { platform } from "@tauri-apps/plugin-os";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
 import { ClientSelector } from "../settings/client-selector";
 import { PathSelector } from "../settings/PathSelector";
 
 const Layout = () => {
   const { selectedClient } = useClientPathStore();
-  const { t } = useTranslation();
   const isMacOS = platform() === "macos";
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Get navigation routes with icons
-  const navs = getNavigationRoutes(t as (key: string, options?: any) => string);
-
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
-      <AppSidebar navs={navs} />
+      <AppSidebar />
 
       <SidebarInset>
         {/* Main vertical layout: top bar, main content, status bar */}

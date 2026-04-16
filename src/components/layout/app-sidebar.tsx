@@ -18,19 +18,16 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks/useAuth"
 import { cn } from "@/lib/utils"
+import { getNavigationRoutes } from "@/routes"
 import { useViewStore } from "@/stores/viewStore"
-import { Nav } from "@/types"
 import { platform } from "@tauri-apps/plugin-os"
 import { open } from "@tauri-apps/plugin-shell"
 import { User } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-interface AppSidebarProps {
-  navs: Nav[]
-}
-
-export const AppSidebar = ({ navs }: AppSidebarProps) => {
+export const AppSidebar = () => {
   const { t } = useTranslation<"translation">()
+  const navs = getNavigationRoutes(t as any);
   const { view, navigate } = useViewStore()
   const { user } = useAuth()
   const platformName = platform()
