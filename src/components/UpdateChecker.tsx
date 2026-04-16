@@ -7,14 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useUpdateStore } from "@/stores/useUpdateStore";
 import { relaunch } from '@tauri-apps/plugin-process';
-import { check, Update } from "@tauri-apps/plugin-updater";
-import { useEffect, useState } from "react";
-
-interface UpdateState {
-  update?: Update;
-  error?: string;
-}
+import { check } from "@tauri-apps/plugin-updater";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const STORAGE_KEYS = {
   SKIPPED_VERSIONS: 'mcp-linker-skipped-versions',
@@ -26,8 +23,14 @@ const CHECK_INTERVAL_HOURS = 24; // Check for updates every 24 hours
 const REMIND_LATER_HOURS = 24; // Remind later interval 24 hours
 
 export function UpdateChecker() {
-  const [updateState, setUpdateState] = useState<UpdateState>({});
-  const [showDialog, setShowDialog] = useState(false);
+  const { 
+    update, 
+    showDialog, 
+    setShowDialog, 
+    setUpdate, 
+    setChecking, 
+    manualCheckTrigger 
+  } = useUpdateStore();
 
   // Get list of skipped versions
   const getSkippedVersions = (): string[] => {
@@ -80,52 +83,45 @@ export function UpdateChecker() {
     return hoursDiff >= CHECK_INTERVAL_HOURS;
   };
 
-  const checkForUpdates = async () => {
-    if (!shouldCheckForUpdates()) {
+  const checkForUpdates = async (isManual: boolean = false) => {
+    if (!isManual && !shouldCheckForUpdates()) {
       return;
     }
 
+    setChecking(true);
     try {
-      const update = await check();
+      const result = await check();
       localStorage.setItem(STORAGE_KEYS.LAST_CHECK_TIME, new Date().toISOString());
       
-      if (update && update.version && shouldShowUpdateDialog(update.version)) {
-        setUpdateState(prev => ({
-          ...prev,
-          update,
-        }));
-        setShowDialog(true);
+      if (result) {
+        setUpdate(result);
+        if (isManual || shouldShowUpdateDialog(result.version)) {
+          setShowDialog(true);
+        }
+      } else if (isManual) {
+        toast.info("Your application is up to date.");
       }
     } catch (error) {
       console.error("Failed to check for updates:", error);
-      setUpdateState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : "Unknown error",
-      }));
-    }
-  };
-
-  const downloadAndInstall = async () => {
-    if (!updateState.update) return;
-
-    setShowDialog(false);
-
-    try {
-      await updateState.update.downloadAndInstall();
-    } catch (error) {
-      console.error("Failed to download and install update:", error);
-      setUpdateState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : "Update failed",
-      }));
-      return;
+      if (isManual) {
+        toast.error(`Update check failed: ${error}`);
+      }
+    } finally {
+      setChecking(false);
     }
   };
 
   // Check for updates on app startup
   useEffect(() => {
-    checkForUpdates();
+    checkForUpdates(false);
   }, []);
+
+  // Listen for manual check triggers
+  useEffect(() => {
+    if (manualCheckTrigger > 0) {
+      checkForUpdates(true);
+    }
+  }, [manualCheckTrigger]);
 
   return (
     <>
@@ -135,15 +131,15 @@ export function UpdateChecker() {
           <DialogHeader>
             <DialogTitle>Update Available</DialogTitle>
             <DialogDescription>
-              Version {updateState.update?.version} is available. Would you like to download and install it?
+              Version {update?.version} is available. Would you like to download and install it?
             </DialogDescription>
           </DialogHeader>
 
-          {updateState.update?.body && (
+          {update?.body && (
             <div className="mt-4">
               <h4 className="text-sm font-medium mb-2">What's new:</h4>
               <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md max-h-40 overflow-y-auto whitespace-pre-wrap">
-                {updateState.update.body}
+                {update.body}
               </div>
             </div>
           )}
@@ -153,8 +149,8 @@ export function UpdateChecker() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                if (updateState.update?.version) {
-                  skipVersion(updateState.update.version);
+                if (update?.version) {
+                  skipVersion(update.version);
                 }
                 setShowDialog(false);
               }}
@@ -176,9 +172,14 @@ export function UpdateChecker() {
               </Button>
               <Button
                 onClick={async () => {
-                  await downloadAndInstall();
-                  // Relaunch the app after successful install to apply update
-                  await relaunch();
+                  if (!update) return;
+                  try {
+                    await update.downloadAndInstall();
+                    await relaunch();
+                  } catch (error) {
+                    console.error("Failed to download and install update:", error);
+                    toast.error(`Update failed: ${error instanceof Error ? error.message : "Update failed"}`);
+                  }
                 }}
               >
                 Update Now
@@ -187,8 +188,6 @@ export function UpdateChecker() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* No progress UI; app will relaunch after install */}
     </>
   );
 }
