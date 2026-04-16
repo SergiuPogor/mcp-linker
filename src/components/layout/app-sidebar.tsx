@@ -14,14 +14,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  useSidebar
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks/useAuth"
 import { cn } from "@/lib/utils"
 import { getNavigationRoutes } from "@/routes"
 import { signOut } from "@/services/auth"
 import { useViewStore } from "@/stores/viewStore"
+import { openUrl } from '@tauri-apps/plugin-opener'
 import { platform } from "@tauri-apps/plugin-os"
-import { open } from "@tauri-apps/plugin-shell"
 import { User } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
@@ -32,6 +33,7 @@ export const AppSidebar = () => {
   const { user } = useAuth()
   const platformName = platform()
   const isMacOS = platformName === "macos"
+  const { open } = useSidebar()
 
   return (
     <Sidebar collapsible="icon">
@@ -49,7 +51,7 @@ export const AppSidebar = () => {
                 isActive={view === nav.id}
                 onClick={() => navigate(`/${nav.id}`)}
               >
-                {nav.icon}
+                {open ? nav.icon : <span className="text-xl">{nav.icon}</span>}
                 <span>{nav.name}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -73,7 +75,7 @@ export const AppSidebar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
                 <DropdownMenuItem
-                  onClick={() => open("https://github.com/milisp/mcp-linker/issues")}
+                  onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues")}
                 >
                   <span>{t("feedback")}</span>
                 </DropdownMenuItem>
