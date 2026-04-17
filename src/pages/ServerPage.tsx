@@ -1,4 +1,5 @@
 import { ContentLoadingFallback } from "@/components/common/LoadingConfig";
+import { Github } from "@/components/icons";
 import { ServerConfigForm } from "@/components/server/form/ServerConfigForm";
 import { useServerConfig } from "@/components/server/hooks/useServerConfig";
 import { ServerBadge, ServerMeta } from "@/components/server/ui";
@@ -9,7 +10,6 @@ import { api } from "@/lib/api";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { useViewStore } from "@/stores/viewStore";
 import type { ServerType } from "@/types";
-import { Github } from "@lobehub/icons";
 import { invoke } from "@tauri-apps/api/core";
 import { ChevronLeft, Download, Eye, Star, User } from "lucide-react";
 import { useEffect, useState } from "react";

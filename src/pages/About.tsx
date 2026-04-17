@@ -1,3 +1,4 @@
+import { Github } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Github } from "@lobehub/icons";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   Download,

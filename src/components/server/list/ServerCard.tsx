@@ -1,3 +1,4 @@
+import { Github } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +13,6 @@ import { useFavoriteServers } from "@/stores/favoriteServers";
 import { useViewStore } from "@/stores/viewStore";
 import type { ServerType } from "@/types";
 import { openUrl } from "@/utils/urlHelper";
-import { Github } from "@lobehub/icons";
 import {
   Loader2,
   SquareArrowOutUpRight,

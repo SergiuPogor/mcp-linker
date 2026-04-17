@@ -1,10 +1,10 @@
 // ArgsTextarea.tsx
+import { Github } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useRepoUrlStore } from "@/stores/repoUrl";
 import { parseGitHubRepoUrl } from "@/utils/urlHelper";
-import { Github } from "@lobehub/icons";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect } from "react";
 import { toast } from "sonner";
