@@ -29,7 +29,7 @@ export function useServerTemplateSubmit({
   const personalStats = useStatsStore((s) => s.personalStats);
   const showGlobalDialog = useGlobalDialogStore((s) => s.showDialog);
 
-  const FREE_SERVER_LIMIT = 1;
+  const FREE_SERVER_LIMIT = 3;
   const isLimitedUser = !isAuthenticated || isFreeUser;
 
   // Handle submit (add to local config)
