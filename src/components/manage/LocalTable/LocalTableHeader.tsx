@@ -1,4 +1,3 @@
-import { UpgradePlanButton } from "@/components/common/UpgradePlanButton";
 import { Button } from "@/components/ui/button";
 import { useTier } from "@/hooks/useTier";
 import { useViewStore } from "@/stores/viewStore";
@@ -41,7 +40,6 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Monitor className="h-4 w-4 opacity-50" />
             <span>Local Sync 🔒</span>
-            <UpgradePlanButton />
           </div>
         )}
 
@@ -70,7 +68,6 @@ export const LocalTableHeader: React.FC<LocalTableHeaderProps> = ({
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Cloud className="h-4 w-4 opacity-50" />
             <span>Cloud Sync 🔒</span>
-            <UpgradePlanButton />
           </div>
         )}
     </div>
