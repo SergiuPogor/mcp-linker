@@ -25,7 +25,7 @@ import { signOut } from "@/services/auth"
 import { useViewStore } from "@/stores/viewStore"
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { platform } from "@tauri-apps/plugin-os"
-import { ExternalLink, User } from "lucide-react"
+import { ExternalLink, Info, LogIn, LogOut, Mail, MessageCircle, Settings, User } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 export const AppSidebar = () => {
@@ -33,7 +33,7 @@ export const AppSidebar = () => {
   const navs = getNavigationRoutes(t as any);
   const { view, navigate } = useViewStore()
   const { user } = useAuth()
-  const { tier } = useTier()
+  const { isFree } = useTier()
   const platformName = platform()
   const isMacOS = platformName === "macos"
   const { open } = useSidebar()
@@ -78,39 +78,44 @@ export const AppSidebar = () => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
+                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                  <Settings />
+                  {t("nav.settings")}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues")}
                 >
+                  <MessageCircle />
                   <span>{t("feedback")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate("/about")}
                 >
+                  <Info />
                   <span>{t("nav.about")} MCP Linker</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {user?.email ? (<>
                   <DropdownMenuItem>
+                    <Mail />
                     <span className="truncate text-muted-foreground">{user.email}</span>
                   </DropdownMenuItem>
-                  {tier === 'FREE' &&
+                  {isFree &&
                     <DropdownMenuItem onClick={() => openUrl('https://mcp-linker.milisp.dev/pricing')}>
-                      <span>Upgrade Plan</span> <ExternalLink />
+                      <ExternalLink />
+                      <span>Upgrade Plan</span>
                     </DropdownMenuItem>
                   }
                   </>
                 ) : (
                   <DropdownMenuItem onClick={() => navigate("/auth")}>
+                    <LogIn />
                     Login
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/settings")}>
-                  {t("nav.settings")}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 {user && (
                   <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut />
                     Logout
                   </DropdownMenuItem>
                 )}
