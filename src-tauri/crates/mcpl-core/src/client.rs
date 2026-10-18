@@ -19,7 +19,7 @@ impl ClientConfig {
         if name == "copilot" && path.ends_with("Code/User/mcp.json") {
             let marker = home.join(".config/mcplinker/copilot-user-config-migrated");
             if let Err(e) = migrate_legacy_copilot(&home.join(".vscode/mcp.json"), &path, &marker) {
-                eprintln!("[Copilot] legacy config migration skipped: {e}");
+                log::warn!("[Copilot] legacy config migration skipped: {e}");
             }
         }
         Ok(Self { path })
@@ -125,7 +125,7 @@ pub struct Workspace {
 
 /// Recently opened folders for project-capable clients (Cursor, VS Code), newest
 /// first, so their workspace configs can be offered without browsing.
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub fn list_workspaces(client_name: String) -> Result<Vec<Workspace>, String> {
     let home = home_dir().ok_or("Failed to get home directory")?;
     Ok(workspaces_in(&home, &client_name))

@@ -6,23 +6,14 @@
 use std::env;
 use std::sync::{Arc, Mutex};
 
-mod adapter;
+use mcpl_core::{claude_code_commands, claude_disabled, client, clients, codex, json_commands as cmd, license, mcp_commands, mcp_crud};
+
 mod app_settings;
-mod claude_code_commands;
 mod claude_tools;
-mod claude_disabled;
-mod client;
-mod clients;
-mod cmd;
-mod codex;
-mod config;
+
 mod encryption;
 mod git;
 mod installer;
-mod json_manager;
-mod license;
-mod mcp_commands;
-mod mcp_crud;
 mod mcp_inspector;
 #[cfg(target_os = "macos")]
 mod menu;
@@ -98,7 +89,9 @@ pub fn run() {
         .manage(Arc::new(Mutex::new(None::<String>)))
         .setup(|_app| {
             use tauri::Manager;
-            license::init(_app.handle());
+            if let Ok(dir) = _app.path().app_config_dir() {
+                license::init(dir);
+            }
             let inspector = _app.state::<mcp_inspector::InspectorState>().inner().clone();
             tauri::async_runtime::spawn(async move {
                 let mut interval = tokio::time::interval(std::time::Duration::from_secs(60));

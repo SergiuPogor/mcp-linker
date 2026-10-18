@@ -61,6 +61,21 @@ yay -S mcp-linker-bin
 3. **Click "Add"** to install to your selected client
 4. **Done!** Start using new AI capabilities immediately
 
+### CLI
+
+`mcpl` does the same from the terminal, with no app needed. Download it from the
+[`mcpl-v*` releases](https://github.com/milisp/mcp-linker/releases).
+
+```bash
+# Add one server to Claude Code, Codex and Cursor at once
+mcpl add fs -c claude-code -c codex -c cursor -- npx -y @modelcontextprotocol/server-filesystem ~/work
+
+mcpl ls                                  # every client on this machine
+mcpl sync --from claude-code --to codex  # copy servers between clients (license)
+```
+
+See [docs/cli.md](docs/cli.md) for every command.
+
 ## Screenshots
 
 | Local Sync between projects | Server Discovery | Manage |

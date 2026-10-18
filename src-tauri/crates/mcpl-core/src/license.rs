@@ -5,7 +5,7 @@
 //! re-validation, expiry, or grace period: a one-time purchase must never lock
 //! a customer out because they are offline or Polar is unavailable. Plus and
 //! Pro keys cover builds released within a year of purchase; older builds keep
-//! working with them forever. Pro adds the Pro-only clients (Claude Code, Codex).
+//! working with them forever. The app and the `mcpl` CLI share the same file.
 
 use ring::rand::{SecureRandom, SystemRandom};
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,6 @@ use std::fs;
 use std::path::PathBuf;
 use std::sync::{Mutex, MutexGuard, OnceLock};
 use std::time::Duration;
-use tauri::{AppHandle, Manager};
 
 #[cfg(debug_assertions)]
 const POLAR_API: &str = "https://sandbox-api.polar.sh/v1";
@@ -115,6 +114,14 @@ pub fn require(tier: Tier, feature: &str) -> Result<(), String> {
     Err(format!("{feature} requires {plan} license."))
 }
 
+/// Local Sync needs the higher tier of its two clients (`clients.rs`): free
+/// between Claude Desktop and Cursor, Pro once Claude Code or Codex is
+/// involved. The app checks the same rule in `requireSync`.
+pub fn require_sync(from: &str, to: &str) -> Result<(), String> {
+    let tier = |id: &str| crate::clients::find(id).map_or(Tier::Pro, |client| client.tier);
+    require(tier(from).max(tier(to)), "Local Sync")
+}
+
 #[derive(Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct License {
@@ -191,15 +198,22 @@ fn updates_until(key: &ActivatedKey) -> Option<String> {
     Some((purchased + chrono::Duration::days(UPDATE_DAYS)).to_rfc3339())
 }
 
-fn license_path(app: &AppHandle) -> Result<PathBuf, String> {
-    let dir = app.path().app_config_dir().map_err(|e| e.to_string())?;
-    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-    Ok(dir.join("license.json"))
+/// The app's bundle identifier; Tauri's `app_config_dir` is the platform
+/// config directory joined with it.
+const APP_IDENTIFIER: &str = "dev.milisp.mcplinker";
+
+/// The app config directory, where `license.json` lives. Matches Tauri's
+/// `app_config_dir`, so the CLI finds a license activated in the app.
+pub fn config_dir() -> Option<PathBuf> {
+    dirs::config_dir().map(|dir| dir.join(APP_IDENTIFIER))
 }
 
-/// Reads `license.json` once at startup.
-pub fn init(app: &AppHandle) {
-    let Ok(path) = license_path(app) else { return };
+/// Reads `license.json` from `dir` once at startup.
+pub fn init(dir: PathBuf) {
+    if fs::create_dir_all(&dir).is_err() {
+        return;
+    }
+    let path = dir.join("license.json");
     let license: License = fs::read_to_string(&path)
         .ok()
         .and_then(|text| serde_json::from_str(&text).ok())
@@ -269,12 +283,12 @@ async fn post(path: &str, body: serde_json::Value) -> Result<reqwest::Response, 
         .map_err(|_| "Could not reach Polar. Check your connection and try again.".to_string())
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub fn license_status() -> LicenseStatus {
     status_of(&lock())
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn activate_license(key: String) -> Result<LicenseStatus, String> {
     ensure_configured()?;
     let key = key.trim().to_string();
@@ -338,7 +352,7 @@ pub async fn activate_license(key: String) -> Result<LicenseStatus, String> {
 
 /// Frees this device's activation slot on Polar, then forgets the key.
 /// A network failure keeps the local license so the user can retry.
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn deactivate_license() -> Result<LicenseStatus, String> {
     let (key, activation_id) = {
         let license = lock();

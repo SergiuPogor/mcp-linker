@@ -34,7 +34,7 @@ fn saved_server(root: &Value, project: &str, name: &str) -> Result<Value, String
 }
 
 async fn inspect(project: String, name: String) -> Result<ClaudeToolsResponse, String> {
-    crate::license::require(crate::license::Tier::Pro, "Claude Code tool inspection")?;
+    mcpl_core::license::require(mcpl_core::license::Tier::Pro, "Claude Code tool inspection")?;
     if !Path::new(&project).is_absolute() || !Path::new(&project).is_dir() {
         return Err("Select an existing Claude Code project directory.".into());
     }

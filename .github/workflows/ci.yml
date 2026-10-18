@@ -57,4 +57,8 @@ jobs:
 
       - name: Cargo check
         working-directory: src-tauri
-        run: cargo check
+        run: cargo check --workspace
+
+      - name: Test mcpl-core and mcpl
+        working-directory: src-tauri
+        run: cargo test -p mcpl-core -p mcpl

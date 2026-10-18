@@ -14,10 +14,14 @@ edition = "2024"
 name = "mcp_store_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+[workspace]
+members = ["crates/*"]
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+mcpl-core = { path = "crates/mcpl-core", features = ["tauri"] }
 tauri = { version = "2", features = ["devtools"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }

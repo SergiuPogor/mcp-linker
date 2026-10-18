@@ -7,7 +7,7 @@ use crate::json_manager::JsonManager;
 use serde_json::{json, Value};
 use std::path::PathBuf;
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn read_json_file(client_name: String, path: Option<String>) -> Result<Value, String> {
     if crate::clients::find(&client_name).is_some_and(|c| c.storage == Storage::CodexToml) {
         let servers = codex_cmds::read_mcp_servers().await?;
@@ -45,7 +45,7 @@ pub async fn read_json_file(client_name: String, path: Option<String>) -> Result
     Ok(json)
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn write_json_file(
     client_name: String,
     path: Option<String>,
@@ -57,7 +57,7 @@ pub async fn write_json_file(
     JsonManager::write_json_file(file_path, &content).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn get_app_path(client_name: String, path: Option<String>) -> Result<String, String> {
     let app_config = ClientConfig::new(&client_name, path.as_deref())?;
     let file_path = app_config.get_path();
@@ -65,7 +65,7 @@ pub async fn get_app_path(client_name: String, path: Option<String>) -> Result<S
     Ok(file_path.to_string_lossy().to_string())
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub fn check_mcplinker_config_exists() -> bool {
     let home_dir = dirs::home_dir().unwrap_or_default();
     let config_path: PathBuf = home_dir.join(".config/mcplinker/mcp.json");

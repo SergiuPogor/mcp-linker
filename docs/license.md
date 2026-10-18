@@ -36,6 +36,9 @@ needed. Commands call `license::require(tier, feature)`, which reads the
 license kept in memory in step with `license.json`. Add both when gating a new
 feature that has a command of its own. Reading configuration is never gated.
 
+The `mcpl` CLI applies the same rules from `mcpl-core`: `license::require_sync`
+in `mcpl sync`, and it shares this `license.json` (see `docs/cli.md`).
+
 The source is AGPL-3.0, so these checks keep honest users honest; they are not
 DRM.
 

@@ -3,7 +3,6 @@ use dirs::home_dir;
 use serde_json::{json, Value};
 use std::fs;
 use std::path::PathBuf;
-use tauri::command;
 
 fn require_local(scope: Option<ClaudeMcpScope>) -> Result<(), String> {
     if scope.unwrap_or_default() != ClaudeMcpScope::Local {
@@ -82,7 +81,7 @@ fn disabled_view(config: &Value, working_dir: &str) -> Value {
     Value::Object(out)
 }
 
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_list_disabled(
     working_dir: String,
     scope: Option<ClaudeMcpScope>,
@@ -92,7 +91,7 @@ pub async fn claude_list_disabled(
     Ok(disabled_view(&config, &working_dir))
 }
 
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_disable_server(
     working_dir: String,
     name: String,
@@ -119,7 +118,7 @@ pub async fn claude_disable_server(
     Ok(disabled_view(&config, &working_dir))
 }
 
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_enable_server(
     working_dir: String,
     name: String,
@@ -136,7 +135,7 @@ pub async fn claude_enable_server(
     Ok(disabled_view(&config, &working_dir))
 }
 
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_update_disabled(
     working_dir: String,
     name: String,

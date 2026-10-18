@@ -4,7 +4,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
-use tauri::command;
 
 // ~/.claude.json {projects: { "working_dir": "mcpServers": server}, other_keys: {}}
 // {'sentry': {'type': 'http', 'url': 'https://mcp.sentry.dev/mcp'},
@@ -89,7 +88,7 @@ fn servers_at_mut<'a>(
 }
 
 /// List all MCP servers configured in Claude Code
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_mcp_list(
     working_dir: String,
     scope: Option<ClaudeMcpScope>,
@@ -120,7 +119,7 @@ pub async fn claude_mcp_list(
 }
 
 /// Get details for a specific MCP server
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_mcp_get(
     name: String,
     working_dir: String,
@@ -135,7 +134,7 @@ pub async fn claude_mcp_get(
 }
 
 /// Add a new MCP server to Claude Code
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_mcp_add(
     request: ClaudeCodeServer,
     working_dir: String,
@@ -189,7 +188,7 @@ pub async fn claude_mcp_add(
 }
 
 /// Remove an MCP server from Claude Code
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_mcp_remove(
     name: String,
     working_dir: String,
@@ -240,7 +239,7 @@ pub async fn claude_mcp_remove(
 }
 
 /// List all projects configured in Claude Code
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn claude_list_projects() -> Result<Vec<String>, String> {
     let claude_config_path = get_claude_config_path(None)?;
 
@@ -269,7 +268,7 @@ pub async fn claude_list_projects() -> Result<Vec<String>, String> {
 }
 
 /// Check if Claude Code CLI is available
-#[command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn check_claude_cli_available() -> Result<bool, String> {
     let output = Command::new("claude").args(["--version"]).output();
 
@@ -279,7 +278,7 @@ pub async fn check_claude_cli_available() -> Result<bool, String> {
     }
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub fn check_claude_config_exists() -> Result<bool, String> {
     let home_dir = dirs::home_dir().ok_or("Unable to find home directory")?;
     let path = home_dir.join(".claude.json");
@@ -351,7 +350,7 @@ pub fn claude_transport(kind: &str, has_command: bool) -> Result<&'static str, S
     }
 }
 
-fn server_to_json(server: &ClaudeCodeServer) -> Result<serde_json::Value, String> {
+pub fn server_to_json(server: &ClaudeCodeServer) -> Result<serde_json::Value, String> {
     let kind = claude_transport(&server.r#type, server.command.is_some())?;
     if kind == "stdio" && server.command.is_none() {
         return Err(format!("Server '{}' needs a command for stdio", server.name));

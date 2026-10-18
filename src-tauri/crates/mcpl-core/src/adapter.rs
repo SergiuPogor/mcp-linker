@@ -33,7 +33,7 @@ impl<'a> ClientAdapter<'a> {
     pub async fn add(&self, name: String, cfg: Value) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] add server: {}", name);
+                log::debug!("[Adapter][Codex] add server: {}", name);
                 let normalized = crate::mcp_crud::normalize_codex_config(cfg)?;
                 let parsed: crate::codex::McpServerConfig = serde_json::from_value(normalized)
                     .map_err(|e| format!("Invalid server config for codex: {}", e))?;
@@ -43,7 +43,7 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] add server: {} -> {}",
                     client_name,
                     name,
@@ -57,14 +57,14 @@ impl<'a> ClientAdapter<'a> {
     pub async fn remove(&self, name: String) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] remove server: {}", name);
+                log::debug!("[Adapter][Codex] remove server: {}", name);
                 codex_cmds::delete_mcp_server(name).await?;
                 let servers = codex_cmds::read_mcp_servers().await?;
                 Ok(serde_json::json!({"mcpServers": servers}))
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] remove server: {} -> {}",
                     client_name,
                     name,
@@ -78,7 +78,7 @@ impl<'a> ClientAdapter<'a> {
     pub async fn update(&self, name: String, cfg: Value) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] update server: {}", name);
+                log::debug!("[Adapter][Codex] update server: {}", name);
                 let normalized = crate::mcp_crud::normalize_codex_config(cfg)?;
                 let parsed: crate::codex::McpServerConfig = serde_json::from_value(normalized)
                     .map_err(|e| format!("Invalid server config for codex: {}", e))?;
@@ -88,7 +88,7 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] update server: {} -> {}",
                     client_name,
                     name,
@@ -102,7 +102,7 @@ impl<'a> ClientAdapter<'a> {
     pub async fn batch_delete(&self, names: Vec<String>) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] batch delete servers");
+                log::debug!("[Adapter][Codex] batch delete servers");
                 for n in names {
                     let _ = codex_cmds::delete_mcp_server(n).await;
                 }
@@ -111,7 +111,7 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] batch delete -> {}",
                     client_name,
                     path.display()
@@ -125,12 +125,12 @@ impl<'a> ClientAdapter<'a> {
         match self {
             ClientAdapter::Codex => {
                 let disabled = codex_cmds::list_disabled().await?;
-                println!("[Adapter][Codex] list disabled: {}", disabled.len());
+                log::debug!("[Adapter][Codex] list disabled: {}", disabled.len());
                 Ok(serde_json::to_value(disabled).unwrap_or_default())
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] list disabled -> {}",
                     client_name,
                     path.display()
@@ -143,14 +143,14 @@ impl<'a> ClientAdapter<'a> {
     pub async fn disable(&self, name: String) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] disable: {}", name);
+                log::debug!("[Adapter][Codex] disable: {}", name);
                 codex_cmds::disable(&name).await?;
                 let disabled = codex_cmds::list_disabled().await?;
                 Ok(serde_json::to_value(disabled).unwrap_or_default())
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] disable: {} -> {}",
                     client_name,
                     name,
@@ -164,14 +164,14 @@ impl<'a> ClientAdapter<'a> {
     pub async fn enable(&self, name: String) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] enable: {}", name);
+                log::debug!("[Adapter][Codex] enable: {}", name);
                 codex_cmds::enable(&name).await?;
                 let disabled = codex_cmds::list_disabled().await?;
                 Ok(serde_json::to_value(disabled).unwrap_or_default())
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] enable: {} -> {}",
                     client_name,
                     name,
@@ -185,7 +185,7 @@ impl<'a> ClientAdapter<'a> {
     pub async fn update_disabled(&self, name: String, cfg: Value) -> Result<Value, String> {
         match self {
             ClientAdapter::Codex => {
-                println!("[Adapter][Codex] update disabled: {}", name);
+                log::debug!("[Adapter][Codex] update disabled: {}", name);
                 let parsed: crate::codex::McpServerConfig = serde_json::from_value(cfg)
                     .map_err(|e| format!("Invalid server config for codex: {}", e))?;
                 codex_cmds::update_disabled(&name, parsed).await?;
@@ -194,7 +194,7 @@ impl<'a> ClientAdapter<'a> {
             }
             ClientAdapter::Json { .. } => {
                 let (client_name, path) = self.json_path()?;
-                println!(
+                log::debug!(
                     "[Adapter][JSON:{}] update disabled: {} -> {}",
                     client_name,
                     name,

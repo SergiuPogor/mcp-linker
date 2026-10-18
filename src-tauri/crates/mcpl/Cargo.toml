@@ -1,0 +1,21 @@
+[package]
+name = "mcpl"
+version = "0.1.0"
+description = "Manage MCP servers across Claude Code, Codex, Cursor and other AI clients"
+authors = ["milisp"]
+edition = "2024"
+license = "AGPL-3.0-only"
+repository = "https://github.com/milisp/mcp-linker"
+homepage = "https://mcp-linker.milisp.dev"
+keywords = ["mcp", "claude", "codex", "cursor", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "mcpl"
+path = "src/main.rs"
+
+[dependencies]
+mcpl-core = { path = "../mcpl-core", version = "0.1.0" }
+clap = { version = "4.5", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+tokio = { version = "1.45.1", features = ["macros", "rt-multi-thread"] }
