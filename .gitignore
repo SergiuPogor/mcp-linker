@@ -38,3 +38,7 @@ CLAUDE.md
 tauri-app/src/bindings/
 # Local build env (Polar org id for license activation)
 src-tauri/.cargo/config.toml
+
+# mcpl binaries staged for npm by the mcpl release workflow
+npm/platforms/*/mcpl
+npm/platforms/*/mcpl.exe

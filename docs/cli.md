@@ -120,10 +120,30 @@ The CLI reads and writes the app's `license.json`
 (`<config dir>/dev.milisp.mcplinker/`), so a key activated in either works in
 both. The check runs in `mcpl-core` (`license::require_sync`).
 
+## Install
+
+```bash
+npx mcpl ls          # run without installing
+npm install -g mcpl  # or install
+```
+
+Binaries for every platform are also attached to each `mcpl-v*` GitHub release.
+
 ## Release
 
-Tag `mcpl-vX.Y.Z` (independent of the app's version). The `mcpl release`
-workflow builds `mcpl` for macOS (arm64, x64), Linux (x64, arm64) and Windows
-(x64) and attaches the archives to a GitHub release. Homebrew
-(`milisp/tap/mcpl`), npm (`npx mcpl`) and crates.io packaging build on those
-archives and are set up separately.
+`scripts/bump-mcpl.sh X.Y.Z` sets the crate and npm versions, commits, and tags
+`mcpl-vX.Y.Z` (independent of the app's version). Pushing the tag runs the
+`mcpl release` workflow:
+
+1. Builds `mcpl` for macOS (arm64, x64; signed and notarized), Linux (x64,
+   arm64; static musl) and Windows (x64, arm64).
+2. Creates the GitHub release with an archive and sha256 for each target.
+3. Publishes npm packages with trusted publishing (OIDC): one per platform
+   (`@milisp/mcpl-darwin-arm64`, …, each with its `os`/`cpu`) and `mcpl`, whose
+   `bin/mcpl.js` runs the binary from whichever platform package npm installed
+   as an optional dependency. Layout: `npm/mcpl`, `npm/platforms/*`.
+
+npm trusted publishing needs each of the seven packages configured once on
+npmjs.com (repository `milisp/mcp-linker`, workflow `mcpl-release.yml`). A
+package must exist before it can be configured, so the very first publish is
+done by hand with `npm publish --access public` from each directory.

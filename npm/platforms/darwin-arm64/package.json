@@ -1,0 +1,19 @@
+{
+  "name": "@milisp/mcpl-darwin-arm64",
+  "version": "0.1.0",
+  "description": "mcpl prebuilt binary for macOS arm64",
+  "license": "AGPL-3.0-only",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "mcpl"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milisp/mcp-linker.git"
+  }
+}

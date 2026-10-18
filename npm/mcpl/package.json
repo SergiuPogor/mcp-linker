@@ -1,0 +1,45 @@
+{
+  "name": "mcpl",
+  "version": "0.1.0",
+  "description": "Manage MCP servers across Claude Code, Codex, Cursor and other AI clients from the terminal.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "claude-code",
+    "codex",
+    "cursor",
+    "cli"
+  ],
+  "homepage": "https://github.com/milisp/mcp-linker/blob/main/docs/cli.md",
+  "bugs": {
+    "url": "https://github.com/milisp/mcp-linker/issues"
+  },
+  "license": "AGPL-3.0-only",
+  "bin": {
+    "mcpl": "bin/mcpl.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "optionalDependencies": {
+    "@milisp/mcpl-darwin-arm64": "0.1.0",
+    "@milisp/mcpl-darwin-x64": "0.1.0",
+    "@milisp/mcpl-linux-x64": "0.1.0",
+    "@milisp/mcpl-linux-arm64": "0.1.0",
+    "@milisp/mcpl-win32-x64": "0.1.0",
+    "@milisp/mcpl-win32-arm64": "0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milisp/mcp-linker.git"
+  }
+}
