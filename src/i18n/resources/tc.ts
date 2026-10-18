@@ -105,11 +105,12 @@ const tc: { translation: TranslationSchema } = {
       needsPro: "此功能需要 MCP Linker Pro（一次性購買）。",
       enterKey: "輸入授權金鑰",
       buy: "購買授權",
-      freeClients: "Claude Desktop 和 Cursor 免費。",
+      freeClients: "所有 client 都可以免費新增和編輯 server，Claude Desktop 和 Cursor 之間的同步也免費。",
       features: {
-        client: "修改 {{client}} 的 server",
+        sync: "本機同步",
         batch: "批次操作",
         inspection: "MCP 工具即時檢查",
+        toolPolicy: "Codex 工具策略",
       },
     },
     manage: {

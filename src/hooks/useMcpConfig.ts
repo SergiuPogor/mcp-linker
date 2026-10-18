@@ -1,4 +1,4 @@
-import { LicenseRequiredError, claudeWrite, clientWrite } from "@/lib/claude";
+import { claudeWrite, clientWrite } from "@/lib/claude";
 import { requiresConfigFile } from "@/lib/clients";
 import { requireLocalClaudeScope, useCCProjectStore } from "@/stores/ccProject";
 import { ConfigType } from "@/types/mcpConfig";
@@ -48,8 +48,7 @@ export function useMcpConfig(
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : errorMessagePrefix;
-        // The upgrade dialog already explains a missing license.
-        if (!(error instanceof LicenseRequiredError)) toast.error(errorMessage);
+        toast.error(errorMessage);
         throw error; // Re-throw to allow caller to handle
       }
     },

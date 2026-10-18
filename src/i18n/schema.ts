@@ -103,9 +103,10 @@ export interface TranslationSchema {
     buy: string;
     freeClients: string;
     features: {
-      client: string;
+      sync: string;
       batch: string;
       inspection: string;
+      toolPolicy: string;
     };
   };
   manage: {

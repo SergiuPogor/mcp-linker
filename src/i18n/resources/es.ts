@@ -104,11 +104,12 @@ const es: { translation: TranslationSchema } = {
       needsPro: "Esto requiere MCP Linker Pro, de pago único.",
       enterKey: "Introducir clave de licencia",
       buy: "Comprar una licencia",
-      freeClients: "Claude Desktop y Cursor son gratis.",
+      freeClients: "Añadir y editar servidores es gratis en todos los clientes, igual que sincronizar entre Claude Desktop y Cursor.",
       features: {
-        client: "Cambiar servidores de {{client}}",
+        sync: "Sincronización local",
         batch: "Acciones por lotes",
         inspection: "Inspección de herramientas en vivo",
+        toolPolicy: "Política de herramientas de Codex",
       },
     },
     manage: {

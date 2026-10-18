@@ -26,7 +26,7 @@ export function UpgradeDialog() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <KeyRound className="h-4 w-4" />
-            {upgrade && t(`upgrade.features.${upgrade.feature}`, { client: upgrade.client })}
+            {upgrade && t(`upgrade.features.${upgrade.feature}`)}
           </DialogTitle>
           <DialogDescription>{t(upgrade?.tier === "pro" ? "upgrade.needsPro" : "upgrade.needsPlus")} {t("upgrade.freeClients")}</DialogDescription>
         </DialogHeader>

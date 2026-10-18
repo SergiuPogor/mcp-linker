@@ -10,7 +10,6 @@ import { quickInstallConfig } from "./utils/quickInstall";
 import { ChevronDown, Cloud, Trash2 } from "lucide-react";
 import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { useMcpRefresh } from "@/contexts/McpRefreshContext";
-import { LicenseRequiredError } from "@/lib/claude";
 import { toast } from "sonner";
 import { uninstallServer } from "./utils/installedServer";
 import { clientLabel as labelOf } from "@/lib/clients";
@@ -74,7 +73,7 @@ export function ServerWorkspace({ server, onSaved, onUninstalled, initialTab = "
       editor.markUninstalled();
       onUninstalled?.();
     } catch (error) {
-      if (!(error instanceof LicenseRequiredError)) toast.error(`Failed to uninstall: ${error instanceof Error ? error.message : String(error)}`);
+      toast.error(`Failed to uninstall: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
   const section = "space-y-2 p-4";

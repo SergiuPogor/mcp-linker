@@ -104,11 +104,12 @@ const de: { translation: TranslationSchema } = {
       needsPro: "Dafür brauchst du MCP Linker Pro, als Einmalkauf.",
       enterKey: "Lizenzschlüssel eingeben",
       buy: "Lizenz kaufen",
-      freeClients: "Claude Desktop und Cursor sind kostenlos.",
+      freeClients: "Server hinzufügen und bearbeiten ist für alle Clients kostenlos, ebenso die Synchronisierung zwischen Claude Desktop und Cursor.",
       features: {
-        client: "{{client}}-Server ändern",
+        sync: "Lokale Synchronisierung",
         batch: "Stapelaktionen",
         inspection: "Live-Tool-Prüfung",
+        toolPolicy: "Codex-Tool-Richtlinie",
       },
     },
     manage: {

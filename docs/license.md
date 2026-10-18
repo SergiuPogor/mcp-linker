@@ -13,29 +13,28 @@ Each client has a `tier` in `src-tauri/src/clients.rs` (`Tier` is in
 `license.rs`; `free < plus < pro`). Viewing every client's servers and
 Discover are always free.
 
-| Tier | Clients you can change | Features |
-|---|---|---|
-| Free | Claude Desktop, Cursor (and mcp-linker's own store) | Sync between those two |
-| Plus | Copilot, Copilot CLI, Cline, OpenCode, Pi, Hermes, Augment, mcphub, Custom | Batch actions, live tool inspection |
-| Pro | Claude Code (every scope), Codex | Copying Claude Code servers between projects, Claude Code tool inspection, Codex tool policy |
+Adding, editing, enabling, disabling and removing servers one at a time is
+free for every client, Claude Code and Codex included. Licenses unlock working
+across clients and at scale.
+
+| Tier | Features |
+|---|---|
+| Free | Every client's basic management, sync between Claude Desktop and Cursor |
+| Plus | Sync between any clients except Claude Code and Codex, batch actions, live tool inspection |
+| Pro | Sync to or from Claude Code or Codex (including between Claude Code projects), Claude Code tool inspection, Codex tool policy |
 
 | Gate | UI | Command check |
 |---|---|---|
-| Changing a client's servers | `requireClient(id)` via `clientWrite` / `claudeWrite` in `src/lib/claude.ts` | `license::require_client` in every write command: `add/update/remove_mcp_server`, `enable/disable/update_disabled_mcp_server`, `write_json_file`, `claude_mcp_add/remove`, `claude_enable/disable_server`, `claude_update_disabled`, `codex_set_tool_policy` |
-| Copying Claude Code servers between projects (Pro) | `claudeWrite` (`claudeCopy`) | `claude_mcp_copy` |
-| Batch actions (Plus) | `LocalTable` batch handlers | `batch_delete_mcp_servers` (plus the client's tier) |
+| Local Sync (higher `tier` of its two clients in `clients.rs`) | `requireSync(from, to)` in `LocalSyncPanel` | none: sync is a series of ordinary writes |
+| Batch actions (Plus) | `LocalTable` batch handlers | `batch_delete_mcp_servers` |
 | Live tool inspection (Plus; Pro for Claude Code) | `ToolsPanel` | `mcp_inspector_connect`, `claude_mcp_tools` |
+| Codex tool policy (Pro) | `ToolsPanel` | `codex_set_tool_policy` |
 
-Sync between clients has no gate of its own: each write it makes goes through
-`clientWrite` / `claudeWrite`, so syncing into a client above your tier opens
-the upgrade dialog.
-
-The UI calls `requirePro(feature, tier?)` or `requireClient(id)` from
+The UI calls `requirePro(feature, tier?)` or `requireSync(from, to)` from
 `src/stores/license.ts`, which open the upgrade dialog naming the tier
-needed. Commands call `license::require(tier, feature)` or
-`license::require_client`, which read the license kept in memory in step with
-`license.json`. Add both when gating a new feature or changing a client's
-tier. Reading configuration is never gated.
+needed. Commands call `license::require(tier, feature)`, which reads the
+license kept in memory in step with `license.json`. Add both when gating a new
+feature that has a command of its own. Reading configuration is never gated.
 
 The source is AGPL-3.0, so these checks keep honest users honest; they are not
 DRM.

@@ -51,7 +51,6 @@ pub async fn write_json_file(
     path: Option<String>,
     content: Value,
 ) -> Result<(), String> {
-    crate::license::require_client(&client_name)?;
     let app_config = ClientConfig::new(&client_name, path.as_deref())?;
     let file_path = app_config.get_path();
 

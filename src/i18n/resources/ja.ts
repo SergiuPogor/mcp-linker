@@ -104,11 +104,12 @@ const ja: { translation: TranslationSchema } = {
       needsPro: "この機能には MCP Linker Pro（買い切り）が必要です。",
       enterKey: "ライセンスキーを入力",
       buy: "ライセンスを購入",
-      freeClients: "Claude Desktop と Cursor は無料です。",
+      freeClients: "サーバーの追加と編集はすべてのクライアントで無料です。Claude Desktop と Cursor 間の同期も無料です。",
       features: {
-        client: "{{client}} のサーバーを変更",
+        sync: "ローカル同期",
         batch: "一括操作",
         inspection: "ライブツール検査",
+        toolPolicy: "Codex ツールポリシー",
       },
     },
     manage: {

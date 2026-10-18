@@ -24,8 +24,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getClients, hasProjectConfig, requiresConfigFile, takesPath } from "@/lib/clients";
 import { listWorkspaces } from "@/components/settings/InstallationTarget";
-import { LicenseRequiredError, claudeWrite, clientWrite, toClaudeRequest } from "@/lib/claude";
+import { claudeWrite, clientWrite, toClaudeRequest } from "@/lib/claude";
 import { pickClientPath } from "@/lib/data";
+import { requireSync } from "@/stores/license";
 import { cn } from "@/lib/utils";
 import {
   SCOPE_LABEL,
@@ -203,13 +204,12 @@ export function LocalSyncPanel({ onClose, onSaved }: {
     let done = 0;
     const failures: string[] = [];
     // One at a time: every write rewrites the same config file. A bad entry
-    // must not stop the rest, but a missing license stops everything.
+    // must not stop the rest.
     const run = async (name: string, write: () => Promise<unknown>) => {
       try {
         await write();
         done++;
       } catch (error) {
-        if (error instanceof LicenseRequiredError) throw error;
         failures.push(`${name}: ${error instanceof Error ? error.message : String(error)}`);
       }
     };
@@ -219,8 +219,6 @@ export function LocalSyncPanel({ onClose, onSaved }: {
         if (skip.includes(name)) continue;
         await run(name, async () => writeTarget(name, mergeOver(target[name], convertServer(clientIdOf(toClient), source[name]))));
       }
-    } catch {
-      // The upgrade dialog already explains a missing license.
     } finally {
       if (done) toast.success(t("manage.sync.saved", { count: done }));
       if (failures.length) toast.error(failures.join("\n"));
@@ -246,7 +244,7 @@ export function LocalSyncPanel({ onClose, onSaved }: {
               </Button>
             </>
           )}
-          <Button size="sm" onClick={() => (overwrites.length ? setConfirming(true) : save())} disabled={!pending || saving || sameSide}>
+          <Button size="sm" onClick={() => requireSync(clientIdOf(fromClient), clientIdOf(toClient)) && (overwrites.length ? setConfirming(true) : save())} disabled={!pending || saving || sameSide}>
             {saving && <RefreshCw className="size-4 animate-spin" />}
             {t("save")}
           </Button>
