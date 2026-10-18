@@ -3,6 +3,7 @@
 
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use mcpl_core::license;
+use mcpl_core::plugins::{self, PluginClient};
 use mcpl_core::sync::{convert_server, merge_over, same_server};
 use mcpl_core::target::{self, Target};
 use serde_json::{Map, Value, json};
@@ -79,6 +80,11 @@ enum Command {
     Sync(SyncArgs),
     /// List supported clients, whether they are installed, and their config paths.
     Clients,
+    /// Manage Claude Code and Codex plugins (MCP servers + skills bundles).
+    Plugin {
+        #[command(subcommand)]
+        action: PluginAction,
+    },
     /// Show, activate or deactivate this device's license (shared with the app).
     License {
         #[command(subcommand)]
@@ -149,6 +155,85 @@ struct SyncArgs {
     skip_existing: bool,
 }
 
+#[derive(Args)]
+struct PluginClients {
+    /// claude-code or codex; repeat for both.
+    #[arg(short = 'c', long = "client", value_name = "CLIENT", required = true)]
+    clients: Vec<String>,
+}
+
+#[derive(Subcommand)]
+enum PluginAction {
+    /// List installed plugins; both clients without -c.
+    #[command(alias = "list")]
+    Ls {
+        #[arg(short = 'c', long = "client", value_name = "CLIENT")]
+        clients: Vec<String>,
+    },
+    /// Show a plugin's MCP servers and skills.
+    Get {
+        /// name@marketplace, or a bare name when it is unique.
+        id: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    /// Install a plugin from a marketplace the client knows.
+    Install {
+        id: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    /// Uninstall a plugin.
+    #[command(alias = "remove")]
+    Rm {
+        id: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    Enable {
+        id: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    Disable {
+        id: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    /// Copy plugins from one client to the other (Pro): skills as they are,
+    /// MCP servers converted, Claude Code-only parts left out.
+    Sync {
+        #[arg(long, value_name = "CLIENT")]
+        from: String,
+        #[arg(long, value_name = "CLIENT")]
+        to: String,
+        /// Plugins to copy (name@marketplace or a unique name).
+        #[arg(required = true)]
+        ids: Vec<String>,
+    },
+    /// List or add plugin marketplaces.
+    Marketplace {
+        #[command(subcommand)]
+        action: MarketplaceAction,
+    },
+}
+
+#[derive(Subcommand)]
+enum MarketplaceAction {
+    /// List configured marketplaces; both clients without -c.
+    #[command(alias = "list")]
+    Ls {
+        #[arg(short = 'c', long = "client", value_name = "CLIENT")]
+        clients: Vec<String>,
+    },
+    /// Add a marketplace: owner/repo, a git URL or a directory.
+    Add {
+        source: String,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+}
+
 #[derive(Subcommand)]
 enum LicenseAction {
     Status,
@@ -202,6 +287,7 @@ async fn run(cli: &Cli) -> Outcome {
         Command::Disable { name, targets } => each(cli, name, &targets.clients, "disabled", Op::Disable).await,
         Command::Sync(args) => sync(cli, args).await,
         Command::Clients => clients(cli),
+        Command::Plugin { action } => plugin_command(cli, action).await,
         Command::License { action } => license_command(cli, action).await,
     }
 }
@@ -429,7 +515,7 @@ async fn sync(cli: &Cli, args: &SyncArgs) -> Outcome {
         if to == &from {
             return Err(format!("{} is both the source and a destination.", to.describe()).into());
         }
-        license::require_sync(from.client_id(), to.client_id()).map_err(|e| {
+        license::require_sync(from.client_id(), to.client_id(), "Local Sync").map_err(|e| {
             Failure(3, format!("{e} Buy one at https://mcp-linker.milisp.dev/pricing, then run `mcpl license activate <key>`."))
         })?;
     }
@@ -553,6 +639,202 @@ async fn license_command(cli: &Cli, action: &LicenseAction) -> Outcome {
     }
     if value["updatesExpired"] == true {
         println!("This build was released after the key's year of updates; it runs as the free tier.");
+    }
+    Ok(())
+}
+
+fn plugin_clients(ids: &[String]) -> Result<Vec<PluginClient>, Failure> {
+    if ids.is_empty() {
+        return Ok(PluginClient::ALL.to_vec());
+    }
+    ids.iter().map(|id| PluginClient::parse(id).map_err(Failure::from)).collect()
+}
+
+async fn plugin_command(cli: &Cli, action: &PluginAction) -> Outcome {
+    match action {
+        PluginAction::Ls { clients } => {
+            let explicit = !clients.is_empty();
+            let mut out = Map::new();
+            for client in plugin_clients(clients)? {
+                let installed = match plugins::list(client).await {
+                    Ok(installed) => installed,
+                    // Without -c, a client that isn't installed is just skipped.
+                    Err(e) if !explicit => {
+                        if !cli.json {
+                            eprintln!("{}: {e}", client.id());
+                        }
+                        continue;
+                    }
+                    Err(e) => return Err(e.into()),
+                };
+                if cli.json {
+                    out.insert(client.id().into(), serde_json::to_value(&installed).unwrap_or_default());
+                    continue;
+                }
+                println!("{}", client.id());
+                if installed.is_empty() {
+                    println!("  (no plugins)");
+                }
+                for plugin in &installed {
+                    let version = plugin.version.as_deref().map(|v| format!(" {v}")).unwrap_or_default();
+                    let state = if plugin.enabled { "" } else { "  (disabled)" };
+                    println!("  {}{version}{state}", plugin.id);
+                }
+            }
+            if cli.json {
+                print_json(&Value::Object(out));
+            }
+            Ok(())
+        }
+        PluginAction::Get { id, clients } => {
+            let mut out = Map::new();
+            for client in plugin_clients(&clients.clients)? {
+                let details = plugins::details(client, id).await?;
+                if cli.json {
+                    out.insert(client.id().into(), serde_json::to_value(&details).unwrap_or_default());
+                    continue;
+                }
+                let state = if details.plugin.enabled { "enabled" } else { "disabled" };
+                println!("{} in {} ({state})", details.plugin.id, client.id());
+                if let Some(description) = &details.description {
+                    println!("  {description}");
+                }
+                if let Some(path) = &details.plugin.path {
+                    println!("  path: {}", path.display());
+                }
+                println!("  MCP servers:{}", if details.mcp_servers.is_empty() { " none" } else { "" });
+                for (name, config) in &details.mcp_servers {
+                    println!("    {name}  {}", summary(config));
+                }
+                println!("  skills:{}", if details.skills.is_empty() { " none" } else { "" });
+                for skill in &details.skills {
+                    let description = skill.description.as_deref().map(|d| format!("  {d}")).unwrap_or_default();
+                    println!("    {}{description}", skill.name);
+                }
+                if !details.other.is_empty() {
+                    println!("  also: {}", details.other.join(", "));
+                }
+            }
+            if cli.json {
+                print_json(&Value::Object(out));
+            }
+            Ok(())
+        }
+        PluginAction::Install { id, clients } => plugin_each(cli, id, &clients.clients, "installed", PluginOp::Install).await,
+        PluginAction::Rm { id, clients } => plugin_each(cli, id, &clients.clients, "uninstalled", PluginOp::Uninstall).await,
+        PluginAction::Enable { id, clients } => plugin_each(cli, id, &clients.clients, "enabled", PluginOp::Enable).await,
+        PluginAction::Disable { id, clients } => plugin_each(cli, id, &clients.clients, "disabled", PluginOp::Disable).await,
+        PluginAction::Sync { from, to, ids } => {
+            let (from, to) = (PluginClient::parse(from)?, PluginClient::parse(to)?);
+            let mut reports = Vec::new();
+            for id in ids {
+                if cli.dry_run {
+                    let details = plugins::details(from, id).await?;
+                    reports.push(json!({ "id": details.plugin.id, "mcpServers": details.mcp_servers.keys().collect::<Vec<_>>(),
+                        "skills": details.skills.iter().map(|s| &s.name).collect::<Vec<_>>(), "skipped": details.other }));
+                    continue;
+                }
+                let report = plugins::copy(from, to, id).await.map_err(|e| {
+                    if e.contains("license") {
+                        Failure(3, format!("{e} Buy one at https://mcp-linker.milisp.dev/pricing, then run `mcpl license activate <key>`."))
+                    } else {
+                        Failure(1, e)
+                    }
+                })?;
+                reports.push(serde_json::to_value(&report).unwrap_or_default());
+            }
+            if cli.json {
+                print_json(&json!({ "dryRun": cli.dry_run, "from": from.id(), "to": to.id(), "plugins": reports }));
+                return Ok(());
+            }
+            for report in &reports {
+                let list = |key: &str| {
+                    let items: Vec<&str> = report[key].as_array().into_iter().flatten().filter_map(Value::as_str).collect();
+                    if items.is_empty() { "none".to_string() } else { items.join(", ") }
+                };
+                let verb = if cli.dry_run { "would copy" } else { "copied" };
+                println!("{verb} {} to {}", report["id"].as_str().unwrap_or(""), to.id());
+                println!("  MCP servers: {}", list("mcpServers"));
+                println!("  skills: {}", list("skills"));
+                if report["skipped"].as_array().is_some_and(|s| !s.is_empty()) {
+                    println!("  left out ({} can't use them): {}", to.id(), list("skipped"));
+                }
+            }
+            Ok(())
+        }
+        PluginAction::Marketplace { action: MarketplaceAction::Ls { clients } } => {
+            let explicit = !clients.is_empty();
+            let mut out = Map::new();
+            for client in plugin_clients(clients)? {
+                let list = match plugins::marketplaces(client).await {
+                    Ok(list) => list,
+                    Err(e) if !explicit => {
+                        if !cli.json {
+                            eprintln!("{}: {e}", client.id());
+                        }
+                        continue;
+                    }
+                    Err(e) => return Err(e.into()),
+                };
+                if cli.json {
+                    out.insert(client.id().into(), serde_json::to_value(&list).unwrap_or_default());
+                    continue;
+                }
+                println!("{}", client.id());
+                for marketplace in &list {
+                    println!("  {}  {}", marketplace.name, marketplace.source.as_deref().unwrap_or(""));
+                }
+            }
+            if cli.json {
+                print_json(&Value::Object(out));
+            }
+            Ok(())
+        }
+        PluginAction::Marketplace { action: MarketplaceAction::Add { source, clients } } => {
+            for client in plugin_clients(&clients.clients)? {
+                if !cli.dry_run {
+                    plugins::add_marketplace(client, source).await.map_err(Failure::from)?;
+                }
+                if !cli.json {
+                    println!("{} marketplace {source} to {}", if cli.dry_run { "would add" } else { "added" }, client.id());
+                }
+            }
+            if cli.json {
+                print_json(&json!({ "dryRun": cli.dry_run, "source": source }));
+            }
+            Ok(())
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+enum PluginOp {
+    Install,
+    Uninstall,
+    Enable,
+    Disable,
+}
+
+async fn plugin_each(cli: &Cli, id: &str, clients: &[String], done: &str, op: PluginOp) -> Outcome {
+    let mut changes = Vec::new();
+    for client in plugin_clients(clients)? {
+        if !cli.dry_run {
+            match op {
+                PluginOp::Install => plugins::install(client, id).await,
+                PluginOp::Uninstall => plugins::uninstall(client, id).await,
+                PluginOp::Enable => plugins::set_enabled(client, id, true).await,
+                PluginOp::Disable => plugins::set_enabled(client, id, false).await,
+            }
+            .map_err(|e| format!("{}: {e}", client.id()))?;
+        }
+        if cli.json {
+            changes.push(json!({ "client": client.id(), "id": id }));
+        } else {
+            println!("{}{done} {id} in {}", if cli.dry_run { "would be " } else { "" }, client.id());
+        }
+    }
+    if cli.json {
+        print_json(&json!({ "dryRun": cli.dry_run, "action": done, "changes": changes }));
     }
     Ok(())
 }

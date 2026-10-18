@@ -32,6 +32,7 @@ export interface TranslationSchema {
     about: string;
     recentlyAdded: string;
     installapp: string;
+    plugins: string;
     client: string;
   };
   content: {
@@ -107,6 +108,7 @@ export interface TranslationSchema {
       batch: string;
       inspection: string;
       toolPolicy: string;
+      pluginSync: string;
     };
   };
   manage: {
@@ -177,5 +179,32 @@ export interface TranslationSchema {
   announcement: {
     learnMore: string;
     dismiss: string;
+  };
+  plugins: {
+    title: string;
+    subtitle: string;
+    refresh: string;
+    unavailable: string;
+    packsTitle: string;
+    packsBody: string;
+    addPacks: string;
+    installPlaceholder: string;
+    marketplacePlaceholder: string;
+    addMarketplace: string;
+    marketplaceAdded: string;
+    installed: string;
+    empty: string;
+    marketplaces: string;
+    mcpServers: string;
+    skills: string;
+    none: string;
+    alsoHas: string;
+    enabled: string;
+    copyTo: string;
+    copied: string;
+    leftOut: string;
+    uninstall: string;
+    uninstallTitle: string;
+    uninstallBody: string;
   };
 }

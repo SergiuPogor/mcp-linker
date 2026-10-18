@@ -3,6 +3,7 @@ import { CollectionPage } from "@/pages/CollectionPage";
 import Discover from "@/pages/Discover";
 import Manage from "@/pages/manage";
 import NotesPage from "@/pages/NotesPage";
+import PluginsPage from "@/pages/PluginsPage";
 import { NewServerPage } from "@/pages/NewServerPage";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
@@ -10,6 +11,7 @@ import {
   Code,
   LayoutDashboard,
   NotebookPen,
+  Puzzle,
   FileInput,
   Search,
 } from "lucide-react";
@@ -27,6 +29,8 @@ export const AppRoutes = () => {
       return <Manage />;
     case "claude-code-manage":
       return <ClaudeCodeManage />;
+    case "plugins":
+      return <PluginsPage />;
     case "recently":
       return <Manage />;
     case "settings":
@@ -72,6 +76,11 @@ export const getNavigationRoutes = (
       id: "claude-code-manage",
       name: "Claude Code",
       icon: <Code />,
+    },
+    {
+      id: "plugins",
+      name: t("nav.plugins"),
+      icon: <Puzzle />,
     },
     {
       id: "install-app",

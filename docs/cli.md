@@ -84,8 +84,37 @@ nothing, print what would change), `-y/--yes` (answer yes to confirmations).
   otherwise; the error comes before anything is written. Sync never deletes
   servers from a destination (a future `--prune` may).
 
+### Plugins
+
+Claude Code and Codex plugins bundle MCP servers and skills (see
+`docs/plugins.md`). `CLIENT` is `claude-code` (`cc`) or `codex`; commands
+without `-c` cover both.
+
+```
+mcpl plugin ls [-c CLIENT]...                  # alias: list
+mcpl plugin get <id> -c CLIENT...              # MCP servers, skills, other parts
+mcpl plugin install <id> -c CLIENT...          # id = name@marketplace
+mcpl plugin rm <id> -c CLIENT...               # alias: remove
+mcpl plugin enable | disable <id> -c CLIENT...
+mcpl plugin sync --from CLIENT --to CLIENT <id>...   # copy across clients (Pro)
+mcpl plugin marketplace ls [-c CLIENT]...
+mcpl plugin marketplace add <source> -c CLIENT...    # owner/repo, git URL or folder
+```
+
+`<id>` may be a bare name when only one installed plugin has it. For example,
+MCP Linker's packs in both clients at once:
+
+```bash
+mcpl plugin marketplace add milisp/mcp-linker -c cc -c codex
+mcpl plugin install ios@mcp-linker -c cc -c codex
+```
+
+JSON output: `plugin ls` → `{ "<client>": [Plugin] }`, `plugin get` →
+`{ "<client>": PluginDetails }`, `plugin sync` →
+`{ "dryRun", "from", "to", "plugins": [{ "id", "mcpServers", "skills", "skipped" }] }`.
+
 Reserved for later, so do not use these names for anything else: `search`,
-`install <registry-id>` (Official MCP Registry), `plugin …`, `skill …`.
+`install <registry-id>` (Official MCP Registry), `skill …`.
 
 ## JSON output
 
@@ -114,7 +143,8 @@ Targets in output use the canonical form, e.g. `claude-code:local@/work/app`.
 Same rules as the app (see `docs/license.md`): every command is free except
 `sync`, which needs the higher tier of its two clients — free between Claude
 Desktop and Cursor, Plus for other clients, Pro once Claude Code or Codex is
-involved. `add` to several clients at once is free.
+involved. `add` to several clients at once is free. `plugin sync` is Pro;
+every other `plugin` command is free.
 
 The CLI reads and writes the app's `license.json`
 (`<config dir>/dev.milisp.mcplinker/`), so a key activated in either works in
