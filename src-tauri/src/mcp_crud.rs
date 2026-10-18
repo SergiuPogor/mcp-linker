@@ -80,7 +80,6 @@ pub async fn add_mcp_server(
         // ClientAdapter would write a stray <project>/mcp.json that Claude Code never reads.
         return Err("Use the Claude Code commands for Claude Code servers.".into());
     }
-    crate::license::require_client(&client_name)?;
     let adapter = ClientAdapter::new(&client_name, path.as_deref());
     adapter.add(server_name, server_config).await
 }
@@ -95,7 +94,6 @@ pub async fn remove_mcp_server(
         // ClientAdapter would write a stray <project>/mcp.json that Claude Code never reads.
         return Err("Use the Claude Code commands for Claude Code servers.".into());
     }
-    crate::license::require_client(&client_name)?;
     let adapter = ClientAdapter::new(&client_name, path.as_deref());
     adapter.remove(server_name).await
 }
@@ -111,7 +109,6 @@ pub async fn update_mcp_server(
         // ClientAdapter would write a stray <project>/mcp.json that Claude Code never reads.
         return Err("Use the Claude Code commands for Claude Code servers.".into());
     }
-    crate::license::require_client(&client_name)?;
     let adapter = ClientAdapter::new(&client_name, path.as_deref());
     adapter.update(server_name, server_config).await
 }
@@ -123,7 +120,6 @@ pub async fn batch_delete_mcp_servers(
     server_names: Vec<String>,
 ) -> Result<Value, String> {
     crate::license::require(crate::license::Tier::Plus, "Batch actions")?;
-    crate::license::require_client(&client_name)?;
     let adapter = ClientAdapter::new(&client_name, path.as_deref());
     adapter.batch_delete(server_names).await
 }

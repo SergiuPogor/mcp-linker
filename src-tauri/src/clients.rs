@@ -74,7 +74,8 @@ pub struct ClientInfo {
     pub disable: Disable,
     #[serde(skip)]
     pub entry: Entry,
-    /// The license tier needed to change this client's config (`license::require_client`).
+    /// The license tier Local Sync needs when this client is either side of it.
+    /// Adding and changing servers is free for every client.
     pub tier: Tier,
     /// mcp-linker's own store; not offered as a target.
     #[serde(skip)]
@@ -222,7 +223,7 @@ mod tests {
     }
 
     #[test]
-    fn claude_desktop_and_cursor_are_free_and_claude_code_and_codex_are_pro() {
+    fn sync_is_free_between_claude_desktop_and_cursor_and_pro_with_claude_code_or_codex() {
         let with = |tier| list_clients().into_iter().filter(|c| c.tier == tier).map(|c| c.id).collect::<Vec<_>>();
         assert_eq!(with(Tier::Free), ["claude", "cursor"]);
         assert_eq!(with(Tier::Pro), ["claude_code", "codex"]);

@@ -104,11 +104,12 @@ const zh: { translation: TranslationSchema } = {
       needsPro: "此功能需要 MCP Linker Pro（一次性购买）。",
       enterKey: "输入许可证密钥",
       buy: "购买许可证",
-      freeClients: "Claude Desktop 和 Cursor 免费。",
+      freeClients: "所有 client 都可以免费添加和编辑 server，Claude Desktop 和 Cursor 之间的同步也免费。",
       features: {
-        client: "修改 {{client}} 的 server",
+        sync: "本地同步",
         batch: "批量操作",
         inspection: "MCP 工具实时检查",
+        toolPolicy: "Codex 工具策略",
       },
     },
     manage: {

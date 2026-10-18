@@ -1,4 +1,4 @@
-import { addToClaudeCode, clientWrite, LicenseRequiredError } from "@/lib/claude";
+import { addToClaudeCode, clientWrite } from "@/lib/claude";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useClientPathStore } from "@/stores";
@@ -76,7 +76,7 @@ export function InstallAppPage() {
       toast.success(`Successfully added server ${serverName}`);
     } catch (error) {
       console.error("Failed to add server:", error);
-      if (!(error instanceof LicenseRequiredError)) toast.error(`Failed to add server: ${error instanceof Error ? error.message : String(error)}`);
+      toast.error(`Failed to add server: ${error instanceof Error ? error.message : String(error)}`);
     }
   }, [selectedClient, selectedPath, serverName, editableConfig]);
 

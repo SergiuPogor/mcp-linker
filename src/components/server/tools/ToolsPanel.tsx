@@ -1,6 +1,6 @@
 import { ClaudeCodeToolsPanel } from "./ClaudeCodeToolsPanel";
 import { useCCProjectStore } from "@/stores/ccProject";
-import { requireClient, requirePro, useHasTier } from "@/stores/license";
+import { requirePro, useHasTier } from "@/stores/license";
 import { Button } from "@/components/ui/button";
 import type { ServerConfig } from "@/types";
 import { invoke } from "@tauri-apps/api/core";
@@ -52,7 +52,7 @@ function InspectorToolsPanel({ config, serverName, selectedClient, workingDir, c
     setPolicyDirty(true); setPolicyMessage(null);
   };
   const savePolicy = async () => {
-    if (!policy.serverExists || policyBusy || !requireClient("codex")) return;
+    if (!policy.serverExists || policyBusy || !requirePro("toolPolicy")) return;
     const generation = policyGeneration.current;
     setPolicyBusy(true); setPolicyMessage(null);
     try {
@@ -137,7 +137,7 @@ function InspectorToolsPanel({ config, serverName, selectedClient, workingDir, c
 
 export function ToolsPanel(props: Parameters<typeof InspectorToolsPanel>[0]) {
   const scope = useCCProjectStore(state => state.selectedScope);
-  // Claude Code is a Pro client, so inspecting its servers needs Pro too.
+  // Claude Code tool inspection is a Pro feature.
   const tier = props.selectedClient === "claude_code" ? "pro" : "plus";
   const licensed = useHasTier(tier);
   if (!licensed) return <div className="space-y-2 text-sm text-muted-foreground"><p>Connect to this server to list its tools and try them out. Live tool inspection needs an MCP Linker {tier === "pro" ? "Pro" : "Plus or Pro"} license.</p><Button variant="outline" size="sm" onClick={() => requirePro("inspection", tier)}>Unlock tool inspection</Button></div>;

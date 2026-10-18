@@ -115,15 +115,6 @@ pub fn require(tier: Tier, feature: &str) -> Result<(), String> {
     Err(format!("{feature} requires {plan} license."))
 }
 
-/// Writing a client's config needs the client's tier from `clients.rs`.
-/// Reading is free for every client.
-pub fn require_client(id: &str) -> Result<(), String> {
-    match crate::clients::find(id) {
-        Some(client) => require(client.tier, &format!("Changing {} servers", client.label)),
-        None => require(Tier::Pro, &format!("Changing '{id}' servers")),
-    }
-}
-
 #[derive(Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct License {

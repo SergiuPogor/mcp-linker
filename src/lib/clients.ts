@@ -15,7 +15,7 @@ export type ClientInfo = {
   projectFile: string | null;
   /** flag: `"disabled": true` · stash: parked under `__disabled` · list: names in the client's settings.json (Copilot CLI) · native: the client's own mechanism. */
   disable: "flag" | "stash" | "list" | "native";
-  /** The license tier needed to change this client's config. */
+  /** The license tier Local Sync needs when this client is either side of it. */
   tier: Tier;
 };
 
