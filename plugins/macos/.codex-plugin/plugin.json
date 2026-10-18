@@ -1,0 +1,40 @@
+{
+  "name": "macos",
+  "version": "0.1.0",
+  "description": "macOS app development pack: XcodeBuildMCP plus skills for building and testing macOS apps and for signing, notarizing and distributing them outside the Mac App Store.",
+  "author": {
+    "name": "MCP Linker",
+    "url": "https://github.com/milisp/mcp-linker"
+  },
+  "homepage": "https://github.com/milisp/mcp-linker/tree/main/plugins/macos",
+  "repository": "https://github.com/milisp/mcp-linker",
+  "license": "MIT",
+  "keywords": [
+    "macos",
+    "xcode",
+    "swift",
+    "notarization",
+    "developer-id",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "macOS Developer Pack",
+    "shortDescription": "Build, test and notarize macOS apps",
+    "longDescription": "Bundles XcodeBuildMCP with skills for building and testing macOS apps from the command line and for Developer ID signing, notarization, stapling and DMG distribution with the asc CLI.",
+    "developerName": "MCP Linker",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/milisp/mcp-linker/tree/main/plugins/macos",
+    "defaultPrompt": [
+      "Build and test this macOS app",
+      "Sign, notarize and staple this build for direct distribution"
+    ],
+    "brandColor": "#8E8E93"
+  }
+}

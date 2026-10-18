@@ -1,0 +1,32 @@
+{
+  "name": "mcp-linker",
+  "interface": {
+    "displayName": "MCP Linker"
+  },
+  "plugins": [
+    {
+      "name": "ios",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ios"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "macos",
+      "source": {
+        "source": "local",
+        "path": "./plugins/macos"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

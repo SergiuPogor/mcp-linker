@@ -1,0 +1,41 @@
+{
+  "name": "mcp-linker",
+  "description": "Curated plugin packs (MCP servers + skills) from MCP Linker, for Claude Code and Codex.",
+  "owner": {
+    "name": "MCP Linker",
+    "url": "https://github.com/milisp/mcp-linker"
+  },
+  "plugins": [
+    {
+      "name": "ios",
+      "source": "./plugins/ios",
+      "description": "iOS development pack: XcodeBuildMCP and an iOS Simulator MCP, plus skills for simulator build/run, axe UI automation, TestFlight releases and signing troubleshooting.",
+      "version": "0.1.0",
+      "category": "development",
+      "keywords": [
+        "ios",
+        "xcode",
+        "swift",
+        "simulator",
+        "testflight",
+        "app-store-connect",
+        "mcp"
+      ]
+    },
+    {
+      "name": "macos",
+      "source": "./plugins/macos",
+      "description": "macOS app development pack: XcodeBuildMCP plus skills for building and testing macOS apps and for signing, notarizing and distributing them outside the Mac App Store.",
+      "version": "0.1.0",
+      "category": "development",
+      "keywords": [
+        "macos",
+        "xcode",
+        "swift",
+        "notarization",
+        "developer-id",
+        "mcp"
+      ]
+    }
+  ]
+}
