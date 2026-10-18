@@ -65,11 +65,11 @@ pub(crate) fn normalize_codex_config(mut server_config: Value) -> Result<Value, 
         obj.remove("isActive");
     }
 
-    println!("[Codex] normalize output: {}", server_config);
+    log::debug!("[Codex] normalize output: {}", server_config);
     Ok(server_config)
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn add_mcp_server(
     client_name: String,
     path: Option<String>,
@@ -84,7 +84,7 @@ pub async fn add_mcp_server(
     adapter.add(server_name, server_config).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn remove_mcp_server(
     client_name: String,
     path: Option<String>,
@@ -98,7 +98,7 @@ pub async fn remove_mcp_server(
     adapter.remove(server_name).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn update_mcp_server(
     client_name: String,
     path: Option<String>,
@@ -113,7 +113,7 @@ pub async fn update_mcp_server(
     adapter.update(server_name, server_config).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn batch_delete_mcp_servers(
     client_name: String,
     path: Option<String>,

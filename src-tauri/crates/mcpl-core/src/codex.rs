@@ -104,7 +104,7 @@ pub async fn read_mcp_servers() -> Result<HashMap<String, McpServerConfig>, Stri
     let config_path = get_config_path()?;
 
     if !config_path.exists() {
-        println!("[Codex] config not found: {}", config_path.display());
+        log::debug!("[Codex] config not found: {}", config_path.display());
         return Ok(HashMap::new());
     }
 
@@ -115,7 +115,7 @@ pub async fn read_mcp_servers() -> Result<HashMap<String, McpServerConfig>, Stri
     let config: CodexConfig =
         toml::from_str(&content).map_err(|e| format!("Failed to parse config file: {}", e))?;
     let (active_count, disabled_count) = partition_config_states(&config.mcp_servers);
-    println!(
+    log::debug!(
         "[Codex] read servers: active={}, disabled={}",
         active_count,
         disabled_count + config.disabled_mcp_servers.len()
@@ -131,7 +131,7 @@ pub async fn read_mcp_servers() -> Result<HashMap<String, McpServerConfig>, Stri
 async fn load_config() -> Result<CodexConfig, String> {
     let config_path = get_config_path()?;
     if !config_path.exists() {
-        println!(
+        log::debug!(
             "[Codex] load default config (no file): {}",
             config_path.display()
         );
@@ -143,7 +143,7 @@ async fn load_config() -> Result<CodexConfig, String> {
     let config: CodexConfig =
         toml::from_str(&content).map_err(|e| format!("Failed to parse config file: {}", e))?;
     let (active_count, disabled_count) = partition_config_states(&config.mcp_servers);
-    println!(
+    log::debug!(
         "[Codex] load config: active={}, disabled={}",
         active_count,
         disabled_count + config.disabled_mcp_servers.len()
@@ -176,7 +176,7 @@ async fn persist_document(config_path: &Path, doc: DocumentMut) -> Result<(), St
     let tmp_path = config_path.with_extension("toml.tmp");
     let (active_count, disabled_count) = doc_counts(&doc);
     let toml_content = doc.to_string();
-    println!(
+    log::debug!(
         "[Codex] save config: path={}, tmp={}, active={}, disabled={}",
         config_path.display(),
         tmp_path.display(),
@@ -372,12 +372,12 @@ pub async fn add_mcp_server(name: String, config: McpServerConfig) -> Result<(),
 }
 
 pub async fn delete_mcp_server(name: String) -> Result<(), String> {
-    println!("[Codex] delete request: {}", name);
+    log::debug!("[Codex] delete request: {}", name);
     let _guard = CODEX_CFG_LOCK.lock().await;
     let config_path = get_config_path()?;
     let mut doc = load_document(&config_path).await?;
     let (active_keys, disabled_keys) = partition_server_keys(&doc);
-    println!(
+    log::debug!(
         "[Codex] before delete: active_keys={:?} disabled_keys={:?}",
         active_keys, disabled_keys
     );
@@ -388,7 +388,7 @@ pub async fn delete_mcp_server(name: String) -> Result<(), String> {
     if !removed {
         return Err(format!("MCP server '{}' not found", name));
     }
-    println!("[Codex] delete matched, saving");
+    log::debug!("[Codex] delete matched, saving");
     persist_document(&config_path, doc).await
 }
 
@@ -408,17 +408,17 @@ pub async fn disable(name: &str) -> Result<(), String> {
     let _guard = CODEX_CFG_LOCK.lock().await;
     let config_path = get_config_path()?;
     let mut doc = load_document(&config_path).await?;
-    println!(
+    log::debug!(
         "[Codex] disable request: {} | active_keys={:?}",
         name,
         partition_server_keys(&doc).0
     );
     if let Some(server_table) = get_server_table_mut(&mut doc, name) {
         set_enabled_field(server_table, false);
-        println!("[Codex] disable matched, saving");
+        log::debug!("[Codex] disable matched, saving");
         persist_document(&config_path, doc).await
     } else {
-        println!("[Codex] disable miss");
+        log::debug!("[Codex] disable miss");
         Ok(())
     }
 }
@@ -427,17 +427,17 @@ pub async fn enable(name: &str) -> Result<(), String> {
     let _guard = CODEX_CFG_LOCK.lock().await;
     let config_path = get_config_path()?;
     let mut doc = load_document(&config_path).await?;
-    println!(
+    log::debug!(
         "[Codex] enable request: {} | disabled_keys={:?}",
         name,
         partition_server_keys(&doc).1
     );
     if let Some(server_table) = get_server_table_mut(&mut doc, name) {
         set_enabled_field(server_table, true);
-        println!("[Codex] enable matched, saving");
+        log::debug!("[Codex] enable matched, saving");
         persist_document(&config_path, doc).await
     } else {
-        println!("[Codex] enable miss");
+        log::debug!("[Codex] enable miss");
         Ok(())
     }
 }
@@ -446,7 +446,7 @@ pub async fn update_disabled(name: &str, server: McpServerConfig) -> Result<(), 
     let _guard = CODEX_CFG_LOCK.lock().await;
     let config_path = get_config_path()?;
     let mut doc = load_document(&config_path).await?;
-    println!(
+    log::debug!(
         "[Codex] update_disabled: {} | disabled_keys(before)={:?}",
         name,
         partition_server_keys(&doc).1
@@ -456,7 +456,7 @@ pub async fn update_disabled(name: &str, server: McpServerConfig) -> Result<(), 
     preserve_client_settings(table.get(name), &mut item);
     set_enabled_on_item(&mut item, false)?;
     table.insert(name, item);
-    println!(
+    log::debug!(
         "[Codex] update_disabled saved | disabled_keys(after)={:?}",
         partition_server_keys(&doc).1
     );
@@ -549,7 +549,7 @@ fn apply_tool_policy(
     Ok(())
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn codex_get_tool_policy(server_name: String) -> Result<ToolPolicy, String> {
     let _guard = CODEX_CFG_LOCK.lock().await;
     let path = get_config_path()?;
@@ -557,7 +557,7 @@ pub async fn codex_get_tool_policy(server_name: String) -> Result<ToolPolicy, St
     read_tool_policy(&doc, &server_name)
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn codex_set_tool_policy(
     server_name: String,
     enabled_tools: Option<Vec<String>>,

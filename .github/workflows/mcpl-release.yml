@@ -1,0 +1,80 @@
+name: mcpl release
+
+# Builds the standalone mcpl CLI (docs/cli.md). Independent of the app's
+# release: tag mcpl-vX.Y.Z.
+on:
+  push:
+    tags:
+      - "mcpl-v*"
+
+permissions:
+  contents: write
+
+env:
+  # Same as the app: builds without it can't activate licenses.
+  MCP_LINKER_POLAR_ORG_ID: ${{ secrets.MCP_LINKER_POLAR_ORG_ID }}
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-latest, target: aarch64-apple-darwin }
+          - { os: macos-latest, target: x86_64-apple-darwin }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check the tag matches crates/mcpl/Cargo.toml
+        shell: bash
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#mcpl-v}"
+          CARGO_VERSION=$(sed -n 's/^version = "\(.*\)"$/\1/p' src-tauri/crates/mcpl/Cargo.toml | head -n 1)
+          if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match mcpl version $CARGO_VERSION"
+            exit 1
+          fi
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+        with:
+          toolchain: stable
+          targets: ${{ matrix.target }}
+
+      - name: Build
+        working-directory: src-tauri
+        run: cargo build --release --locked -p mcpl --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#mcpl-v}"
+          NAME="mcpl-${VERSION}-${{ matrix.target }}"
+          mkdir -p "dist/$NAME"
+          BIN=mcpl
+          if [ "${{ runner.os }}" = "Windows" ]; then BIN=mcpl.exe; fi
+          cp "src-tauri/target/${{ matrix.target }}/release/$BIN" "dist/$NAME/"
+          cp LICENSE docs/cli.md "dist/$NAME/"
+          cd dist
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            7z a "$NAME.zip" "$NAME" > /dev/null
+            sha256sum "$NAME.zip" > "$NAME.zip.sha256"
+          else
+            tar czf "$NAME.tar.gz" "$NAME"
+            shasum -a 256 "$NAME.tar.gz" > "$NAME.tar.gz.sha256"
+          fi
+
+      - name: Upload to the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The five jobs race to create the release; whoever loses just uploads.
+          gh release create "$GITHUB_REF_NAME" --title "mcpl ${GITHUB_REF_NAME#mcpl-v}" --notes "See docs/cli.md." --latest=false || true
+          shopt -s nullglob
+          gh release upload "$GITHUB_REF_NAME" dist/*.tar.gz dist/*.zip dist/*.sha256 --clobber

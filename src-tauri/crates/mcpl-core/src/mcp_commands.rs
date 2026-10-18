@@ -1,7 +1,7 @@
 use crate::adapter::ClientAdapter;
 use serde_json::Value;
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn disable_mcp_server(
     client_name: String,
     path: Option<String>,
@@ -11,7 +11,7 @@ pub async fn disable_mcp_server(
     adapter.disable(server_name).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn enable_mcp_server(
     client_name: String,
     path: Option<String>,
@@ -21,7 +21,7 @@ pub async fn enable_mcp_server(
     adapter.enable(server_name).await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn list_disabled_servers(
     client_name: String,
     path: Option<String>,
@@ -30,7 +30,7 @@ pub async fn list_disabled_servers(
     adapter.list_disabled().await
 }
 
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn update_disabled_mcp_server(
     client_name: String,
     path: Option<String>,

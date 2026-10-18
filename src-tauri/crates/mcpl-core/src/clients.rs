@@ -179,7 +179,7 @@ pub fn find(id: &str) -> Option<&'static ClientInfo> {
 }
 
 /// Clients the user can pick, in display order.
-#[tauri::command]
+#[cfg_attr(feature = "tauri", tauri::command)]
 pub fn list_clients() -> Vec<ClientInfo> {
     CLIENTS.iter().filter(|client| !client.internal).cloned().collect()
 }
