@@ -1,44 +1,57 @@
 name: mcpl release
 
-# Builds the standalone mcpl CLI (docs/cli.md). Independent of the app's
-# release: tag mcpl-vX.Y.Z.
+# Builds the standalone mcpl CLI (docs/cli.md) and publishes it to GitHub
+# Releases and npm. Independent of the app's release: run
+# scripts/bump-mcpl.sh X.Y.Z, then push the mcpl-vX.Y.Z tag it creates.
 on:
   push:
     tags:
       - "mcpl-v*"
 
 permissions:
-  contents: write
+  contents: read
 
 env:
+  CARGO_TERM_COLOR: always
   # Same as the app: builds without it can't activate licenses.
   MCP_LINKER_POLAR_ORG_ID: ${{ secrets.MCP_LINKER_POLAR_ORG_ID }}
 
 jobs:
+  tag-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Check the tag matches crates/mcpl/Cargo.toml
+        run: |
+          set -euo pipefail
+          tag_version="${GITHUB_REF_NAME#mcpl-v}"
+          cargo_version=$(sed -n 's/^version = "\(.*\)"$/\1/p' src-tauri/crates/mcpl/Cargo.toml | head -n 1)
+          if [ "$tag_version" != "$cargo_version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match mcpl version $cargo_version"
+            exit 1
+          fi
+          if [ -z "$MCP_LINKER_POLAR_ORG_ID" ]; then
+            echo "::error::MCP_LINKER_POLAR_ORG_ID secret is not set. Builds without it can't activate licenses."
+            exit 1
+          fi
+
   build:
     name: Build ${{ matrix.target }}
+    needs: tag-check
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: macos-latest, target: aarch64-apple-darwin }
-          - { os: macos-latest, target: x86_64-apple-darwin }
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
-          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
-          - { os: windows-latest, target: x86_64-pc-windows-msvc }
+          - { os: macos-latest, target: aarch64-apple-darwin, npm: darwin-arm64 }
+          - { os: macos-latest, target: x86_64-apple-darwin, npm: darwin-x64 }
+          # musl: one static binary that runs on any Linux distribution.
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, npm: linux-x64 }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-musl, npm: linux-arm64, cross: true }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, npm: win32-x64 }
+          - { os: windows-latest, target: aarch64-pc-windows-msvc, npm: win32-arm64 }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Check the tag matches crates/mcpl/Cargo.toml
-        shell: bash
-        run: |
-          TAG_VERSION="${GITHUB_REF_NAME#mcpl-v}"
-          CARGO_VERSION=$(sed -n 's/^version = "\(.*\)"$/\1/p' src-tauri/crates/mcpl/Cargo.toml | head -n 1)
-          if [ "$TAG_VERSION" != "$CARGO_VERSION" ]; then
-            echo "::error::tag $GITHUB_REF_NAME does not match mcpl version $CARGO_VERSION"
-            exit 1
-          fi
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
@@ -46,35 +59,159 @@ jobs:
           toolchain: stable
           targets: ${{ matrix.target }}
 
+      - name: Install musl tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - name: Install cross
+        if: matrix.cross
+        run: cargo install cross --locked
+
       - name: Build
         working-directory: src-tauri
-        run: cargo build --release --locked -p mcpl --target ${{ matrix.target }}
+        shell: bash
+        run: |
+          if [ "${{ matrix.cross }}" = "true" ]; then
+            cross build --release --locked -p mcpl --target ${{ matrix.target }}
+          else
+            cargo build --release --locked -p mcpl --target ${{ matrix.target }}
+          fi
+
+      - name: Import Apple Developer certificate
+        if: runner.os == 'macOS'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -t 3600 -u build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          rm -f certificate.p12
+
+      - name: Sign and notarize
+        if: runner.os == 'macOS'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          bin="src-tauri/target/${{ matrix.target }}/release/mcpl"
+          identity="$(security find-identity -v -p codesigning build.keychain | grep -o '"Developer ID Application:.*"' | head -1 | tr -d '"')"
+          codesign --force --options runtime --timestamp -s "$identity" --identifier dev.milisp.mcpl "$bin"
+          zip -j notarize.zip "$bin"
+          xcrun notarytool submit notarize.zip --apple-id "$APPLE_ID" --password "$APPLE_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
+          rm -f notarize.zip
+          codesign -v "$bin"
+
+      - name: Clean up keychain
+        if: always() && runner.os == 'macOS'
+        run: security delete-keychain build.keychain || true
 
       - name: Package
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#mcpl-v}"
-          NAME="mcpl-${VERSION}-${{ matrix.target }}"
-          mkdir -p "dist/$NAME"
-          BIN=mcpl
-          if [ "${{ runner.os }}" = "Windows" ]; then BIN=mcpl.exe; fi
-          cp "src-tauri/target/${{ matrix.target }}/release/$BIN" "dist/$NAME/"
-          cp LICENSE docs/cli.md "dist/$NAME/"
-          cd dist
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#mcpl-v}"
+          name="mcpl-${version}-${{ matrix.target }}"
+          bin=mcpl
+          if [ "${{ runner.os }}" = "Windows" ]; then bin=mcpl.exe; fi
+          mkdir -p "release/$name"
+          cp "src-tauri/target/${{ matrix.target }}/release/$bin" LICENSE docs/cli.md "release/$name/"
+          cp "src-tauri/target/${{ matrix.target }}/release/$bin" "npm/platforms/${{ matrix.npm }}/"
+          cd release
           if [ "${{ runner.os }}" = "Windows" ]; then
-            7z a "$NAME.zip" "$NAME" > /dev/null
-            sha256sum "$NAME.zip" > "$NAME.zip.sha256"
+            7z a "$name.zip" "$name" > /dev/null
+            sha256sum "$name.zip" > "$name.zip.sha256"
           else
-            tar czf "$NAME.tar.gz" "$NAME"
-            shasum -a 256 "$NAME.tar.gz" > "$NAME.tar.gz.sha256"
+            tar czf "$name.tar.gz" "$name"
+            shasum -a 256 "$name.tar.gz" > "$name.tar.gz.sha256"
           fi
+          rm -rf "$name"
 
-      - name: Upload to the release
-        shell: bash
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-${{ matrix.npm }}
+          path: release/*
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-${{ matrix.npm }}
+          path: npm/platforms/${{ matrix.npm }}
+          if-no-files-found: error
+
+  github-release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+      - name: Publish the GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # The five jobs race to create the release; whoever loses just uploads.
-          gh release create "$GITHUB_REF_NAME" --title "mcpl ${GITHUB_REF_NAME#mcpl-v}" --notes "See docs/cli.md." --latest=false || true
-          shopt -s nullglob
-          gh release upload "$GITHUB_REF_NAME" dist/*.tar.gz dist/*.zip dist/*.sha256 --clobber
+          gh release create "$GITHUB_REF_NAME" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "mcpl ${GITHUB_REF_NAME#mcpl-v}" \
+            --notes "Install: \`npm install -g mcpl\` or download a binary below. Docs: https://github.com/milisp/mcp-linker/blob/main/docs/cli.md" \
+            --latest=false
+
+  npm-publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # npm trusted publishing (OIDC): configure each package on npmjs.com
+      # with this repository and workflow file; no token needed.
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Use an npm that supports trusted publishing
+        run: npm install -g npm@latest
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: staged
+          pattern: npm-*
+
+      - name: Put the binaries into the platform packages
+        run: |
+          set -euo pipefail
+          for dir in staged/npm-*; do
+            platform="${dir#staged/npm-}"
+            cp "$dir"/mcpl* "npm/platforms/$platform/"
+          done
+          chmod +x npm/platforms/*/mcpl
+
+      - name: Set package versions from the tag
+        run: |
+          version="${GITHUB_REF_NAME#mcpl-v}"
+          node scripts/npm-version.cjs "$version"
+
+      - name: Publish platform packages
+        run: |
+          for dir in npm/platforms/*/; do
+            (cd "$dir" && npm publish --access public --provenance)
+          done
+
+      - name: Publish mcpl
+        working-directory: npm/mcpl
+        run: npm publish --access public --provenance

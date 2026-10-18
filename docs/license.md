@@ -29,6 +29,7 @@ across clients and at scale.
 | Batch actions (Plus) | `LocalTable` batch handlers | `batch_delete_mcp_servers` |
 | Live tool inspection (Plus; Pro for Claude Code) | `ToolsPanel` | `mcp_inspector_connect`, `claude_mcp_tools` |
 | Codex tool policy (Pro) | `ToolsPanel` | `codex_set_tool_policy` |
+| Plugin sync between Claude Code and Codex (Pro) | `requirePro("pluginSync")` in `PluginsPage` | `plugins::copy` (`license::require_sync`) |
 
 The UI calls `requirePro(feature, tier?)` or `requireSync(from, to)` from
 `src/stores/license.ts`, which open the upgrade dialog naming the tier

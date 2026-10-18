@@ -6,7 +6,7 @@
 use std::env;
 use std::sync::{Arc, Mutex};
 
-use mcpl_core::{claude_code_commands, claude_disabled, client, clients, codex, json_commands as cmd, license, mcp_commands, mcp_crud};
+use mcpl_core::{claude_code_commands, claude_disabled, client, clients, codex, json_commands as cmd, license, mcp_commands, mcp_crud, plugins};
 
 mod app_settings;
 mod claude_tools;
@@ -84,6 +84,14 @@ pub fn run() {
             license::license_status,
             license::activate_license,
             license::deactivate_license,
+            plugins::plugin_list,
+            plugins::plugin_details,
+            plugins::plugin_set_enabled,
+            plugins::plugin_install,
+            plugins::plugin_uninstall,
+            plugins::plugin_marketplaces,
+            plugins::plugin_add_marketplace,
+            plugins::plugin_copy,
         ])
         .manage(mcp_inspector::InspectorState::default())
         .manage(Arc::new(Mutex::new(None::<String>)))

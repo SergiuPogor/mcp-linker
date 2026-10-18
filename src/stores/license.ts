@@ -3,13 +3,14 @@ import { getLicenseStatus, type LicenseStatus, type Tier } from "@/lib/license";
 import { create } from "zustand";
 
 /** Paid features. Keep in step with `license::require` calls in src-tauri. */
-export type ProFeature = "sync" | "batch" | "inspection" | "toolPolicy";
+export type ProFeature = "sync" | "batch" | "inspection" | "toolPolicy" | "pluginSync";
 
 /** The tier each feature needs by default; `sync` comes from its two clients. */
 const FEATURE_TIER: Record<Exclude<ProFeature, "sync">, Tier> = {
   batch: "plus",
   inspection: "plus",
   toolPolicy: "pro",
+  pluginSync: "pro",
 };
 
 const RANK: Record<Tier, number> = { free: 0, plus: 1, pro: 2 };

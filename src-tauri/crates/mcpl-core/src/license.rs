@@ -117,9 +117,9 @@ pub fn require(tier: Tier, feature: &str) -> Result<(), String> {
 /// Local Sync needs the higher tier of its two clients (`clients.rs`): free
 /// between Claude Desktop and Cursor, Pro once Claude Code or Codex is
 /// involved. The app checks the same rule in `requireSync`.
-pub fn require_sync(from: &str, to: &str) -> Result<(), String> {
+pub fn require_sync(from: &str, to: &str, feature: &str) -> Result<(), String> {
     let tier = |id: &str| crate::clients::find(id).map_or(Tier::Pro, |client| client.tier);
-    require(tier(from).max(tier(to)), "Local Sync")
+    require(tier(from).max(tier(to)), feature)
 }
 
 #[derive(Clone, Default, Serialize, Deserialize)]

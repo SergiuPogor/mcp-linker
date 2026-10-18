@@ -84,8 +84,37 @@ nothing, print what would change), `-y/--yes` (answer yes to confirmations).
   otherwise; the error comes before anything is written. Sync never deletes
   servers from a destination (a future `--prune` may).
 
+### Plugins
+
+Claude Code and Codex plugins bundle MCP servers and skills (see
+`docs/plugins.md`). `CLIENT` is `claude-code` (`cc`) or `codex`; commands
+without `-c` cover both.
+
+```
+mcpl plugin ls [-c CLIENT]...                  # alias: list
+mcpl plugin get <id> -c CLIENT...              # MCP servers, skills, other parts
+mcpl plugin install <id> -c CLIENT...          # id = name@marketplace
+mcpl plugin rm <id> -c CLIENT...               # alias: remove
+mcpl plugin enable | disable <id> -c CLIENT...
+mcpl plugin sync --from CLIENT --to CLIENT <id>...   # copy across clients (Pro)
+mcpl plugin marketplace ls [-c CLIENT]...
+mcpl plugin marketplace add <source> -c CLIENT...    # owner/repo, git URL or folder
+```
+
+`<id>` may be a bare name when only one installed plugin has it. For example,
+MCP Linker's packs in both clients at once:
+
+```bash
+mcpl plugin marketplace add milisp/mcp-linker -c cc -c codex
+mcpl plugin install ios@mcp-linker -c cc -c codex
+```
+
+JSON output: `plugin ls` → `{ "<client>": [Plugin] }`, `plugin get` →
+`{ "<client>": PluginDetails }`, `plugin sync` →
+`{ "dryRun", "from", "to", "plugins": [{ "id", "mcpServers", "skills", "skipped" }] }`.
+
 Reserved for later, so do not use these names for anything else: `search`,
-`install <registry-id>` (Official MCP Registry), `plugin …`, `skill …`.
+`install <registry-id>` (Official MCP Registry), `skill …`.
 
 ## JSON output
 
@@ -114,16 +143,37 @@ Targets in output use the canonical form, e.g. `claude-code:local@/work/app`.
 Same rules as the app (see `docs/license.md`): every command is free except
 `sync`, which needs the higher tier of its two clients — free between Claude
 Desktop and Cursor, Plus for other clients, Pro once Claude Code or Codex is
-involved. `add` to several clients at once is free.
+involved. `add` to several clients at once is free. `plugin sync` is Pro;
+every other `plugin` command is free.
 
 The CLI reads and writes the app's `license.json`
 (`<config dir>/dev.milisp.mcplinker/`), so a key activated in either works in
 both. The check runs in `mcpl-core` (`license::require_sync`).
 
+## Install
+
+```bash
+npx mcpl ls          # run without installing
+npm install -g mcpl  # or install
+```
+
+Binaries for every platform are also attached to each `mcpl-v*` GitHub release.
+
 ## Release
 
-Tag `mcpl-vX.Y.Z` (independent of the app's version). The `mcpl release`
-workflow builds `mcpl` for macOS (arm64, x64), Linux (x64, arm64) and Windows
-(x64) and attaches the archives to a GitHub release. Homebrew
-(`milisp/tap/mcpl`), npm (`npx mcpl`) and crates.io packaging build on those
-archives and are set up separately.
+`scripts/bump-mcpl.sh X.Y.Z` sets the crate and npm versions, commits, and tags
+`mcpl-vX.Y.Z` (independent of the app's version). Pushing the tag runs the
+`mcpl release` workflow:
+
+1. Builds `mcpl` for macOS (arm64, x64; signed and notarized), Linux (x64,
+   arm64; static musl) and Windows (x64, arm64).
+2. Creates the GitHub release with an archive and sha256 for each target.
+3. Publishes npm packages with trusted publishing (OIDC): one per platform
+   (`@milisp/mcpl-darwin-arm64`, …, each with its `os`/`cpu`) and `mcpl`, whose
+   `bin/mcpl.js` runs the binary from whichever platform package npm installed
+   as an optional dependency. Layout: `npm/mcpl`, `npm/platforms/*`.
+
+npm trusted publishing needs each of the seven packages configured once on
+npmjs.com (repository `milisp/mcp-linker`, workflow `mcpl-release.yml`). A
+package must exist before it can be configured, so the very first publish is
+done by hand with `npm publish --access public` from each directory.

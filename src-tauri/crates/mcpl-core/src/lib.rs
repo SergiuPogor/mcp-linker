@@ -15,5 +15,6 @@ pub mod json_manager;
 pub mod license;
 pub mod mcp_commands;
 pub mod mcp_crud;
+pub mod plugins;
 pub mod sync;
 pub mod target;

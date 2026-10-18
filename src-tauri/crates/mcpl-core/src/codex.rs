@@ -649,3 +649,27 @@ mod tool_policy_tests {
         );
     }
 }
+
+/// Sets `[plugins."<id>"] enabled` in config.toml. Codex has no CLI command
+/// for this; `codex plugin add/remove` install and uninstall.
+pub async fn set_plugin_enabled(id: &str, enabled: bool) -> Result<(), String> {
+    let _guard = CODEX_CFG_LOCK.lock().await;
+    let path = get_config_path()?;
+    let mut doc = load_document(&path).await?;
+    let plugins = doc
+        .entry("plugins")
+        .or_insert_with(|| {
+            let mut table = Table::new();
+            table.set_implicit(true);
+            Item::Table(table)
+        })
+        .as_table_mut()
+        .ok_or("`plugins` in config.toml is not a table")?;
+    let plugin = plugins
+        .entry(id)
+        .or_insert_with(|| Item::Table(Table::new()))
+        .as_table_mut()
+        .ok_or_else(|| format!("`plugins.\"{id}\"` in config.toml is not a table"))?;
+    plugin["enabled"] = value(enabled);
+    persist_document(&path, doc).await
+}

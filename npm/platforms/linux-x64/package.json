@@ -1,0 +1,19 @@
+{
+  "name": "@milisp/mcpl-linux-x64",
+  "version": "0.1.0",
+  "description": "mcpl prebuilt binary for Linux x64 (static musl)",
+  "license": "AGPL-3.0-only",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "files": [
+    "mcpl"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milisp/mcp-linker.git"
+  }
+}
