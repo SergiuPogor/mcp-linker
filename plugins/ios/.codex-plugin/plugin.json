@@ -1,0 +1,42 @@
+{
+  "name": "ios",
+  "version": "0.1.0",
+  "description": "iOS development pack: XcodeBuildMCP and an iOS Simulator MCP, plus skills for simulator build/run, axe UI automation, TestFlight releases and signing troubleshooting.",
+  "author": {
+    "name": "MCP Linker",
+    "url": "https://github.com/milisp/mcp-linker"
+  },
+  "homepage": "https://github.com/milisp/mcp-linker/tree/main/plugins/ios",
+  "repository": "https://github.com/milisp/mcp-linker",
+  "license": "MIT",
+  "keywords": [
+    "ios",
+    "xcode",
+    "swift",
+    "simulator",
+    "testflight",
+    "app-store-connect",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "iOS Developer Pack",
+    "shortDescription": "Build, drive, sign and ship iOS apps",
+    "longDescription": "Bundles XcodeBuildMCP and an iOS Simulator MCP server with skills for building and running on the simulator, driving the simulator UI with the axe CLI, releasing through TestFlight with the asc CLI, and troubleshooting code signing.",
+    "developerName": "MCP Linker",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/milisp/mcp-linker/tree/main/plugins/ios",
+    "defaultPrompt": [
+      "Build and run this app on an iPhone simulator",
+      "Tap through the onboarding flow and screenshot each screen",
+      "Upload this build to TestFlight"
+    ],
+    "brandColor": "#0A84FF"
+  }
+}
