@@ -34,6 +34,8 @@ scripts/validate.mjs
    `notion.json` for a remote server, `clickup.json` for an npm package.
    - `name` is `io.github.milisp.mcp-linker/<id>`.
    - `description` is at most 100 characters. Longer text goes in `fullDescription`.
+   - Set `official` in the catalog metadata: `true` only if you publish this server for
+     your own product, otherwise `false` (see [Official and Community](#official-and-community)).
    - Declare user-supplied values as `environmentVariables` or headers with
      `isSecret: true`. **Never commit a real token.**
    - Remote URLs must use `https`. Plain `http` is only accepted for loopback
@@ -59,6 +61,17 @@ MCP Linker reads its own fields from
 | `official` | yes | `true` if the product's own vendor publishes this server, `false` for a community server |
 | `featured` | no | `true` shows the server in the Featured section. Maintainers only |
 | `fullDescription` | no | Details beyond the 100-character `description` |
+
+### Official and Community
+
+The app and the website show a badge for every server: **Official** when `official` is
+`true`, **Community** when it is `false`. Cards only mark Official servers.
+
+The flag is written by the submitter, so the script cannot check it. Reviewers do:
+for `official: true` they compare the remote host, the package scope or the repository
+owner with the vendor of the product. If they cannot confirm it, they ask you to
+change it to `false`, and the server is still listed. Setting it to `true` for a
+product you do not publish gets the entry rejected.
 
 These are local definitions, not claims of official registry publication or
 ownership of the publisher's namespace. `version: "1.0.0"` versions the directory
