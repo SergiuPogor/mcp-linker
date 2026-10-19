@@ -92,6 +92,9 @@ pub fn run() {
             plugins::plugin_marketplaces,
             plugins::plugin_add_marketplace,
             plugins::plugin_copy,
+            plugins::plugin_activity,
+            plugins::plugin_catalog,
+            plugins::plugin_icon,
         ])
         .manage(mcp_inspector::InspectorState::default())
         .manage(Arc::new(Mutex::new(None::<String>)))

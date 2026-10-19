@@ -185,11 +185,12 @@ export interface TranslationSchema {
     subtitle: string;
     refresh: string;
     unavailable: string;
-    packsTitle: string;
-    packsBody: string;
-    addPacks: string;
-    installPlaceholder: string;
-    marketplacePlaceholder: string;
+    linkerTitle: string;
+    linkerBody: string;
+    marketplaceHint: string;
+    marketplaceSource: string;
+    marketplaceRef: string;
+    marketplaceSparse: string;
     addMarketplace: string;
     marketplaceAdded: string;
     installed: string;
@@ -206,5 +207,17 @@ export interface TranslationSchema {
     uninstall: string;
     uninstallTitle: string;
     uninstallBody: string;
+    back: string;
+    activity: string;
+    activityEmpty: string;
+    location: string;
+    add: string;
+    addedAt: string;
+    tabPublic: string;
+    tabPersonal: string;
+    search: string;
+    installedSection: string;
+    noMatches: string;
+    showAll: string;
   };
 }

@@ -98,7 +98,8 @@ mcpl plugin rm <id> -c CLIENT...               # alias: remove
 mcpl plugin enable | disable <id> -c CLIENT...
 mcpl plugin sync --from CLIENT --to CLIENT <id>...   # copy across clients (Pro)
 mcpl plugin marketplace ls [-c CLIENT]...
-mcpl plugin marketplace add <source> -c CLIENT...    # owner/repo, git URL or folder
+mcpl plugin marketplace add <source> -c CLIENT... [--ref REF] [--sparse PATH]...
+                                                     # source: owner/repo, git URL or folder
 ```
 
 `<id>` may be a bare name when only one installed plugin has it. For example,
@@ -108,6 +109,9 @@ MCP Linker's packs in both clients at once:
 mcpl plugin marketplace add milisp/mcp-linker -c cc -c codex
 mcpl plugin install ios@mcp-linker -c cc -c codex
 ```
+
+`--ref` pins a git branch, tag or commit; `--sparse` (repeatable) checks out only those
+repo directories.
 
 JSON output: `plugin ls` → `{ "<client>": [Plugin] }`, `plugin get` →
 `{ "<client>": PluginDetails }`, `plugin sync` →

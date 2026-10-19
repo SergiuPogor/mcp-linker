@@ -1,3 +1,8 @@
+import { ClientIcon } from "@/components/ClientIcon";
+import { ActivityDialog } from "@/components/plugins/ActivityLog";
+import { PluginItem } from "@/components/plugins/PluginCard";
+import { PluginDetailView } from "@/components/plugins/PluginDetailView";
+import { usePluginActions } from "@/components/plugins/usePluginActions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,248 +13,291 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  PACKS_MARKETPLACE,
-  PLUGIN_CLIENTS,
-  type Plugin,
-  type PluginClient,
-  addMarketplace,
-  copyPlugin,
-  installPlugin,
-  listMarketplaces,
-  listPlugins,
-  otherClient,
-  pluginDetails,
-  setPluginEnabled,
-  uninstallPlugin,
-} from "@/lib/plugins";
-import { requirePro } from "@/stores/license";
+import { Textarea } from "@/components/ui/textarea";
+import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, type CatalogEntry, type PluginClient, addMarketplace, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRightLeft, ChevronDown, ChevronRight, Package, Plus, RefreshCcw, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, History, Plus, RefreshCcw, Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
 const labelOf = (client: PluginClient) => PLUGIN_CLIENTS.find(c => c.id === client)?.label ?? client;
+const clientIconId = (client: PluginClient) => (client === "claude-code" ? "claude_code" : "codex");
+const titleCase = (text: string) => text.replace(/[-_]/g, " ").replace(/^\w/, c => c.toUpperCase());
+/** Rows shown per section until it is expanded. */
+const PREVIEW = 8;
+/** Rows shown in an expanded section; Codex's public catalog has thousands. */
+const MAX_ROWS = 100;
 
-function PluginDetailsPanel({ client, id }: { client: PluginClient; id: string }) {
-  const { t } = useTranslation();
-  const { data, error, isLoading } = useQuery({ queryKey: ["plugin", client, id], queryFn: () => pluginDetails(client, id) });
-  if (isLoading) return <p className="text-sm text-muted-foreground">{t("loading")}</p>;
-  if (error || !data) return <p className="text-sm text-destructive">{message(error)}</p>;
-  const servers = Object.entries(data.mcpServers);
-  return (
-    <div className="space-y-3 text-sm">
-      {data.description && <p className="text-muted-foreground">{data.description}</p>}
-      <div>
-        <h4 className="font-medium">{t("plugins.mcpServers")}</h4>
-        {servers.length === 0 && <p className="text-muted-foreground">{t("plugins.none")}</p>}
-        {servers.map(([name, config]) => (
-          <p key={name} className="font-mono text-xs">
-            {name} <span className="text-muted-foreground">{String(config.command ?? config.url ?? "")} {Array.isArray(config.args) ? config.args.join(" ") : ""}</span>
-          </p>
-        ))}
-      </div>
-      <div>
-        <h4 className="font-medium">{t("plugins.skills")}</h4>
-        {data.skills.length === 0 && <p className="text-muted-foreground">{t("plugins.none")}</p>}
-        {data.skills.map(skill => (
-          <p key={skill.name}>
-            <span className="font-mono text-xs">{skill.name}</span>
-            {skill.description && <span className="text-muted-foreground"> — {skill.description}</span>}
-          </p>
-        ))}
-      </div>
-      {data.other.length > 0 && <p className="text-muted-foreground">{t("plugins.alsoHas", { parts: data.other.join(", ") })}</p>}
-      {data.path && <p className="font-mono text-xs text-muted-foreground break-all">{data.path}</p>}
-    </div>
-  );
+type Tab = "public" | "personal";
+
+interface Section {
+  key: string;
+  title: string;
+  entries: CatalogEntry[];
 }
 
-function PluginRow({ client, plugin, onUninstall }: { client: PluginClient; plugin: Plugin; onUninstall: (plugin: Plugin) => void }) {
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
-  const target = otherClient(client);
-
-  const toggle = useMutation({
-    mutationFn: (enabled: boolean) => setPluginEnabled(client, plugin.id, enabled),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["plugins", client] }),
-    onError: error => toast.error(message(error)),
-  });
-  const copy = useMutation({
-    mutationFn: () => copyPlugin(client, target, plugin.id),
-    onSuccess: report => {
-      queryClient.invalidateQueries({ queryKey: ["plugins", target] });
-      toast.success(t("plugins.copied", { id: report.id, client: labelOf(target) }), {
-        description: report.skipped.length ? t("plugins.leftOut", { parts: report.skipped.join(", ") }) : undefined,
-      });
-    },
-    onError: error => toast.error(message(error)),
-  });
-
-  return (
-    <div className="rounded-lg border p-3">
-      <div className="flex items-center gap-3">
-        <button type="button" className="flex min-w-0 flex-1 items-center gap-2 text-left" onClick={() => setOpen(!open)}>
-          {open ? <ChevronDown className="size-4 shrink-0" /> : <ChevronRight className="size-4 shrink-0" />}
-          <span className="truncate font-medium">{plugin.name}</span>
-          <Badge variant="secondary">{plugin.marketplace}</Badge>
-          {plugin.version && <span className="text-xs text-muted-foreground">{plugin.version}</span>}
-          {plugin.scope && plugin.scope !== "user" && <Badge variant="outline">{plugin.scope}</Badge>}
-        </button>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={copy.isPending}
-          onClick={() => requirePro("pluginSync") && copy.mutate()}
-          title={t("plugins.copyTo", { client: labelOf(target) })}
-        >
-          <ArrowRightLeft className={`size-4 ${copy.isPending ? "animate-pulse" : ""}`} />
-          <span className="hidden sm:inline">{t("plugins.copyTo", { client: labelOf(target) })}</span>
-        </Button>
-        <Switch checked={plugin.enabled} disabled={toggle.isPending} onCheckedChange={checked => toggle.mutate(checked)} aria-label={t("plugins.enabled")} />
-        <Button variant="ghost" size="icon" aria-label={t("plugins.uninstall")} title={t("plugins.uninstall")} onClick={() => onUninstall(plugin)}>
-          <Trash2 className="size-4" />
-        </Button>
-      </div>
-      {open && (
-        <div className="mt-3 border-t pt-3">
-          <PluginDetailsPanel client={client} id={plugin.id} />
-        </div>
-      )}
-    </div>
-  );
+/** Installed plugins first, then the rest grouped: Public by category, Personal by marketplace. */
+function sectionsOf(entries: CatalogEntry[], tab: Tab, installedTitle: string): Section[] {
+  const installed = entries.filter(e => e.installed);
+  const groups = new Map<string, CatalogEntry[]>();
+  for (const entry of entries.filter(e => !e.installed)) {
+    const key = tab === "public" ? titleCase(entry.category ?? "Other") : entry.marketplace;
+    groups.set(key, [...(groups.get(key) ?? []), entry]);
+  }
+  return [
+    ...(installed.length ? [{ key: "installed", title: installedTitle, entries: installed }] : []),
+    ...[...groups].map(([title, list]) => ({ key: title, title, entries: list })),
+  ];
 }
 
 export default function PluginsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [client, setClient] = useState<PluginClient>("claude-code");
+  const [tab, setTab] = useState<Tab>("public");
+  const [query, setQuery] = useState("");
+  const [expanded, setExpanded] = useState<string[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [removing, setRemoving] = useState<CatalogEntry | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [linkerOpen, setLinkerOpen] = useState(false);
   const [source, setSource] = useState("");
-  const [installId, setInstallId] = useState("");
-  const [removing, setRemoving] = useState<Plugin | null>(null);
+  const [gitRef, setGitRef] = useState("");
+  const [sparse, setSparse] = useState("");
+  const [showActivity, setShowActivity] = useState(false);
 
-  const plugins = useQuery({ queryKey: ["plugins", client], queryFn: () => listPlugins(client), retry: false });
-  const marketplaces = useQuery({ queryKey: ["plugin-marketplaces", client], queryFn: () => listMarketplaces(client), retry: false });
-  const refresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["plugins", client] });
-    queryClient.invalidateQueries({ queryKey: ["plugin-marketplaces", client] });
-  };
+  const catalog = useQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), retry: false });
+  const { toggle, install, copy, refresh } = usePluginActions(client, labelOf(client));
+  const all = catalog.data?.plugins ?? [];
+  const selected = all.find(p => p.id === selectedId) ?? null;
+  const packsPreview = useQuery({ queryKey: ["packs-preview"], queryFn: fetchPacks, retry: false, staleTime: 3_600_000 });
+  const packs = catalog.data?.marketplaces.find(m => m.source?.includes(PACKS_MARKETPLACE) || m.name === "mcp-linker");
+
+  const sections = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    const matches = all.filter(
+      e => e.official === (tab === "public") && (!needle || [e.name, e.displayName, e.description, e.marketplace].some(f => f?.toLowerCase().includes(needle))),
+    );
+    return sectionsOf(matches, tab, t("plugins.installedSection"));
+  }, [all, tab, query, t]);
+  const counts = { public: all.filter(e => e.official).length, personal: all.filter(e => !e.official).length };
 
   const addSource = useMutation({
-    mutationFn: (value: string) => addMarketplace(client, value),
-    onSuccess: (_, value) => {
+    mutationFn: ({ source, gitRef, sparse }: { source: string; gitRef: string; sparse: string[] }) => addMarketplace(client, source, gitRef.trim(), sparse),
+    onSuccess: async (output, { source }) => {
+      setAdding(false);
       setSource("");
-      refresh();
-      toast.success(t("plugins.marketplaceAdded", { source: value, client: labelOf(client) }));
+      setGitRef("");
+      setSparse("");
+      queryClient.invalidateQueries({ queryKey: ["plugin-activity"] });
+      // Say where the client put it, and show what it brought.
+      const fresh = await queryClient.fetchQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), staleTime: 0 });
+      const added = fresh.marketplaces.find(m => m.source === source || m.name === source.split("/").pop());
+      setTab("personal");
+      toast.success(t("plugins.marketplaceAdded", { source, client: labelOf(client) }), {
+        description: added?.location ? t("plugins.addedAt", { path: added.location }) : output.trim() || undefined,
+      });
     },
-    onError: error => toast.error(message(error)),
-  });
-  const install = useMutation({
-    mutationFn: (id: string) => installPlugin(client, id),
-    onSuccess: (_, id) => {
-      setInstallId("");
+    onError: error => {
       refresh();
-      toast.success(t("plugins.installed", { id, client: labelOf(client) }));
+      toast.error(message(error), { duration: 15_000 });
     },
-    onError: error => toast.error(message(error)),
   });
   const uninstall = useMutation({
-    mutationFn: (plugin: Plugin) => uninstallPlugin(client, plugin.id),
-    onSuccess: refresh,
-    onError: error => toast.error(message(error)),
+    mutationFn: (plugin: CatalogEntry) => uninstallPlugin(client, plugin.id),
+    onSuccess: () => {
+      setSelectedId(null);
+      refresh();
+    },
+    onError: error => toast.error(message(error), { duration: 15_000 }),
     onSettled: () => setRemoving(null),
   });
 
-  const hasPacks = marketplaces.data?.some(m => m.source?.includes(PACKS_MARKETPLACE) || m.name === "mcp-linker");
+  const submit = () => {
+    const text = source.trim();
+    if (!text) return;
+    addSource.mutate({ source: text, gitRef, sparse: sparse.split("\n").map(p => p.trim()).filter(Boolean) });
+  };
+  const busyId = install.isPending ? install.variables : toggle.isPending ? toggle.variables.id : null;
 
   return (
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">{t("plugins.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("plugins.subtitle")}</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Tabs value={client} onValueChange={value => setClient(value as PluginClient)}>
-            <TabsList>
-              {PLUGIN_CLIENTS.map(c => <TabsTrigger key={c.id} value={c.id}>{c.label}</TabsTrigger>)}
-            </TabsList>
-          </Tabs>
-          <Button variant="outline" size="sm" onClick={refresh} disabled={plugins.isFetching}>
-            <RefreshCcw className={`size-4 ${plugins.isFetching ? "animate-spin" : ""}`} />
-            {t("plugins.refresh")}
-          </Button>
-        </div>
-
-        {plugins.error ? (
-          <div className="rounded-lg border border-destructive/50 p-4 text-sm">
-            <p className="font-medium">{t("plugins.unavailable", { client: labelOf(client) })}</p>
-            <p className="mt-1 text-muted-foreground">{message(plugins.error)}</p>
-          </div>
+      <div className="max-w-4xl mx-auto space-y-6">
+        {selected ? (
+          <PluginDetailView client={client} plugin={selected} onBack={() => setSelectedId(null)} onUninstall={() => setRemoving(selected)} />
         ) : (
           <>
-            {marketplaces.data && !hasPacks && (
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-4">
-                <div className="flex items-start gap-3">
-                  <Package className="mt-0.5 size-5 shrink-0" />
-                  <div>
-                    <p className="font-medium">{t("plugins.packsTitle")}</p>
-                    <p className="text-sm text-muted-foreground">{t("plugins.packsBody")}</p>
-                  </div>
+            <div className="flex items-center justify-between gap-4">
+              <h1 className="text-3xl font-bold">{t("plugins.title")}</h1>
+              <Tabs
+                value={client}
+                onValueChange={next => {
+                  setClient(next as PluginClient);
+                  setSelectedId(null);
+                  setExpanded([]);
+                }}
+              >
+                <TabsList>
+                  {PLUGIN_CLIENTS.map(c => (
+                    <TabsTrigger key={c.id} value={c.id} className="gap-2">
+                      <ClientIcon client={clientIconId(c.id)} />
+                      {c.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input className="rounded-full pl-9" value={query} onChange={event => setQuery(event.target.value)} placeholder={t("plugins.search")} />
+              </div>
+              <Button variant="ghost" size="icon" aria-label={t("plugins.refresh")} title={t("plugins.refresh")} onClick={refresh}>
+                <RefreshCcw className={`size-4 ${catalog.isFetching ? "animate-spin" : ""}`} />
+              </Button>
+              <Button variant="ghost" size="icon" aria-label={t("plugins.activity")} title={t("plugins.activity")} onClick={() => setShowActivity(true)}>
+                <History className="size-4" />
+              </Button>
+              <Button className="rounded-full" onClick={() => setAdding(true)}>
+                <Plus className="size-4" />
+                {t("plugins.add")}
+              </Button>
+            </div>
+
+            {catalog.data && !packs && (
+              <div className="rounded-xl border p-4">
+                <div className="flex items-center gap-4">
+                  <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setLinkerOpen(open => !open)}>
+                    <span className="block font-medium">{t("plugins.linkerTitle")}</span>
+                    <span className="block text-sm text-muted-foreground">{t("plugins.linkerBody")}</span>
+                  </button>
+                  <Button variant="outline" className="shrink-0 rounded-full" disabled={addSource.isPending} onClick={() => addSource.mutate({ source: PACKS_MARKETPLACE, gitRef: "", sparse: [] })}>
+                    {t("plugins.add")}
+                  </Button>
+                  <button type="button" aria-expanded={linkerOpen} className="shrink-0 text-muted-foreground" onClick={() => setLinkerOpen(open => !open)}>
+                    <ChevronRight className={`size-4 transition-transform ${linkerOpen ? "rotate-90" : ""}`} />
+                  </button>
                 </div>
-                <Button size="sm" disabled={addSource.isPending} onClick={() => addSource.mutate(PACKS_MARKETPLACE)}>
-                  <Plus className="size-4" />
-                  {t("plugins.addPacks")}
-                </Button>
+                {linkerOpen && (
+                  <ul className="mt-3 space-y-3 border-t pt-3">
+                    {(packsPreview.data ?? bundledPacks).map(plugin => (
+                      <li key={plugin.name} className="text-sm">
+                        <p className="font-medium">{plugin.name}</p>
+                        <p className="text-muted-foreground">{plugin.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <form
-                className="flex gap-2"
-                onSubmit={event => {
-                  event.preventDefault();
-                  if (installId.trim()) install.mutate(installId.trim());
-                }}
-              >
-                <Input value={installId} onChange={event => setInstallId(event.target.value)} placeholder={t("plugins.installPlaceholder")} />
-                <Button type="submit" variant="outline" disabled={!installId.trim() || install.isPending}>{t("install")}</Button>
-              </form>
-              <form
-                className="flex gap-2"
-                onSubmit={event => {
-                  event.preventDefault();
-                  if (source.trim()) addSource.mutate(source.trim());
-                }}
-              >
-                <Input value={source} onChange={event => setSource(event.target.value)} placeholder={t("plugins.marketplacePlaceholder")} />
-                <Button type="submit" variant="outline" disabled={!source.trim() || addSource.isPending}>{t("plugins.addMarketplace")}</Button>
-              </form>
-            </div>
+            <Tabs value={tab} onValueChange={next => setTab(next as Tab)}>
+              <TabsList>
+                <TabsTrigger value="public">
+                  {t("plugins.tabPublic")} <span className="ml-1 text-muted-foreground">{counts.public}</span>
+                </TabsTrigger>
+                <TabsTrigger value="personal">
+                  {t("plugins.tabPersonal")} <span className="ml-1 text-muted-foreground">{counts.personal}</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
-            <div className="space-y-2">
-              {plugins.isLoading && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
-              {plugins.data?.length === 0 && <p className="text-sm text-muted-foreground">{t("plugins.empty", { client: labelOf(client) })}</p>}
-              {plugins.data?.map(plugin => <PluginRow key={plugin.id} client={client} plugin={plugin} onUninstall={setRemoving} />)}
-            </div>
-
-            {marketplaces.data && marketplaces.data.length > 0 && (
-              <p className="text-xs text-muted-foreground">
-                {t("plugins.marketplaces")}: {marketplaces.data.map(m => m.name).join(", ")}
-              </p>
+            {catalog.error ? (
+              <div className="rounded-xl border border-destructive/50 p-4 text-sm">
+                <p className="font-medium">{t("plugins.unavailable", { client: labelOf(client) })}</p>
+                <p className="mt-1 text-muted-foreground">{message(catalog.error)}</p>
+              </div>
+            ) : catalog.isLoading ? (
+              <p className="text-sm text-muted-foreground">{t("loading")}</p>
+            ) : sections.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("plugins.noMatches")}</p>
+            ) : (
+              sections.map(section => {
+                const open = !!query.trim() || section.key === "installed" || expanded.includes(section.key);
+                const shown = section.entries.slice(0, open ? MAX_ROWS : PREVIEW);
+                return (
+                  <section key={section.key}>
+                    <button
+                      type="button"
+                      className="mb-2 flex items-center gap-1 text-lg font-medium"
+                      onClick={() => setExpanded(open ? expanded.filter(k => k !== section.key) : [...expanded, section.key])}
+                    >
+                      {section.title}
+                      <span className="text-sm font-normal text-muted-foreground">{section.entries.length}</span>
+                      {section.entries.length > PREVIEW && <ChevronRight className={`size-4 text-muted-foreground transition-transform ${open ? "rotate-90" : ""}`} />}
+                    </button>
+                    <div className="grid gap-x-6 sm:grid-cols-2">
+                      {shown.map(entry => (
+                        <PluginItem
+                          key={entry.id}
+                          entry={entry}
+                          busy={busyId === entry.id}
+                          onOpen={() => setSelectedId(entry.id)}
+                          onToggle={enabled => toggle.mutate({ id: entry.id, enabled })}
+                          onInstall={() => install.mutate(entry.id)}
+                          copy={{
+                            label: copy.targetLabel,
+                            clientId: clientIconId(copy.target),
+                            pending: copy.isPending && copy.variables === entry.id,
+                            run: () => copy.run(entry.id),
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })
             )}
           </>
         )}
       </div>
+
+      <Dialog open={adding} onOpenChange={open => !open && setAdding(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("plugins.addMarketplace")}</DialogTitle>
+            <DialogDescription>{t("plugins.marketplaceHint")}</DialogDescription>
+          </DialogHeader>
+          <form
+            className="space-y-4"
+            onSubmit={event => {
+              event.preventDefault();
+              submit();
+            }}
+          >
+            <div className="space-y-2">
+              <Label htmlFor="marketplace-source">{t("plugins.marketplaceSource")}</Label>
+              <Input id="marketplace-source" autoFocus value={source} onChange={event => setSource(event.target.value)} placeholder="openai/plugins or git@github.com:org/repo.git" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="marketplace-ref">{t("plugins.marketplaceRef")}</Label>
+              <Input id="marketplace-ref" value={gitRef} onChange={event => setGitRef(event.target.value)} placeholder="main" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="marketplace-sparse">{t("plugins.marketplaceSparse")}</Label>
+              <Textarea id="marketplace-sparse" rows={4} value={sparse} onChange={event => setSparse(event.target.value)} placeholder="plugins/codex" />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setAdding(false)}>
+                {t("cancel")}
+              </Button>
+              <Button type="submit" disabled={!source.trim() || addSource.isPending}>
+                {t("plugins.addMarketplace")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <ActivityDialog open={showActivity} onOpenChange={setShowActivity} />
 
       <AlertDialog open={removing !== null} onOpenChange={open => !open && setRemoving(null)}>
         <AlertDialogContent>

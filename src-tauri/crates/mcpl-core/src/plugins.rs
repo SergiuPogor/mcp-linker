@@ -12,6 +12,9 @@ use crate::sync::convert_server;
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value, json};
 use std::path::{Path, PathBuf};
+use std::process::Stdio;
+use std::sync::Mutex;
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tokio::process::Command;
 
 /// The bridge marketplace's name in both clients.
@@ -114,18 +117,67 @@ pub struct CopyReport {
     pub skipped: Vec<String>,
 }
 
-fn split_id(id: &str) -> (String, String) {
-    match id.split_once('@') {
-        Some((name, marketplace)) => (name.into(), marketplace.into()),
-        None => (id.into(), String::new()),
+/// One client CLI call, kept for the Plugins page's activity log.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Activity {
+    /// Unix time in milliseconds.
+    pub at: u64,
+    pub command: String,
+    pub ok: bool,
+    pub duration_ms: u64,
+    /// Output of the command, or the error.
+    pub output: String,
+}
+
+static ACTIVITY: Mutex<Vec<Activity>> = Mutex::new(Vec::new());
+
+/// The recent client CLI calls, newest first.
+pub fn activity() -> Vec<Activity> {
+    ACTIVITY.lock().map(|log| log.iter().rev().cloned().collect()).unwrap_or_default()
+}
+
+fn record(entry: Activity) {
+    // The app has no log sink, so `tauri dev` shows this on stderr.
+    eprintln!("[plugins] `{}` {} in {}ms", entry.command, if entry.ok { "ok" } else { "failed" }, entry.duration_ms);
+    log::info!("[plugins] `{}` {} in {}ms: {}", entry.command, if entry.ok { "ok" } else { "failed" }, entry.duration_ms, entry.output.trim());
+    if let Ok(mut log) = ACTIVITY.lock() {
+        log.push(entry);
+        let extra = log.len().saturating_sub(100);
+        log.drain(..extra);
     }
 }
 
+/// Long enough for a first `git clone` of a marketplace.
+const RUN_TIMEOUT: Duration = Duration::from_secs(180);
+
 async fn run(client: PluginClient, args: &[&str]) -> Result<String, String> {
+    let command = format!("{} {}", client.program(), args.join(" "));
+    let started = Instant::now();
+    let result = run_inner(client, args).await;
+    let (ok, output) = match &result {
+        Ok(out) => (true, out.clone()),
+        Err(err) => (false, err.clone()),
+    };
+    record(Activity {
+        at: SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_millis() as u64).unwrap_or(0),
+        command,
+        ok,
+        duration_ms: started.elapsed().as_millis() as u64,
+        output,
+    });
+    result
+}
+
+async fn run_inner(client: PluginClient, args: &[&str]) -> Result<String, String> {
     let output = Command::new(client.program())
         .args(args)
-        .output()
+        .stdin(Stdio::null())
+        .kill_on_drop(true)
+        .output();
+    let output = tokio::time::timeout(RUN_TIMEOUT, output)
         .await
+        .map_err(|_| format!("`{} {}` timed out after {}s.", client.program(), args.join(" "), RUN_TIMEOUT.as_secs()))?
         .map_err(|e| match e.kind() {
             std::io::ErrorKind::NotFound => format!("`{}` was not found on PATH; install {} first.", client.program(), client.id()),
             _ => format!("Failed to run `{}`: {e}", client.program()),
@@ -139,62 +191,24 @@ async fn run(client: PluginClient, args: &[&str]) -> Result<String, String> {
     Err(format!("`{} {}` failed: {detail}", client.program(), args.join(" ")))
 }
 
-fn parse_json(text: &str, what: &str) -> Result<Value, String> {
-    serde_json::from_str(text).map_err(|e| format!("Unexpected {what} output: {e}"))
-}
-
-/// Installed plugins.
+/// Installed plugins, read from the client's files (see `plugin_catalog`).
 pub async fn list(client: PluginClient) -> Result<Vec<Plugin>, String> {
-    let text = run(client, &["plugin", "list", "--json"]).await?;
-    Ok(plugins_from_list(client, &parse_json(&text, "plugin list")?))
-}
-
-fn plugins_from_list(client: PluginClient, value: &Value) -> Vec<Plugin> {
-    let text = |row: &Value, key: &str| row.get(key).and_then(Value::as_str).map(str::to_string);
-    match client {
-        // [{ id, version, scope, enabled, installPath, … }]
-        PluginClient::ClaudeCode => value
-            .as_array()
-            .into_iter()
-            .flatten()
-            .filter_map(|row| {
-                let id = text(row, "id")?;
-                let (name, marketplace) = split_id(&id);
-                Some(Plugin {
-                    name,
-                    marketplace,
-                    client,
-                    version: text(row, "version"),
-                    enabled: row.get("enabled").and_then(Value::as_bool).unwrap_or(false),
-                    scope: text(row, "scope"),
-                    path: text(row, "installPath").map(PathBuf::from),
-                    id,
-                })
-            })
-            .collect(),
-        // { installed: [{ pluginId, name, marketplaceName, version, enabled, source: { path } }] }
-        PluginClient::Codex => value
-            .get("installed")
-            .and_then(Value::as_array)
-            .into_iter()
-            .flatten()
-            .filter(|row| row.get("installed").and_then(Value::as_bool) != Some(false))
-            .filter_map(|row| {
-                let id = text(row, "pluginId")?;
-                let (name, marketplace) = split_id(&id);
-                Some(Plugin {
-                    name: text(row, "name").unwrap_or(name),
-                    marketplace: text(row, "marketplaceName").unwrap_or(marketplace),
-                    client,
-                    version: text(row, "version"),
-                    enabled: row.get("enabled").and_then(Value::as_bool).unwrap_or(false),
-                    scope: None,
-                    path: row.pointer("/source/path").and_then(Value::as_str).map(PathBuf::from),
-                    id,
-                })
-            })
-            .collect(),
-    }
+    let catalog = crate::plugin_catalog::catalog(client)?;
+    Ok(catalog
+        .plugins
+        .into_iter()
+        .filter(|entry| entry.installed)
+        .map(|entry| Plugin {
+            id: entry.id,
+            name: entry.name,
+            marketplace: entry.marketplace,
+            client,
+            version: entry.version,
+            enabled: entry.enabled,
+            scope: entry.scope,
+            path: entry.path,
+        })
+        .collect())
 }
 
 /// Finds an installed plugin by `name@marketplace`, or by bare name when only one matches.
@@ -318,13 +332,28 @@ pub fn read_dir(root: &Path) -> PluginDir {
     PluginDir { manifest, servers, skills, other }
 }
 
+/// What a plugin holds, installed or not (an uninstalled one only when its source is inside its marketplace).
 pub async fn details(client: PluginClient, id: &str) -> Result<PluginDetails, String> {
-    let plugin = find(client, id).await?;
-    let PluginDir { manifest, servers: mcp_servers, skills, other } = match &plugin.path {
+    let entry = crate::plugin_catalog::catalog(client)?
+        .plugins
+        .into_iter()
+        .find(|p| p.id == id || p.name == id)
+        .ok_or_else(|| format!("Plugin '{id}' is not in any {} marketplace.", client.id()))?;
+    let PluginDir { manifest, servers: mcp_servers, skills, other } = match &entry.path {
         Some(path) => read_dir(path),
         None => PluginDir { manifest: None, servers: Map::new(), skills: Vec::new(), other: Vec::new() },
     };
-    let description = manifest.as_ref().and_then(|m| m.get("description")).and_then(Value::as_str).map(str::to_string);
+    let description = manifest.as_ref().and_then(|m| m.get("description")).and_then(Value::as_str).map(str::to_string).or(entry.description.clone());
+    let plugin = Plugin {
+        id: entry.id,
+        name: entry.name,
+        marketplace: entry.marketplace,
+        client,
+        version: entry.version,
+        enabled: entry.enabled,
+        scope: entry.scope,
+        path: entry.path,
+    };
     Ok(PluginDetails {
         plugin,
         description,
@@ -349,12 +378,12 @@ pub async fn set_enabled(client: PluginClient, id: &str, enabled: bool) -> Resul
 }
 
 /// Installs `name@marketplace` from a marketplace the client already knows.
-pub async fn install(client: PluginClient, id: &str) -> Result<(), String> {
+pub async fn install(client: PluginClient, id: &str) -> Result<String, String> {
     let verb = match client {
         PluginClient::ClaudeCode => "install",
         PluginClient::Codex => "add",
     };
-    run(client, &["plugin", verb, id]).await.map(drop)
+    run(client, &["plugin", verb, id]).await
 }
 
 pub async fn uninstall(client: PluginClient, id: &str) -> Result<(), String> {
@@ -372,33 +401,41 @@ pub struct Marketplace {
     pub name: String,
     /// A URL, `owner/repo` or a directory.
     pub source: Option<String>,
+    /// Where the client keeps the marketplace on disk.
+    pub location: Option<PathBuf>,
 }
 
 pub async fn marketplaces(client: PluginClient) -> Result<Vec<Marketplace>, String> {
-    let text = run(client, &["plugin", "marketplace", "list", "--json"]).await?;
-    let value = parse_json(&text, "marketplace list")?;
-    let rows = match client {
-        PluginClient::ClaudeCode => value.as_array().cloned().unwrap_or_default(),
-        PluginClient::Codex => value.get("marketplaces").and_then(Value::as_array).cloned().unwrap_or_default(),
-    };
-    Ok(rows
-        .iter()
-        .filter_map(|row| {
-            let name = row.get("name")?.as_str()?.to_string();
-            let source = ["repo", "url", "path"]
-                .iter()
-                .find_map(|key| row.get(*key))
-                .or_else(|| row.pointer("/marketplaceSource/source"))
-                .and_then(Value::as_str)
-                .map(str::to_string);
-            Some(Marketplace { name, source })
-        })
-        .collect())
+    Ok(crate::plugin_catalog::catalog(client)?.marketplaces)
 }
 
-/// Adds a marketplace (`owner/repo`, a git URL or a directory).
-pub async fn add_marketplace(client: PluginClient, source: &str) -> Result<(), String> {
-    run(client, &["plugin", "marketplace", "add", source]).await.map(drop)
+/// Adds a marketplace (`owner/repo`, a git URL or a directory), optionally pinned to a git ref and
+/// limited to some repo directories (sparse checkout).
+pub async fn add_marketplace(client: PluginClient, source: &str, git_ref: Option<&str>, sparse: &[String]) -> Result<String, String> {
+    let git_ref = git_ref.map(str::trim).filter(|r| !r.is_empty());
+    let sparse: Vec<&str> = sparse.iter().map(|p| p.trim()).filter(|p| !p.is_empty()).collect();
+    let mut args: Vec<String> = ["plugin", "marketplace", "add"].map(String::from).to_vec();
+    match client {
+        // Claude Code takes the ref as a `#ref` suffix and one variadic --sparse.
+        PluginClient::ClaudeCode => {
+            args.push(git_ref.map_or_else(|| source.to_string(), |r| format!("{source}#{r}")));
+            if !sparse.is_empty() {
+                args.push("--sparse".into());
+                args.extend(sparse.iter().map(|p| p.to_string()));
+            }
+        }
+        PluginClient::Codex => {
+            args.push(source.to_string());
+            if let Some(r) = git_ref {
+                args.extend(["--ref".into(), r.to_string()]);
+            }
+            for path in sparse {
+                args.extend(["--sparse".into(), path.to_string()]);
+            }
+        }
+    }
+    let args: Vec<&str> = args.iter().map(String::as_str).collect();
+    run(client, &args).await
 }
 
 /// Where the bridge marketplace for `to` lives: `<app config dir>/plugin-bridge/<client>`.
@@ -568,9 +605,11 @@ pub async fn copy(from: PluginClient, to: PluginClient, id: &str) -> Result<Copy
         // Registered from somewhere else (an older layout): point it here.
         Some(_) => {
             run(to, &["plugin", "marketplace", "remove", BRIDGE]).await?;
-            add_marketplace(to, &bridge_text).await?;
+            add_marketplace(to, &bridge_text, None, &[]).await?;
         }
-        None => add_marketplace(to, &bridge_text).await?,
+        None => {
+            add_marketplace(to, &bridge_text, None, &[]).await?;
+        }
     }
     // A plugin already installed from the bridge is reinstalled to pick up the new copy.
     if list(to).await?.iter().any(|p| p.id == report.id) {
@@ -598,7 +637,7 @@ pub async fn plugin_set_enabled(client: String, id: String, enabled: bool) -> Re
 }
 
 #[cfg_attr(feature = "tauri", tauri::command)]
-pub async fn plugin_install(client: String, id: String) -> Result<(), String> {
+pub async fn plugin_install(client: String, id: String) -> Result<String, String> {
     install(PluginClient::parse(&client)?, &id).await
 }
 
@@ -613,8 +652,25 @@ pub async fn plugin_marketplaces(client: String) -> Result<Vec<Marketplace>, Str
 }
 
 #[cfg_attr(feature = "tauri", tauri::command)]
-pub async fn plugin_add_marketplace(client: String, source: String) -> Result<(), String> {
-    add_marketplace(PluginClient::parse(&client)?, &source).await
+pub async fn plugin_add_marketplace(client: String, source: String, git_ref: Option<String>, sparse: Option<Vec<String>>) -> Result<String, String> {
+    add_marketplace(PluginClient::parse(&client)?, &source, git_ref.as_deref(), &sparse.unwrap_or_default()).await
+}
+
+#[cfg_attr(feature = "tauri", tauri::command)]
+pub async fn plugin_catalog(client: String) -> Result<crate::plugin_catalog::Catalog, String> {
+    let client = PluginClient::parse(&client)?;
+    tokio::task::spawn_blocking(move || crate::plugin_catalog::catalog(client)).await.map_err(|e| e.to_string())?
+}
+
+/// A plugin's logo as a `data:` URL, or none when it has no readable one.
+#[cfg_attr(feature = "tauri", tauri::command)]
+pub async fn plugin_icon(path: String) -> Option<String> {
+    tokio::task::spawn_blocking(move || crate::plugin_catalog::icon_data_url(Path::new(&path))).await.ok().flatten()
+}
+
+#[cfg_attr(feature = "tauri", tauri::command)]
+pub async fn plugin_activity() -> Vec<Activity> {
+    activity()
 }
 
 #[cfg_attr(feature = "tauri", tauri::command)]
@@ -625,22 +681,6 @@ pub async fn plugin_copy(from: String, to: String, id: String) -> Result<CopyRep
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn reads_both_clients_list_output() {
-        let claude = json!([{ "id": "ios@mcp-linker", "version": "0.1.0", "scope": "user", "enabled": true, "installPath": "/c/ios" }]);
-        let plugins = plugins_from_list(PluginClient::ClaudeCode, &claude);
-        assert_eq!((plugins[0].name.as_str(), plugins[0].marketplace.as_str(), plugins[0].enabled), ("ios", "mcp-linker", true));
-        assert_eq!(plugins[0].scope.as_deref(), Some("user"));
-
-        let codex = json!({ "installed": [
-            { "pluginId": "pdf@openai", "name": "pdf", "marketplaceName": "openai", "enabled": false, "installed": true, "source": { "path": "/x/pdf" } },
-            { "pluginId": "gone@openai", "installed": false },
-        ] });
-        let plugins = plugins_from_list(PluginClient::Codex, &codex);
-        assert_eq!(plugins.len(), 1);
-        assert_eq!(plugins[0].path.as_deref(), Some(Path::new("/x/pdf")));
-    }
 
     #[test]
     fn parses_plugin_clients() {

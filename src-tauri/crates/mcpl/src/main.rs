@@ -229,6 +229,12 @@ enum MarketplaceAction {
     /// Add a marketplace: owner/repo, a git URL or a directory.
     Add {
         source: String,
+        /// Git branch, tag or commit to check out.
+        #[arg(long = "ref", value_name = "REF")]
+        git_ref: Option<String>,
+        /// Only check out these repo directories (repeatable).
+        #[arg(long, value_name = "PATH")]
+        sparse: Vec<String>,
         #[command(flatten)]
         clients: PluginClients,
     },
@@ -790,10 +796,10 @@ async fn plugin_command(cli: &Cli, action: &PluginAction) -> Outcome {
             }
             Ok(())
         }
-        PluginAction::Marketplace { action: MarketplaceAction::Add { source, clients } } => {
+        PluginAction::Marketplace { action: MarketplaceAction::Add { source, git_ref, sparse, clients } } => {
             for client in plugin_clients(&clients.clients)? {
                 if !cli.dry_run {
-                    plugins::add_marketplace(client, source).await.map_err(Failure::from)?;
+                    plugins::add_marketplace(client, source, git_ref.as_deref(), sparse).await.map_err(Failure::from)?;
                 }
                 if !cli.json {
                     println!("{} marketplace {source} to {}", if cli.dry_run { "would add" } else { "added" }, client.id());
@@ -820,7 +826,7 @@ async fn plugin_each(cli: &Cli, id: &str, clients: &[String], done: &str, op: Pl
     for client in plugin_clients(clients)? {
         if !cli.dry_run {
             match op {
-                PluginOp::Install => plugins::install(client, id).await,
+                PluginOp::Install => plugins::install(client, id).await.map(drop),
                 PluginOp::Uninstall => plugins::uninstall(client, id).await,
                 PluginOp::Enable => plugins::set_enabled(client, id, true).await,
                 PluginOp::Disable => plugins::set_enabled(client, id, false).await,
