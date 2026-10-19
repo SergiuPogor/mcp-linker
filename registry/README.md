@@ -56,6 +56,7 @@ MCP Linker reads its own fields from
 |---|---|---|
 | `category` | yes | One of `index.json` `categories` |
 | `configName` | no | Key written into client configuration files |
+| `official` | yes | `true` if the product's own vendor publishes this server, `false` for a community server |
 | `featured` | no | `true` shows the server in the Featured section. Maintainers only |
 | `fullDescription` | no | Details beyond the 100-character `description` |
 

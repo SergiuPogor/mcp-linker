@@ -36,7 +36,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "posthog",
-        "category": "Analytics"
+        "category": "Analytics",
+        "official": true
       }
     }
   }

@@ -36,7 +36,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "postman",
-        "category": "Development & Testing"
+        "category": "Development & Testing",
+        "official": true
       }
     }
   }

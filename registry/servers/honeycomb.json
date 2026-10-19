@@ -24,7 +24,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "honeycomb",
-        "category": "Infrastructure & DevOps"
+        "category": "Infrastructure & DevOps",
+        "official": true
       }
     }
   }

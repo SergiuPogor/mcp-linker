@@ -37,6 +37,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "dchub",
         "category": "Database & Data",
+        "official": true,
         "fullDescription": "DC Hub is the live data layer for data-center site selection. Its Data Center Power Index (DCPI) is a daily score of where data centers can get grid power, across 300+ markets. It carries live grid feeds from the seven US ISOs (PJM, ERCOT, CAISO, MISO, SPP, NYISO, ISO-NE), electricity prices by state and ISO, and power, gas and fiber infrastructure data. Answers carry an as-of timestamp and a citation line. 94 MCP tools over Streamable HTTP; the free tier needs no key."
       }
     }

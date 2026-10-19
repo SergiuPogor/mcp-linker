@@ -24,6 +24,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "linear",
         "category": "Project Management",
+        "official": true,
         "featured": true
       }
     }

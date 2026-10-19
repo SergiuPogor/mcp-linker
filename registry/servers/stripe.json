@@ -24,6 +24,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "stripe",
         "category": "Payments & Commerce",
+        "official": true,
         "featured": true
       }
     }

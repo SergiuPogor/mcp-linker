@@ -29,6 +29,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "altorank",
         "category": "Sales & Marketing",
+        "official": true,
         "fullDescription": "AltoRank's hosted MCP server: readiness audits, Search Console, keyword research and SEO drafts into a review queue. Sign in with OAuth in your browser. No tool approves or publishes a draft. AltoRank is open source (AGPL-3.0) and self-hostable."
       }
     }

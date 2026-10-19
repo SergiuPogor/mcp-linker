@@ -28,7 +28,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "apollo",
-        "category": "Sales & Marketing"
+        "category": "Sales & Marketing",
+        "official": true
       }
     }
   }

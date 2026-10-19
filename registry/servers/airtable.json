@@ -35,7 +35,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "airtable",
-        "category": "Database & Data"
+        "category": "Database & Data",
+        "official": false
       }
     }
   }

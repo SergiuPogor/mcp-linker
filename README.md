@@ -85,6 +85,10 @@ See [docs/cli.md](docs/cli.md) for every command.
 ## What's MCP?
 Model Context Protocol is like USB-C for AI — a standard way to connect AI models to different data sources and tools.
 
+## 🤝 Add your MCP server
+
+Built an MCP server, or run one for your product? **Submit it to the directory.** Any working, safe server is welcome, however new it is. Open a pull request that adds one JSON file: see [how to add a server](./registry/README.md#adding-a-server) and the [listing criteria](./CONTRIBUTING.md#listing-an-mcp-server).
+
 ## 🧭 Related Projects
 
 - [milisp/codexia](http://github.com/milisp/codexia) - Agent workstation for the Codex & claude code.

@@ -29,6 +29,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "looot",
         "category": "Sales & Marketing",
+        "official": true,
         "fullDescription": "One API key and prepaid balance for about 2,500 data endpoints from 90+ providers: work email, phone, company enrichment, Google SERP, web pages. Pay per call, no subscription. Sign in with OAuth in your browser."
       }
     }

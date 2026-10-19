@@ -38,6 +38,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "mobilebuildmcp",
         "category": "Development & Testing",
+        "official": true,
         "fullDescription": "Build, run, and test iOS and macOS apps with Xcode and the Simulator. Formerly XcodeBuildMCP, by Sentry. Requires macOS 14.5+ and Xcode 16+. Sends error reports to Sentry by default; see its README to opt out."
       }
     }

@@ -23,7 +23,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "square",
-        "category": "Payments & Commerce"
+        "category": "Payments & Commerce",
+        "official": true
       }
     }
   }

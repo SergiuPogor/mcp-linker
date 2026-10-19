@@ -24,6 +24,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "figma",
         "category": "Design & Media",
+        "official": true,
         "featured": true
       }
     }

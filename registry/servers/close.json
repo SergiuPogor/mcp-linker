@@ -23,7 +23,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "close",
-        "category": "Sales & Marketing"
+        "category": "Sales & Marketing",
+        "official": true
       }
     }
   }

@@ -1,7 +1,7 @@
 import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import type { ServerType } from "@/types";
-import { Check, Cloud, Loader2, Monitor, Plus, Server, Trash2 } from "lucide-react";
+import { BadgeCheck, Check, Cloud, Loader2, Monitor, Plus, Server, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { quickInstallConfig, serverTransportLabels } from "../utils/quickInstall";
 
@@ -62,6 +62,12 @@ export function ServerCard({ server, onOpenDetails, onQuickAdd, targetLabel, ins
                 {label}
               </span>
             ))}
+            {server.isOfficial && (
+              <span className="inline-flex shrink-0 items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" title="Published by the product's own vendor">
+                <BadgeCheck className="size-3" />
+                Official
+              </span>
+            )}
           </span>
           <span className="mt-1 line-clamp-1 text-xs text-muted-foreground" title={server.description}>{server.description}</span>
         </span>

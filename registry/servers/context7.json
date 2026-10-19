@@ -35,7 +35,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "context7",
-        "category": "Development & Testing"
+        "category": "Development & Testing",
+        "official": true
       }
     }
   }

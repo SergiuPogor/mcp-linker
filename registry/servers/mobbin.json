@@ -27,7 +27,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "mobbin",
-        "category": "Design & Media"
+        "category": "Design & Media",
+        "official": true
       }
     }
   }

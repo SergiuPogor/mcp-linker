@@ -98,6 +98,9 @@ for (const file of files) {
   } else if (!categories.has(meta.category)) {
     fail(where, `category "${meta.category}" is not one of index.json categories`);
   }
+  if (meta && typeof meta.official !== "boolean") {
+    fail(where, "official must be true (published by the product's own vendor) or false (community)");
+  }
 }
 
 // Collections group existing servers by use case, e.g. iOS development.

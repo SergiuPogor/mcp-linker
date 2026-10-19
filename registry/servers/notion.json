@@ -24,6 +24,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "notion",
         "category": "Project Management",
+        "official": true,
         "featured": true
       }
     }
