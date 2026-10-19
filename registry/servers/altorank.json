@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/altorank",
+  "title": "AltoRank",
+  "description": "Readiness audits, Search Console, keyword research, and SEO drafts into a review queue.",
+  "version": "1.0.0",
+  "websiteUrl": "https://altorank.co/docs/mcp/",
+  "repository": {
+    "url": "https://github.com/AltoRank/altorank",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/altorank.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.altorank.co/api/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "altorank",
+        "category": "Sales & Marketing",
+        "fullDescription": "AltoRank's hosted MCP server: readiness audits, Search Console, keyword research and SEO drafts into a review queue. Sign in with OAuth in your browser. No tool approves or publishes a draft. AltoRank is open source (AGPL-3.0) and self-hostable."
+      }
+    }
+  }
+}

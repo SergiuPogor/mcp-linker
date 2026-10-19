@@ -58,6 +58,32 @@ cp docs/pre-commit .git/hooks/pre-commit
 5. Push your branch: `git push origin feature/amazing-feature`.
 6. Open a Pull Request and describe your changes, rationale, and testing steps.
 
+## Listing an MCP server
+
+Add your server to the [directory](registry/README.md), which has the step-by-step
+guide. This is what we check before merging. A server is listed when:
+
+1. `bun run validate-registry` passes.
+2. It works: the package installs, or the remote URL answers an MCP `initialize`
+   (a `401` for an OAuth server is fine), and the config in the entry matches.
+3. It is safe enough to list: no hard-coded secrets, no install step that runs
+   unexplained scripts, and `fullDescription` states what access it needs, including
+   tools that can run commands or write data.
+4. The description says what the server does and which tools it offers, not just
+   marketing copy.
+5. It is one entry per product, with no duplicate of an existing server.
+6. Its source is clear: `repository` points at the code that actually runs, so anyone
+   can check it. If the server connects to another company's product and you are not
+   that company, say so ("community" or "unofficial") in the title or description and
+   do not present it as official.
+
+Popularity, age and vendor status are not requirements. New servers start with few
+stars, and the vendor is usually the best source for the right config, but anyone
+may submit a server that meets the list above.
+
+Listing is not an endorsement. Maintainers decide what appears in **Featured**
+(`featured: true` and `registry/collections/`); a pull request cannot set that flag.
+
 ## Reporting Bugs and Requesting Features
 
 - Use GitHub Issues for bug reports and feature requests.

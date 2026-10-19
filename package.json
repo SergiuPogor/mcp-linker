@@ -15,7 +15,7 @@
     "build": "tsc && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "sync-catalog": "sh scripts/sync-catalog.sh",
+    "validate-registry": "bun registry/scripts/validate.mjs",
     "preview": "vite preview",
     "tauri": "tauri"
   },
@@ -80,6 +80,8 @@
     "@types/react-dom": "^18.3.7",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "esbuild": "0.25.5",
     "rollup-plugin-visualizer": "^5.14.0",
     "tailwindcss": "^4.3.3",
