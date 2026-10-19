@@ -23,7 +23,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "workato",
-        "category": "Automation & Integration"
+        "category": "Automation & Integration",
+        "official": true
       }
     }
   }

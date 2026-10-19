@@ -34,7 +34,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "monday",
-        "category": "Project Management"
+        "category": "Project Management",
+        "official": true
       }
     }
   }

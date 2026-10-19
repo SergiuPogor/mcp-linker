@@ -23,7 +23,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "eraser",
-        "category": "Design & Media"
+        "category": "Design & Media",
+        "official": true
       }
     }
   }

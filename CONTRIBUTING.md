@@ -73,9 +73,10 @@ guide. This is what we check before merging. A server is listed when:
    marketing copy.
 5. It is one entry per product, with no duplicate of an existing server.
 6. Its source is clear: `repository` points at the code that actually runs, so anyone
-   can check it. If the server connects to another company's product and you are not
-   that company, say so ("community" or "unofficial") in the title or description and
-   do not present it as official.
+   can check it. Set `official: true` only if you publish the server for your own
+   product; otherwise set `official: false`, which the app shows as "Community".
+   Reviewers check the remote host, package scope or repository owner against the
+   vendor before accepting `official: true`.
 
 Popularity, age and vendor status are not requirements. New servers start with few
 stars, and the vendor is usually the best source for the right config, but anyone

@@ -29,7 +29,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "supabase",
-        "category": "Database & Data"
+        "category": "Database & Data",
+        "official": true
       }
     }
   }

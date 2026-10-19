@@ -29,6 +29,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "solidping",
         "category": "Infrastructure & DevOps",
+        "official": true,
         "fullDescription": "Open-source uptime monitoring (AGPL-3.0). List and create checks across 40+ check types, read results and incidents, and manage status pages and maintenance windows. Sign in with OAuth in your browser. A self-hosted instance serves the same MCP endpoint at /api/v1/mcp."
       }
     }

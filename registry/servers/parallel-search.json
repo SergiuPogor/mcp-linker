@@ -30,6 +30,7 @@
       "io.github.milisp.mcp-linker": {
         "configName": "parallel-search",
         "category": "Development & Testing",
+        "official": true,
         "fullDescription": "Opt in by clicking Add. User-provided search objectives, search queries, and requested URLs are sent to Parallel.",
         "featured": true
       }

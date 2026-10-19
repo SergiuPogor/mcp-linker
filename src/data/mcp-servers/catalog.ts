@@ -6,10 +6,11 @@ export const CURATED_SERVERS: ServerType[] = MCP_REGISTRY_SERVERS.map(server => 
   const publisher = server._meta?.["io.modelcontextprotocol.registry/publisher-provided"] as
     Record<string, unknown> | undefined;
   const metadata = publisher?.["io.github.milisp.mcp-linker"] as
-    { category?: string; fullDescription?: string } | undefined;
+    { category?: string; fullDescription?: string; official?: boolean } | undefined;
   return {
     ...entryToServerType({ server }),
     developer: "MCP Linker catalog",
+    isOfficial: metadata?.official === true,
     description: metadata?.fullDescription ?? server.description,
     tags: metadata?.category ? [metadata.category] : [],
     // Catalog revisions are not upstream software versions.

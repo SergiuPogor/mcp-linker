@@ -28,7 +28,8 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "whimsical",
-        "category": "Design & Media"
+        "category": "Design & Media",
+        "official": true
       }
     }
   }
