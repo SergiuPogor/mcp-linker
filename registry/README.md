@@ -80,7 +80,7 @@ setup for every supported client. You can link to it from your own README with a
 the page also shows this snippet ready to copy:
 
 ```markdown
-[![Add to MCP Linker](https://img.shields.io/badge/MCP_Linker-Add-4f46e5?style=for-the-badge)](https://mcp-linker.milisp.dev/servers/<id>)
+[![Add to MCP Linker](https://mcp-linker.milisp.dev/badge.svg)](https://mcp-linker.milisp.dev/servers/<id>)
 ```
 
 This is optional and does not affect whether a server is listed.
