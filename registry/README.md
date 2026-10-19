@@ -73,6 +73,18 @@ owner with the vendor of the product. If they cannot confirm it, they ask you to
 change it to `false`, and the server is still listed. Setting it to `true` for a
 product you do not publish gets the entry rejected.
 
+### After your server is listed
+
+Your server gets a page at `https://mcp-linker.milisp.dev/servers/<id>` with one-click
+setup for every supported client. You can link to it from your own README with a badge;
+the page also shows this snippet ready to copy:
+
+```markdown
+[![Add to MCP Linker](https://img.shields.io/badge/MCP_Linker-Add-4f46e5?style=for-the-badge)](https://mcp-linker.milisp.dev/servers/<id>)
+```
+
+This is optional and does not affect whether a server is listed.
+
 These are local definitions, not claims of official registry publication or
 ownership of the publisher's namespace. `version: "1.0.0"` versions the directory
 entry, not the upstream software.
