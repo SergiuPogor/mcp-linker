@@ -1,0 +1,29 @@
+name: Deploy hub
+
+# The website reads the registry at build time, so rebuild it after a merge.
+on:
+  push:
+    branches: [main]
+    paths:
+      - registry/index.json
+      - registry/servers/**
+      - registry/icons/**
+      - registry/collections/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::VERCEL_DEPLOY_HOOK_URL is not set; skipping the hub rebuild."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
