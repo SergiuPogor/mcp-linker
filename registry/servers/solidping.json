@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/solidping",
+  "title": "SolidPing",
+  "description": "Uptime checks, incidents and status pages from SolidPing",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.solidping.io/",
+  "repository": {
+    "url": "https://github.com/fclairamb/solidping",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/solidping.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://solidping.io/api/v1/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "solidping",
+        "category": "Infrastructure & DevOps",
+        "fullDescription": "Open-source uptime monitoring (AGPL-3.0). List and create checks across 40+ check types, read results and incidents, and manage status pages and maintenance windows. Sign in with OAuth in your browser. A self-hosted instance serves the same MCP endpoint at /api/v1/mcp."
+      }
+    }
+  }
+}

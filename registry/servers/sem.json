@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/sem",
+  "title": "Sem",
+  "description": "Local code symbol lookup, source search, structural diffs and impact analysis",
+  "version": "1.0.0",
+  "repository": { "url": "https://github.com/Ataraxy-Labs/sem", "source": "github" },
+  "icons": [{ "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/sem.svg", "mimeType": "image/svg+xml", "sizes": ["any"] }],
+  "packages": [{
+    "registryType": "npm",
+    "identifier": "@ataraxy-labs/sem",
+    "version": "0.27.0",
+    "runtimeHint": "npx",
+    "transport": { "type": "stdio" },
+    "packageArguments": [{ "type": "positional", "value": "mcp" }],
+    "environmentVariables": [{
+      "name": "SEM_REPO",
+      "description": "Absolute path to an existing local Git checkout on the MCP client host",
+      "placeholder": "/absolute/path/to/repo",
+      "isRequired": true,
+      "isSecret": false
+    }]
+  }],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "sem",
+        "category": "Development & Testing",
+        "fullDescription": "Sem provides local code navigation, structural diffs and impact analysis through stdio MCP. Requires Node.js/npm and an existing Git checkout; no Sem API key. The first query may create an index. The full server also exposes validation tools that can execute commands. Use trusted repositories and client approval controls; SEM_REPO is not a sandbox."
+      }
+    }
+  }
+}
