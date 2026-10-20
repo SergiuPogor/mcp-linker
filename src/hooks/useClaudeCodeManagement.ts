@@ -1,5 +1,5 @@
 import { claudeWrite } from "@/lib/claude";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useCCProjectStore } from "@/stores/ccProject";
 import { invoke } from "@tauri-apps/api/core";
 import { useCallback, useState } from "react";
@@ -35,7 +35,6 @@ interface ServerFormData {
 }
 
 export function useClaudeCodeManagement() {
-  const { toast } = useToast();
   const { selectedProject, selectedScope, setProjects } = useCCProjectStore();
   const [servers, setServers] = useState<ClaudeCodeServer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,17 +45,13 @@ export function useClaudeCodeManagement() {
       const available = await invoke<boolean>("check_claude_config_exists");
       setClaudeCliAvailable(available);
       if (!available) {
-        toast({
-          title: "~/.claude.json Not Found",
-          description: "~/.claude.json Not Found",
-          variant: "destructive"
-        });
+        toast.error("~/.claude.json Not Found", { description: "~/.claude.json Not Found" });
       }
     } catch (error) {
       console.error("Error checking Claude CLI:", error);
       setClaudeCliAvailable(false);
     }
-  }, [toast]);
+  }, []);
 
   const loadServers = useCallback(async () => {
     if (selectedScope !== "user" && !selectedProject) {
@@ -73,26 +68,18 @@ export function useClaudeCodeManagement() {
       setServers(serverList);
     } catch (error) {
       console.error("Error loading servers:", error);
-      toast({
-        title: "Error loading servers",
-        description: `Failed to fetch MCP servers: ${error}`,
-        variant: "destructive"
-      });
+      toast.error("Error loading servers", { description: `Failed to fetch MCP servers: ${error}` });
     } finally {
       setLoading(false);
     }
-  }, [selectedScope, selectedProject, toast]);
+  }, [selectedScope, selectedProject]);
 
   const addServer = async (formData: ServerFormData) => {
     try {
       const { name, type, url, command, args, env, headers } = formData;
       
       if (!name.trim()) {
-        toast({
-          title: "Validation Error",
-          description: "Server name is required",
-          variant: "destructive"
-        });
+        toast.error("Validation Error", { description: "Server name is required" });
         return false;
       }
 
@@ -103,21 +90,13 @@ export function useClaudeCodeManagement() {
 
       if (type === "http" || type === "sse") {
         if (!url.trim()) {
-          toast({
-            title: "Validation Error",
-            description: "URL is required for HTTP/SSE servers",
-            variant: "destructive"
-          });
+          toast.error("Validation Error", { description: "URL is required for HTTP/SSE servers" });
           return false;
         }
         request.url = url.trim();
       } else if (type === "stdio") {
         if (!command.trim()) {
-          toast({
-            title: "Validation Error",
-            description: "Command is required for stdio servers",
-            variant: "destructive"
-          });
+          toast.error("Validation Error", { description: "Command is required for stdio servers" });
           return false;
         }
         request.command = command.trim();
@@ -140,27 +119,16 @@ export function useClaudeCodeManagement() {
       });
       
       if (response.success) {
-        toast({
-          title: "Server Added",
-          description: response.message,
-        });
+        toast.success("Server Added", { description: response.message });
         await loadServers();
         return true;
       } else {
-        toast({
-          title: "Error adding server",
-          description: response.message,
-          variant: "destructive"
-        });
+        toast.error("Error adding server", { description: response.message });
         return false;
       }
     } catch (error) {
       console.error("Error adding server:", error);
-      toast({
-        title: "Error adding server",
-        description: `Failed to add server: ${error}`,
-        variant: "destructive"
-      });
+      toast.error("Error adding server", { description: `Failed to add server: ${error}` });
       return false;
     }
   };
@@ -173,25 +141,14 @@ export function useClaudeCodeManagement() {
       });
       
       if (response.success) {
-        toast({
-          title: "Server Removed",
-          description: response.message,
-        });
+        toast.success("Server Removed", { description: response.message });
         await loadServers();
       } else {
-        toast({
-          title: "Error removing server",
-          description: response.message,
-          variant: "destructive"
-        });
+        toast.error("Error removing server", { description: response.message });
       }
     } catch (error) {
       console.error("Error removing server:", error);
-      toast({
-        title: "Error removing server",
-        description: `Failed to remove server: ${error}`,
-        variant: "destructive"
-      });
+      toast.error("Error removing server", { description: `Failed to remove server: ${error}` });
     }
   };
 
@@ -204,11 +161,7 @@ export function useClaudeCodeManagement() {
       return server;
     } catch (error) {
       console.error("Error getting server details:", error);
-      toast({
-        title: "Error getting server details",
-        description: `Failed to fetch server details: ${error}`,
-        variant: "destructive"
-      });
+      toast.error("Error getting server details", { description: `Failed to fetch server details: ${error}` });
       return null;
     }
   };

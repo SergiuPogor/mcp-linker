@@ -9,7 +9,7 @@ import { AppRoutes } from "@/routes";
 import { useViewStore } from "@/stores/viewStore";
 import { platform } from "@tauri-apps/plugin-os";
 import { useState } from "react";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { ClientSelector } from "../settings/client-selector";
 import { InstallationScope, InstallationTarget } from "../settings/InstallationTarget";
 import { Button } from "@/components/ui/button";
