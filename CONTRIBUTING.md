@@ -77,13 +77,31 @@ guide. This is what we check before merging. A server is listed when:
    product; otherwise set `official: false`, which the app shows as "Community".
    Reviewers check the remote host, package scope or repository owner against the
    vendor before accepting `official: true`.
+7. A package installed from git is pinned. An identifier such as `github:owner/repo`
+   follows the default branch, so anyone who can push to it changes what users run.
+   Use a tag or commit (`github:owner/repo#v1.2.0`), or publish to npm or PyPI.
+   Pinning `npm` and `pypi` versions is recommended but not required.
 
 Popularity, age and vendor status are not requirements. New servers start with few
 stars, and the vendor is usually the best source for the right config, but anyone
 may submit a server that meets the list above.
 
+### Review timing
+
+Listing is free. Pull requests are reviewed when a maintainer has time, there is no
+deadline, and an open pull request is not a rejection. Pinging a maintainer on a pull request does
+not change the order.
+
+### Featured and sponsored placement
+
 Listing is not an endorsement. Maintainers decide what appears in **Featured**
-(`featured: true` and `registry/collections/`); a pull request cannot set that flag.
+(`featured: true` and `registry/collections/`); a pull request cannot set that flag,
+and being a sponsor does not guarantee it.
+
+If you want a featured slot, a place in a collection, or a joint announcement, contact
+the maintainer at [milisp@proton.me](mailto:milisp@proton.me) before opening a pull request.
+Any paid or traded placement is labeled **Sponsored** in the app and the website and is
+kept apart from entries chosen on merit.
 
 ## Reporting Bugs and Requesting Features
 
