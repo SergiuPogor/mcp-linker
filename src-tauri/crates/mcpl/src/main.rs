@@ -49,7 +49,8 @@ enum Command {
     AddJson {
         name: String,
         /// The server entry, e.g. '{"command":"npx","args":["-y","pkg"]}'.
-        json: String,
+        #[arg(value_name = "JSON")]
+        config: String,
         #[command(flatten)]
         targets: RequiredTargets,
         /// Replace an existing server with the same name.
@@ -281,8 +282,8 @@ async fn run(cli: &Cli) -> Outcome {
             let config = server_from_args(args)?;
             put(cli, &args.name, &config, &args.targets.clients, args.force).await
         }
-        Command::AddJson { name, json, targets, force } => {
-            let config: Value = serde_json::from_str(json).map_err(|e| format!("Invalid JSON: {e}"))?;
+        Command::AddJson { name, config, targets, force } => {
+            let config: Value = serde_json::from_str(config).map_err(|e| format!("Invalid JSON: {e}"))?;
             if !config.is_object() {
                 return Err("The server config must be a JSON object.".to_string().into());
             }
@@ -843,4 +844,25 @@ async fn plugin_each(cli: &Cli, id: &str, clients: &[String], done: &str, op: Pl
         print_json(&json!({ "dryRun": cli.dry_run, "action": done, "changes": changes }));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::CommandFactory;
+
+    #[test]
+    fn cli_definition_is_valid() {
+        Cli::command().debug_assert();
+    }
+
+    #[test]
+    fn add_json_parses_with_global_json_flag() {
+        let cli = Cli::try_parse_from([
+            "mcpl", "--json", "--dry-run", "add-json", "probe", "{}", "-c", "custom@/tmp/x.json",
+        ])
+        .unwrap();
+        assert!(cli.json);
+        assert!(matches!(cli.command, Command::AddJson { .. }));
+    }
 }
