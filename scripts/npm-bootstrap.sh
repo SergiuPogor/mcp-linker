@@ -41,21 +41,18 @@ done
 
 node scripts/npm-version.cjs "$VERSION"
 
-if [[ "$DRY" == "--dry-run" ]]; then
-  for dir in npm/platforms/*/ npm/mcpl/; do (cd "$dir" && npm publish --access public --dry-run); done
-  exit 0
-fi
-
-# Platform packages first: mcpl depends on them.
-# Skips versions already on the registry, so a failed run can be re-run.
+# Platform packages first: mcpl depends on them. Skips versions already on
+# the registry, so a failed run can be re-run.
 for dir in npm/platforms/*/ npm/mcpl/; do
   pkg="$(node -p "require('./$dir/package.json').name")"
   if npm view "$pkg@$VERSION" version >/dev/null 2>&1; then
     echo "skip $pkg@$VERSION: already published"
     continue
   fi
-  (cd "$dir" && npm publish --access public)
+  (cd "$dir" && npm publish --access public ${DRY:+--dry-run})
 done
+
+[[ "$DRY" == "--dry-run" ]] && exit 0
 
 # Not --env: the workflow's npm-publish job has no environment.
 for dir in npm/platforms/*/ npm/mcpl/; do
