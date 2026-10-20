@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface BatchActionsDropdownProps {
@@ -30,7 +30,7 @@ export const BatchActionsDropdown = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" >
-              {t("manage.actions")} <ChevronDownIcon className="ml-2 h-4 w-4" />
+              {t("manage.actions")} <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
