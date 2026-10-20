@@ -20,6 +20,7 @@ jobs:
     name: Detect code changes
     outputs:
       code: ${{ steps.diff.outputs.code }}
+      rust: ${{ steps.diff.outputs.rust }}
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -34,13 +35,21 @@ jobs:
         run: |
           if ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
             echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "rust=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           # Markdown never affects typecheck, cargo or registry validation, even under registry/ or src/.
-          if git diff --name-only "$BASE" "$HEAD" | grep -Ev '\.md$' | grep -Eq '^(\.github/workflows/ci\.yml|registry/|src/|src-tauri/|package\.json|bun\.lockb?|tsconfig.*|vite\.config\..*)'; then
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD" | grep -Ev '\.md$' || true)
+          if echo "$CHANGED" | grep -Eq '^(\.github/workflows/ci\.yml|registry/|src/|src-tauri/|package\.json|bun\.lockb?|tsconfig.*|vite\.config\..*)'; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
             echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+          # Frontend-only changes (src/, registry/, JS config) need no Rust toolchain.
+          if echo "$CHANGED" | grep -Eq '^(\.github/workflows/ci\.yml|src-tauri/)'; then
+            echo "rust=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "rust=false" >> "$GITHUB_OUTPUT"
           fi
 
   checks:
@@ -66,28 +75,34 @@ jobs:
         run: bun run validate-registry
 
       - name: Install Linux dependencies
+        if: needs.changes.outputs.rust == 'true'
         run: |
           sudo apt update
           sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Install Rust toolchain
+        if: needs.changes.outputs.rust == 'true'
         uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           toolchain: stable
 
       - name: Setup Rust cache
+        if: needs.changes.outputs.rust == 'true'
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
         with:
           workspaces: src-tauri
 
       # tauri::generate_context! expects frontendDist to exist; cargo check does not need real assets.
       - name: Create placeholder frontend dist
+        if: needs.changes.outputs.rust == 'true'
         run: mkdir -p dist
 
       - name: Cargo check
+        if: needs.changes.outputs.rust == 'true'
         working-directory: src-tauri
         run: cargo check --workspace
 
       - name: Test mcpl-core and mcpl
+        if: needs.changes.outputs.rust == 'true'
         working-directory: src-tauri
         run: cargo test -p mcpl-core -p mcpl
