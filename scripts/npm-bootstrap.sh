@@ -61,12 +61,21 @@ done
 [[ "$DRY" == "--dry-run" ]] && exit 0
 
 # Not --env: the workflow's npm-publish job has no environment.
+# One OTP is reused for every package; it is asked for again on EOTP.
+read -r -p "npm OTP: " otp
 for dir in npm/platforms/*/ npm/mcpl/; do
   pkg="$(node -p "require('./$dir/package.json').name")"
-  # E409 means this package is already bound, so a re-run can carry on.
-  if ! out="$(npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" --allow-publish -y 2>&1)"; then
-    if grep -q E409 <<< "$out"; then echo "skip trust $pkg: already bound"; else echo "$out" >&2; exit 1; fi
-  fi
+  for attempt in 1 2; do
+    set +e
+    npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" --allow-publish --otp "$otp" -y 2>&1 | tee "$work/trust.log"
+    status=${PIPESTATUS[0]}
+    set -e
+    [[ $status -eq 0 ]] && break
+    # E409 means this package is already bound, so a re-run can carry on.
+    if grep -q E409 "$work/trust.log"; then echo "skip trust $pkg: already bound"; break; fi
+    if grep -q EOTP "$work/trust.log" && [[ $attempt -eq 1 ]]; then read -r -p "npm OTP: " otp; continue; fi
+    exit 1
+  done
 done
 
 # The binaries are build output, not source.
