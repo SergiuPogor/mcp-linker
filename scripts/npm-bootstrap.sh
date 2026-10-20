@@ -57,7 +57,10 @@ done
 # Not --env: the workflow's npm-publish job has no environment.
 for dir in npm/platforms/*/ npm/mcpl/; do
   pkg="$(node -p "require('./$dir/package.json').name")"
-  npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" --allow-publish -y
+  # E409 means this package is already bound, so a re-run can carry on.
+  if ! out="$(npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" --allow-publish -y 2>&1)"; then
+    if grep -q E409 <<< "$out"; then echo "skip trust $pkg: already bound"; else echo "$out" >&2; exit 1; fi
+  fi
 done
 
 # The binaries are build output, not source.
