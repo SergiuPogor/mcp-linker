@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.8.0] - 2026-10-19
+
+### New Features
+- **Plugins** — manage Claude Code and Codex plugins in the app, and browse and add plugin marketplaces from the Plugins page
+- **mcpl CLI** — manage MCP servers and plugins from the terminal, now published to npm
+- **Plugin packs** — iOS and macOS plugin packs for Claude Code and Codex
+- **Official badge** — registry servers are marked as official or community
+
+### Changes to what's free
+- Basic management is now free for every client; syncing is the paid feature
+
+### Under the hood
+- The MCP server directory moved to `registry/`
+- Icons now use lucide-react only, toasts use sonner only, and unused dependencies were removed
+- CI skips Rust steps on frontend-only changes
+
 ## [2.7.1] - 2026-10-17
 
 ### Changes
