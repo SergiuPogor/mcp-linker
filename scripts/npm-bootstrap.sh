@@ -57,7 +57,7 @@ done
 # Not --env: the workflow's npm-publish job has no environment.
 for dir in npm/platforms/*/ npm/mcpl/; do
   pkg="$(node -p "require('./$dir/package.json').name")"
-  npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" -y
+  npm trust github "$pkg" --file "$WORKFLOW" --repo "$REPO" --allow-publish -y
 done
 
 # The binaries are build output, not source.
