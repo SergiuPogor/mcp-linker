@@ -49,7 +49,13 @@ for dir in npm/platforms/*/ npm/mcpl/; do
     echo "skip $pkg@$VERSION: already published"
     continue
   fi
-  (cd "$dir" && npm publish --access public ${DRY:+--dry-run})
+  # A staged version is invisible to `npm view` but still blocks a publish.
+  # Approve it with `npm stage approve <id>` (see `npm stage list`).
+  if ! out="$(cd "$dir" && npm publish --access public ${DRY:+--dry-run} 2>&1)"; then
+    if grep -q 'previously staged' <<< "$out"; then echo "skip $pkg@$VERSION: staged, approve it with npm stage approve"; else echo "$out" >&2; exit 1; fi
+  else
+    echo "$out"
+  fi
 done
 
 [[ "$DRY" == "--dry-run" ]] && exit 0
