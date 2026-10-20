@@ -5,8 +5,8 @@ Cline, OpenCode and more, from the terminal. The CLI of
 [MCP Linker](https://github.com/milisp/mcp-linker).
 
 ```bash
-npx mcpl ls                       # every client on this machine
-npm install -g mcpl               # or install it
+npx @milisp/mcpl ls                       # every client on this machine
+npm install -g @milisp/mcpl               # or install it
 
 # Add one server to Claude Code, Codex and Cursor at once
 mcpl add fs -c claude-code -c codex -c cursor -- npx -y @modelcontextprotocol/server-filesystem ~/work

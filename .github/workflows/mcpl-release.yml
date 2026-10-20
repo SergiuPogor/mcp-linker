@@ -165,7 +165,7 @@ jobs:
           gh release create "$GITHUB_REF_NAME" release/* \
             --repo "$GITHUB_REPOSITORY" \
             --title "mcpl ${GITHUB_REF_NAME#mcpl-v}" \
-            --notes "Install: \`npm install -g mcpl\` or download a binary below. Docs: https://github.com/milisp/mcp-linker/blob/main/docs/cli.md" \
+            --notes "Install: \`npm install -g @milisp/mcpl\` or download a binary below. Docs: https://github.com/milisp/mcp-linker/blob/main/docs/cli.md" \
             --latest=false
 
   npm-publish:

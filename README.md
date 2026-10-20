@@ -63,8 +63,8 @@ yay -S mcp-linker-bin
 
 ### CLI
 
-`mcpl` does the same from the terminal, with no app needed: `npm install -g mcpl`,
-or `npx mcpl` to try it. Binaries are on the [`mcpl-v*` releases](https://github.com/milisp/mcp-linker/releases).
+`mcpl` does the same from the terminal, with no app needed: `npm install -g @milisp/mcpl`,
+or `npx @milisp/mcpl` to try it. Binaries are on the [`mcpl-v*` releases](https://github.com/milisp/mcp-linker/releases).
 
 ```bash
 # Add one server to Claude Code, Codex and Cursor at once

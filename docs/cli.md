@@ -157,8 +157,8 @@ both. The check runs in `mcpl-core` (`license::require_sync`).
 ## Install
 
 ```bash
-npx mcpl ls          # run without installing
-npm install -g mcpl  # or install
+npx @milisp/mcpl ls          # run without installing
+npm install -g @milisp/mcpl  # or install
 ```
 
 Binaries for every platform are also attached to each `mcpl-v*` GitHub release.

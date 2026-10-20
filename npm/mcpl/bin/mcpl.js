@@ -30,7 +30,7 @@ try {
 } catch {
   console.error(
     `[mcpl] optional dependency ${pkg} is missing. npm skips it with --no-optional ` +
-      "or an outdated lockfile. Try:\n  npm install -g mcpl@latest --force"
+      "or an outdated lockfile. Try:\n  npm install -g @milisp/mcpl@latest --force"
   );
   process.exit(1);
 }
