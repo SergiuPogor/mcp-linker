@@ -2,6 +2,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/ui/mode-toggle"
@@ -33,10 +34,18 @@ export const AppSidebar = () => {
   const { open } = useSidebar()
 
   return (
-    <Sidebar collapsible="icon" className="border-sidebar-border/50">
+    <Sidebar
+      // macOS: hide fully when collapsed instead of leaving an icon column under the traffic lights
+      collapsible={isMacOS ? "offcanvas" : "icon"}
+      className={cn(
+        "border-sidebar-border/50",
+        // macOS: no vertical divider, so nothing runs past the traffic lights
+        isMacOS && "group-data-[side=left]:border-r-0"
+      )}
+    >
       <SidebarHeader
         data-tauri-drag-region
-        className={cn(isMacOS && "min-h-11 pt-3")}
+        className={cn(isMacOS && "h-11 justify-center p-0")}
       >
       </SidebarHeader>
       <SidebarContent className="gap-1 px-2">
@@ -79,6 +88,7 @@ export const AppSidebar = () => {
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   <Settings />
                   {t("nav.settings")}
+                  <DropdownMenuShortcut>{isMacOS ? "⌘," : "Ctrl+,"}</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues")}
