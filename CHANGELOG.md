@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.0] - 2026-10-22
+
+### New Features
+- **Skills** — a new Skills page with a curated catalog, install from GitHub, and sync between clients. `mcpl skill` (ls, get, install, rm, enable, disable, update) covers the same from the terminal
+- **One header for Skills, MCPs and Plugins** — switch kind and scope from the same toolbar on every page
+- **Per-tool access control for Claude Code** — uncheck a tool to deny it in the project's `.claude/settings.local.json`
+- **Plugin sync** — copy plugins between Claude Code and Codex in a two-pane Sync panel
+- **Plugin contributions** — submit plugins via PR, browse them in Curated and Community tabs
+- **Two-way Local Sync** — stage copies and deletions in both directions
+- **About page** — license status, links and more apps
+- **Cmd+,** opens Settings
+- New servers in the directory: CloakBrowser, Taasky, Keenable
+
+### Changes
+- Import Configuration is replaced by a prefilled Add Server form
+- The Claude Code page is removed — Manage already covers it
+- Sidebar, settings, projects and notes are translated
+
+### Fixes
+- The deep link that launched the app now opens, and a repeat link refills Add Server
+- On macOS the collapsed sidebar hides fully and the header lines up with the traffic lights
+- Skill detail stays visible when the sidebar is open
+
 ## [2.8.0] - 2026-10-19
 
 ### New Features
