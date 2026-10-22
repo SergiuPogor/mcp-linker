@@ -117,8 +117,28 @@ JSON output: `plugin ls` → `{ "<client>": [Plugin] }`, `plugin get` →
 `{ "<client>": PluginDetails }`, `plugin sync` →
 `{ "dryRun", "from", "to", "plugins": [{ "id", "mcpServers", "skills", "skipped" }] }`.
 
+### Skills
+
+Skills are `SKILL.md` folders shared by Claude Code and Codex (see `docs/skills.md`).
+Without `-c`, `install`, `enable` and `disable` cover both clients.
+
+```
+mcpl skill ls                                   # alias: list
+mcpl skill get <name>                           # description, files, SKILL.md
+mcpl skill install <source> [--skill NAME]... [--ref REF] [-c CLIENT]...
+                                                # source: owner/repo[/path], git URL or folder
+mcpl skill install <source> --list              # only show what the source offers
+mcpl skill rm <name>...                         # alias: remove
+mcpl skill enable | disable <name>... -c CLIENT...
+mcpl skill update [<name>...] [--check]         # no names: those changed upstream
+```
+
+JSON output: `skill ls` → `[Skill]`, `skill get` → `{ "skill", "doc" }`,
+`skill install --list` → `Discovered`, `skill update --check` → `[Update]`; the rest →
+`{ "dryRun", "action", "changes": [{ "name", "error", "note" }] }`. Any failed item exits 1.
+
 Reserved for later, so do not use these names for anything else: `search`,
-`install <registry-id>` (Official MCP Registry), `skill …`.
+`install <registry-id>` (Official MCP Registry).
 
 ## JSON output
 

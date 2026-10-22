@@ -4,6 +4,7 @@
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use mcpl_core::license;
 use mcpl_core::plugins::{self, PluginClient};
+use mcpl_core::skills;
 use mcpl_core::sync::{convert_server, merge_over, same_server};
 use mcpl_core::target::{self, Target};
 use serde_json::{Map, Value, json};
@@ -85,6 +86,11 @@ enum Command {
     Plugin {
         #[command(subcommand)]
         action: PluginAction,
+    },
+    /// Manage agent skills (SKILL.md folders) for Claude Code and Codex.
+    Skill {
+        #[command(subcommand)]
+        action: SkillAction,
     },
     /// Show, activate or deactivate this device's license (shared with the app).
     License {
@@ -241,6 +247,62 @@ enum MarketplaceAction {
     },
 }
 
+#[derive(Args)]
+struct SkillNames {
+    /// Skill names.
+    #[arg(required = true)]
+    names: Vec<String>,
+}
+
+#[derive(Subcommand)]
+enum SkillAction {
+    /// List installed skills and which clients have them.
+    #[command(alias = "list")]
+    Ls,
+    /// Show a skill's description, files and SKILL.md.
+    Get { name: String },
+    /// Install skills from owner/repo[/path], a git URL or a folder; all found when no --skill.
+    Install {
+        source: String,
+        /// Git branch, tag or commit to check out.
+        #[arg(long = "ref", value_name = "REF")]
+        git_ref: Option<String>,
+        /// Only this skill (repeatable); `--list` shows what the source has.
+        #[arg(long = "skill", value_name = "NAME")]
+        skill: Vec<String>,
+        /// Only list the skills the source offers.
+        #[arg(long)]
+        list: bool,
+        /// claude-code or codex; repeat for both. Defaults to both.
+        #[arg(short = 'c', long = "client", value_name = "CLIENT")]
+        clients: Vec<String>,
+    },
+    /// Uninstall skills from the shared store and both clients.
+    #[command(alias = "remove")]
+    Rm(SkillNames),
+    /// Link skills into a client.
+    Enable {
+        #[command(flatten)]
+        names: SkillNames,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    /// Unlink skills from a client; the skill stays installed.
+    Disable {
+        #[command(flatten)]
+        names: SkillNames,
+        #[command(flatten)]
+        clients: PluginClients,
+    },
+    /// Re-install skills from their source; with no names, those with upstream changes.
+    Update {
+        names: Vec<String>,
+        /// Only report what has changed upstream.
+        #[arg(long)]
+        check: bool,
+    },
+}
+
 #[derive(Subcommand)]
 enum LicenseAction {
     Status,
@@ -295,6 +357,7 @@ async fn run(cli: &Cli) -> Outcome {
         Command::Sync(args) => sync(cli, args).await,
         Command::Clients => clients(cli),
         Command::Plugin { action } => plugin_command(cli, action).await,
+        Command::Skill { action } => skill_command(cli, action).await,
         Command::License { action } => license_command(cli, action).await,
     }
 }
@@ -812,6 +875,185 @@ async fn plugin_command(cli: &Cli, action: &PluginAction) -> Outcome {
             Ok(())
         }
     }
+}
+
+/// Runs a blocking skills call off the async runtime.
+async fn blocking<T: Send + 'static>(work: impl FnOnce() -> Result<T, String> + Send + 'static) -> Result<T, Failure> {
+    tokio::task::spawn_blocking(work).await.map_err(|e| Failure(1, e.to_string()))?.map_err(Failure::from)
+}
+
+/// Prints a batch's outcomes (or JSON); fails when any item failed.
+fn report_outcomes(cli: &Cli, action: &str, outcomes: &[skills::Outcome]) -> Outcome {
+    if cli.json {
+        print_json(&json!({ "dryRun": cli.dry_run, "action": action, "changes": outcomes }));
+    } else {
+        for o in outcomes {
+            match (&o.error, &o.note) {
+                (Some(e), _) => println!("{}  failed: {e}", o.name),
+                (None, Some(note)) => println!("{}  {action} ({note})", o.name),
+                (None, None) => println!("{}  {action}", o.name),
+            }
+        }
+    }
+    if outcomes.iter().any(|o| o.error.is_some()) { Err("Some skills failed.".to_string().into()) } else { Ok(()) }
+}
+
+fn dry_outcomes(names: &[String]) -> Vec<skills::Outcome> {
+    names.iter().map(|name| skills::Outcome { name: name.clone(), error: None, note: None }).collect()
+}
+
+async fn skill_command(cli: &Cli, action: &SkillAction) -> Outcome {
+    match action {
+        SkillAction::Ls => {
+            let list = blocking(|| Ok(skills::list(&skills::Paths::user()?))).await?;
+            if cli.json {
+                print_json(&serde_json::to_value(&list).unwrap_or_default());
+                return Ok(());
+            }
+            if list.is_empty() {
+                println!("(no skills)");
+            }
+            for skill in &list {
+                let clients = match (skill.claude_code, skill.codex) {
+                    (true, true) => "claude-code, codex",
+                    (true, false) => "claude-code",
+                    (false, true) => "codex",
+                    (false, false) => "none",
+                };
+                let source = skill.source.as_deref().map(|s| format!("  {s}")).unwrap_or_default();
+                println!("{}  [{clients}]{source}", skill.name);
+            }
+            Ok(())
+        }
+        SkillAction::Get { name } => {
+            let name = name.clone();
+            let (doc, listed) = blocking(move || {
+                let paths = skills::Paths::user()?;
+                let doc = skills::read(&paths, &name)?;
+                let listed = skills::list(&paths).into_iter().find(|s| s.name == name);
+                Ok((doc, listed))
+            })
+            .await?;
+            if cli.json {
+                print_json(&json!({ "skill": listed, "doc": doc }));
+                return Ok(());
+            }
+            println!("{}", doc.name);
+            if let Some(description) = &doc.description {
+                println!("  {description}");
+            }
+            println!("  path: {}", doc.path.display());
+            if let Some(skill) = &listed {
+                println!("  claude-code: {}  codex: {}", skill.claude_code, skill.codex);
+                if let Some(source) = &skill.source {
+                    println!("  source: {source}");
+                }
+            }
+            if !doc.files.is_empty() {
+                println!("  files: {}", doc.files.join(", "));
+            }
+            println!("\n{}", doc.markdown);
+            Ok(())
+        }
+        SkillAction::Install { source, git_ref, skill, list, clients } => {
+            let (source, git_ref) = (source.clone(), git_ref.clone());
+            if *list {
+                let found = blocking(move || skills::discover(&source, git_ref.as_deref())).await?;
+                if cli.json {
+                    print_json(&serde_json::to_value(&found).unwrap_or_default());
+                } else {
+                    println!("{}", found.source);
+                    for s in &found.skills {
+                        let description = s.description.as_deref().map(|d| format!("  {d}")).unwrap_or_default();
+                        println!("  {}{description}", s.name);
+                    }
+                }
+                return Ok(());
+            }
+            let targets = plugin_clients(clients)?;
+            if cli.dry_run {
+                let found = blocking(move || skills::discover(&source, git_ref.as_deref())).await?;
+                let names: Vec<String> =
+                    found.skills.into_iter().map(|s| s.name).filter(|n| skill.is_empty() || skill.contains(n)).collect();
+                if names.is_empty() {
+                    return Err(format!("No matching skill found in {}.", found.source).into());
+                }
+                return report_outcomes(cli, "would be installed", &dry_outcomes(&names));
+            }
+            let names = skill.clone();
+            let outcomes =
+                blocking(move || skills::install(&skills::Paths::user()?, &source, git_ref.as_deref(), &names, &targets)).await?;
+            report_outcomes(cli, "installed", &outcomes)
+        }
+        SkillAction::Rm(SkillNames { names }) => {
+            if cli.dry_run {
+                return report_outcomes(cli, "would be uninstalled", &dry_outcomes(names));
+            }
+            let names = names.clone();
+            let outcomes = blocking(move || Ok(skills::uninstall(&skills::Paths::user()?, &names))).await?;
+            report_outcomes(cli, "uninstalled", &outcomes)
+        }
+        SkillAction::Enable { names, clients } => skill_link(cli, &names.names, &clients.clients, true).await,
+        SkillAction::Disable { names, clients } => skill_link(cli, &names.names, &clients.clients, false).await,
+        SkillAction::Update { names, check } => {
+            let mut names = names.clone();
+            if names.is_empty() || *check {
+                let updates = blocking(|| skills::check_updates(&skills::Paths::user()?)).await?;
+                if *check {
+                    if cli.json {
+                        print_json(&serde_json::to_value(&updates).unwrap_or_default());
+                    } else if updates.is_empty() {
+                        println!("all skills are up to date");
+                    }
+                    for u in updates.iter().filter(|_| !cli.json) {
+                        println!("{}  update available ({})", u.name, u.latest_ref.as_deref().unwrap_or("latest"));
+                    }
+                    return Ok(());
+                }
+                names = updates.into_iter().map(|u| u.name).collect();
+                if names.is_empty() {
+                    if cli.json {
+                        print_json(&json!({ "dryRun": cli.dry_run, "action": "updated", "changes": [] }));
+                    } else {
+                        println!("all skills are up to date");
+                    }
+                    return Ok(());
+                }
+            }
+            if cli.dry_run {
+                return report_outcomes(cli, "would be updated", &dry_outcomes(&names));
+            }
+            let outcomes = blocking(move || Ok(skills::update(&skills::Paths::user()?, &names))).await?;
+            report_outcomes(cli, "updated", &outcomes)
+        }
+    }
+}
+
+async fn skill_link(cli: &Cli, names: &[String], clients: &[String], enabled: bool) -> Outcome {
+    let (done, would) = if enabled { ("enabled", "would be enabled") } else { ("disabled", "would be disabled") };
+    let targets = plugin_clients(clients)?;
+    if cli.dry_run {
+        return report_outcomes(cli, would, &dry_outcomes(names));
+    }
+    let names = names.to_vec();
+    let outcomes = blocking(move || {
+        let paths = skills::Paths::user()?;
+        // One row per skill: the first client's failure wins, notes are joined.
+        let mut rows: Vec<skills::Outcome> = dry_outcomes(&names);
+        for client in targets {
+            for (row, o) in rows.iter_mut().zip(skills::set_clients(&paths, &names, client, enabled)) {
+                if row.error.is_none() {
+                    row.error = o.error.map(|e| format!("{}: {e}", client.id()));
+                }
+                if let Some(note) = o.note {
+                    row.note = Some(row.note.take().map(|n| format!("{n} {note}")).unwrap_or(note));
+                }
+            }
+        }
+        Ok(rows)
+    })
+    .await?;
+    report_outcomes(cli, done, &outcomes)
 }
 
 #[derive(Clone, Copy)]
