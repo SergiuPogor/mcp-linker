@@ -103,6 +103,26 @@ the maintainer at [milisp@proton.me](mailto:milisp@proton.me) before opening a p
 Any paid or traded placement is labeled **Sponsored** in the app and the website and is
 kept apart from entries chosen on merit.
 
+## Listing a plugin
+
+Add your plugin to the marketplace; [plugins/README.md](plugins/README.md#submitting-your-plugin)
+has the entry format. This is what we check before merging. A plugin is listed when:
+
+1. `bun run validate-plugins` passes and the entry points at a public GitHub repository,
+   pinned to a full commit SHA.
+2. It installs: `claude plugin validate .` passes in its repository, and
+   `/plugin install <name>@mcp-linker` works.
+3. It is safe enough to list: no hard-coded secrets, no hooks or scripts that run
+   unexplained commands, and the README states what access its MCP servers, hooks and
+   skills need, including anything that runs commands or writes data.
+4. The description says what the plugin bundles and does, not just marketing copy.
+5. It is one entry per plugin, with no duplicate of an existing one.
+6. Its MCP servers are also listed in the [directory](registry/README.md) when they
+   are published for others to use on their own.
+
+Review timing and placement follow [the server rules](#review-timing): listing is free,
+is not an endorsement, and **Featured** or sponsored placement is not set by a pull request.
+
 ## Reporting Bugs and Requesting Features
 
 - Use GitHub Issues for bug reports and feature requests.

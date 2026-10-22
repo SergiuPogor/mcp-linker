@@ -89,6 +89,8 @@ Model Context Protocol is like USB-C for AI — a standard way to connect AI mod
 
 Built an MCP server, or run one for your product? **Submit it to the directory.** Any working, safe server is welcome, however new it is. Open a pull request that adds one JSON file: see [how to add a server](./registry/README.md#adding-a-server) and the [listing criteria](./CONTRIBUTING.md#listing-an-mcp-server).
 
+Built a Claude Code plugin (MCP servers + skills)? **List it too**: one entry in the plugin marketplace, pointing at your repo. See [submitting your plugin](./plugins/README.md#submitting-your-plugin).
+
 ## 🧭 Related Projects
 
 - [milisp/codexia](http://github.com/milisp/codexia) - Agent workstation for the Codex & claude code.

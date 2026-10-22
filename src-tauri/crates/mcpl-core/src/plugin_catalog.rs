@@ -27,6 +27,10 @@ pub struct CatalogEntry {
     pub homepage: Option<String>,
     /// From the client vendor's own marketplace, as opposed to one the user added.
     pub official: bool,
+    /// Submitted by someone else to MCP Linker's marketplace: an external source, not one of its own packs.
+    pub community: bool,
+    /// One of MCP Linker's own packs: a local entry of its marketplace.
+    pub curated: bool,
     pub installed: bool,
     pub enabled: bool,
     /// Claude Code's install scope (`user`, `project`, `local`).
@@ -62,6 +66,8 @@ struct Market {
     info: Marketplace,
     root: Option<PathBuf>,
     official: bool,
+    /// MCP Linker's own marketplace (`milisp/mcp-linker`).
+    linker: bool,
 }
 
 fn claude_markets(home: &Path) -> Vec<Market> {
@@ -92,9 +98,14 @@ fn market(name: &str, source: Option<String>, root: Option<PathBuf>) -> Market {
     let email = manifest.as_ref().and_then(|m| text(m.pointer("/owner/email"))).unwrap_or_default();
     Market {
         official: name == "claude-plugins-official" || email.ends_with("@anthropic.com"),
+        linker: is_linker(name, source.as_deref()),
         info: Marketplace { name: name.to_string(), source, location: root.clone() },
         root,
     }
+}
+
+fn is_linker(name: &str, source: Option<&str>) -> bool {
+    name == "mcp-linker" || source.is_some_and(|s| s.contains("milisp/mcp-linker"))
 }
 
 fn codex_markets(home: &Path) -> Vec<Market> {
@@ -110,7 +121,8 @@ fn codex_markets(home: &Path) -> Vec<Market> {
                 // Git marketplaces are checked out here by Codex.
                 _ => Some(home.join(".codex/.tmp/marketplaces").join(name)).filter(|p| p.is_dir()),
             };
-            Market { official: name.starts_with("openai-"), info: Marketplace { name: name.clone(), source, location: root.clone() }, root }
+            let linker = is_linker(name, source.as_deref());
+            Market { official: name.starts_with("openai-"), linker, info: Marketplace { name: name.clone(), source, location: root.clone() }, root }
         })
         .collect()
 }
@@ -188,6 +200,15 @@ fn icon_of(dir: &Path, manifest: Option<&Value>) -> Option<PathBuf> {
     });
     let declared = declared.map(|rel| dir.join(rel.trim_start_matches("./")));
     declared.into_iter().chain(["icon.png", "logo.png", "icon.svg", "logo.svg", "assets/icon.png", "assets/logo.png"].map(|f| dir.join(f))).find(|p| p.is_file())
+}
+
+/// Whether a marketplace row's `source` lives in the marketplace itself, as MCP Linker's own packs do.
+fn is_local_source(source: Option<&Value>) -> bool {
+    match source {
+        Some(Value::String(_)) => true,
+        Some(Value::Object(map)) => map.get("source").and_then(Value::as_str) == Some("local"),
+        _ => false,
+    }
 }
 
 /// The directory a marketplace row's `source` points at, when it is inside the marketplace.
@@ -289,6 +310,8 @@ fn codex_remote(home: &Path) -> Vec<CatalogEntry> {
                 marketplace: REMOTE_MARKET.into(),
                 name: p.name,
                 official: true,
+                community: false,
+                curated: false,
                 installed: false,
                 enabled: false,
                 scope: None,
@@ -316,7 +339,7 @@ pub fn catalog_at(client: PluginClient, home: &Path) -> Catalog {
     };
 
     let mut plugins: Vec<CatalogEntry> = Vec::new();
-    let build = |id: String, name: String, market: &str, official: bool, row: Option<&Value>, source: Option<PathBuf>| {
+    let build = |id: String, name: String, market: &str, official: bool, community: bool, curated: bool, row: Option<&Value>, source: Option<PathBuf>| {
         let install = installed_of(&id);
         let path = install.and_then(|(_, _, path, _)| path.clone()).or(source);
         // Reading every manifest of a big marketplace is wasted work; installed plugins and Codex's `interface` need it.
@@ -336,6 +359,8 @@ pub fn catalog_at(client: PluginClient, home: &Path) -> Catalog {
             enabled: install.is_some() && enabled(&id),
             marketplace: market.to_string(),
             official,
+            community,
+            curated,
             path,
             name,
             id,
@@ -351,7 +376,8 @@ pub fn catalog_at(client: PluginClient, home: &Path) -> Catalog {
                 continue;
             }
             let source = source_dir(root, row.get("source"));
-            plugins.push(build(id, name, &market.info.name, market.official, Some(&row), source));
+            let local = is_local_source(row.get("source"));
+            plugins.push(build(id, name, &market.info.name, market.official, market.linker && !local, market.linker && local, Some(&row), source));
         }
     }
     // Installed from a marketplace that has since gone (or never listed it).
@@ -361,7 +387,7 @@ pub fn catalog_at(client: PluginClient, home: &Path) -> Catalog {
         }
         let (name, market) = id.split_once('@').unwrap_or((id, ""));
         let official = markets.iter().find(|m| m.info.name == market).is_some_and(|m| m.official) || (client == PluginClient::Codex && market.starts_with("openai-"));
-        plugins.push(build(id.clone(), name.to_string(), market, official, None, None));
+        plugins.push(build(id.clone(), name.to_string(), market, official, false, false, None, None));
     }
     if client == PluginClient::Codex {
         for remote in codex_remote(home) {

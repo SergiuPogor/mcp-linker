@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "validate-registry": "bun registry/scripts/validate.mjs",
+    "validate-plugins": "bun scripts/validate-plugins.mjs",
     "preview": "vite preview",
     "tauri": "tauri"
   },

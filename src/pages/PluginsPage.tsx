@@ -35,7 +35,9 @@ const PREVIEW = 8;
 /** Rows shown in an expanded section; Codex's public catalog has thousands. */
 const MAX_ROWS = 100;
 
-type Tab = "public" | "personal";
+type Tab = "public" | "curated" | "personal" | "community";
+
+const tabOf = (entry: CatalogEntry): Tab => (entry.official ? "public" : entry.curated ? "curated" : entry.community ? "community" : "personal");
 
 interface Section {
   key: string;
@@ -43,12 +45,12 @@ interface Section {
   entries: CatalogEntry[];
 }
 
-/** Installed plugins first, then the rest grouped: Public by category, Personal by marketplace. */
+/** Installed plugins first, then the rest grouped: Public and Community by category, Personal by marketplace. */
 function sectionsOf(entries: CatalogEntry[], tab: Tab, installedTitle: string): Section[] {
   const installed = entries.filter(e => e.installed);
   const groups = new Map<string, CatalogEntry[]>();
   for (const entry of entries.filter(e => !e.installed)) {
-    const key = tab === "public" ? titleCase(entry.category ?? "Other") : entry.marketplace;
+    const key = tab !== "personal" ? titleCase(entry.category ?? "Other") : entry.marketplace;
     groups.set(key, [...(groups.get(key) ?? []), entry]);
   }
   return [
@@ -83,11 +85,12 @@ export default function PluginsPage() {
   const sections = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const matches = all.filter(
-      e => e.official === (tab === "public") && (!needle || [e.name, e.displayName, e.description, e.marketplace].some(f => f?.toLowerCase().includes(needle))),
+      e => tabOf(e) === tab && (!needle || [e.name, e.displayName, e.description, e.marketplace].some(f => f?.toLowerCase().includes(needle))),
     );
     return sectionsOf(matches, tab, t("plugins.installedSection"));
   }, [all, tab, query, t]);
-  const counts = { public: all.filter(e => e.official).length, personal: all.filter(e => !e.official).length };
+  const counts = { public: 0, curated: 0, personal: 0, community: 0 };
+  for (const entry of all) counts[tabOf(entry)]++;
 
   const addSource = useMutation({
     mutationFn: ({ source, gitRef, sparse }: { source: string; gitRef: string; sparse: string[] }) => addMarketplace(client, source, gitRef.trim(), sparse),
@@ -204,8 +207,14 @@ export default function PluginsPage() {
                 <TabsTrigger value="public">
                   {t("plugins.tabPublic")} <span className="ml-1 text-muted-foreground">{counts.public}</span>
                 </TabsTrigger>
+                <TabsTrigger value="curated">
+                  {t("plugins.tabCurated")} <span className="ml-1 text-muted-foreground">{counts.curated}</span>
+                </TabsTrigger>
                 <TabsTrigger value="personal">
                   {t("plugins.tabPersonal")} <span className="ml-1 text-muted-foreground">{counts.personal}</span>
+                </TabsTrigger>
+                <TabsTrigger value="community">
+                  {t("plugins.tabCommunity")} <span className="ml-1 text-muted-foreground">{counts.community}</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>

@@ -40,7 +40,7 @@ jobs:
           fi
           # Markdown never affects typecheck, cargo or registry validation, even under registry/ or src/.
           CHANGED=$(git diff --name-only "$BASE" "$HEAD" | grep -Ev '\.md$' || true)
-          if echo "$CHANGED" | grep -Eq '^(\.github/workflows/ci\.yml|registry/|src/|src-tauri/|package\.json|bun\.lockb?|tsconfig.*|vite\.config\..*)'; then
+          if echo "$CHANGED" | grep -Eq '^(\.github/workflows/ci\.yml|registry/|plugins/|\.claude-plugin/|\.agents/|scripts/validate-plugins|src/|src-tauri/|package\.json|bun\.lockb?|tsconfig.*|vite\.config\..*)'; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
             echo "code=false" >> "$GITHUB_OUTPUT"
@@ -73,6 +73,9 @@ jobs:
 
       - name: Validate registry
         run: bun run validate-registry
+
+      - name: Validate plugins
+        run: bun run validate-plugins
 
       - name: Install Linux dependencies
         if: needs.changes.outputs.rust == 'true'
