@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/keenable",
+  "title": "Keenable",
+  "description": "Live web search and clean-markdown page fetch for AI agents. Keyless, no sign-in.",
+  "version": "1.0.0",
+  "websiteUrl": "https://keenable.ai",
+  "repository": {
+    "url": "https://github.com/keenableai/keenable-mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/keenable.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.keenable.ai/mcp",
+      "headers": [
+        {
+          "name": "X-Keenable-Title",
+          "value": "mcp-linker"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "keenable",
+        "category": "Development & Testing",
+        "official": true,
+        "fullDescription": "Keenable's hosted MCP server. Two read-only tools: search_web_pages (a query, with optional site, published_after/published_before and max_results filters) and fetch_page_content (returns a URL as clean markdown, with an optional extraction prompt). Search queries and requested URLs are sent to Keenable. Works without a key or sign-in, capped per hour per IP; an optional X-API-Key header with a Keenable key removes the cap."
+      }
+    }
+  }
+}
