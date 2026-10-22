@@ -25,9 +25,9 @@ export default function McpManage() {
         <Button variant="ghost" size="icon" aria-label={t("manage.refresh")} title={t("manage.refresh")} onClick={() => navigate(0)}>
           <RefreshCcw />
         </Button>
-        <Button className="rounded-full" onClick={() => navigate("/servers/new")}>
+        <Button className="rounded-full" title={t("addCustomServer")} onClick={() => navigate("/servers/new")}>
           <Plus />
-          {t("addCustomServer")}
+          {t("add")}
         </Button>
       </HomeNav>
       <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">

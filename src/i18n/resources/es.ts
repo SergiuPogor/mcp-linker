@@ -12,6 +12,7 @@ const es: { translation: TranslationSchema } = {
     sellServer: "vender servidor",
     loginRequired: "se requiere inicio de sesión",
     addCustomServer: "Agregar servidor personalizado",
+    add: "Añadir",
     noServerTip: "sin sugerencia de servidor",
     confirmDeletion: "Confirmar eliminación",
     deleteConfirmation: "¿Estás seguro de que deseas eliminar {{serverKey}}?",

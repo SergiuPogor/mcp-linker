@@ -12,6 +12,7 @@ const zh: { translation: TranslationSchema } = {
     sellServer: "销售服务器",
     loginRequired: "需要登录",
     addCustomServer: "添加自定义服务器",
+    add: "添加",
     noServerTip: "无服务器提示",
     confirmDeletion: "确认删除",
     deleteConfirmation: "您确定要删除{{serverKey}}吗？",

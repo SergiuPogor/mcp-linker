@@ -1,3 +1,4 @@
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useViewStore } from "@/stores/viewStore";
 import type { ReactNode } from "react";
@@ -28,33 +29,28 @@ export function HomeNav({ kind, scope, children }: { kind: HomeKind; scope: Home
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-      <nav className="flex shrink-0 items-center gap-4" aria-label="Kind">
+      <nav className="flex shrink-0 items-center gap-1" aria-label="Kind">
         {kinds.map(item => (
           <button
             key={item.id}
             type="button"
             aria-current={item.id === kind}
-            className={cn("text-2xl font-bold tracking-tight transition-colors", item.id === kind ? "text-foreground" : "text-muted-foreground/60 hover:text-foreground")}
+            className={cn("rounded-md px-3 py-1.5 text-sm font-medium transition-colors", item.id === kind ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground")}
             onClick={() => item.id !== kind && navigate(PATHS[item.id][scope])}
           >
             {item.label}
           </button>
         ))}
       </nav>
-      <span className="h-5 w-px shrink-0 bg-border" aria-hidden />
-      <nav className="flex shrink-0 items-center gap-3" aria-label="Scope">
-        {scopes.map(item => (
-          <button
-            key={item.id}
-            type="button"
-            aria-current={item.id === scope}
-            className={cn("text-sm font-medium transition-colors", item.id === scope ? "text-foreground" : "text-muted-foreground hover:text-foreground")}
-            onClick={() => item.id !== scope && navigate(PATHS[kind][item.id])}
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
+      <Tabs value={scope} onValueChange={next => next !== scope && navigate(PATHS[kind][next as HomeScope])}>
+        <TabsList>
+          {scopes.map(item => (
+            <TabsTrigger key={item.id} value={item.id}>
+              {item.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
       {/* Wraps under the nav on narrow windows and stays right-aligned there. */}
       {children && <div className="ml-auto flex min-w-0 flex-1 basis-[16rem] items-center justify-end gap-2">{children}</div>}
     </div>

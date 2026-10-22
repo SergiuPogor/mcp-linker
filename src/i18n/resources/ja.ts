@@ -12,6 +12,7 @@ const ja: { translation: TranslationSchema } = {
     sellServer: "販売サーバー",
     loginRequired: "ログインが必要です",
     addCustomServer: "カスタムサーバーを追加",
+    add: "追加",
     noServerTip: "サーバーヒントなし",
     confirmDeletion: "削除の確認",
     deleteConfirmation: "{{serverKey}} を削除してもよろしいですか？",

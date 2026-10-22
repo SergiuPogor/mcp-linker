@@ -9,6 +9,7 @@ export interface TranslationSchema {
   sellServer: string;
   loginRequired: string;
   addCustomServer: string;
+  add: string;
   noServerTip: string;
   confirmDeletion: string;
   deleteConfirmation: string;
