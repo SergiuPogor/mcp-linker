@@ -1,0 +1,39 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/cloakbrowser-mcp",
+  "title": "CloakBrowser MCP",
+  "description": "Playwright MCP-compatible browser automation bridge for CloakBrowser Chromium.",
+  "version": "1.0.0",
+  "websiteUrl": "https://swimmwatch.github.io/cloakbrowser-mcp/",
+  "repository": {
+    "url": "https://github.com/swimmwatch/cloakbrowser-mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/cloakbrowser-mcp.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "cloakbrowser-mcp",
+      "version": "1.15.1",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" }
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "cloakbrowser-mcp",
+        "category": "Development & Testing",
+        "official": false,
+        "fullDescription": "Runs upstream Playwright MCP with CloakBrowser Chromium, preserving browser tools and adding bridge and browser diagnostics. Tools can navigate pages, inspect accessibility snapshots, click, fill forms, capture screenshots, and execute Playwright code. The server can interact with websites using the selected browser profile and write browser artifacts to the configured output directory. Use a dedicated profile and grant access only to trusted clients. Requires Node.js ^22.13.0 or >=24.0.0; no API key is required for local stdio use."
+      }
+    }
+  }
+}
