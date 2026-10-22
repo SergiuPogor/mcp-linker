@@ -14,6 +14,12 @@ const render = () =>
     </React.StrictMode>,
   );
 
+// `bun dev` in a browser has no Rust backend; answer IPC with canned data.
+if (import.meta.env.DEV && !("__TAURI_INTERNALS__" in window)) {
+  const { installBrowserMock } = await import("./dev/browser-mock");
+  installBrowserMock();
+}
+
 // Client metadata is needed synchronously everywhere; it is a single local IPC call.
 loadClients()
   .catch(error => console.error("Failed to load clients:", error))
