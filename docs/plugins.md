@@ -58,3 +58,10 @@ Pro (`license::require_sync`).
 `plugins/` in this repo holds curated packs (iOS, macOS) that serve both
 clients; see `plugins/README.md`. The app offers to add their marketplace
 (`milisp/mcp-linker`) when a client doesn't have it yet.
+
+The Plugins page has four tabs: **Public** (the client vendor's own marketplace),
+**Curated** (MCP Linker's own packs), **Personal** (every other marketplace you added)
+and **Community** (entries other people submitted to the MCP Linker marketplace by pull
+request, which point at their own repositories and are not endorsed). The app tells
+Curated and Community apart by the entry's `source`: a path inside the marketplace is a
+pack (`CatalogEntry::curated`), anything else is Community (`CatalogEntry::community`).

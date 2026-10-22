@@ -100,6 +100,10 @@ export interface CatalogEntry {
   homepage: string | null;
   /** From the client vendor's own marketplace rather than one the user added. */
   official: boolean;
+  /** Submitted to MCP Linker's marketplace by someone else, not one of its own packs. */
+  community: boolean;
+  /** One of MCP Linker's own packs. */
+  curated: boolean;
   installed: boolean;
   enabled: boolean;
   scope: string | null;

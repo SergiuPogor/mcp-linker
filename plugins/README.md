@@ -48,6 +48,26 @@ plugins/<pack>/.mcp.json
 plugins/<pack>/skills/<skill>/SKILL.md
 ```
 
-## Adding a pack
+## Submitting your plugin
+
+Built a Claude Code plugin (MCP servers, skills, commands)? Open a pull request that adds **one entry** to `.claude-plugin/marketplace.json`. Your code stays in your own repository; we only point at it.
+
+```json
+{
+  "name": "my-plugin",
+  "source": { "source": "github", "repo": "you/my-plugin", "sha": "<40-character commit>" },
+  "description": "What it bundles and what it is for.",
+  "homepage": "https://github.com/you/my-plugin",
+  "category": "development",
+  "keywords": ["mcp"]
+}
+```
+
+- `name` is lowercase kebab-case and unique; `source.sha` pins a full commit (a branch or tag can change under users). Update the entry in a new pull request to ship a new version.
+- The repository root must contain `.claude-plugin/plugin.json`; check it with `claude plugin validate .` there.
+- Run `bun run validate-plugins`, then open the pull request. The [listing criteria](../CONTRIBUTING.md#listing-a-plugin) are what reviewers check.
+- Codex entries (`.agents/plugins/marketplace.json`) are added by maintainers; a plugin that also ships `.codex-plugin/plugin.json` is welcome to say so in the pull request.
+
+## Adding a pack (maintainers)
 
 Copy an existing pack, edit both manifests and `.mcp.json`, then add an entry to both marketplace files. Validate with `claude plugin validate plugins/<pack>` and `claude plugin validate .`.

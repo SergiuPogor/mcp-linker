@@ -268,6 +268,8 @@ export interface TranslationSchema {
     add: string;
     addedAt: string;
     tabPublic: string;
+    tabCommunity: string;
+    tabCurated: string;
     tabPersonal: string;
     search: string;
     installedSection: string;
