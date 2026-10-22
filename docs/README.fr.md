@@ -14,6 +14,10 @@
 
 **Ajoutez et synchronisez en un clic serveurs MCP, skills et plugins entre vos clients IA — aucun appel à un LLM, marketplace intégrée**
 
+[![Download](https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2ea44f?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases/latest)
+
+`brew install mcplinker` · [Autres options d'installation](#installation)
+
 </div>
 
 > [!TIP]

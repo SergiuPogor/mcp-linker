@@ -14,6 +14,10 @@
 
 **一键添加并同步 MCP 服务器、Skills 和插件到各类 AI 客户端——无需调用 LLM，内置应用市场**
 
+[![Download](https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2ea44f?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases/latest)
+
+`brew install mcplinker` · [更多安装方式](#安装)
+
 </div>
 
 > [!TIP]

@@ -14,6 +14,10 @@
 
 **MCP-Server, Skills und Plugins mit einem Klick hinzufügen und zwischen KI-Clients synchronisieren — keine LLM-Aufrufe nötig, integrierter Marktplatz**
 
+[![Download](https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2ea44f?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases/latest)
+
+`brew install mcplinker` · [Weitere Installationsoptionen](#installation)
+
 </div>
 
 > [!TIP]

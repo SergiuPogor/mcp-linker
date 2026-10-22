@@ -14,6 +14,10 @@
 
 **MCP サーバー、Skills、プラグインをワンクリックで追加し、AI クライアント間で同期 — LLM 呼び出し不要、マーケットプレイス内蔵**
 
+[![Download](https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2ea44f?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases/latest)
+
+`brew install mcplinker` · [その他のインストール方法](#インストール)
+
 </div>
 
 > [!TIP]

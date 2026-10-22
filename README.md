@@ -14,6 +14,10 @@ English · [简体中文](docs/README.zh-CN.md) · [繁體中文](docs/README.zh
 
 **One-click add and sync MCP servers, skills and plugins across AI clients — No LLM calls needed, Built-in marketplace**
 
+[![Download](https://img.shields.io/badge/Download-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2ea44f?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases/latest)
+
+`brew install mcplinker` · [More install options](#installation)
+
 </div>
 
 > [!TIP]
