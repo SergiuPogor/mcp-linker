@@ -8,7 +8,7 @@ import {
 import { AppRoutes } from "@/routes";
 import { useViewStore } from "@/stores/viewStore";
 import { platform } from "@tauri-apps/plugin-os";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { ClientSelector } from "../settings/client-selector";
@@ -20,6 +20,19 @@ const Layout = () => {
   const isMacOS = platform() === "macos";
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { view, navigate, history, historyIndex } = useViewStore();
+
+  // Cmd+, (Ctrl+, elsewhere) opens settings, the standard settings shortcut
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "," && (event.metaKey || event.ctrlKey) && !event.shiftKey && !event.altKey) {
+        event.preventDefault();
+        navigate("/settings");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>

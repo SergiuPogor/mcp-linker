@@ -2,6 +2,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ModeToggle } from "@/components/ui/mode-toggle"
@@ -87,6 +88,7 @@ export const AppSidebar = () => {
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   <Settings />
                   {t("nav.settings")}
+                  <DropdownMenuShortcut>{isMacOS ? "⌘," : "Ctrl+,"}</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues")}
