@@ -19,7 +19,6 @@ export default function SettingPage() {
   
   const SECTIONS = [
     { id: "general", label: t("general", "General") },
-    { id: "encryption", label: t("encryption", "Encryption") },
     { id: "license", label: t("license.title") },
   ];
   const section = useViewStore(state => state.search.section);
