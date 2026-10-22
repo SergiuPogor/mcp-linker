@@ -38,7 +38,7 @@ const Layout = () => {
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <AppSidebar />
 
-      <SidebarInset>
+      <SidebarInset className="min-w-0">
         {/* Main vertical layout: top bar, main content, status bar */}
         <div className="flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
             <header

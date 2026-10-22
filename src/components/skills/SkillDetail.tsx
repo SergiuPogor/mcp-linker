@@ -57,7 +57,7 @@ export function SkillDetail({ skill, outdated, onBack, onUninstall }: { skill: S
       {error && <p className="text-sm text-destructive">{message(error)}</p>}
       {data && (
         <>
-          <div className="rounded-xl border p-5">
+          <div className="min-w-0 overflow-hidden rounded-xl border p-5">
             <Markdown>{data.markdown}</Markdown>
           </div>
           {data.files.length > 0 && (
