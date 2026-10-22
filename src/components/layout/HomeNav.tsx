@@ -52,7 +52,7 @@ export function HomeNav({ kind, scope, children }: { kind: HomeKind; scope: Home
         </TabsList>
       </Tabs>
       {/* Wraps under the nav on narrow windows and stays right-aligned there. */}
-      {children && <div className="ml-auto flex min-w-0 flex-1 basis-[16rem] items-center justify-end gap-2">{children}</div>}
+      {children && <div className="ml-auto flex min-w-fit flex-1 basis-[16rem] items-center justify-end gap-2">{children}</div>}
     </div>
   );
 }
