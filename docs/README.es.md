@@ -1,119 +1,140 @@
-# MCP Linker
-
 <div align="center">
 
-Agrega, administra y sincroniza servidores MCP (Model Context Protocol) entre clientes de IA como Claude Desktop, Cursor y Cline, todo a través de una interfaz Tauri ligera con un mercado MCP incorporado.
+<img src="../src-tauri/icons/128x128.png" alt="MCP Linker Logo" width="200" />
 
-![MCP Linker Logo](../images/logo.png)
+# MCP Linker
 
-⚡️ **Di adiós al copiar y pegar**
+[![GitHub Release](https://img.shields.io/github/v/release/milisp/mcp-linker?color=2ea44f&logo=github)](https://github.com/milisp/mcp-linker/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/milisp/mcp-linker?color=yellow&logo=github)](https://github.com/milisp/mcp-linker/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total?color=blue)](https://github.com/milisp/mcp-linker/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)](#)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](../CONTRIBUTING.md)
 
-[![GitHub stars](https://img.shields.io/github/stars/milisp/mcp-linker?style=for-the-badge&logo=github&color=yellow)](https://github.com/milisp/mcp-linker/stargazers)
-[![GitHub release](https://img.shields.io/github/release/milisp/mcp-linker.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
-[![Downloads](https://img.shields.io/github/downloads/milisp/mcp-linker/total.svg?style=for-the-badge&logo=github)](https://github.com/milisp/mcp-linker/releases)
+[English](../README.md) · [简体中文](./README.zh-CN.md) · [繁體中文](./README.zh-TW.md) · [日本語](./README.ja-JP.md) · [Deutsch](./README.de.md) · [Français](./README.fr.md) · **Español**
 
-### 🌟 **¿Te gusta este proyecto? ¡Danos una estrella!** 🌟
-
----
-
-### 🚀 Comienza en 30 segundos
-
-[📥 **Descargar ahora**](https://github.com/milisp/mcp-linker/releases) • [🚀 Inicio Rápido](#inicio-rápido) • [💬 Unirse a Discord](https://discord.gg/zAjtD4kf5K)
+**Añade y sincroniza con un clic servidores MCP, skills y plugins entre clientes de IA — sin llamadas a LLM, con marketplace integrado**
 
 </div>
 
----
+> [!TIP]
+> ⭐ Dale una estrella al repositorio y sigue a **milisp** en [Twitter](https://x.com/lisp_mi) y [GitHub](https://github.com/milisp) para enterarte de más.
 
-## ✨ ¿Por qué elegir MCP Linker?
+![Sincronización local: copiar servidores de Claude Code a Codex](../images/sync-to-codex.webp)
 
-**La forma más rápida de mejorar tu flujo de trabajo con IA**
+## 🚀 ¿Por qué MCP Linker?
 
-![Demo](../images/sync-to-codex.webp)
+- ⚡ **Instantáneo** — Añade servidores MCP, skills y plugins en segundos
+- 🧠 **Compatible con varios clientes** — Funciona con los principales clientes de IA
 
-### 🎯 Funcionalidades clave
+## ✨ Características
 
-- **🚀 Instalación con un clic** — No más edición manual de archivos de configuración
-- **🔄 Soporte multi-cliente** — Claude Desktop, Cursor, VS Code, Cline, Roo Code, Windsurf y más
-- **📦 Más de 600 servidores seleccionados** — El mercado de servidores MCP incorporado
-- **🧩 Skills** — Catálogo seleccionado y de la comunidad, instalación desde cualquier repositorio de GitHub, activación por cliente para Claude Code y Codex ([detalles](./skills.md))
-- **🔌 Plugins** — Explora los mercados de plugins de Claude Code y Codex, y copia plugins entre ambos ([detalles](./plugins.md))
-- **🌐 Multiplataforma** — macOS, Windows, Linux (ligero ~6MB)
-- **🔍 Detección inteligente** — Detección automática de entornos Python, Node.js, UV
-- **⚡ Construido con Tauri** — Rápido, seguro y eficiente en recursos
+- **Sincronización local** — Sincroniza las configuraciones de servidores MCP entre varios clientes
+- **Registro MCP oficial** — Explora e instala servidores directamente desde registry.modelcontextprotocol.io
+- **Skills** — Catálogo seleccionado y catálogo de la comunidad, instalación desde cualquier repositorio de GitHub y activación por cliente para Claude Code y Codex. Misma estructura que `npx skills`. [Ver detalle](./skills.md)
+- **Plugins** — Explora los marketplaces de plugins de Claude Code y Codex, y copia plugins entre ambos desde un panel de sincronización. [Ver detalle](./plugins.md)
+- **Compatible con varios clientes** — Claude Desktop/Code, Codex, Cursor, VS Code, GitHub Copilot CLI, Cline, OpenCode, Pi, Hermes Agent. [Ver detalle](./clients.md)
+- **Multiplataforma** — macOS, Windows, Linux
+- **Detección inteligente** — Detecta automáticamente entornos de Python, Node.js y uv
 
-### 💎 Beneficios destacados
+## 🚀 Inicio rápido
 
-- Sincroniza configuraciones de servidores MCP entre todos tus clientes.
-- Los usuarios Pro obtienen 🔐 Sincronización en la nube cifrada.
-- ¡Funciones de colaboración en equipo!\*\*
+### Instalación
 
-## 🚀 Inicio Rápido
+**macOS (Homebrew)**
+```bash
+brew install mcplinker
+```
 
-**Ponte en marcha en menos de un minuto:**
+**Arch Linux (AUR)**
+```bash
+yay -S mcp-linker-bin
+```
 
-1. **[📥 Descarga la última versión](https://github.com/milisp/mcp-linker/releases)**
-2. **🔍 Explora** nuestro mercado de servidores MCP
-3. **➕ Haz clic en "Agregar"** para instalar y configurar automáticamente
-4. **🎉 ¡Listo!**
+**GitHub Releases (binarios precompilados)**
+[Descargar](https://github.com/milisp/mcp-linker/releases)
 
-> **💡 Consejo Pro:** ¡Marca este repositorio para estar al tanto de nuevos servidores y funciones!
+> [!Note]
+> Si te has suscrito, vuelve a abrir la aplicación después de iniciar sesión por primera vez.
 
-## 🚀 Actualiza a MCP-Linker Pro o Team
+### Primeros pasos
 
-Accede a sincronización en la nube y más  
-👉 [Ver niveles y suscribirse](https://mcp-linker.milisp.dev/pricing)
+1. **Explora** los servidores MCP en el marketplace integrado
+2. **Haz clic en «Get»** para ver la configuración
+3. **Haz clic en «Add»** para instalarlo en el cliente que elijas
+4. **¡Listo!** Empieza a usar nuevas capacidades de IA de inmediato
 
-## 📸 Capturas de pantalla
+### CLI
 
-| Administrar                     | 🔍 Descubrir servidores         | 🔄 Sincronización local                |
-| ------------------------------- | ------------------------------- | ------------------------------- |
-| ![Manage](../images/manage.webp) | ![Discover](../images/discover.webp) | ![Sincronización local](../images/sync-projects.webp) |
+`mcpl` hace lo mismo desde la terminal, sin necesidad de la aplicación: `npm install -g @milisp/mcpl`,
+o `npx @milisp/mcpl` para probarlo. Los binarios están en las [versiones `mcpl-v*`](https://github.com/milisp/mcp-linker/releases).
 
----
+```bash
+# Add one server to Claude Code, Codex and Cursor at once
+mcpl add fs -c claude-code -c codex -c cursor -- npx -y @modelcontextprotocol/server-filesystem ~/work
+
+mcpl ls                                  # every client on this machine
+mcpl sync --from claude-code --to codex  # copy servers between clients (license)
+mcpl skill install owner/repo            # install skills for Claude Code and Codex
+mcpl plugin ls                           # plugins of Claude Code and Codex
+```
+
+Consulta [cli.md](./cli.md) para ver todos los comandos.
+
+## Capturas de pantalla
+
+| Sincronización local entre proyectos | Descubrimiento de servidores | Gestión |
+|-----------------------------|------------------|--------|
+| ![Sincronización local entre proyectos de Claude Code](../images/sync-projects.webp) | ![Descubrir](../images/discover.webp) | ![Gestionar](../images/manage.webp) |
+
+## ¿Qué es MCP?
+El Model Context Protocol es como el USB-C de la IA: una forma estándar de conectar modelos de IA con distintas fuentes de datos y herramientas.
+
+## 🤝 Añade tu servidor MCP
+
+¿Has creado un servidor MCP, o gestionas uno para tu producto? **Envíalo al directorio.** Cualquier servidor que funcione y sea seguro es bienvenido, por nuevo que sea. Abre un pull request que añada un archivo JSON: consulta [cómo añadir un servidor](../registry/README.md#adding-a-server) y los [criterios de inclusión](../CONTRIBUTING.md#listing-an-mcp-server).
+
+¿Has creado un plugin de Claude Code (servidores MCP + skills)? **Inclúyelo también**: una entrada en el marketplace de plugins que apunte a tu repositorio. Consulta [cómo enviar tu plugin](../plugins/README.md#submitting-your-plugin).
+
+¿Tienes un skill (`SKILL.md`)? **Inclúyelo en la página de Skills**: una entrada en [`skills/catalog.json`](../skills/catalog.json). Consulta [skills.md](./skills.md).
+
+## 🧭 Proyectos relacionados
+
+- [milisp/codexia](http://github.com/milisp/codexia) - Estación de trabajo de agentes para Codex y Claude Code.
+- [**awesome-claude-dxt**](https://github.com/milisp/awesome-claude-dxt) — una lista seleccionada de extensiones de Claude Desktop (dxt), herramientas y recursos
+- [**awesome-codex-cli**](https://github.com/milisp/awesome-codex-cli) — lista seleccionada de herramientas, plugins, skills y MCP para Codex
+
+## 💬 Comunidad y soporte
+
+- [💬 Únete a Discord](https://discord.gg/zAjtD4kf5K)
+- [💬 Únete a las discusiones](https://github.com/milisp/mcp-linker/discussions)
+- [🐛 Reporta problemas](https://github.com/milisp/mcp-linker/issues)
 
 ## 🛠️ Desarrollo
 
-```bash
-git clone https://github.com/milisp/mcp-linker
-cd mcp-linker
-bun install
-cp .env.example .env
-bun tauri dev
-```
+Para los comandos de desarrollo y la guía de contribución, consulta [CONTRIBUTING](../CONTRIBUTING.md)
 
-**Requisitos:** Node.js 20+, Bun, toolchain de Rust
+## 🔍 Solución de problemas
 
----
+Consulta la [Wiki](https://github.com/milisp/mcp-linker/wiki)
 
-## 🏗️ Arquitectura
+## 💖 Colaboradores
 
-- **Frontend:** Tauri + React + shadcn/ui
-- **Backend:** FastAPI opcional
+¡Gracias a todos nuestros magníficos colaboradores!
 
----
+<a href="https://github.com/milisp/mcp-linker/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=milisp/mcp-linker" />
+</a>
 
-## 🤝 Contribuir
+## Licencia
 
-¡Contribuciones bienvenidas! Consulta [CONTRIBUTING.md](../CONTRIBUTING.md) para más detalles.
+MCP Linker tiene doble licencia: **AGPL-3.0** y **licencia comercial**.
 
-**¿Te ha sido útil? ¡Danos una ⭐ para apoyar el proyecto!**
+- **AGPL-3.0** — para uso de código abierto.
+- **Licencia comercial** — necesaria para uso de código cerrado, propietario, alojado o SaaS.
 
 ---
+**¿Te ha resultado útil? ¡Dale una ⭐ al proyecto!**
 
-## 💬 Soporte y comunidad
+## 📈 Historial de estrellas
 
-- **[💬 Únete a nuestra comunidad en Discord](https://discord.gg/zAjtD4kf5K)** — Obtén ayuda, comparte ideas y conecta con otros usuarios
-- **[🐛 Reporta problemas](https://github.com/milisp/mcp-linker/issues)** — Ayúdanos a mejorar
-
----
-
-## 🎉 Contribuidores destacados
-
-Agradecemos a nuestra increíble comunidad de colaboradores que mejoran MCP Linker cada día:
-
-[![Contributors](https://contrib.rocks/image?repo=milisp/mcp-linker)](https://github.com/milisp/mcp-linker/graphs/contributors)
-
-**Agradecimientos especiales a:**
-
-- [@eltociear](https://github.com/eltociear) — Traducción al japonés
-- [@devilcoder01](https://github.com/devilcoder01) — Compatibilidad con Windows, mejoras de UI, flujos de trabajo de GitHub 🛠️
+[![Star History Chart](https://api.star-history.com/svg?repos=milisp/mcp-linker&type=Date)](https://star-history.com/#milisp/mcp-linker)
