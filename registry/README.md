@@ -11,7 +11,7 @@ for the exact criteria.
 
 Two layers:
 
-- **Directory**: every entry in `index.json`, grouped by category.
+- **Directory**: every file in `servers/`, grouped by category.
 - **Featured**: entries with `featured: true`, plus the hand-picked `collections/`.
   Maintainers choose these. Popularity, official vendor status and quality of
   maintenance all count, and submitting a PR does not put a server here.
@@ -19,7 +19,7 @@ Two layers:
 ## Layout
 
 ```
-index.json             display order, categories, and collections
+index.json             maintainer-ordered entries, categories, and collections
 servers/<id>.json      one server, server.json format
 icons/<id>.svg         its icon
 collections/<id>.json  a themed set of servers
@@ -42,8 +42,7 @@ scripts/validate.mjs
      servers exposed by a local desktop app.
 3. Add `icons/<id>.svg` and set `icons` to
    `[{ "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/<id>.svg", "mimeType": "image/svg+xml", "sizes": ["any"] }]`.
-4. Add `<id>` to `servers` in `index.json`. Array order is display order, so append to the end.
-5. Run `bun install && bun run validate-registry`, then open a pull request.
+4. Run `bun install && bun run validate-registry`, then open a pull request.
 
 You don't need to clone anything: on GitHub, open `registry/servers/`, choose
 **Add file → Create new file**, and GitHub forks the repository and opens the

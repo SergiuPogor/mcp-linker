@@ -34,14 +34,11 @@ const icons = readdirSync(join(root, "icons")).filter(f => f.endsWith(".svg"));
 const errors = [];
 const fail = (where, message) => errors.push(`${where}: ${message}`);
 
-// index.json and servers/ must list exactly the same entries.
+// index.json only orders the first entries; every id it lists must exist.
 const listed = new Set(index.servers);
 if (listed.size !== index.servers.length) fail("index.json", "servers contains duplicates");
 for (const id of listed) {
   if (!files.includes(`${id}.json`)) fail("index.json", `"${id}" has no servers/${id}.json`);
-}
-for (const file of files) {
-  if (!listed.has(file.slice(0, -5))) fail(`servers/${file}`, "not listed in index.json servers");
 }
 
 for (const file of files) {
