@@ -8,11 +8,8 @@ import { NewServerPage } from "@/pages/NewServerPage";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
 import {
-  LayoutDashboard,
+  Home,
   NotebookPen,
-  Puzzle,
-  Sparkles,
-  Search,
 } from "lucide-react";
 import About from "./pages/About";
 import { useViewStore } from "./stores/viewStore";
@@ -55,28 +52,13 @@ export const getNavigationRoutes = (
   return [
     {
       id: "discover",
-      name: t("nav.discover"),
-      icon: <Search />,
-    },
-    {
-      id: "manage",
-      name: t("nav.manage"),
-      icon: <LayoutDashboard />,
+      name: t("nav.home"),
+      icon: <Home />,
     },
     {
       id: "notes",
       name: t("notes.title"),
       icon: <NotebookPen />,
-    },
-    {
-      id: "plugins",
-      name: t("nav.plugins"),
-      icon: <Puzzle />,
-    },
-    {
-      id: "skills",
-      name: t("nav.skills"),
-      icon: <Sparkles />,
     },
   ];
 };

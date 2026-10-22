@@ -1,3 +1,5 @@
+import { CatalogCard } from "@/components/common/CatalogCard";
+import { PluginIcon } from "@/components/plugins/PluginIcon";
 import { ClientIcon } from "@/components/ClientIcon";
 import { AddSkillDialog } from "@/components/skills/AddSkillDialog";
 import { SkillDetail } from "@/components/skills/SkillDetail";
@@ -14,14 +16,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { SearchToggle } from "@/components/common/SearchToggle";
+import { HomeNav } from "@/components/layout/HomeNav";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useViewStore } from "@/stores/viewStore";
 import { PLUGIN_CLIENTS, type PluginClient } from "@/lib/plugins";
 import { type CatalogSkill, type Skill, bundledSkills, checkSkillUpdates, fetchCatalog, hasSkill, listSkills } from "@/lib/skills";
 import { useQuery } from "@tanstack/react-query";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Check, Download, Loader2, Plus, RefreshCcw, Search } from "lucide-react";
+import { Check, Download, Loader2, Plus, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -35,7 +39,9 @@ const matches = (needle: string, ...fields: (string | null | undefined)[]) => !n
 
 export default function SkillsPage() {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>("installed");
+  const discovering = useViewStore(state => state.search.scope === "discover");
+  const [source, setSource] = useState<Exclude<Tab, "installed">>("curated");
+  const tab: Tab = discovering ? source : "installed";
   const [query, setQuery] = useState("");
   const [clientId, setClientId] = useState<PluginClient>(PLUGIN_CLIENTS[0].id);
   const [selected, setSelected] = useState<string[]>([]);
@@ -84,20 +90,17 @@ export default function SkillsPage() {
   const client = PLUGIN_CLIENTS.find(c => c.id === clientId) ?? PLUGIN_CLIENTS[0];
 
   const header = (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <h1 className="text-3xl font-bold">{t("skills.title")}</h1>
+    <HomeNav kind="skills" scope={discovering ? "discover" : "yours"}>
+      <SearchToggle value={query} onChange={setQuery} placeholder={t("skills.search")} />
+      {discovering && (
         <Tabs
-          value={tab}
+          value={source}
           onValueChange={next => {
-            setTab(next as Tab);
+            setSource(next as typeof source);
             setSelected([]);
           }}
         >
           <TabsList>
-            <TabsTrigger value="installed">
-              {t("skills.tabInstalled")} <span className="ml-1 text-muted-foreground">{counts.installed}</span>
-            </TabsTrigger>
             <TabsTrigger value="curated">
               {t("skills.tabCurated")} <span className="ml-1 text-muted-foreground">{counts.curated}</span>
             </TabsTrigger>
@@ -106,35 +109,29 @@ export default function SkillsPage() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
-        <div className="ml-auto" />
-        <Tabs value={clientId} onValueChange={next => setClientId(next as PluginClient)}>
-          <TabsList>
-            {PLUGIN_CLIENTS.map(c => (
-              <TabsTrigger key={c.id} value={c.id} className="gap-1.5">
-                <ClientIcon client={clientIconId(c.id)} className="size-4" />
-                {c.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input className="rounded-full pl-9" value={query} onChange={event => setQuery(event.target.value)} placeholder={t("skills.search")} />
-        </div>
-        <Button variant="ghost" size="icon" aria-label={t("skills.refresh")} title={t("skills.refresh")} onClick={refresh}>
-          <RefreshCcw className={`size-4 ${skills.isFetching ? "animate-spin" : ""}`} />
-        </Button>
+      )}
+      <Tabs value={clientId} onValueChange={next => setClientId(next as PluginClient)}>
+        <TabsList>
+          {PLUGIN_CLIENTS.map(c => (
+            <TabsTrigger key={c.id} value={c.id} aria-label={c.label} title={c.label}>
+              <ClientIcon client={clientIconId(c.id)} className="size-4" />
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+      <Button variant="ghost" size="icon" aria-label={t("skills.refresh")} title={t("skills.refresh")} onClick={refresh}>
+        <RefreshCcw className={`size-4 ${skills.isFetching ? "animate-spin" : ""}`} />
+      </Button>
+      {!discovering && (
         <Button variant="ghost" size="icon" aria-label={t("skills.checkUpdates")} title={t("skills.checkUpdates")} disabled={updates.isFetching} onClick={checkUpdates}>
           {updates.isFetching ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
         </Button>
-        <Button className="rounded-full" onClick={() => setAdding(true)}>
-          <Plus className="size-4" />
-          {t("skills.add")}
-        </Button>
-      </div>
-    </div>
+      )}
+      <Button className="rounded-full" onClick={() => setAdding(true)}>
+        <Plus className="size-4" />
+        {t("skills.add")}
+      </Button>
+    </HomeNav>
   );
 
   /** What the picked rows can be given: link to a client, install, update, remove. */
@@ -178,44 +175,37 @@ export default function SkillsPage() {
   );
 
   const installedRow = (skill: Skill) => (
-    <div key={skill.name} role="button" tabIndex={0} className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-muted/60" onClick={() => setOpenName(skill.name)} onKeyDown={event => event.key === "Enter" && setOpenName(skill.name)}>
-      <div onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
-        <Checkbox checked={selected.includes(skill.name)} onCheckedChange={on => toggle(skill.name, !!on)} aria-label={skill.name} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-2 truncate font-medium">
-          {skill.name}
-          {outdated.has(skill.name) && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-normal text-amber-600">{t("skills.updateAvailable")}</span>}
-        </p>
-        <p className="truncate text-sm text-muted-foreground">{skill.description}</p>
-      </div>
-      <div onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
-        <Switch checked={hasSkill(skill, client.id)} disabled={busy} onCheckedChange={enabled => setClient.mutate({ names: [skill.name], client: client.id, enabled })} aria-label={t("skills.enabledIn", { client: client.label })} title={t("skills.enabledIn", { client: client.label })} />
-      </div>
-    </div>
+    <CatalogCard
+      key={skill.name}
+      icon={<PluginIcon name={skill.name} icon={null} className="size-9" />}
+      title={skill.name}
+      description={skill.description}
+      badge={outdated.has(skill.name) && <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-normal text-amber-600">{t("skills.updateAvailable")}</span>}
+      onOpen={() => setOpenName(skill.name)}
+      leading={<Checkbox checked={selected.includes(skill.name)} onCheckedChange={on => toggle(skill.name, !!on)} aria-label={skill.name} />}
+      action={<Switch checked={hasSkill(skill, client.id)} disabled={busy} onCheckedChange={enabled => setClient.mutate({ names: [skill.name], client: client.id, enabled })} aria-label={t("skills.enabledIn", { client: client.label })} title={t("skills.enabledIn", { client: client.label })} />}
+    />
   );
 
   const catalogRow = (entry: CatalogSkill) => {
     const have = byName.get(entry.name);
     const stale = catalogStale(entry);
     const installing = installCatalog.isPending && installCatalog.variables?.skills.includes(entry);
+    const linked = !!have && hasSkill(have, client.id);
+    const current = linked && !stale;
+    const label = current ? t("skills.enabledIn", { client: client.label }) : stale && linked ? t("skills.update") : t("skills.installTo", { client: client.label });
     return (
-      <div key={entry.name} className="flex min-w-0 items-center gap-3 rounded-lg px-2 py-2 hover:bg-muted/50">
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-medium" title={entry.name}>{entry.name}</span>
-          <span className="line-clamp-1 text-xs text-muted-foreground" title={entry.description}>{entry.description}</span>
-        </span>
-        {(() => {
-          const linked = !!have && hasSkill(have, client.id);
-          const current = linked && !stale;
-          const label = current ? t("skills.enabledIn", { client: client.label }) : stale && linked ? t("skills.update") : t("skills.installTo", { client: client.label });
-          return (
-            <Button size="icon" variant={current ? "ghost" : "outline"} className="size-8 shrink-0" disabled={busy || current} title={label} aria-label={`${label}: ${entry.name}`} onClick={() => installCatalog.mutate({ skills: [entry], clients: [client.id] })}>
-              {installing ? <Loader2 className="size-4 animate-spin" /> : current ? <Check className="size-4 text-emerald-600" /> : stale && linked ? <RefreshCcw className="size-4" /> : <Plus className="size-4" />}
-            </Button>
-          );
-        })()}
-      </div>
+      <CatalogCard
+        key={entry.name}
+        icon={<PluginIcon name={entry.name} icon={null} className="size-9" />}
+        title={entry.name}
+        description={entry.description}
+        action={
+          <Button size="icon" variant={current ? "ghost" : "outline"} className="size-8" disabled={busy || current} title={label} aria-label={`${label}: ${entry.name}`} onClick={() => installCatalog.mutate({ skills: [entry], clients: [client.id] })}>
+            {installing ? <Loader2 className="size-4 animate-spin" /> : current ? <Check className="size-4 text-emerald-600" /> : stale && linked ? <RefreshCcw className="size-4" /> : <Plus className="size-4" />}
+          </Button>
+        }
+      />
     );
   };
 
@@ -236,7 +226,7 @@ export default function SkillsPage() {
               ) : shownInstalled.length === 0 ? (
                 <p className="text-sm text-muted-foreground">{t("skills.noMatches")}</p>
               ) : (
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {selectAll}
                   {shownInstalled.map(installedRow)}
                 </div>
@@ -248,7 +238,7 @@ export default function SkillsPage() {
                 {Array.from(catalogGroups, ([category, group]) => (
                   <section key={category} className="space-y-2" aria-label={category}>
                     <h2 className="text-lg font-semibold capitalize">{category}</h2>
-                    <div className="grid w-full grid-cols-1 gap-x-6 md:grid-cols-2">{group.map(catalogRow)}</div>
+                    <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">{group.map(catalogRow)}</div>
                   </section>
                 ))}
                 {tab === "community" && (

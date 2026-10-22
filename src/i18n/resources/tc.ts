@@ -25,6 +25,9 @@ const tc: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "探索",
+      home: "主頁",
+      yours: "我的",
+      mcps: "MCPs",
       category: "分類",
       arcade: "街機",
       create: "創建",

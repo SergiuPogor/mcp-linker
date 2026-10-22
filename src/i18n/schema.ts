@@ -21,6 +21,9 @@ export interface TranslationSchema {
   mcpLinker: string;
   nav: {
     discover: string;
+    home: string;
+    yours: string;
+    mcps: string;
     category: string;
     arcade: string;
     create: string;

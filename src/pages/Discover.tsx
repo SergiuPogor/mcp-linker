@@ -2,7 +2,6 @@ import { CollectionCarousel } from "@/components/collection/CollectionCarousel";
 import { CATALOG_COLLECTIONS, CURATED_SERVER_IDS, FEATURED_SERVER_IDS } from "@/data/mcp-servers/catalog";
 import { ServerList } from "@/components/server";
 import { useMcpServers } from "@/hooks/useMcpServers";
-import { Search } from "lucide-react";
 import {
   useDeferredValue,
   useEffect,
@@ -13,6 +12,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useViewStore } from "@/stores/viewStore";
 import Favorites from "./favorites";
+import { SearchToggle } from "@/components/common/SearchToggle";
+import { HomeNav } from "@/components/layout/HomeNav";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type TransportFilter = "all" | "local" | "remote";
@@ -105,6 +106,9 @@ export default function Discovery() {
 
   return (
     <div className="p-8 space-y-4">
+      <HomeNav kind="mcps" scope="discover">
+        <SearchToggle value={searchTerm} onChange={setSearchTerm} placeholder="Search for MCP servers..." />
+      </HomeNav>
       <div className="flex justify-center">
         <Tabs value={favorites ? "favorites" : "browse"} onValueChange={value => navigate(value === "favorites" ? "/discover?tab=favorites" : "/discover")}>
           <TabsList><TabsTrigger value="browse">Browse</TabsTrigger><TabsTrigger value="favorites">{t("nav.favs")}</TabsTrigger></TabsList>
@@ -113,23 +117,7 @@ export default function Discovery() {
       {favorites ? <Favorites embedded /> : <>
       {search.category && <div className="flex flex-wrap items-center gap-3 text-sm"><span>Category: {search.category}</span><button type="button" className="text-muted-foreground underline hover:text-foreground" onClick={() => navigate("/discover", { replace: true })}>Clear filter</button></div>}
       <div className="mb-6">
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="relative mx-auto w-full max-w-2xl"
-        >
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search for MCP servers..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-        </form>
-
-        <div className="flex justify-center gap-2 mt-3">
+        <div className="flex justify-center gap-2">
           {TRANSPORT_FILTERS.map(({ value, label }) => (
             <button
               key={value}

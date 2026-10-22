@@ -24,6 +24,9 @@ const zh: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "发现",
+      home: "主页",
+      yours: "我的",
+      mcps: "MCPs",
       category: "分类",
       arcade: "Arcade",
       create: "创作",

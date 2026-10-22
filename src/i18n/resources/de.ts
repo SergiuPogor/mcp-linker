@@ -24,6 +24,9 @@ const de: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "Entdecken",
+      home: "Start",
+      yours: "Meine",
+      mcps: "MCPs",
       category: "Kategorien",
       arcade: "Arcade",
       create: "Erstellen",

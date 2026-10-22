@@ -1,5 +1,6 @@
 import { Dashboard } from "@/components/manage/Dashboard";
 import { LocalTable } from "@/components/manage/LocalTable/index";
+import { HomeNav } from "@/components/layout/HomeNav";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { clientLabel as labelOf } from "@/lib/clients";
@@ -20,25 +21,18 @@ export default function McpManage() {
 
   return (
     <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col gap-6 p-8 text-foreground">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">{t("manage.title")}</h1>
-          <p className="text-sm text-muted-foreground">
-            {saved
-              ? t("manage.savedSubtitle")
-              : t("manage.subtitle", { client: clientLabel })}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label={t("manage.refresh")} title={t("manage.refresh")} onClick={() => navigate(0)}>
-            <RefreshCcw />
-          </Button>
-          <Button onClick={() => navigate("/servers/new")}>
-            <Plus />
-            {t("addCustomServer")}
-          </Button>
-        </div>
-      </header>
+      <HomeNav kind="mcps" scope="yours">
+        <Button variant="ghost" size="icon" aria-label={t("manage.refresh")} title={t("manage.refresh")} onClick={() => navigate(0)}>
+          <RefreshCcw />
+        </Button>
+        <Button className="rounded-full" onClick={() => navigate("/servers/new")}>
+          <Plus />
+          {t("addCustomServer")}
+        </Button>
+      </HomeNav>
+      <p className="-mt-3 text-sm text-muted-foreground">
+        {saved ? t("manage.savedSubtitle") : t("manage.subtitle", { client: clientLabel })}
+      </p>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
         <Tabs value={saved ? "saved" : "installed"} onValueChange={value => navigate(value === "saved" ? "/manage?tab=saved" : "/manage")}>

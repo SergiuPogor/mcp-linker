@@ -24,6 +24,9 @@ const ja: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "発見",
+      home: "ホーム",
+      yours: "マイ",
+      mcps: "MCPs",
       category: "カテゴリ",
       arcade: "アーケード",
       create: "作成",

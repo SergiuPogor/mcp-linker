@@ -16,16 +16,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { SearchToggle } from "@/components/common/SearchToggle";
+import { HomeNav } from "@/components/layout/HomeNav";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, type CatalogEntry, type PluginClient, addMarketplace, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeftRight, ChevronRight, History, Plus, RefreshCcw, Search } from "lucide-react";
+import { ArrowLeftRight, ChevronRight, History, Plus, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useViewStore } from "@/stores/viewStore";
 
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
 const labelOf = (client: PluginClient) => PLUGIN_CLIENTS.find(c => c.id === client)?.label ?? client;
@@ -63,6 +66,8 @@ function sectionsOf(entries: CatalogEntry[], tab: Tab, installedTitle: string): 
 export default function PluginsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { search, navigate } = useViewStore();
+  const discovering = search.scope === "discover";
   const [client, setClient] = useState<PluginClient>("claude-code");
   const [tab, setTab] = useState<Tab>("public");
   const [query, setQuery] = useState("");
@@ -87,10 +92,10 @@ export default function PluginsPage() {
   const sections = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const matches = all.filter(
-      e => tabOf(e) === tab && (!needle || [e.name, e.displayName, e.description, e.marketplace].some(f => f?.toLowerCase().includes(needle))),
+      e => (discovering ? tabOf(e) === tab : e.installed) && (!needle || [e.name, e.displayName, e.description, e.marketplace].some(f => f?.toLowerCase().includes(needle))),
     );
     return sectionsOf(matches, tab, t("plugins.installedSection"));
-  }, [all, tab, query, t]);
+  }, [all, tab, query, discovering, t]);
   const counts = { public: 0, curated: 0, personal: 0, community: 0 };
   for (const entry of all) counts[tabOf(entry)]++;
 
@@ -106,6 +111,7 @@ export default function PluginsPage() {
       const fresh = await queryClient.fetchQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), staleTime: 0 });
       const added = fresh.marketplaces.find(m => m.source === source || m.name === source.split("/").pop());
       setTab("personal");
+      navigate("/plugins?scope=discover");
       toast.success(t("plugins.marketplaceAdded", { source, client: labelOf(client) }), {
         description: added?.location ? t("plugins.addedAt", { path: added.location }) : output.trim() || undefined,
       });
@@ -141,8 +147,8 @@ export default function PluginsPage() {
           <PluginDetailView client={client} plugin={selected} onBack={() => setSelectedId(null)} onUninstall={() => setRemoving(selected)} />
         ) : (
           <>
-            <div className="flex items-center justify-between gap-4">
-              <h1 className="text-3xl font-bold">{t("plugins.title")}</h1>
+            <HomeNav kind="plugins" scope={discovering ? "discover" : "yours"}>
+              <SearchToggle value={query} onChange={setQuery} placeholder={t("plugins.search")} />
               <Tabs
                 value={client}
                 onValueChange={next => {
@@ -153,20 +159,12 @@ export default function PluginsPage() {
               >
                 <TabsList>
                   {PLUGIN_CLIENTS.map(c => (
-                    <TabsTrigger key={c.id} value={c.id} className="gap-2">
-                      <ClientIcon client={clientIconId(c.id)} />
-                      {c.label}
+                    <TabsTrigger key={c.id} value={c.id} aria-label={c.label} title={c.label}>
+                      <ClientIcon client={clientIconId(c.id)} className="size-4" />
                     </TabsTrigger>
                   ))}
                 </TabsList>
               </Tabs>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input className="rounded-full pl-9" value={query} onChange={event => setQuery(event.target.value)} placeholder={t("plugins.search")} />
-              </div>
               <Button variant="ghost" size="icon" aria-label={t("plugins.refresh")} title={t("plugins.refresh")} onClick={refresh}>
                 <RefreshCcw className={`size-4 ${catalog.isFetching ? "animate-spin" : ""}`} />
               </Button>
@@ -181,9 +179,9 @@ export default function PluginsPage() {
                 <Plus className="size-4" />
                 {t("plugins.add")}
               </Button>
-            </div>
+            </HomeNav>
 
-            {catalog.data && !packs && (
+            {discovering && catalog.data && !packs && (
               <div className="rounded-xl border p-4">
                 <div className="flex items-center gap-4">
                   <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setLinkerOpen(open => !open)}>
@@ -210,7 +208,7 @@ export default function PluginsPage() {
               </div>
             )}
 
-            <Tabs value={tab} onValueChange={next => setTab(next as Tab)}>
+            {discovering && <Tabs value={tab} onValueChange={next => setTab(next as Tab)}>
               <TabsList>
                 <TabsTrigger value="public">
                   {t("plugins.tabPublic")} <span className="ml-1 text-muted-foreground">{counts.public}</span>
@@ -225,7 +223,7 @@ export default function PluginsPage() {
                   {t("plugins.tabCommunity")} <span className="ml-1 text-muted-foreground">{counts.community}</span>
                 </TabsTrigger>
               </TabsList>
-            </Tabs>
+            </Tabs>}
 
             {catalog.error ? (
               <div className="rounded-xl border border-destructive/50 p-4 text-sm">
@@ -251,7 +249,7 @@ export default function PluginsPage() {
                       <span className="text-sm font-normal text-muted-foreground">{section.entries.length}</span>
                       {section.entries.length > PREVIEW && <ChevronRight className={`size-4 text-muted-foreground transition-transform ${open ? "rotate-90" : ""}`} />}
                     </button>
-                    <div className="grid gap-x-6 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-2">
                       {shown.map(entry => (
                         <PluginItem
                           key={entry.id}

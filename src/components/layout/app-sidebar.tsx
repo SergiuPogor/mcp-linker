@@ -50,10 +50,10 @@ export const AppSidebar = () => {
       </SidebarHeader>
       <SidebarContent className="gap-1 px-2">
         <SidebarMenu>
-          {navs.filter(nav => ["discover", "manage"].includes(nav.id)).map((nav) => (
+          {navs.filter(nav => nav.id === "discover").map((nav) => (
             <SidebarMenuItem key={nav.id}>
               <SidebarMenuButton
-                isActive={view === nav.id || (nav.id === "discover" && (view === "favorites" || view === "collection")) || (nav.id === "manage" && view === "recently")}
+                isActive={["discover", "manage", "skills", "plugins", "favorites", "collection", "recently"].includes(view)}
                 onClick={() => navigate(`/${nav.id}`)}
               >
                 {nav.icon}
@@ -63,7 +63,7 @@ export const AppSidebar = () => {
           ))}
         </SidebarMenu>
         <SidebarMenu>
-          {navs.filter(nav => !["discover", "manage"].includes(nav.id)).map(nav => (
+          {navs.filter(nav => nav.id !== "discover").map(nav => (
             <SidebarMenuItem key={nav.id}>
               <SidebarMenuButton isActive={view === nav.id} onClick={() => navigate(`/${nav.id}`)}>
                 {nav.icon}<span>{nav.name}</span>
