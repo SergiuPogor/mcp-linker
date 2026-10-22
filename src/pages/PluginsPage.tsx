@@ -14,14 +14,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, type CatalogEntry, type PluginClient, addMarketplace, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
+import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, otherClient, type CatalogEntry, type PluginClient, addMarketplace, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, History, Plus, RefreshCcw, Search } from "lucide-react";
+import { ArrowRight, ChevronRight, History, Loader2, Plus, RefreshCcw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -74,10 +75,17 @@ export default function PluginsPage() {
   const [gitRef, setGitRef] = useState("");
   const [sparse, setSparse] = useState("");
   const [showActivity, setShowActivity] = useState(false);
+  const [picked, setPicked] = useState<string[]>([]);
 
   const catalog = useQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), retry: false });
   const { toggle, install, copy, refresh } = usePluginActions(client, labelOf(client));
   const all = catalog.data?.plugins ?? [];
+  // Plugins the other client lacks, matched by name: a copy lands there under the bridge marketplace's id.
+  const otherCatalog = useQuery({ queryKey: ["plugin-catalog", otherClient(client)], queryFn: () => pluginCatalog(otherClient(client)), retry: false });
+  const otherNames = new Set((otherCatalog.data?.plugins ?? []).filter(p => p.installed).map(p => p.name));
+  const installedEntries = all.filter(p => p.installed);
+  const missingIds = installedEntries.filter(p => !otherNames.has(p.name)).map(p => p.id);
+  const pickedIds = picked.filter(id => installedEntries.some(p => p.id === id));
   const selected = all.find(p => p.id === selectedId) ?? null;
   const packsPreview = useQuery({ queryKey: ["packs-preview"], queryFn: fetchPacks, retry: false, staleTime: 3_600_000 });
   const packs = catalog.data?.marketplaces.find(m => m.source?.includes(PACKS_MARKETPLACE) || m.name === "mcp-linker");
@@ -144,6 +152,7 @@ export default function PluginsPage() {
                 onValueChange={next => {
                   setClient(next as PluginClient);
                   setSelectedId(null);
+                  setPicked([]);
                   setExpanded([]);
                 }}
               >
@@ -202,6 +211,20 @@ export default function PluginsPage() {
               </div>
             )}
 
+            {pickedIds.length > 0 && (
+              <div className="sticky top-2 z-10 flex flex-wrap items-center gap-2 rounded-xl border bg-background/95 p-2 shadow-sm backdrop-blur">
+                <span className="px-2 text-sm font-medium">{t("plugins.selected", { count: pickedIds.length })}</span>
+                <Button size="sm" disabled={copy.manyPending} onClick={() => copy.runMany(pickedIds, () => setPicked([]))}>
+                  {copy.manyPending ? <Loader2 className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
+                  <ClientIcon client={clientIconId(copy.target)} className="size-4" />
+                  {t("plugins.copyTo", { client: copy.targetLabel })}
+                </Button>
+                <Button variant="ghost" size="sm" className="ml-auto" onClick={() => setPicked([])}>
+                  {t("plugins.clearSelection")}
+                </Button>
+              </div>
+            )}
+
             <Tabs value={tab} onValueChange={next => setTab(next as Tab)}>
               <TabsList>
                 <TabsTrigger value="public">
@@ -243,6 +266,22 @@ export default function PluginsPage() {
                       <span className="text-sm font-normal text-muted-foreground">{section.entries.length}</span>
                       {section.entries.length > PREVIEW && <ChevronRight className={`size-4 text-muted-foreground transition-transform ${open ? "rotate-90" : ""}`} />}
                     </button>
+                    {section.key === "installed" && (
+                      <div className="mb-1 flex flex-wrap items-center gap-3 px-2 text-sm text-muted-foreground">
+                        <label className="flex items-center gap-2">
+                          <Checkbox
+                            checked={section.entries.every(e => picked.includes(e.id))}
+                            onCheckedChange={on => setPicked(on ? [...new Set([...picked, ...section.entries.map(e => e.id)])] : picked.filter(id => !section.entries.some(e => e.id === id)))}
+                          />
+                          {t("plugins.selectAll")}
+                        </label>
+                        {missingIds.length > 0 && (
+                          <button type="button" className="underline-offset-2 hover:underline" onClick={() => setPicked(missingIds)}>
+                            {t("plugins.selectMissing", { count: missingIds.length, client: copy.targetLabel })}
+                          </button>
+                        )}
+                      </div>
+                    )}
                     <div className="grid gap-x-6 sm:grid-cols-2">
                       {shown.map(entry => (
                         <PluginItem
@@ -252,6 +291,7 @@ export default function PluginsPage() {
                           onOpen={() => setSelectedId(entry.id)}
                           onToggle={enabled => toggle.mutate({ id: entry.id, enabled })}
                           onInstall={() => install.mutate(entry.id)}
+                          select={entry.installed ? { checked: picked.includes(entry.id), onChange: on => setPicked(on ? [...picked, entry.id] : picked.filter(id => id !== entry.id)) } : undefined}
                           copy={{
                             label: copy.targetLabel,
                             clientId: clientIconId(copy.target),

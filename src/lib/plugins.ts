@@ -75,6 +75,13 @@ export interface CopyReport {
   skipped: string[];
 }
 
+/** What happened to one plugin of a batch copy. */
+export interface CopyResult {
+  id: string;
+  report: CopyReport | null;
+  error: string | null;
+}
+
 export const listPlugins = (client: PluginClient) => invoke<Plugin[]>("plugin_list", { client });
 export const pluginDetails = (client: PluginClient, id: string) => invoke<PluginDetails>("plugin_details", { client, id });
 export const setPluginEnabled = (client: PluginClient, id: string, enabled: boolean) =>
@@ -85,6 +92,7 @@ export const listMarketplaces = (client: PluginClient) => invoke<Marketplace[]>(
 export const addMarketplace = (client: PluginClient, source: string, gitRef?: string, sparse?: string[]) =>
   invoke<string>("plugin_add_marketplace", { client, source, gitRef: gitRef || null, sparse: sparse?.length ? sparse : null });
 export const copyPlugin = (from: PluginClient, to: PluginClient, id: string) => invoke<CopyReport>("plugin_copy", { from, to, id });
+export const copyPlugins = (from: PluginClient, to: PluginClient, ids: string[]) => invoke<CopyResult[]>("plugin_copy_many", { from, to, ids });
 export const pluginActivity = () => invoke<PluginActivity[]>("plugin_activity");
 
 /** A plugin offered by one of the client's marketplaces, installed or not. */

@@ -50,6 +50,10 @@ installed in one client into one for the other:
 4. Install `<name>@mcp-linker-bridge` with the destination's CLI, reinstalling
    it if it was already there.
 
+In the app, tick several installed plugins (or "Select N not in Codex") and copy them in one
+go: `plugins::copy_many` checks the license once, stages every plugin, registers the bridge
+marketplace once and installs each, and a plugin that fails does not stop the others.
+
 The license rule is the same as Local Sync involving Claude Code or Codex:
 Pro (`license::require_sync`).
 
