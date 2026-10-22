@@ -123,6 +123,38 @@ has the entry format. This is what we check before merging. A plugin is listed w
 Review timing and placement follow [the server rules](#review-timing): listing is free,
 is not an endorsement, and **Featured** or sponsored placement is not set by a pull request.
 
+## Listing a skill
+
+Add your skill to the catalog behind the app's Skills page: open a pull request that adds
+**one entry** to [`skills/catalog.json`](skills/catalog.json). Your files stay in your own
+repository; we only point at them.
+
+```json
+{
+  "name": "my-skill",
+  "description": "What it does and when an agent should use it.",
+  "category": "development",
+  "repo": "you/my-skills",
+  "path": "skills/my-skill",
+  "sha": "<40-character commit>",
+  "homepage": "https://github.com/you/my-skills"
+}
+```
+
+A skill is listed when:
+
+1. `bun run validate-skills` passes. `path` is the folder that holds `SKILL.md`, and `sha`
+   pins a full commit; update the entry in a new pull request to ship a new version.
+2. It installs: `SKILL.md` starts with `name` and `description` front matter, and the app's
+   Add dialog (or `npx skills add you/my-skills`) finds it.
+3. It is safe enough to list: no hard-coded secrets, and any script it ships or tells the
+   agent to run is explained in `SKILL.md`.
+4. The description says what the skill does and when to use it.
+5. It is one entry per skill, with no duplicate of an existing one.
+
+Entries without `"curated": true` appear in the **Community** tab; **Curated** is chosen by
+maintainers. Review timing and placement follow [the server rules](#review-timing).
+
 ## Reporting Bugs and Requesting Features
 
 - Use GitHub Issues for bug reports and feature requests.

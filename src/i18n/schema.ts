@@ -33,6 +33,7 @@ export interface TranslationSchema {
     recentlyAdded: string;
     installapp: string;
     plugins: string;
+    skills: string;
     client: string;
   };
   content: {
@@ -233,6 +234,54 @@ export interface TranslationSchema {
   announcement: {
     learnMore: string;
     dismiss: string;
+  };
+  skills: {
+    title: string;
+    subtitle: string;
+    search: string;
+    refresh: string;
+    add: string;
+    tabInstalled: string;
+    tabCurated: string;
+    tabCommunity: string;
+    noMatches: string;
+    emptyInstalled: string;
+    back: string;
+    selected: string;
+    selectAll: string;
+    clear: string;
+    addTo: string;
+    install: string;
+    installTo: string;
+    installedToast: string;
+    installedBadge: string;
+    update: string;
+    updateAvailable: string;
+    checkUpdates: string;
+    upToDate: string;
+    updatesFound: string;
+    updatedToast: string;
+    uninstall: string;
+    uninstallTitle: string;
+    uninstallBody: string;
+    syncedToast: string;
+    someFailed: string;
+    enabledIn: string;
+    handMade: string;
+    files: string;
+    location: string;
+    addTitle: string;
+    addHint: string;
+    sourceLabel: string;
+    sourcePlaceholder: string;
+    gitRef: string;
+    find: string;
+    found: string;
+    installSelected: string;
+    catalogOffline: string;
+    submitTitle: string;
+    submitBody: string;
+    submitLink: string;
   };
   plugins: {
     title: string;

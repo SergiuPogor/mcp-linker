@@ -91,6 +91,8 @@ Built an MCP server, or run one for your product? **Submit it to the directory.*
 
 Built a Claude Code plugin (MCP servers + skills)? **List it too**: one entry in the plugin marketplace, pointing at your repo. See [submitting your plugin](./plugins/README.md#submitting-your-plugin).
 
+Have a skill (`SKILL.md`)? **List it in the Skills page**: one entry in [`skills/catalog.json`](./skills/catalog.json). See [docs/skills.md](./docs/skills.md).
+
 ## 🧭 Related Projects
 
 - [milisp/codexia](http://github.com/milisp/codexia) - Agent workstation for the Codex & claude code.

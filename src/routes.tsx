@@ -3,6 +3,7 @@ import Discover from "@/pages/Discover";
 import Manage from "@/pages/manage";
 import NotesPage from "@/pages/NotesPage";
 import PluginsPage from "@/pages/PluginsPage";
+import SkillsPage from "@/pages/SkillsPage";
 import { NewServerPage } from "@/pages/NewServerPage";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
@@ -10,6 +11,7 @@ import {
   LayoutDashboard,
   NotebookPen,
   Puzzle,
+  Sparkles,
   Search,
 } from "lucide-react";
 import About from "./pages/About";
@@ -25,6 +27,8 @@ export const AppRoutes = () => {
       return <Manage />;
     case "plugins":
       return <PluginsPage />;
+    case "skills":
+      return <SkillsPage />;
     case "recently":
       return <Manage />;
     case "settings":
@@ -68,6 +72,11 @@ export const getNavigationRoutes = (
       id: "plugins",
       name: t("nav.plugins"),
       icon: <Puzzle />,
+    },
+    {
+      id: "skills",
+      name: t("nav.skills"),
+      icon: <Sparkles />,
     },
   ];
 };
