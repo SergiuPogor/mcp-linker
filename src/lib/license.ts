@@ -2,6 +2,9 @@ import { invoke } from "@tauri-apps/api/core";
 
 export const PRICING_URL = "https://mcp-linker.milisp.dev/pricing";
 
+/** The pricing page with the place the click came from, so the site can tell the entry points apart. */
+export const pricingUrl = (ref: string) => `${PRICING_URL}?ref=${ref}`;
+
 /** What a license unlocks; each tier includes the ones before it. */
 export type Tier = "free" | "plus" | "pro";
 

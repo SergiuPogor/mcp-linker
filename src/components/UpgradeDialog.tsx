@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { PRICING_URL } from "@/lib/license";
+import { pricingUrl } from "@/lib/license";
 import { useLicense } from "@/stores/license";
 import { useViewStore } from "@/stores/viewStore";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -40,7 +40,7 @@ export function UpgradeDialog() {
           >
             {t("upgrade.enterKey")}
           </Button>
-          <Button onClick={() => openUrl(PRICING_URL)}>{t("upgrade.buy")}</Button>
+          <Button onClick={() => openUrl(pricingUrl(`upgrade-${upgrade?.feature ?? "dialog"}`))}>{t("upgrade.buy")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

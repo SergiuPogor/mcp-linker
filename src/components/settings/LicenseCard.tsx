@@ -11,7 +11,7 @@ import {
   activateLicense,
   deactivateLicense,
   type LicenseStatus,
-  PRICING_URL,
+  pricingUrl,
 } from "@/lib/license";
 import { useLicense } from "@/stores/license";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -81,7 +81,7 @@ export default function LicenseCard() {
         {status?.updatesExpired && updatesDate && (
           <p className="text-sm text-muted-foreground">
             {t("license.updatesExpired", { date: updatesDate })}{" "}
-            <Button variant="link" size="sm" className="h-auto p-0" onClick={() => openUrl(PRICING_URL)}>
+            <Button variant="link" size="sm" className="h-auto p-0" onClick={() => openUrl(pricingUrl("settings"))}>
               {t("license.renew")}
             </Button>
           </p>
@@ -111,7 +111,7 @@ export default function LicenseCard() {
             {status?.deviceId && t("license.device", { id: status.deviceId })}
           </span>
           {!status?.licensed && (
-            <Button variant="link" size="sm" className="h-auto p-0" onClick={() => openUrl(PRICING_URL)}>
+            <Button variant="link" size="sm" className="h-auto p-0" onClick={() => openUrl(pricingUrl("settings"))}>
               {t("license.buy")}
             </Button>
           )}
