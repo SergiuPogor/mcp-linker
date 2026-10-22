@@ -1,4 +1,3 @@
-import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
 import { CollectionPage } from "@/pages/CollectionPage";
 import Discover from "@/pages/Discover";
 import Manage from "@/pages/manage";
@@ -8,7 +7,6 @@ import { NewServerPage } from "@/pages/NewServerPage";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
 import {
-  Code,
   LayoutDashboard,
   NotebookPen,
   Puzzle,
@@ -27,8 +25,6 @@ export const AppRoutes = () => {
       return <Discover />;
     case "manage":
       return <Manage />;
-    case "claude-code-manage":
-      return <ClaudeCodeManage />;
     case "plugins":
       return <PluginsPage />;
     case "recently":
@@ -71,11 +67,6 @@ export const getNavigationRoutes = (
       id: "notes",
       name: "Notes",
       icon: <NotebookPen />,
-    },
-    {
-      id: "claude-code-manage",
-      name: "Claude Code",
-      icon: <Code />,
     },
     {
       id: "plugins",
