@@ -53,10 +53,12 @@ import { type ClaudeCodeScope, useCCProjectStore } from "@/stores/ccProject";
 import { useClientPathStore } from "@/stores/clientPathStore";
 import { useProjectPreferences } from "@/stores/projectPreferences";
 import { invoke } from "@tauri-apps/api/core";
-import { ArrowLeft, Check, ChevronRight, ChevronsUpDown, ChevronsRight, FolderOpen, RefreshCw, Trash2 } from "lucide-react";
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsUpDown, ChevronsRight, FolderOpen, RefreshCw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+
+const emptyStaged = (): Staged => ({ toCopy: new Set(), toDelete: new Set() });
 
 async function readServers(client: string, path: string | null): Promise<ServerMap> {
   if (isCCSource(client)) {
@@ -87,7 +89,7 @@ function useServers(client: string, path: string) {
   return { servers, loading, reload: load };
 }
 
-/** Two-pane copy between any two clients, Claude Code projects or scopes; copies and deletions are staged on the right until saved. */
+/** Two-pane copy in either direction between any two clients, Claude Code projects or scopes; copies and deletions are staged on both sides until saved. */
 export function LocalSyncPanel({ onClose, onSaved }: {
   onClose: () => void;
   onSaved: () => Promise<void> | void;
@@ -133,21 +135,22 @@ export function LocalSyncPanel({ onClose, onSaved }: {
   }, [fromClient, fromOptions]);
   useEffect(() => localStorage.setItem("syncFromClient", fromClient), [fromClient]);
 
-  const { servers: source, loading } = useServers(fromClient, fromPath);
+  const { servers: source, loading, reload: reloadSource } = useServers(fromClient, fromPath);
   const { servers: target, loading: targetLoading, reload: reloadTarget } = useServers(toClient, toPath);
   const sameSide = !!fromClient && fromClient === toClient && fromPath === toPath;
 
   const [saving, setSaving] = useState(false);
-  const [toCopy, setToCopy] = useState<Set<string>>(new Set());
-  const [toDelete, setToDelete] = useState<Set<string>>(new Set());
+  // Copies and deletions staged on each side; "left" is written to the source's config, "right" to the target's.
+  const [left, setLeft] = useState<Staged>(emptyStaged);
+  const [right, setRight] = useState<Staged>(emptyStaged);
   const [leftSel, setLeftSel] = useState<Set<string>>(new Set());
   const [rightSel, setRightSel] = useState<Set<string>>(new Set());
   const [leftFilter, setLeftFilter] = useState("");
   const [rightFilter, setRightFilter] = useState("");
 
   const resetStaged = () => {
-    setToCopy(new Set());
-    setToDelete(new Set());
+    setLeft(emptyStaged());
+    setRight(emptyStaged());
     setLeftSel(new Set());
     setRightSel(new Set());
   };
@@ -155,50 +158,62 @@ export function LocalSyncPanel({ onClose, onSaved }: {
   // Either side changed; staged moves no longer apply.
   useEffect(resetStaged, [fromClient, fromPath, toClient, toPath]);
 
-  const leftNames = useMemo(() => Object.keys(source), [source]);
-  const rightNames = useMemo(() => rightNamesOf(target, toCopy), [target, toCopy]);
-  const missing = missingNames(source, target, toCopy);
-  // For each source server the target already has: what a copy would change there (empty when identical).
-  const changes = useMemo(
-    () => Object.fromEntries(leftNames.filter(name => name in target).map(name => [name, changedFields(source[name], target[name])])),
-    [leftNames, source, target],
-  );
-  const identical = (name: string) => changes[name]?.length === 0;
-  const overwrites = [...toCopy].filter(name => name in target);
+  const leftNames = useMemo(() => rightNamesOf(source, left.toCopy), [source, left.toCopy]);
+  const rightNames = useMemo(() => rightNamesOf(target, right.toCopy), [target, right.toCopy]);
+  const missingRight = missingNames(source, target, right.toCopy);
+  const missingLeft = missingNames(target, source, left.toCopy);
+  // For each server both sides have: what copying it across would change there (empty when identical).
+  const changesBetween = (from: ServerMap, to: ServerMap) =>
+    Object.fromEntries(Object.keys(from).filter(name => name in to).map(name => [name, changedFields(from[name], to[name])]));
+  const changesRight = useMemo(() => changesBetween(source, target), [source, target]);
+  const changesLeft = useMemo(() => changesBetween(target, source), [source, target]);
+  const identical = (changes: Record<string, string[]>, name: string) => changes[name]?.length === 0;
+  const overwritesRight = [...right.toCopy].filter(name => name in target);
+  const overwritesLeft = [...left.toCopy].filter(name => name in source);
+  const overwrites = overwritesLeft.length + overwritesRight.length;
   const [confirming, setConfirming] = useState(false);
 
-  const applyStaged = (next: Staged) => {
-    setToCopy(next.toCopy);
-    setToDelete(next.toDelete);
-  };
-  const copy = (names: string[]) => {
-    // Copying a server the target already has unchanged would do nothing.
-    applyStaged(stageCopy({ toCopy, toDelete }, names.filter(name => !identical(name))));
+  // Stage copies into one side. Only servers really present on the other side can be copied, and
+  // a server is staged in one direction at a time.
+  const copyRight = (names: string[]) => {
+    const movable = names.filter(name => name in source && !identical(changesRight, name));
+    setRight(stageCopy(right, movable));
+    setLeft(({ toCopy, toDelete }) => ({ toCopy: new Set([...toCopy].filter(name => !movable.includes(name))), toDelete }));
     setLeftSel(new Set());
   };
-  const toggleDelete = (names: string[]) => {
-    applyStaged(toggleDeleteStaged({ toCopy, toDelete }, names));
+  const copyLeft = (names: string[]) => {
+    const movable = names.filter(name => name in target && !identical(changesLeft, name));
+    setLeft(stageCopy(left, movable));
+    setRight(({ toCopy, toDelete }) => ({ toCopy: new Set([...toCopy].filter(name => !movable.includes(name))), toDelete }));
+    setRightSel(new Set());
+  };
+  const toggleDeleteLeft = (names: string[]) => {
+    setLeft(toggleDeleteStaged(left, names));
+    setLeftSel(new Set());
+  };
+  const toggleDeleteRight = (names: string[]) => {
+    setRight(toggleDeleteStaged(right, names));
     setRightSel(new Set());
   };
 
-  const writeTarget = async (name: string, config?: Record<string, any>) => {
-    if (isCCSource(toClient)) {
-      const { scope, dir } = parseCCSource(toClient);
+  const writeSide = async (client: string, path: string, name: string, config?: Record<string, any>) => {
+    if (isCCSource(client)) {
+      const { scope, dir } = parseCCSource(client);
       if (scope !== "user" && !dir) throw new Error("Please select a Claude Code project");
       const where = { workingDir: dir, scope };
       return config
         ? claudeWrite("claude_mcp_add", { request: toClaudeRequest(name, config), ...where })
         : claudeWrite("claude_mcp_remove", { name, ...where });
     }
-    const where = { clientName: toClient, path: toPath || undefined, serverName: name };
+    const where = { clientName: client, path: path || undefined, serverName: name };
     return config
       ? clientWrite("update_mcp_server", { ...where, serverConfig: config })
       : clientWrite("remove_mcp_server", where);
   };
 
-  const pending = toCopy.size + toDelete.size;
+  const pending = left.toCopy.size + left.toDelete.size + right.toCopy.size + right.toDelete.size;
 
-  const save = async (skip: string[] = []) => {
+  const save = async (skipExisting = false) => {
     setConfirming(false);
     setSaving(true);
     let done = 0;
@@ -213,17 +228,23 @@ export function LocalSyncPanel({ onClose, onSaved }: {
         failures.push(`${name}: ${error instanceof Error ? error.message : String(error)}`);
       }
     };
+    const writes = [
+      { client: toClient, path: toPath, staged: right, own: target, other: source },
+      { client: fromClient, path: fromPath, staged: left, own: source, other: target },
+    ];
     try {
-      for (const name of toDelete) await run(name, () => writeTarget(name));
-      for (const name of toCopy) {
-        if (skip.includes(name)) continue;
-        await run(name, async () => writeTarget(name, mergeOver(target[name], convertServer(clientIdOf(toClient), source[name]))));
+      for (const { client, path, staged, own, other } of writes) {
+        for (const name of staged.toDelete) await run(name, () => writeSide(client, path, name));
+        for (const name of staged.toCopy) {
+          if (skipExisting && name in own) continue;
+          await run(name, async () => writeSide(client, path, name, mergeOver(own[name], convertServer(clientIdOf(client), other[name]))));
+        }
       }
     } finally {
       if (done) toast.success(t("manage.sync.saved", { count: done }));
       if (failures.length) toast.error(failures.join("\n"));
       resetStaged();
-      await Promise.all([reloadTarget(), onSaved()]);
+      await Promise.all([reloadSource(), reloadTarget(), onSaved()]);
       setSaving(false);
     }
   };
@@ -244,7 +265,7 @@ export function LocalSyncPanel({ onClose, onSaved }: {
               </Button>
             </>
           )}
-          <Button size="sm" onClick={() => requireSync(clientIdOf(fromClient), clientIdOf(toClient)) && (overwrites.length ? setConfirming(true) : save())} disabled={!pending || saving || sameSide}>
+          <Button size="sm" onClick={() => requireSync(clientIdOf(fromClient), clientIdOf(toClient)) && (overwrites ? setConfirming(true) : save())} disabled={!pending || saving || sameSide}>
             {saving && <RefreshCw className="size-4 animate-spin" />}
             {t("save")}
           </Button>
@@ -260,17 +281,21 @@ export function LocalSyncPanel({ onClose, onSaved }: {
             <AlertDialogDescription>{t("manage.sync.overwriteBody")}</AlertDialogDescription>
           </AlertDialogHeader>
           <ul className="max-h-60 space-y-1 overflow-y-auto text-sm">
-            {overwrites.map(name => (
-              <li key={name}>
+            {[
+              ...overwritesRight.map(name => ({ name, arrow: "→", fields: changesRight[name] })),
+              ...overwritesLeft.map(name => ({ name, arrow: "←", fields: changesLeft[name] })),
+            ].map(({ name, arrow, fields }) => (
+              <li key={`${arrow}${name}`}>
+                <span className="mr-2 text-muted-foreground">{arrow}</span>
                 <span className="font-medium">{name}</span>
-                <span className="ml-2 font-mono text-xs text-muted-foreground">{changes[name]?.join(", ")}</span>
+                <span className="ml-2 font-mono text-xs text-muted-foreground">{fields?.join(", ")}</span>
               </li>
             ))}
           </ul>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-            {overwrites.length < toCopy.size + toDelete.size && (
-              <Button variant="outline" onClick={() => save(overwrites)}>{t("manage.sync.skipExisting")}</Button>
+            {overwrites < left.toCopy.size + left.toDelete.size + right.toCopy.size + right.toDelete.size && (
+              <Button variant="outline" onClick={() => save(true)}>{t("manage.sync.skipExisting")}</Button>
             )}
             <AlertDialogAction onClick={() => save()}>{t("manage.sync.overwriteConfirm")}</AlertDialogAction>
           </AlertDialogFooter>
@@ -300,32 +325,54 @@ export function LocalSyncPanel({ onClose, onSaved }: {
           onFilter={setLeftFilter}
           selected={leftSel}
           onSelect={setLeftSel}
-          onActivate={name => !sameSide && copy([name])}
-          configOf={name => source[name] ?? {}}
+          onActivate={name => left.toCopy.has(name) ? toggleDeleteLeft([name]) : !sameSide && copyRight([name])}
+          configOf={name => (left.toCopy.has(name) ? target[name] : source[name]) ?? {}}
           badgeOf={name =>
-            toCopy.has(name) ? { label: t("manage.sync.queued"), variant: "default" }
-            : identical(name) ? { label: t("manage.sync.identical"), variant: "secondary" }
-            : name in target ? { label: t("manage.sync.differs"), variant: "outline", title: changes[name]?.join(", ") }
-            : undefined}
+            left.toCopy.has(name)
+              ? name in source
+                ? { label: t("manage.sync.overwrite"), variant: "destructive", title: changesLeft[name]?.join(", ") }
+                : { label: t("manage.sync.adding"), variant: "default" }
+              : left.toDelete.has(name) ? { label: t("manage.sync.removing"), variant: "destructive" }
+              : right.toCopy.has(name) ? { label: t("manage.sync.queued"), variant: "default" }
+              : identical(changesRight, name) ? { label: t("manage.sync.identical"), variant: "secondary" }
+              : name in target ? { label: t("manage.sync.differs"), variant: "outline", title: changesRight[name]?.join(", ") }
+              : undefined}
+          struck={left.toDelete}
           empty={loading ? t("loading") : fromClient ? t("manage.sync.empty") : t("manage.sync.pickSource")}
           footer={
-            <Button variant="ghost" size="sm" onClick={() => copy(missing)} disabled={!missing.length || saving || sameSide}>
-              {t("manage.sync.copyMissing")}
-              <ChevronsRight className="size-4" />
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" onClick={() => toggleDeleteLeft([...leftSel])} disabled={!leftSel.size || saving}>
+                <Trash2 className="size-4" />
+                {t("manage.sync.deleteSelected")}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => copyRight(missingRight)} disabled={!missingRight.length || saving || sameSide}>
+                {t("manage.sync.copyMissing")}
+                <ChevronsRight className="size-4" />
+              </Button>
+            </>
           }
         />
 
-        <div className="col-start-2 row-start-2 flex flex-col items-center justify-center">
+        <div className="col-start-2 row-start-2 flex flex-col items-center justify-center gap-2">
           <Button
             variant="outline"
             size="icon"
             aria-label={t("manage.sync.copy")}
             title={t("manage.sync.copy")}
-            onClick={() => copy([...leftSel])}
+            onClick={() => copyRight([...leftSel])}
             disabled={!leftSel.size || saving || sameSide}
           >
             <ChevronRight />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={t("manage.sync.copy")}
+            title={t("manage.sync.copy")}
+            onClick={() => copyLeft([...rightSel])}
+            disabled={!rightSel.size || saving || sameSide}
+          >
+            <ChevronLeft />
           </Button>
         </div>
 
@@ -351,22 +398,29 @@ export function LocalSyncPanel({ onClose, onSaved }: {
           onFilter={setRightFilter}
           selected={rightSel}
           onSelect={setRightSel}
-          onActivate={name => toggleDelete([name])}
-          configOf={name => (toCopy.has(name) ? source[name] : target[name]) ?? {}}
+          onActivate={name => right.toCopy.has(name) ? toggleDeleteRight([name]) : !sameSide && copyLeft([name])}
+          configOf={name => (right.toCopy.has(name) ? source[name] : target[name]) ?? {}}
           badgeOf={name =>
-            toCopy.has(name)
+            right.toCopy.has(name)
               ? name in target
-                ? { label: t("manage.sync.overwrite"), variant: "destructive", title: changes[name]?.join(", ") }
+                ? { label: t("manage.sync.overwrite"), variant: "destructive", title: changesRight[name]?.join(", ") }
                 : { label: t("manage.sync.adding"), variant: "default" }
-              : toDelete.has(name) ? { label: t("manage.sync.removing"), variant: "destructive" }
+              : right.toDelete.has(name) ? { label: t("manage.sync.removing"), variant: "destructive" }
+              : left.toCopy.has(name) ? { label: t("manage.sync.queued"), variant: "default" }
               : undefined}
-          struck={toDelete}
+          struck={right.toDelete}
           empty={targetLoading ? t("loading") : toClient ? t("manage.sync.empty") : t("manage.sync.pickTarget")}
           footer={
-            <Button variant="ghost" size="sm" onClick={() => toggleDelete([...rightSel])} disabled={!rightSel.size || saving}>
-              <Trash2 className="size-4" />
-              {t("manage.sync.deleteSelected")}
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" onClick={() => copyLeft(missingLeft)} disabled={!missingLeft.length || saving || sameSide}>
+                <ChevronsLeft className="size-4" />
+                {t("manage.sync.copyMissing")}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => toggleDeleteRight([...rightSel])} disabled={!rightSel.size || saving}>
+                <Trash2 className="size-4" />
+                {t("manage.sync.deleteSelected")}
+              </Button>
+            </>
           }
         />
       </div>
@@ -646,7 +700,7 @@ function ServerBox({ className, header, names, filter, onFilter, selected, onSel
             );
           })}
         </ul>
-        <div className="flex justify-end border-t p-1">{footer}</div>
+        <div className="flex justify-between border-t p-1">{footer}</div>
       </div>
     </div>
   );
