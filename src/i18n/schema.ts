@@ -274,6 +274,12 @@ export interface TranslationSchema {
     search: string;
     installedSection: string;
     noMatches: string;
+    selected: string;
+    selectAll: string;
+    selectMissing: string;
+    clearSelection: string;
+    copiedMany: string;
+    copyFailed: string;
     showAll: string;
   };
 }

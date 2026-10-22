@@ -581,20 +581,16 @@ pub fn stage_in_bridge(bridge: &Path, source_dir: &Path, name: &str, to: PluginC
     })
 }
 
-/// Copies an installed plugin from one client to the other (a Pro feature,
-/// like any sync involving Claude Code or Codex). The copy is staged in the
-/// bridge marketplace and installed with the destination's own CLI.
-pub async fn copy(from: PluginClient, to: PluginClient, id: &str) -> Result<CopyReport, String> {
-    if from == to {
-        return Err("Pick two different clients.".into());
-    }
-    crate::license::require_sync(from.server_format(), to.server_format(), "Plugin sync")?;
+/// Stages one installed plugin of `from` in the bridge marketplace of `to`.
+async fn stage(from: PluginClient, to: PluginClient, id: &str) -> Result<CopyReport, String> {
     let plugin = find(from, id).await?;
     let source = plugin.path.clone().ok_or_else(|| format!("{} did not report where '{}' is installed.", from.id(), plugin.id))?;
-    let bridge = bridge_dir(to)?;
-    let report = stage_in_bridge(&bridge, &source, &plugin.name, to)?;
+    stage_in_bridge(&bridge_dir(to)?, &source, &plugin.name, to)
+}
 
-    let bridge_text = bridge.to_string_lossy().into_owned();
+/// Makes sure `to` knows the bridge marketplace and sees what was staged in it.
+async fn register_bridge(to: PluginClient) -> Result<(), String> {
+    let bridge_text = bridge_dir(to)?.to_string_lossy().into_owned();
     let registered = marketplaces(to).await?.into_iter().find(|m| m.name == BRIDGE);
     match registered {
         Some(m) if m.source.as_deref() == Some(bridge_text.as_str()) => {
@@ -611,12 +607,72 @@ pub async fn copy(from: PluginClient, to: PluginClient, id: &str) -> Result<Copy
             add_marketplace(to, &bridge_text, None, &[]).await?;
         }
     }
-    // A plugin already installed from the bridge is reinstalled to pick up the new copy.
-    if list(to).await?.iter().any(|p| p.id == report.id) {
+    Ok(())
+}
+
+/// Installs a staged copy; one already installed from the bridge is reinstalled to pick up the new copy.
+async fn install_staged(to: PluginClient, report: &CopyReport, installed: &[String]) -> Result<(), String> {
+    if installed.contains(&report.id) {
         uninstall(to, &report.id).await?;
     }
     install(to, &report.id).await?;
-    Ok(report)
+    Ok(())
+}
+
+/// Copies an installed plugin from one client to the other (a Pro feature,
+/// like any sync involving Claude Code or Codex). The copy is staged in the
+/// bridge marketplace and installed with the destination's own CLI.
+pub async fn copy(from: PluginClient, to: PluginClient, id: &str) -> Result<CopyReport, String> {
+    let mut results = copy_many(from, to, &[id.to_string()]).await?;
+    let result = results.remove(0);
+    match (result.report, result.error) {
+        (Some(report), _) => Ok(report),
+        (None, error) => Err(error.unwrap_or_else(|| "Copy failed.".into())),
+    }
+}
+
+/// What happened to one plugin of a batch.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CopyResult {
+    /// The id in the source client.
+    pub id: String,
+    pub report: Option<CopyReport>,
+    pub error: Option<String>,
+}
+
+/// Copies several plugins in one go: the license is checked once, the bridge
+/// is registered once, and a plugin that fails does not stop the others.
+pub async fn copy_many(from: PluginClient, to: PluginClient, ids: &[String]) -> Result<Vec<CopyResult>, String> {
+    if from == to {
+        return Err("Pick two different clients.".into());
+    }
+    crate::license::require_sync(from.server_format(), to.server_format(), "Plugin sync")?;
+    let mut results: Vec<CopyResult> = Vec::new();
+    for id in ids {
+        results.push(match stage(from, to, id).await {
+            Ok(report) => CopyResult { id: id.clone(), report: Some(report), error: None },
+            Err(error) => CopyResult { id: id.clone(), report: None, error: Some(error) },
+        });
+    }
+    if results.iter().any(|r| r.report.is_some()) {
+        if let Err(error) = register_bridge(to).await {
+            for result in results.iter_mut().filter(|r| r.report.is_some()) {
+                result.report = None;
+                result.error = Some(error.clone());
+            }
+            return Ok(results);
+        }
+        let installed: Vec<String> = list(to).await?.into_iter().map(|p| p.id).collect();
+        for result in results.iter_mut() {
+            let Some(report) = result.report.clone() else { continue };
+            if let Err(error) = install_staged(to, &report, &installed).await {
+                result.report = None;
+                result.error = Some(error);
+            }
+        }
+    }
+    Ok(results)
 }
 
 // Tauri commands for the app's Plugins page; `client` is `claude-code` or `codex`.
@@ -676,6 +732,11 @@ pub async fn plugin_activity() -> Vec<Activity> {
 #[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn plugin_copy(from: String, to: String, id: String) -> Result<CopyReport, String> {
     copy(PluginClient::parse(&from)?, PluginClient::parse(&to)?, &id).await
+}
+
+#[cfg_attr(feature = "tauri", tauri::command)]
+pub async fn plugin_copy_many(from: String, to: String, ids: Vec<String>) -> Result<Vec<CopyResult>, String> {
+    copy_many(PluginClient::parse(&from)?, PluginClient::parse(&to)?, &ids).await
 }
 
 #[cfg(test)]

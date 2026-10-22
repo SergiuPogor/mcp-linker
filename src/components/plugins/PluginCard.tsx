@@ -1,5 +1,6 @@
 import { ClientIcon } from "@/components/ClientIcon";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import type { CatalogEntry } from "@/lib/plugins";
 import { ArrowRight, Loader2, Plus } from "lucide-react";
@@ -14,6 +15,7 @@ export function PluginItem({
   onToggle,
   onInstall,
   copy,
+  select,
 }: {
   entry: CatalogEntry;
   busy: boolean;
@@ -22,11 +24,18 @@ export function PluginItem({
   onInstall: () => void;
   /** Copies this (installed) plugin to the other client. */
   copy: { label: string; clientId: string; pending: boolean; run: () => void };
+  /** Tick box for batch actions (installed plugins only). */
+  select?: { checked: boolean; onChange: (checked: boolean) => void };
 }) {
   const { t } = useTranslation();
   const title = entry.displayName ?? entry.name;
   return (
     <div role="button" tabIndex={0} className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-muted/60" onClick={onOpen} onKeyDown={event => event.key === "Enter" && onOpen()}>
+      {select && (
+        <div onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
+          <Checkbox checked={select.checked} onCheckedChange={on => select.onChange(!!on)} aria-label={title} />
+        </div>
+      )}
       <PluginIcon name={title} icon={entry.icon} iconUrl={entry.iconUrl} />
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{title}</p>

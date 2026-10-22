@@ -94,6 +94,7 @@ pub fn run() {
             plugins::plugin_marketplaces,
             plugins::plugin_add_marketplace,
             plugins::plugin_copy,
+            plugins::plugin_copy_many,
             plugins::plugin_activity,
             plugins::plugin_catalog,
             plugins::plugin_icon,
