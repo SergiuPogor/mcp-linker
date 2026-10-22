@@ -1,6 +1,6 @@
 {
   "name": "@milisp/mcpl",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Manage MCP servers across Claude Code, Codex, Cursor and other AI clients from the terminal.",
   "keywords": [
     "mcp",
@@ -31,12 +31,12 @@
     "win32"
   ],
   "optionalDependencies": {
-    "@milisp/mcpl-darwin-arm64": "0.1.2",
-    "@milisp/mcpl-darwin-x64": "0.1.2",
-    "@milisp/mcpl-linux-x64": "0.1.2",
-    "@milisp/mcpl-linux-arm64": "0.1.2",
-    "@milisp/mcpl-win32-x64": "0.1.2",
-    "@milisp/mcpl-win32-arm64": "0.1.2"
+    "@milisp/mcpl-darwin-arm64": "0.2.0",
+    "@milisp/mcpl-darwin-x64": "0.2.0",
+    "@milisp/mcpl-linux-x64": "0.2.0",
+    "@milisp/mcpl-linux-arm64": "0.2.0",
+    "@milisp/mcpl-win32-x64": "0.2.0",
+    "@milisp/mcpl-win32-arm64": "0.2.0"
   },
   "repository": {
     "type": "git",

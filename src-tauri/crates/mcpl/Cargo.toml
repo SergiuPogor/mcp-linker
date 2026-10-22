@@ -1,6 +1,6 @@
 [package]
 name = "mcpl"
-version = "0.1.2"
+version = "0.2.0"
 description = "Manage MCP servers across Claude Code, Codex, Cursor and other AI clients"
 authors = ["milisp"]
 edition = "2024"

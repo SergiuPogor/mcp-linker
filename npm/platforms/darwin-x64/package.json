@@ -1,6 +1,6 @@
 {
   "name": "@milisp/mcpl-darwin-x64",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "mcpl prebuilt binary for macOS x64",
   "license": "AGPL-3.0-only",
   "os": [
