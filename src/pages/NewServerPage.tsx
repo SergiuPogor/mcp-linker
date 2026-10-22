@@ -9,7 +9,7 @@ import type { ServerConfig, ServerType } from "@/types";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { Github } from "@/components/icons";
 import { ClipboardPaste } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -32,7 +32,8 @@ function customServer(imported?: ImportedServer): ServerType {
 function deepLinkServer(search: Record<string, string>): ImportedServer | undefined {
   if (!search.config) return undefined;
   try {
-    const found = findServerConfigs(JSON.parse(atob(search.config)));
+    // URLSearchParams turns the "+" of standard base64 into a space.
+    const found = findServerConfigs(JSON.parse(atob(search.config.replace(/ /g, "+"))));
     const item = found.find(entry => entry.name === search.name) ?? found[0];
     return item && { ...item, name: item.name || search.name || "" };
   } catch {
@@ -43,7 +44,16 @@ function deepLinkServer(search: Record<string, string>): ImportedServer | undefi
 export function NewServerPage() {
   const { t } = useTranslation();
   const navigate = useViewStore(state => state.navigate);
-  const [server, setServer] = useState(() => customServer(deepLinkServer(useViewStore.getState().search)));
+  const search = useViewStore(state => state.search);
+  const [server, setServer] = useState(() => customServer(deepLinkServer(search)));
+  const appliedLink = useRef(search.config);
+  // A deep link opened while this page is already showing must refill the form too.
+  useEffect(() => {
+    if (search.config === appliedLink.current) return;
+    appliedLink.current = search.config;
+    const linked = deepLinkServer(search);
+    if (linked) setServer(customServer(linked));
+  }, [search]);
   const [candidates, setCandidates] = useState<ImportedServer[]>([]);
   const [githubUrl, setGithubUrl] = useState("");
   const { loading, fetchAllJsonBlocks } = useGithubReadmeJson();
