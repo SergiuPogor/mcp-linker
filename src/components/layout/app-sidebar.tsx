@@ -53,7 +53,6 @@ export const AppSidebar = () => {
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
-        {open && <InstallationTarget sidebar allowClientChange={false} />}
         <SidebarMenu>
           {navs.filter(nav => !["discover", "manage"].includes(nav.id)).map(nav => (
             <SidebarMenuItem key={nav.id}>
@@ -63,6 +62,7 @@ export const AppSidebar = () => {
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
+        {open && <InstallationTarget sidebar allowClientChange={false} />}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
@@ -90,7 +90,7 @@ export const AppSidebar = () => {
                   onClick={() => navigate("/about")}
                 >
                   <Info />
-                  <span>{t("nav.about")} MCP Linker</span>
+                  <span>{t("nav.about")}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

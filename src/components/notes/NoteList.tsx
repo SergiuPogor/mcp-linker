@@ -11,8 +11,10 @@ import { useNoteStore } from "@/hooks/useNoteStore";
 import { cn } from "@/lib/utils";
 import { MoreHorizontal, Plus, Search, Star, StarOff, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function NoteList() {
+  const { t } = useTranslation();
   const {
     notes,
     currentNoteId,
@@ -94,7 +96,7 @@ export function NoteList() {
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-            {note.content || "Empty note"}
+            {note.content || t("notes.emptyNote")}
           </p>
           <div className="flex items-center justify-between mt-2">
             <span className="text-xs text-muted-foreground/70">
@@ -135,7 +137,7 @@ export function NoteList() {
                   className="text-destructive hover:text-destructive/90"
                 >
                   <Trash2 className="h-3 w-3 mr-2" />
-                  Delete
+                  {t("notes.delete")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -149,7 +151,7 @@ export function NoteList() {
     <div className="flex flex-col h-full bg-muted/30">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b bg-background">
-        <h3 className="text-sm font-medium text-foreground">Notes</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("notes.title")}</h3>
         <Button
           onClick={handleCreateNote}
           size="sm"
@@ -164,7 +166,7 @@ export function NoteList() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
           <Input
-            placeholder="Search notes..."
+            placeholder={t("notes.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8 h-8 text-sm"
@@ -175,19 +177,19 @@ export function NoteList() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="history">History</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
+          <TabsTrigger value="history">{t("notes.history")}</TabsTrigger>
+          <TabsTrigger value="favorites">{t("notes.favorites")}</TabsTrigger>
         </TabsList>
         
         <TabsContent value="history" className="flex-1 overflow-y-auto mt-0">
           {filteredNotes.length === 0 ? (
             <div className="text-center text-muted-foreground text-sm">
               {searchQuery ? (
-                <p>No notes match your search</p>
+                <p>{t("notes.noMatch")}</p>
               ) : notes.length === 0 ? (
                 <>
-                  <p>No notes yet</p>
-                  <p className="text-xs mt-1">Create your first note to get started</p>
+                  <p>{t("notes.empty")}</p>
+                  <p className="text-xs mt-1">{t("notes.emptyHint")}</p>
                   <div className="mt-4 space-y-3 px-4">
                     <blockquote className="text-xs italic text-muted-foreground border-l-2 border-primary/30 pl-3">
                       "AI doesn't replace humans, but humans with AI will replace humans without AI." - Karim Lakhani
@@ -201,7 +203,7 @@ export function NoteList() {
                   </div>
                 </>
               ) : (
-                <p>No notes to display</p>
+                <p>{t("notes.noneToDisplay")}</p>
               )}
             </div>
           ) : (
@@ -215,11 +217,11 @@ export function NoteList() {
           {filteredNotes.length === 0 ? (
             <div className="p-4 text-center text-muted-foreground text-sm">
               {searchQuery ? (
-                <p>No favorite notes match your search</p>
+                <p>{t("notes.noFavoriteMatch")}</p>
               ) : (
                 <>
-                  <p>No favorite notes</p>
-                  <p className="text-xs mt-1">Star some notes to see them here</p>
+                  <p>{t("notes.noFavorites")}</p>
+                  <p className="text-xs mt-1">{t("notes.starHint")}</p>
                 </>
               )}
             </div>

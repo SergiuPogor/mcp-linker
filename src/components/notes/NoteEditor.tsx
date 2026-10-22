@@ -3,8 +3,10 @@ import { Input } from "@/components/ui/input";
 import { useNoteStore } from "@/hooks/useNoteStore";
 import { Edit3, Save } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function NoteEditor() {
+  const { t } = useTranslation();
   const {
     getCurrentNote,
     updateNote,
@@ -53,10 +55,10 @@ export function NoteEditor() {
         <div className="text-center space-y-4 max-w-md">
           <Edit3 className="w-12 h-12 text-muted-foreground mx-auto" />
           <h2 className="text-xl font-semibold text-foreground">
-            No note selected
+            {t("notes.noSelection")}
           </h2>
           <p className="text-muted-foreground">
-            Select a note from the list or create a new one to start writing.
+            {t("notes.noSelectionHint")}
           </p>
         </div>
       </div>
@@ -73,7 +75,7 @@ export function NoteEditor() {
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
               className="font-medium"
-              placeholder="Note title..."
+              placeholder={t("notes.titlePlaceholder")}
               autoFocus
               onBlur={() => setIsEditing(false)}
               onKeyDown={(e) => {
@@ -86,9 +88,9 @@ export function NoteEditor() {
             <h1
               className="text-lg font-medium text-foreground truncate cursor-text hover:bg-muted/50 px-2 py-1 rounded"
               onClick={() => setIsEditing(true)}
-              title="Click to edit title"
+              title={t("notes.editTitle")}
             >
-              {title || "Untitled Note"}
+              {title || t("notes.untitled")}
             </h1>
           )}
         </div>
@@ -100,7 +102,7 @@ export function NoteEditor() {
             className="h-8"
           >
             <Save className="w-3 h-3 mr-1.5" />
-            Save
+            {t("save")}
           </Button>
         )}
       </div>
@@ -110,7 +112,7 @@ export function NoteEditor() {
         <textarea
           value={content}
           onChange={(e) => handleContentChange(e.target.value)}
-          placeholder="Start writing your note..."
+          placeholder={t("notes.contentPlaceholder")}
           className="w-full h-full resize-none border-0 outline-none text-sm leading-relaxed bg-transparent text-foreground placeholder:text-muted-foreground"
           style={{ fontFamily: 'inherit' }}
         />
@@ -119,10 +121,10 @@ export function NoteEditor() {
       {/* Footer with metadata */}
       <div className="px-4 py-2 border-t text-xs flex justify-between items-center text-muted-foreground">
         <span>
-          Created: {new Date(currentNote.createdAt).toLocaleDateString()}
+          {t("notes.created", { date: new Date(currentNote.createdAt).toLocaleDateString() })}
         </span>
         <span>
-          Modified: {new Date(currentNote.updatedAt).toLocaleString()}
+          {t("notes.modified", { date: new Date(currentNote.updatedAt).toLocaleString() })}
         </span>
       </div>
     </div>

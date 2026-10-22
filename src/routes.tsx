@@ -61,7 +61,7 @@ export const getNavigationRoutes = (
     },
     {
       id: "notes",
-      name: "Notes",
+      name: t("notes.title"),
       icon: <NotebookPen />,
     },
     {

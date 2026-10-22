@@ -39,11 +39,11 @@ export default function LangSelect() {
           <CardTitle className="flex items-center gap-2">
             {t("language", "Language")}
           </CardTitle>
-          <CardDescription>Language for the app UI</CardDescription>
+          <CardDescription>{t("languageDescription")}</CardDescription>
         </span>
         <Select value={currentLang} onValueChange={changeLanguage}>
           <SelectTrigger className="w-full max-w-[200px]">
-            <SelectValue placeholder="Select Language" />
+            <SelectValue placeholder={t("selectLanguage")} />
           </SelectTrigger>
           <SelectContent>
             {languages.map((lang) => (

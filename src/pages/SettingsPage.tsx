@@ -32,13 +32,13 @@ export default function SettingPage() {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="space-y-2 mb-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Settings</h1>
+          <h1 className="text-2xl font-semibold">{t("nav.settings")}</h1>
           <Button
             variant="outline"
             disabled={isChecking}
             onClick={() => triggerManualCheck()}
           >
-            {isChecking ? "Checking…" : "Check for Updates"}
+            {isChecking ? t("checking") : t("checkForUpdates")}
           </Button>
         </div>
       </div>
