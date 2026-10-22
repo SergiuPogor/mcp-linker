@@ -67,6 +67,276 @@
       "keywords": [
         "macos"
       ]
+    },
+    {
+      "name": "pdf",
+      "description": "Read, merge, split, fill, watermark and OCR PDF files, or create new ones.",
+      "category": "documents",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/pdf",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "docx",
+      "description": "Create, read and edit Word documents, including tracked changes, comments and templates.",
+      "category": "documents",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/docx",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "pptx",
+      "description": "Create and edit PowerPoint decks: layouts, templates, speaker notes and comments.",
+      "category": "documents",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/pptx",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "xlsx",
+      "description": "Open, clean, compute on and create spreadsheets (xlsx, csv, tsv) with formulas and charts.",
+      "category": "documents",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/xlsx",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "doc-coauthoring",
+      "description": "A structured workflow for co-authoring docs, proposals, specs and decision records.",
+      "category": "documents",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/doc-coauthoring",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "frontend-design",
+      "description": "Distinctive, intentional UI design: aesthetic direction and typography that avoid templated defaults.",
+      "category": "design",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/frontend-design",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "canvas-design",
+      "description": "Create posters and static visual art as PNG or PDF from a design philosophy.",
+      "category": "design",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/canvas-design",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "algorithmic-art",
+      "description": "Generative art with p5.js: seeded randomness, flow fields and interactive parameters.",
+      "category": "design",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/algorithmic-art",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "theme-factory",
+      "description": "Apply one of 10 preset themes (colors and fonts) to slides, docs and HTML pages, or generate a new one.",
+      "category": "design",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/theme-factory",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "slack-gif-creator",
+      "description": "Make animated GIFs sized and validated for Slack.",
+      "category": "design",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/slack-gif-creator",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "web-artifacts-builder",
+      "description": "Build multi-component HTML artifacts with React, Tailwind CSS and shadcn/ui.",
+      "category": "development",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/web-artifacts-builder",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "webapp-testing",
+      "description": "Test local web apps with Playwright: check UI behavior, capture screenshots and read browser logs.",
+      "category": "development",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/webapp-testing",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "mcp-builder",
+      "description": "Guide for building well-designed MCP servers in Python (FastMCP) or TypeScript.",
+      "category": "development",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/mcp-builder",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "claude-api",
+      "description": "Claude API and Anthropic SDK reference: models, streaming, tool use, caching and migration.",
+      "category": "development",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/claude-api",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "skill-creator",
+      "description": "Create, improve and benchmark skills, and tune their descriptions to trigger reliably.",
+      "category": "development",
+      "curated": true,
+      "repo": "anthropics/skills",
+      "path": "skills/skill-creator",
+      "sha": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "homepage": "https://github.com/anthropics/skills"
+    },
+    {
+      "name": "brainstorming",
+      "description": "Turn a rough idea into a design through questions before any code is written.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/brainstorming",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "writing-plans",
+      "description": "Write a step-by-step implementation plan from a spec before touching code.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/writing-plans",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "executing-plans",
+      "description": "Carry out a written plan in batches with review checkpoints.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/executing-plans",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "subagent-driven-development",
+      "description": "Execute a plan by dispatching a fresh subagent per task with review between tasks.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/subagent-driven-development",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "description": "Split independent problems across parallel agents.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/dispatching-parallel-agents",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "test-driven-development",
+      "description": "Write the failing test first, then the code that makes it pass.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/test-driven-development",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "systematic-debugging",
+      "description": "Find the root cause of a bug before proposing a fix.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/systematic-debugging",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "verification-before-completion",
+      "description": "Run the checks and confirm the evidence before claiming work is done.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/verification-before-completion",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "requesting-code-review",
+      "description": "Request a review of finished work against the plan before merging.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/requesting-code-review",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "receiving-code-review",
+      "description": "Handle review feedback with technical rigor instead of blind agreement.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/receiving-code-review",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "using-git-worktrees",
+      "description": "Work on a feature in an isolated git worktree.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/using-git-worktrees",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "description": "Decide how to land finished work: merge, PR or cleanup.",
+      "category": "workflow",
+      "curated": true,
+      "repo": "obra/superpowers",
+      "path": "skills/finishing-a-development-branch",
+      "sha": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "homepage": "https://github.com/obra/superpowers"
     }
   ]
 }

@@ -82,6 +82,8 @@ const CATALOG_URL = `https://raw.githubusercontent.com/${CATALOG_REPO}/main/skil
 export const bundledSkills: CatalogSkill[] = bundledCatalog.skills as CatalogSkill[];
 
 export const fetchCatalog = async (): Promise<CatalogSkill[]> => {
+  // In dev, read the checked-out catalog so local edits show before they reach main.
+  if (import.meta.env.DEV) return bundledSkills;
   const response = await fetch(CATALOG_URL);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return ((await response.json()) as { skills: CatalogSkill[] }).skills;
