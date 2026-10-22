@@ -8,7 +8,6 @@ export type ViewName =
   | "settings"
   | "about"
   | "server"
-  | "install-app"
   | "notes"
   | "favorites"
   | "collection";

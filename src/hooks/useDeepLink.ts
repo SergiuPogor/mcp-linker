@@ -34,7 +34,8 @@ export const useDeepLink = () => {
         // query values that merely contain "install-app" / "servers".
         if (urlObj.host === "install-app") {
           debugLog(`got ${urlObj.pathname + urlObj.search}`);
-          navigate(`/install-app${urlObj.pathname + urlObj.search}`, {
+          // Prefill the Add Server form; saving stays an explicit click.
+          navigate(`/servers/new${urlObj.search}`, {
             replace: true,
           });
         }

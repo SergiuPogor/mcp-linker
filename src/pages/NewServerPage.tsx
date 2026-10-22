@@ -28,10 +28,22 @@ function customServer(imported?: ImportedServer): ServerType {
   };
 }
 
+/** The server carried by an `mcp-linker://install-app?name=…&config=<base64 JSON>` deep link, if any. */
+function deepLinkServer(search: Record<string, string>): ImportedServer | undefined {
+  if (!search.config) return undefined;
+  try {
+    const found = findServerConfigs(JSON.parse(atob(search.config)));
+    const item = found.find(entry => entry.name === search.name) ?? found[0];
+    return item && { ...item, name: item.name || search.name || "" };
+  } catch {
+    return undefined;
+  }
+}
+
 export function NewServerPage() {
   const { t } = useTranslation();
   const navigate = useViewStore(state => state.navigate);
-  const [server, setServer] = useState(customServer);
+  const [server, setServer] = useState(() => customServer(deepLinkServer(useViewStore.getState().search)));
   const [candidates, setCandidates] = useState<ImportedServer[]>([]);
   const [githubUrl, setGithubUrl] = useState("");
   const { loading, fetchAllJsonBlocks } = useGithubReadmeJson();

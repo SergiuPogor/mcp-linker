@@ -1,4 +1,3 @@
-import { useCCProjectStore } from "@/stores/ccProject";
 import { type InvokeArgs, invoke } from "@tauri-apps/api/core";
 
 type ClaudeWriteCommand =
@@ -40,17 +39,4 @@ export function toClaudeRequest(name: string, value: Record<string, unknown>) {
     return { name, type: value.type ?? "http", url, headers: value.headers };
   }
   throw new Error("Unsupported config for Claude Code");
-}
-
-/** Adds a server to the Claude Code project and scope chosen in the header. */
-export function addToClaudeCode(name: string, value: Record<string, unknown>) {
-  const { selectedProject, selectedScope } = useCCProjectStore.getState();
-  if (selectedScope !== "user" && !selectedProject) {
-    return Promise.reject(new Error("Select a Claude Code project first."));
-  }
-  return claudeWrite("claude_mcp_add", {
-    request: toClaudeRequest(name, value),
-    workingDir: selectedProject ?? "",
-    scope: selectedScope,
-  });
 }

@@ -10,11 +10,9 @@ import {
   LayoutDashboard,
   NotebookPen,
   Puzzle,
-  FileInput,
   Search,
 } from "lucide-react";
 import About from "./pages/About";
-import { InstallAppPage } from "./pages/InstallApp";
 import { useViewStore } from "./stores/viewStore";
 
 export const AppRoutes = () => {
@@ -35,8 +33,6 @@ export const AppRoutes = () => {
       return <About />;
     case "server":
       return params.id === "new" ? <NewServerPage /> : <ServerPage />;
-    case "install-app":
-      return <InstallAppPage />;
     case "notes":
       return <NotesPage />;
     case "favorites":
@@ -72,11 +68,6 @@ export const getNavigationRoutes = (
       id: "plugins",
       name: t("nav.plugins"),
       icon: <Puzzle />,
-    },
-    {
-      id: "install-app",
-      name: "Import Configuration",
-      icon: <FileInput />,
     },
   ];
 };
