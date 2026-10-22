@@ -71,6 +71,8 @@ pub fn run() {
             encryption::decrypt_data,
             claude_code_commands::claude_mcp_list,
             claude_tools::claude_mcp_tools,
+            claude_tools::claude_get_tool_policy,
+            claude_tools::claude_set_tool_policy,
             claude_code_commands::claude_mcp_get,
             claude_code_commands::claude_mcp_add,
             claude_code_commands::claude_mcp_remove,

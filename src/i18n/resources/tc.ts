@@ -165,7 +165,7 @@ const tc: { translation: TranslationSchema } = {
         sync: "本機同步",
         batch: "批次操作",
         inspection: "MCP 工具即時檢查",
-        toolPolicy: "Codex 工具策略",
+        toolPolicy: "工具策略",
         pluginSync: "在 Claude Code 和 Codex 之間複製外掛",
       },
     },
