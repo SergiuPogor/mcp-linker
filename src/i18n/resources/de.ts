@@ -12,6 +12,7 @@ const de: { translation: TranslationSchema } = {
     sellServer: "Server verkaufen",
     loginRequired: "Anmeldung erforderlich",
     addCustomServer: "Benutzerdefinierten Server hinzufügen",
+    add: "Hinzufügen",
     noServerTip: "Kein Server-Tipp",
     confirmDeletion: "Löschen bestätigen",
     deleteConfirmation: "Möchten Sie {{serverKey}} wirklich löschen?",
@@ -24,6 +25,9 @@ const de: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "Entdecken",
+      home: "Start",
+      yours: "Meine",
+      mcps: "MCPs",
       category: "Kategorien",
       arcade: "Arcade",
       create: "Erstellen",

@@ -12,6 +12,7 @@ const en: { translation: TranslationSchema } = {
     sellServer: "sell server",
     loginRequired: "login Required",
     addCustomServer: "Add custom server",
+    add: "Add",
     noServerTip: "no Server Tip",
     confirmDeletion: "Confirm Deletion",
     deleteConfirmation: "Are you sure you want to delete {{serverKey}}?",
@@ -24,6 +25,9 @@ const en: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "Discover",
+      home: "Home",
+      yours: "Yours",
+      mcps: "MCPs",
       category: "Categories",
       arcade: "Arcade",
       create: "Create",

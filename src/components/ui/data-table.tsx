@@ -46,6 +46,8 @@ interface DataTableProps<TData, TValue> {
   onTableInstanceChange?: (table: Table<TData>) => void;
   batchActions?: BatchActionsProps;
   toolbar?: React.ReactNode;
+  /** Filters the searchKey column from outside; the built-in search box is then hidden. */
+  filter?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -57,6 +59,7 @@ export function DataTable<TData, TValue>({
   onTableInstanceChange,
   batchActions,
   toolbar,
+  filter,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation()
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -80,6 +83,11 @@ export function DataTable<TData, TValue>({
   })
 
   React.useEffect(() => {
+    if (searchKey && filter !== undefined) table.getColumn(searchKey)?.setFilterValue(filter)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, searchKey])
+
+  React.useEffect(() => {
     if (onTableInstanceChange) {
       onTableInstanceChange(table);
     }
@@ -90,7 +98,7 @@ export function DataTable<TData, TValue>({
     <div>
       {(searchKey || batchActions || toolbar) && (
         <div className="flex items-center gap-2 pb-3">
-          {searchKey && (
+          {searchKey && filter === undefined && (
             <div className="relative w-full max-w-sm">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input

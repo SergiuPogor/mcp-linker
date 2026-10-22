@@ -40,6 +40,42 @@ const LICENSE = {
   updatesExpired: false,
 };
 
+const plugin = (name: string, description: string, extra: Record<string, unknown> = {}) => ({
+  id: `${name}@mock`,
+  name,
+  displayName: null,
+  marketplace: "mock",
+  description,
+  category: "development",
+  version: "1.0.0",
+  homepage: null,
+  official: true,
+  community: false,
+  curated: false,
+  installed: false,
+  enabled: false,
+  scope: null,
+  path: null,
+  icon: null,
+  iconUrl: null,
+  ...extra,
+});
+
+const PLUGINS = [
+  plugin("github", "Triage issues, review pull requests and manage repositories from the agent.", { installed: true, enabled: true }),
+  plugin("linear", "Create and update Linear issues without leaving the conversation.", { installed: true }),
+  plugin("figma", "Turn Figma frames into code and read design tokens."),
+  plugin("sentry", "Pull crashes and stack traces into the session and triage them."),
+  plugin("vercel", "Deploy previews, read build logs and manage environment variables."),
+  plugin("notion", "Search and edit Notion pages and databases."),
+];
+
+const SKILLS = [
+  { name: "pdf", description: "Read, merge, split, fill and OCR PDF files.", path: "/mock/pdf", claudeCode: true, codex: false, source: "anthropics/skills", installedRef: null },
+  { name: "ios-simulator-build-run", description: "Build an iOS app and run it on the Simulator, then read build errors and logs.", path: "/mock/ios", claudeCode: true, codex: true, source: "milisp/skills", installedRef: null },
+  { name: "my-notes", description: null, path: "/mock/notes", claudeCode: false, codex: true, source: null, installedRef: null },
+];
+
 const ANSWERS: Record<string, unknown> = {
   list_clients: CLIENTS,
   license_status: LICENSE,
@@ -55,7 +91,8 @@ const ANSWERS: Record<string, unknown> = {
   plugin_list: [],
   plugin_marketplaces: [],
   plugin_activity: [],
-  plugin_catalog: { marketplaces: [], plugins: [] },
+  plugin_catalog: { marketplaces: [], plugins: PLUGINS },
+  skill_list: SKILLS,
 };
 
 export function installBrowserMock() {

@@ -13,6 +13,7 @@ const tc: { translation: TranslationSchema } = {
     sellServer: "出售伺服器",
     loginRequired: "需要登入",
     addCustomServer: "新增自訂伺服器",
+    add: "新增",
     noServerTip: "沒有伺服器提示",
     confirmDeletion: "確認刪除",
     deleteConfirmation: "你確定要刪除 {{serverKey}} 嗎？",
@@ -25,6 +26,9 @@ const tc: { translation: TranslationSchema } = {
     mcpLinker: "MCP Linker",
     nav: {
       discover: "探索",
+      home: "主頁",
+      yours: "我的",
+      mcps: "MCPs",
       category: "分類",
       arcade: "街機",
       create: "創建",

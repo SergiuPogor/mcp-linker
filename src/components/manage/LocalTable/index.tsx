@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useServerTableColumns } from "../ServerTableColumns";
 import { useServersData } from "./useServersData";
 
-export const LocalTable = () => {
+export const LocalTable = ({ query }: { query?: string }) => {
   const { t } = useTranslation();
   const { selectedClient, selectedPath } = useClientPathStore();
   const [syncOpen, setSyncOpen] = useState(false);
@@ -129,6 +129,7 @@ export const LocalTable = () => {
           columns={localColumns}
           data={serversData}
           searchKey="name"
+          filter={query}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
           onTableInstanceChange={setTableInstance}
