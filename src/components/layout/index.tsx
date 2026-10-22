@@ -10,6 +10,7 @@ import { useViewStore } from "@/stores/viewStore";
 import { platform } from "@tauri-apps/plugin-os";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 import { ClientSelector } from "../settings/client-selector";
 import { InstallationScope, InstallationTarget } from "../settings/InstallationTarget";
 import { Button } from "@/components/ui/button";
@@ -29,10 +30,10 @@ const Layout = () => {
         <div className="flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
             <header
               data-tauri-drag-region
-              className="flex shrink-0 items-center gap-2 p-2"
+              className={cn("flex shrink-0 items-center gap-2", isMacOS ? "h-11 px-2" : "p-2")}
             >
                 <SidebarTrigger
-                  className={isMacOS && !sidebarOpen ? "ml-8 shrink-0" : "shrink-0"}
+                  className={isMacOS && !sidebarOpen ? "ml-20 shrink-0" : "shrink-0"}
                 />
               <div className="flex shrink-0 items-center gap-1" role="group" aria-label="Page navigation">
                 <Button variant="ghost" size="icon" aria-label="Go back" title="Go back" disabled={historyIndex === 0} onClick={() => navigate(-1)}><ArrowLeft className="size-4" /></Button>
