@@ -18,7 +18,7 @@
 
 ### 🚀 30 秒快速開始
 
-[📥 **立即下載**](https://github.com/milisp/mcp-linker/releases) • [🚀 快速上手](#快速上手) • [💬 加入 Discord](https://discord.gg/UqXeVqUKQq)
+[📥 **立即下載**](https://github.com/milisp/mcp-linker/releases) • [🚀 快速上手](#快速上手) • [💬 加入 Discord](https://discord.gg/zAjtD4kf5K)
 
 </div>
 
@@ -100,7 +100,7 @@ bun tauri dev
 
 ## 💬 支援與社群
 
-- **[💬 加入 Discord 社群](https://discord.gg/UqXeVqUKQq)** — 提問、交流、分享想法
+- **[💬 加入 Discord 社群](https://discord.gg/zAjtD4kf5K)** — 提問、交流、分享想法
 - **[🐛 回報問題](https://github.com/milisp/mcp-linker/issues)** — 幫助我們改進！
 
 ---

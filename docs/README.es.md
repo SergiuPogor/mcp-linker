@@ -18,7 +18,7 @@ Agrega, administra y sincroniza servidores MCP (Model Context Protocol) entre cl
 
 ### 🚀 Comienza en 30 segundos
 
-[📥 **Descargar ahora**](https://github.com/milisp/mcp-linker/releases) • [🚀 Inicio Rápido](#inicio-rápido) • [💬 Unirse a Discord](https://discord.gg/UqXeVqUKQq)
+[📥 **Descargar ahora**](https://github.com/milisp/mcp-linker/releases) • [🚀 Inicio Rápido](#inicio-rápido) • [💬 Unirse a Discord](https://discord.gg/zAjtD4kf5K)
 
 </div>
 
@@ -100,7 +100,7 @@ bun tauri dev
 
 ## 💬 Soporte y comunidad
 
-- **[💬 Únete a nuestra comunidad en Discord](https://discord.gg/UqXeVqUKQq)** — Obtén ayuda, comparte ideas y conecta con otros usuarios
+- **[💬 Únete a nuestra comunidad en Discord](https://discord.gg/zAjtD4kf5K)** — Obtén ayuda, comparte ideas y conecta con otros usuarios
 - **[🐛 Reporta problemas](https://github.com/milisp/mcp-linker/issues)** — Ayúdanos a mejorar
 
 ---

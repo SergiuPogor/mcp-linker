@@ -18,7 +18,7 @@ Ajoutez, gérez et synchronisez des serveurs MCP (Model Context Protocol) sur de
 
 ### 🚀 Commencez en 30 secondes
 
-[📥 **Télécharger maintenant**](https://github.com/milisp/mcp-linker/releases) • [🚀 Démarrage rapide](#démarrage-rapide) • [💬 Rejoignez Discord](https://discord.gg/UqXeVqUKQq)
+[📥 **Télécharger maintenant**](https://github.com/milisp/mcp-linker/releases) • [🚀 Démarrage rapide](#démarrage-rapide) • [💬 Rejoignez Discord](https://discord.gg/zAjtD4kf5K)
 
 </div>
 
@@ -100,7 +100,7 @@ Les contributions sont les bienvenues ! Voir [CONTRIBUTING.md](./CONTRIBUTING.md
 
 ## 💬 Support & Communauté
 
-- **[💬 Rejoignez notre communauté Discord](https://discord.gg/UqXeVqUKQq)** — Obtenez de l'aide, partagez vos idées, et connectez-vous avec d'autres utilisateurs
+- **[💬 Rejoignez notre communauté Discord](https://discord.gg/zAjtD4kf5K)** — Obtenez de l'aide, partagez vos idées, et connectez-vous avec d'autres utilisateurs
 - **[🐛 Signalez des problèmes](https://github.com/milisp/mcp-linker/issues)** — Aidez-nous à améliorer le projet
 
 ---

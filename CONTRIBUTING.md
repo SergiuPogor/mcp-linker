@@ -116,4 +116,4 @@ kept apart from entries chosen on merit.
 - Keep changes minimal, focused, and consistent with the existing codebase.
 
 ## How to join
-- Join our [Discord](https://discord.gg/G9uJxjpd) to chat!
+- Join our [Discord](https://discord.gg/zAjtD4kf5K) to chat!

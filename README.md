@@ -97,6 +97,7 @@ Built an MCP server, or run one for your product? **Submit it to the directory.*
 
 ## 💬 Community & Support
 
+- [💬 Join Discord](https://discord.gg/zAjtD4kf5K)
 - [💬 Join Discussions](https://github.com/milisp/mcp-linker/discussions)
 - [🐛 Report Issues](https://github.com/milisp/mcp-linker/issues)
 

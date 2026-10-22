@@ -55,7 +55,7 @@ bun tauri dev
 
 ## サポート
 
-- [Discord コミュニティ](https://discord.gg/G9uJxjpd)
+- [Discord コミュニティ](https://discord.gg/zAjtD4kf5K)
 - [GitHub Issues](https://github.com/milisp/mcp-linker/issues)
 
 ## 🎉 貢献者の皆さま
