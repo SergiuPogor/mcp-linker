@@ -109,6 +109,91 @@ pub async fn claude_mcp_tools(
     inspect(working_dir, server_name).await
 }
 
+/// Claude Code names MCP tool rules `mcp__<server>__<tool>`, with the server name
+/// normalized to `[A-Za-z0-9_-]`.
+fn rule_prefix(server: &str) -> String {
+    let server: String = server
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
+        .collect();
+    format!("mcp__{server}__")
+}
+
+fn settings_path(project: &str) -> Result<std::path::PathBuf, String> {
+    if !Path::new(project).is_absolute() || !Path::new(project).is_dir() {
+        return Err("Select an existing Claude Code project directory.".into());
+    }
+    Ok(Path::new(project).join(".claude").join("settings.local.json"))
+}
+
+fn read_settings(path: &Path) -> Result<Value, String> {
+    match std::fs::read(path) {
+        Ok(bytes) => serde_json::from_slice(&bytes)
+            .ok()
+            .filter(Value::is_object)
+            .ok_or_else(|| "Claude Code local settings are not a valid JSON object.".to_string()),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(json!({})),
+        Err(_) => Err("Could not read Claude Code local settings.".into()),
+    }
+}
+
+fn disabled_tools(settings: &Value, prefix: &str) -> Vec<String> {
+    settings["permissions"]["deny"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|rule| rule.as_str()?.strip_prefix(prefix).map(str::to_owned))
+        .collect()
+}
+
+/// Replaces this server's `mcp__<server>__*` deny rules, leaving every other rule and setting intact.
+fn apply_disabled_tools(settings: &mut Value, prefix: &str, tools: &[String]) -> Result<(), String> {
+    let root = settings.as_object_mut().ok_or("Claude Code local settings are not a JSON object.")?;
+    let permissions = root.entry("permissions").or_insert_with(|| json!({}));
+    let deny = permissions
+        .as_object_mut()
+        .ok_or("Claude Code permissions are not a JSON object.")?
+        .entry("deny")
+        .or_insert_with(|| json!([]));
+    let deny = deny.as_array_mut().ok_or("Claude Code deny rules are not a list.")?;
+    deny.retain(|rule| !rule.as_str().is_some_and(|rule| rule.starts_with(prefix)));
+    deny.extend(tools.iter().map(|tool| Value::String(format!("{prefix}{tool}"))));
+    Ok(())
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClaudeToolPolicy {
+    disabled_tools: Vec<String>,
+}
+
+#[tauri::command]
+pub async fn claude_get_tool_policy(working_dir: String, server_name: String) -> Result<ClaudeToolPolicy, String> {
+    let settings = read_settings(&settings_path(&working_dir)?)?;
+    Ok(ClaudeToolPolicy { disabled_tools: disabled_tools(&settings, &rule_prefix(&server_name)) })
+}
+
+#[tauri::command]
+pub async fn claude_set_tool_policy(
+    working_dir: String,
+    server_name: String,
+    disabled_tools: Vec<String>,
+) -> Result<ClaudeToolPolicy, String> {
+    mcpl_core::license::require(mcpl_core::license::Tier::Pro, "Claude Code tool policy")?;
+    let path = settings_path(&working_dir)?;
+    let prefix = rule_prefix(&server_name);
+    let mut settings = read_settings(&path)?;
+    apply_disabled_tools(&mut settings, &prefix, &disabled_tools)?;
+    let dir = path.parent().ok_or("Invalid settings path.")?;
+    std::fs::create_dir_all(dir).map_err(|_| "Could not create the .claude directory.")?;
+    // Write beside the target, then rename, so a crash never leaves half a settings file.
+    let mut temp = tempfile::NamedTempFile::new_in(dir).map_err(|_| "Could not write Claude Code local settings.")?;
+    serde_json::to_writer_pretty(&mut temp, &settings).map_err(|_| "Could not write Claude Code local settings.")?;
+    temp.write_all(b"\n").map_err(|_| "Could not write Claude Code local settings.")?;
+    temp.persist(&path).map_err(|_| "Could not write Claude Code local settings.")?;
+    Ok(ClaudeToolPolicy { disabled_tools: self::disabled_tools(&settings, &prefix) })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -124,6 +209,20 @@ mod tests {
             "https://global.example"
         );
         assert!(saved_server(&root, "/project", "missing").is_err());
+    }
+    #[test]
+    fn policy_replaces_only_this_servers_rules() {
+        let mut settings = json!({"model":"x","permissions":{"allow":["Bash"],"deny":["Read(.env)","mcp__my_srv__old","mcp__other__keep"]}});
+        let prefix = rule_prefix("my.srv");
+        assert_eq!(prefix, "mcp__my_srv__");
+        assert_eq!(disabled_tools(&settings, &prefix), ["old"]);
+        apply_disabled_tools(&mut settings, &prefix, &["a".into(), "b".into()]).unwrap();
+        assert_eq!(settings["permissions"]["deny"], json!(["Read(.env)", "mcp__other__keep", "mcp__my_srv__a", "mcp__my_srv__b"]));
+        assert_eq!(settings["permissions"]["allow"], json!(["Bash"]));
+        assert_eq!(settings["model"], "x");
+        let mut empty = json!({});
+        apply_disabled_tools(&mut empty, &prefix, &[]).unwrap();
+        assert_eq!(empty["permissions"]["deny"], json!([]));
     }
     #[tokio::test]
     #[ignore = "Explicit live verification only; starts Claude Code and contacts configured Cloudflare MCP"]

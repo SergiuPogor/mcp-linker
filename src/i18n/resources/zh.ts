@@ -164,7 +164,7 @@ const zh: { translation: TranslationSchema } = {
         sync: "本地同步",
         batch: "批量操作",
         inspection: "MCP 工具实时检查",
-        toolPolicy: "Codex 工具策略",
+        toolPolicy: "工具策略",
         pluginSync: "在 Claude Code 和 Codex 之间复制插件",
       },
     },

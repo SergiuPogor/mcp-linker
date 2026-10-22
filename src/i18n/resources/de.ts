@@ -164,7 +164,7 @@ const de: { translation: TranslationSchema } = {
         sync: "Lokale Synchronisierung",
         batch: "Stapelaktionen",
         inspection: "Live-Tool-Prüfung",
-        toolPolicy: "Codex-Tool-Richtlinie",
+        toolPolicy: "Tool-Richtlinie",
         pluginSync: "Plugins zwischen Claude Code und Codex kopieren",
       },
     },

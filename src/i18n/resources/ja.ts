@@ -164,7 +164,7 @@ const ja: { translation: TranslationSchema } = {
         sync: "ローカル同期",
         batch: "一括操作",
         inspection: "ライブツール検査",
-        toolPolicy: "Codex ツールポリシー",
+        toolPolicy: "ツールポリシー",
         pluginSync: "Claude Code と Codex の間でプラグインをコピー",
       },
     },
