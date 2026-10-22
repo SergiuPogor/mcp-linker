@@ -35,6 +35,8 @@
 - **🚀 一鍵安裝** — 無需手動編輯設定檔
 - **🔄 多客戶端支援** — 支援 Claude Desktop、Cursor、VS Code、Cline、Roo Code、Windsurf 等
 - **📦 600+ 精選伺服器** — 內建 MCP 伺服器市集
+- **🧩 Skills** — 精選與社群目錄，可從任何 GitHub 倉庫安裝，依客戶端為 Claude Code 與 Codex 啟用（[詳情](./skills.md)）
+- **🔌 外掛** — 瀏覽 Claude Code 與 Codex 外掛市集，並在兩者之間複製外掛（[詳情](./plugins.md)）
 - **🌐 跨平台支援** — macOS、Windows、Linux（僅約 6MB）
 - **🔍 智慧偵測** — 自動偵測 Python、Node.js、UV 環境
 - **⚡ 基於 Tauri 构建** — 快速、安全、資源效率高

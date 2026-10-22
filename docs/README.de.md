@@ -35,6 +35,8 @@ Füge MCP-Server (Model Context Protocol) hinzu, verwalte und synchronisiere sie
 - **🚀 Installation mit einem Klick** — Keine manuelle Bearbeitung von Konfigurationsdateien mehr
 - **🔄 Multi-Client-Unterstützung** — Claude Desktop, Cursor, VS Code, Cline, Roo Code, Windsurf und mehr
 - **📦 600+ kuratierte Server** — Integrierter MCP-Server-Marktplatz
+- **🧩 Skills** — Kuratierter und Community-Katalog, Installation aus jedem GitHub-Repo, pro Client für Claude Code und Codex aktivierbar ([Details](./skills.md))
+- **🔌 Plugins** — Plugin-Marktplätze von Claude Code und Codex durchsuchen und Plugins zwischen beiden kopieren ([Details](./plugins.md))
 - **🌐 Plattformübergreifend** — macOS, Windows, Linux (leichtgewichtig ~6MB)
 - **🔍 Intelligente Erkennung** — Erkennt automatisch Python-, Node.js-, UV-Umgebungen
 - **⚡ Entwickelt mit Tauri** — Schnell, sicher und ressourcenschonend

@@ -12,6 +12,8 @@
 - 一键安装和配置 MCP 服务器
 - 支持多个 AI 客户端（Claude Desktop、Cursor、VS Code、Cline、Roo Code、Windsurf 等）
 - 收录 600+ 精选 MCP 服务器
+- Skills：精选与社区目录，可从任意 GitHub 仓库安装，按客户端为 Claude Code 和 Codex 启用（[详情](./skills.md)）
+- 插件：浏览 Claude Code 和 Codex 插件市场，并在两者之间复制插件（[详情](./plugins.md)）
 - 跨平台支持：macOS、Windows、Linux
 - 自动检测 Python、Node.js、UV 环境
 - 云端同步收藏的服务器

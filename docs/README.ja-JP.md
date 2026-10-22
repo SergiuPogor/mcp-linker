@@ -9,6 +9,8 @@
 - ワンクリックで MCP サーバーのインストールと設定
 - 複数の AI クライアントに対応（Claude Desktop、Cursor、VS Code、Cline、Roo Code、Windsurf など）
 - 600 以上の厳選された MCP サーバーを利用可能
+- Skills：厳選・コミュニティカタログ、任意の GitHub リポジトリからインストール、Claude Code と Codex でクライアントごとに有効化（[詳細](./skills.md)）
+- プラグイン：Claude Code と Codex のプラグインマーケットプレイスを閲覧し、両者間でプラグインをコピー（[詳細](./plugins.md)）
 - クロスプラットフォーム：macOS、Windows、Linux
 - Python、Node.js、UV 環境を自動検出
 - お気に入りサーバーのクラウド同期
