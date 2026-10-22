@@ -100,6 +100,17 @@ const de: { translation: TranslationSchema } = {
       updatesExpired: "Diese Version erschien nach dem Ende deiner Updates am {{date}} und läuft daher als kostenlose Version. Verlängere, oder nutze weiter eine Version, die vor diesem Datum erschienen ist.",
       renew: "Verlängern",
     },
+    aboutPage: {
+      version: "Version {{version}}",
+      tagline: "MCP-Server und Plugins für Claude Code, Codex, Cursor und weitere KI-Clients hinzufügen, verwalten und synchronisieren.",
+      tier: { free: "Kostenlos", plus: "Plus", pro: "Pro" },
+      freeNote: "Server hinzufügen und bearbeiten ist für alle Clients kostenlos. Synchronisierung, Stapelaktionen und Tool-Prüfung brauchen eine Lizenz.",
+      manageLicense: "Lizenz verwalten",
+      links: { github: "GitHub", discord: "Discord", issues: "Problem melden", changelog: "Änderungsprotokoll" },
+      moreTitle: "Mehr von milisp",
+      moreDesc: "Weitere Apps für alle, die mit KI arbeiten",
+      apps: { codexia: "Eine kostenlose Arbeitsumgebung für Claude Code und Codex mit Bots, Routinen und Git-Worktrees.", plux: "Shift zweimal tippen, um Text und Screenshots zu erfassen und an ChatGPT, Claude oder Cursor zu senden." },
+    },
     upgrade: {
       needsPlus: "Dafür brauchst du MCP Linker Plus oder Pro, als Einmalkauf.",
       needsPro: "Dafür brauchst du MCP Linker Pro, als Einmalkauf.",

@@ -100,6 +100,17 @@ const ja: { translation: TranslationSchema } = {
       updatesExpired: "このバージョンはアップデート期間（{{date}} まで）の後にリリースされたため、無料版として動作します。更新するか、その日付より前にリリースされたバージョンを使い続けてください。",
       renew: "更新する",
     },
+    aboutPage: {
+      version: "バージョン {{version}}",
+      tagline: "Claude Code、Codex、Cursor などの AI クライアント間で MCP サーバーとプラグインを追加・管理・同期します。",
+      tier: { free: "無料", plus: "Plus", pro: "Pro" },
+      freeNote: "サーバーの追加と編集はすべてのクライアントで無料です。同期、一括操作、ツール検査にはライセンスが必要です。",
+      manageLicense: "ライセンスを管理",
+      links: { github: "GitHub", discord: "Discord", issues: "問題を報告", changelog: "変更履歴" },
+      moreTitle: "milisp のその他のアプリ",
+      moreDesc: "AI を使う人のために作っているほかのアプリ",
+      apps: { codexia: "Claude Code と Codex 向けの無料ワークステーション。ボット、ルーチン、git worktree に対応。", plux: "Shift を2回押してテキストとスクリーンショットを集め、ChatGPT、Claude、Cursor に送信します。" },
+    },
     upgrade: {
       needsPlus: "この機能には MCP Linker Plus または Pro（買い切り）が必要です。",
       needsPro: "この機能には MCP Linker Pro（買い切り）が必要です。",

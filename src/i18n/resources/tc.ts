@@ -101,6 +101,17 @@ const tc: { translation: TranslationSchema } = {
       updatesExpired: "此版本發佈於你的更新期（{{date}} 截止）之後，因此以免費版執行。可以續費，或繼續使用該日期之前發佈的版本。",
       renew: "續費",
     },
+    aboutPage: {
+      version: "版本 {{version}}",
+      tagline: "在 Claude Code、Codex、Cursor 等 AI client 之間新增、管理和同步 MCP server 與外掛。",
+      tier: { free: "免費版", plus: "Plus", pro: "Pro" },
+      freeNote: "所有 client 都可以免費新增和編輯 server。同步、批次操作和工具檢查需要授權碼。",
+      manageLicense: "管理授權",
+      links: { github: "GitHub", discord: "Discord", issues: "回報問題", changelog: "更新日誌" },
+      moreTitle: "milisp 的其他應用",
+      moreDesc: "我們為使用 AI 的人製作的其他應用",
+      apps: { codexia: "為 Claude Code 和 Codex 打造的免費工作台，支援 bot、排程任務和 git worktree。", plux: "連按兩下 Shift 收集文字和截圖，再傳送到 ChatGPT、Claude 或 Cursor。" },
+    },
     upgrade: {
       needsPlus: "此功能需要 MCP Linker Plus 或 Pro（一次性購買）。",
       needsPro: "此功能需要 MCP Linker Pro（一次性購買）。",

@@ -100,6 +100,17 @@ const es: { translation: TranslationSchema } = {
       updatesExpired: "Esta versión salió después de que terminaran tus actualizaciones el {{date}}, así que funciona como la versión gratuita. Renueva, o sigue usando una versión publicada antes de esa fecha.",
       renew: "Renovar",
     },
+    aboutPage: {
+      version: "Versión {{version}}",
+      tagline: "Añade, gestiona y sincroniza servidores MCP y plugins entre Claude Code, Codex, Cursor y más clientes de IA.",
+      tier: { free: "Gratis", plus: "Plus", pro: "Pro" },
+      freeNote: "Añadir y editar servidores es gratis en todos los clientes. La sincronización, las acciones por lotes y la inspección de herramientas requieren una licencia.",
+      manageLicense: "Gestionar licencia",
+      links: { github: "GitHub", discord: "Discord", issues: "Informar de un problema", changelog: "Registro de cambios" },
+      moreTitle: "Más de milisp",
+      moreDesc: "Otras apps que creamos para quienes trabajan con IA",
+      apps: { codexia: "Un espacio de trabajo gratuito para Claude Code y Codex, con bots, rutinas y git worktrees.", plux: "Pulsa Shift dos veces para capturar texto y capturas de pantalla y envíalos a ChatGPT, Claude o Cursor." },
+    },
     upgrade: {
       needsPlus: "Esto requiere MCP Linker Plus o Pro, de pago único.",
       needsPro: "Esto requiere MCP Linker Pro, de pago único.",

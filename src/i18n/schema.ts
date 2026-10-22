@@ -97,6 +97,17 @@ export interface TranslationSchema {
     updatesExpired: string;
     renew: string;
   };
+  aboutPage: {
+    version: string;
+    tagline: string;
+    tier: { free: string; plus: string; pro: string };
+    freeNote: string;
+    manageLicense: string;
+    links: { github: string; discord: string; issues: string; changelog: string };
+    moreTitle: string;
+    moreDesc: string;
+    apps: { codexia: string; plux: string };
+  };
   upgrade: {
     needsPlus: string;
     needsPro: string;
