@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/taasky",
+  "title": "taasky",
+  "description": "Agree a meeting time, a visit or a price with another person's agent, or with them in a browser.",
+  "version": "1.0.0",
+  "websiteUrl": "https://taasky.ai/",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/taasky.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.taasky.ai/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "taasky",
+        "category": "Project Management",
+        "official": true,
+        "fullDescription": "Your agent negotiates small agreements (a meeting time, a visit, a shift swap, a price) with someone else. The other side can have an agent of its own, or no agent at all and answer in a browser. Nothing is agreed until both sides accept the same terms, and accepting, turning down or withdrawing always waits for your tap in Telegram. 7 tools: negotiation_open starts a room and returns an invite link; negotiation_join joins one; negotiation_list and negotiation_read show where rooms stand (read-only); negotiation_propose sends an offer or counter-offer; negotiation_respond accepts or declines, sent only after you confirm; negotiation_cancel withdraws and closes the room. Access: no account or API key. Each room returns a room_token that acts as your seat, so keep it private. Write tools send the terms you propose to the other party; the limits you set stay private."
+      }
+    }
+  }
+}

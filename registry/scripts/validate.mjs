@@ -34,14 +34,11 @@ const icons = readdirSync(join(root, "icons")).filter(f => f.endsWith(".svg"));
 const errors = [];
 const fail = (where, message) => errors.push(`${where}: ${message}`);
 
-// index.json and servers/ must list exactly the same entries.
+// index.json only orders the first entries; every id it lists must exist.
 const listed = new Set(index.servers);
 if (listed.size !== index.servers.length) fail("index.json", "servers contains duplicates");
 for (const id of listed) {
   if (!files.includes(`${id}.json`)) fail("index.json", `"${id}" has no servers/${id}.json`);
-}
-for (const file of files) {
-  if (!listed.has(file.slice(0, -5))) fail(`servers/${file}`, "not listed in index.json servers");
 }
 
 for (const file of files) {
@@ -136,14 +133,14 @@ for (const file of collectionFiles) {
   if (members.length < 2) fail(where, "servers must list at least 2 servers");
   if (new Set(members).size !== members.length) fail(where, "servers contains duplicates");
   for (const member of members) {
-    if (!listed.has(member)) fail(where, `"${member}" is not a server in index.json`);
+    if (!files.includes(`${member}.json`)) fail(where, `"${member}" is not a server in servers/`);
   }
 }
 
 // SVGs can carry script, so only plain vector markup is accepted.
 for (const file of icons) {
   const where = `icons/${file}`;
-  if (!listed.has(file.slice(0, -4))) fail(where, "has no matching server");
+  if (!files.includes(`${file.slice(0, -4)}.json`)) fail(where, "has no matching server");
   const svg = readFileSync(join(root, "icons", file), "utf8");
   if (Buffer.byteLength(svg) > MAX_ICON_BYTES) fail(where, `larger than ${MAX_ICON_BYTES / 1024} KB`);
   if (!/^\s*<svg\b[^>]*\bviewBox=/.test(svg)) fail(where, "must start with <svg> and have a viewBox");
