@@ -105,36 +105,24 @@ export default function Discovery() {
   }, [favorites, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <div className="p-8 space-y-4">
+    <div className="p-4 sm:p-6 space-y-6">
       <HomeNav kind="mcps" scope="discover">
         <SearchToggle value={searchTerm} onChange={setSearchTerm} placeholder="Search for MCP servers..." />
       </HomeNav>
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Tabs value={favorites ? "favorites" : "browse"} onValueChange={value => navigate(value === "favorites" ? "/discover?tab=favorites" : "/discover")}>
           <TabsList><TabsTrigger value="browse">Browse</TabsTrigger><TabsTrigger value="favorites">{t("nav.favs")}</TabsTrigger></TabsList>
         </Tabs>
+        {!favorites && (
+          <Tabs value={transport} onValueChange={value => setTransport(value as TransportFilter)}>
+            <TabsList>
+              {TRANSPORT_FILTERS.map(({ value, label }) => <TabsTrigger key={value} value={value}>{label}</TabsTrigger>)}
+            </TabsList>
+          </Tabs>
+        )}
       </div>
       {favorites ? <Favorites embedded /> : <>
       {search.category && <div className="flex flex-wrap items-center gap-3 text-sm"><span>Category: {search.category}</span><button type="button" className="text-muted-foreground underline hover:text-foreground" onClick={() => navigate("/discover", { replace: true })}>Clear filter</button></div>}
-      <div className="mb-6">
-        <div className="flex justify-center gap-2">
-          {TRANSPORT_FILTERS.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setTransport(value)}
-              className={`px-3 py-1 text-sm rounded-full border transition-colors ${
-                transport === value
-                  ? "bg-blue-500 text-white border-blue-500"
-                  : "border-gray-300 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {!deferredSearchTerm && !search.category && transport === "all" && CATALOG_COLLECTIONS.length > 0 && (
         <CollectionCarousel collections={CATALOG_COLLECTIONS} />
       )}
