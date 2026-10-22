@@ -1,6 +1,6 @@
 import { useViewStore } from "@/stores/viewStore";
 import { listen } from "@tauri-apps/api/event";
-import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
+import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -11,6 +11,7 @@ function debugLog(msg: string) {
 }
 
 const processedUrls = new Set<string>();
+let launchUrlChecked = false;
 
 // useDeepLink hook: handles deep link authentication and navigation
 export const useDeepLink = () => {
@@ -34,7 +35,8 @@ export const useDeepLink = () => {
         // query values that merely contain "install-app" / "servers".
         if (urlObj.host === "install-app") {
           debugLog(`got ${urlObj.pathname + urlObj.search}`);
-          navigate(`/install-app${urlObj.pathname + urlObj.search}`, {
+          // Prefill the Add Server form; saving stays an explicit click.
+          navigate(`/servers/new${urlObj.search}`, {
             replace: true,
           });
         }
@@ -66,6 +68,15 @@ export const useDeepLink = () => {
     };
 
     onOpenUrl((urls) => handleUrl(urls));
+
+    // onOpenUrl only hears links opened while the page is listening; the link
+    // that launched the app arrives before that and must be read explicitly.
+    if (!launchUrlChecked) {
+      launchUrlChecked = true;
+      getCurrent()
+        .then((urls) => { if (urls?.length) handleUrl(urls); })
+        .catch(console.error);
+    }
 
     // Listen to Tauri emit events
     const unlistenPromise = listen<string>("deep-link-received", (event) => {

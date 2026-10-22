@@ -3,13 +3,11 @@ import { create } from "zustand";
 export type ViewName =
   | "discover"
   | "manage"
-  | "claude-code-manage"
   | "plugins"
   | "recently"
   | "settings"
   | "about"
   | "server"
-  | "install-app"
   | "notes"
   | "favorites"
   | "collection";

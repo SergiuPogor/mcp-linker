@@ -1,4 +1,3 @@
-import ClaudeCodeManage from "@/pages/ClaudeCodeManage";
 import { CollectionPage } from "@/pages/CollectionPage";
 import Discover from "@/pages/Discover";
 import Manage from "@/pages/manage";
@@ -8,15 +7,12 @@ import { NewServerPage } from "@/pages/NewServerPage";
 import { ServerPage } from "@/pages/ServerPage";
 import SettingsPage from "@/pages/SettingsPage";
 import {
-  Code,
   LayoutDashboard,
   NotebookPen,
   Puzzle,
-  FileInput,
   Search,
 } from "lucide-react";
 import About from "./pages/About";
-import { InstallAppPage } from "./pages/InstallApp";
 import { useViewStore } from "./stores/viewStore";
 
 export const AppRoutes = () => {
@@ -27,8 +23,6 @@ export const AppRoutes = () => {
       return <Discover />;
     case "manage":
       return <Manage />;
-    case "claude-code-manage":
-      return <ClaudeCodeManage />;
     case "plugins":
       return <PluginsPage />;
     case "recently":
@@ -39,8 +33,6 @@ export const AppRoutes = () => {
       return <About />;
     case "server":
       return params.id === "new" ? <NewServerPage /> : <ServerPage />;
-    case "install-app":
-      return <InstallAppPage />;
     case "notes":
       return <NotesPage />;
     case "favorites":
@@ -73,19 +65,9 @@ export const getNavigationRoutes = (
       icon: <NotebookPen />,
     },
     {
-      id: "claude-code-manage",
-      name: "Claude Code",
-      icon: <Code />,
-    },
-    {
       id: "plugins",
       name: t("nav.plugins"),
       icon: <Puzzle />,
-    },
-    {
-      id: "install-app",
-      name: "Import Configuration",
-      icon: <FileInput />,
     },
   ];
 };
