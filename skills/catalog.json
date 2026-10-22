@@ -1,0 +1,72 @@
+{
+  "name": "mcp-linker-skills",
+  "description": "Curated and community agent skills for MCP Linker's Skills page.",
+  "skills": [
+    {
+      "name": "ios-signing-troubleshooting",
+      "description": "Diagnose iOS code signing, provisioning profile, entitlement and certificate errors from Xcode or xcodebuild. Use when a build, archive or export fails with signing errors, \"No profiles found\", \"Provisioning profile doesn't include\", or keychain problems.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/ios/skills/ios-signing-troubleshooting",
+      "keywords": [
+        "ios"
+      ]
+    },
+    {
+      "name": "ios-simulator-build-run",
+      "description": "Build an iOS app and run it on the Simulator, then read build errors, logs and screenshots. Use when asked to build, run, launch, test or debug an iOS/iPadOS app, or when xcodebuild fails.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/ios/skills/ios-simulator-build-run",
+      "keywords": [
+        "ios"
+      ]
+    },
+    {
+      "name": "ios-simulator-ui-automation",
+      "description": "Drive a booted iOS Simulator like a user with the axe CLI (describe-ui, tap, swipe, type, screenshot, record-video) to verify UI flows, reproduce bugs and capture screenshots. Use when asked to tap, scroll, type into, screenshot or smoke-test a running iOS app.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/ios/skills/ios-simulator-ui-automation",
+      "keywords": [
+        "ios"
+      ]
+    },
+    {
+      "name": "ios-testflight-release",
+      "description": "Archive an iOS app, upload it to TestFlight and submit it to the App Store using the asc (App Store Connect) CLI, with a pre-release checklist. Use when asked to ship, release, upload a build, distribute a beta, or submit to App Review.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/ios/skills/ios-testflight-release",
+      "keywords": [
+        "ios"
+      ]
+    },
+    {
+      "name": "macos-build-test",
+      "description": "Build, run and test macOS apps and Swift packages from the command line with XcodeBuildMCP, xcodebuild and swift. Use when asked to build, launch, test or debug a macOS target, a Swift package, or a menu bar, AppKit or SwiftUI Mac app.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/macos/skills/macos-build-test",
+      "keywords": [
+        "macos"
+      ]
+    },
+    {
+      "name": "macos-notarize-distribute",
+      "description": "Sign with Developer ID, notarize with Apple, staple and package a macOS app as a DMG or ZIP for distribution outside the Mac App Store, using codesign and the asc CLI. Use when asked to notarize, staple, or ship a Mac app directly.",
+      "category": "development",
+      "curated": true,
+      "repo": "milisp/mcp-linker",
+      "path": "plugins/macos/skills/macos-notarize-distribute",
+      "keywords": [
+        "macos"
+      ]
+    }
+  ]
+}

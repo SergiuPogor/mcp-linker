@@ -4,6 +4,7 @@ export type ViewName =
   | "discover"
   | "manage"
   | "plugins"
+  | "skills"
   | "recently"
   | "settings"
   | "about"
