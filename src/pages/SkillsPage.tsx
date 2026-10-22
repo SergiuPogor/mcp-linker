@@ -128,12 +128,6 @@ export default function SkillsPage() {
       <span className="px-2 text-sm font-medium">{t("skills.selected", { count: pickedNames.length })}</span>
       {tab === "installed" ? (
         <>
-          {PLUGIN_CLIENTS.map(client => (
-            <Button key={client.id} variant="outline" size="sm" disabled={busy} onClick={() => setClient.mutate({ names: pickedNames, client: client.id, enabled: true })}>
-              <ClientIcon client={clientIconId(client.id)} className="size-4" />
-              {t("skills.addTo", { client: client.label })}
-            </Button>
-          ))}
           {pickedNames.some(n => outdated.has(n)) && (
             <Button variant="outline" size="sm" disabled={busy} onClick={() => update.mutate(pickedNames.filter(n => outdated.has(n)))}>
               {t("skills.update")}
@@ -163,11 +157,29 @@ export default function SkillsPage() {
     </div>
   );
 
+  /** Select-all row; on the installed tab the client switches on its right flip every shown skill at once. */
   const selectAll = names.length > 0 && (
-    <label className="flex items-center gap-2 px-2 text-sm text-muted-foreground">
-      <Checkbox checked={allPicked} onCheckedChange={on => setSelected(on ? names : [])} />
-      {t("skills.selectAll")}
-    </label>
+    <div className="flex items-center justify-between gap-3 px-2 pb-1">
+      <label className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Checkbox checked={allPicked} onCheckedChange={on => setSelected(on ? names : [])} />
+        {t("skills.selectAll")}
+      </label>
+      {tab === "installed" && (
+        <div className="flex items-center gap-3">
+          {PLUGIN_CLIENTS.map(client => (
+            <span key={client.id} className="flex items-center gap-1.5" title={t("skills.enabledIn", { client: clientLabel(client.id) })}>
+              <ClientIcon client={clientIconId(client.id)} className="size-4" />
+              <Switch
+                checked={shownInstalled.every(s => hasSkill(s, client.id))}
+                disabled={busy}
+                onCheckedChange={enabled => setClient.mutate({ names, client: client.id, enabled })}
+                aria-label={t("skills.enabledIn", { client: clientLabel(client.id) })}
+              />
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
   );
 
   const installedRow = (skill: Skill) => (
@@ -185,7 +197,7 @@ export default function SkillsPage() {
       <div className="flex items-center gap-3" onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>
         {PLUGIN_CLIENTS.map(client => (
           <span key={client.id} className="flex items-center gap-1.5" title={t("skills.enabledIn", { client: clientLabel(client.id) })}>
-            <ClientIcon client={clientIconId(client.id)} className="size-4" />
+            <span className="size-4" aria-hidden />
             <Switch checked={hasSkill(skill, client.id)} disabled={busy} onCheckedChange={enabled => setClient.mutate({ names: [skill.name], client: client.id, enabled })} aria-label={t("skills.enabledIn", { client: clientLabel(client.id) })} />
           </span>
         ))}
