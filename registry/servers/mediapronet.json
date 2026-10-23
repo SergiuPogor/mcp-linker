@@ -24,7 +24,7 @@
     "io.modelcontextprotocol.registry/publisher-provided": {
       "io.github.milisp.mcp-linker": {
         "configName": "mediapronet",
-        "category": "Database & Data",
+        "category": "Sales & Marketing",
         "official": true,
         "fullDescription": "Public, read-only MCP server for MEDIAPRONET, a launch and discovery directory of newly launched startups, SaaS products and AI tools. Seven read-only tools: search_listings (keyword search with optional category and pricing filters), get_listing (full listing profile by slug), find_alternatives (alternatives to a named product), browse_category, list_categories, get_trending and get_site_of_the_day. No API key, no account, no write access. Docs: https://mediapronet.com/mcp"
       }
