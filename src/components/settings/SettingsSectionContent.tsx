@@ -3,6 +3,7 @@ import SecurityNoticeCard from "@/components/settings/SecurityNoticeCard";
 import React from "react";
 import LangSelect from "./LangSelect";
 import LicenseCard from "./LicenseCard";
+import ThemeSelect from "./ThemeSelect";
 
 interface Key {
   id: string;
@@ -41,6 +42,7 @@ const SettingsSectionContent: React.FC<SettingsSectionContentProps> = ({
     return (
       <div className="space-y-4">
         <LangSelect />
+        <ThemeSelect />
       </div>
     );
   }

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discord
+    url: https://discord.gg/zAjtD4kf5K
+    about: Ask questions and chat with the community
+  - name: Email
+    url: mailto:hi@milisp.dev
+    about: Billing, licensing or private questions

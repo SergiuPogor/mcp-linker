@@ -13,7 +13,7 @@ import { useLicense } from "@/stores/license";
 import { useViewStore } from "@/stores/viewStore";
 import { getVersion } from "@tauri-apps/api/app";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { ExternalLink, KeyRound } from "lucide-react";
+import { ExternalLink, KeyRound, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -21,8 +21,9 @@ import { toast } from "sonner";
 const LINKS = [
   { id: "github", icon: Github, url: "https://github.com/milisp/mcp-linker" },
   { id: "discord", icon: Discord, url: "https://discord.gg/zAjtD4kf5K" },
-  { id: "issues", icon: ExternalLink, url: "https://github.com/milisp/mcp-linker/issues" },
+  { id: "issues", icon: ExternalLink, url: "https://github.com/milisp/mcp-linker/issues/new/choose" },
   { id: "changelog", icon: ExternalLink, url: "https://github.com/milisp/mcp-linker/blob/main/CHANGELOG.md" },
+  { id: "contact", icon: Mail, url: "mailto:hi@milisp.dev" },
 ] as const;
 
 const MORE_APPS = [

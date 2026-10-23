@@ -86,6 +86,12 @@ export interface TranslationSchema {
   general: string;
   language: string;
   languageDescription: string;
+  help: string;
+  contact: string;
+  theme: string;
+  themeLight: string;
+  themeDark: string;
+  themeSystem: string;
   selectLanguage: string;
   checkForUpdates: string;
   checking: string;
@@ -151,7 +157,7 @@ export interface TranslationSchema {
     tier: { free: string; plus: string; pro: string };
     freeNote: string;
     manageLicense: string;
-    links: { github: string; discord: string; issues: string; changelog: string };
+    links: { github: string; discord: string; issues: string; changelog: string; contact: string };
     moreTitle: string;
     moreDesc: string;
     apps: { codexia: string; plux: string };

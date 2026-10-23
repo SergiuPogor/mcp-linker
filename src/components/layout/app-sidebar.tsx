@@ -5,7 +5,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ModeToggle } from "@/components/ui/mode-toggle"
+import { Button } from "@/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
@@ -21,7 +21,7 @@ import { getNavigationRoutes } from "@/routes"
 import { useViewStore } from "@/stores/viewStore"
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { platform } from "@tauri-apps/plugin-os"
-import { Info, MessageCircle, Settings, User } from "lucide-react"
+import { CircleHelp, Info, Mail, MessageCircle, Settings, User } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { InstallationTarget } from "@/components/settings/InstallationTarget"
 
@@ -90,21 +90,34 @@ export const AppSidebar = () => {
                   {t("nav.settings")}
                   <DropdownMenuShortcut>{isMacOS ? "⌘," : "Ctrl+,"}</DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues")}
-                >
-                  <MessageCircle />
-                  <span>{t("feedback")}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate("/about")}
-                >
-                  <Info />
-                  <span>{t("nav.about")}</span>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            {open && <ModeToggle />}
+            {open && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="shrink-0">
+                    <CircleHelp />
+                    <span className="sr-only">{t("help")}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => openUrl("https://github.com/milisp/mcp-linker/issues/new/choose")}
+                  >
+                    <MessageCircle />
+                    <span>{t("feedback")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openUrl("mailto:hi@milisp.dev")}>
+                    <Mail />
+                    <span>{t("contact")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/about")}>
+                    <Info />
+                    <span>{t("nav.about")}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             </span>
           </SidebarMenuItem>
         </SidebarMenu>
