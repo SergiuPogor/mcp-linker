@@ -63,7 +63,13 @@ export const uninstallSkills = (names: string[]) => invoke<Outcome[]>("skill_uni
 export const discoverSkills = (source: string, gitRef?: string) => invoke<Discovered>("skill_discover", { source, gitRef: gitRef || null });
 export const installSkills = (source: string, names: string[], clients: PluginClient[], gitRef?: string) =>
   invoke<Outcome[]>("skill_install", { source, gitRef: gitRef || null, names, clients });
-export const checkSkillUpdates = () => invoke<SkillUpdate[]>("skill_check_updates");
+export interface SkillUpdateReport {
+  updates: SkillUpdate[];
+  /** Sources that could not be reached, so their skills were not checked. */
+  failures: { source: string; error: string }[];
+}
+
+export const checkSkillUpdates = () => invoke<SkillUpdateReport>("skill_check_updates");
 export const updateSkills = (names: string[]) => invoke<Outcome[]>("skill_update", { names });
 
 /** A skill offered by MCP Linker's catalog (skills/catalog.json), installed or not. */

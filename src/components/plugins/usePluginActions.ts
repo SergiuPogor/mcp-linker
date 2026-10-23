@@ -1,6 +1,8 @@
 import { PLUGIN_CLIENTS, type PluginClient, type PluginUpdateCheck, copyPlugin, copyPlugins, installPlugin, otherClient, setPluginEnabled, updatePlugins } from "@/lib/plugins";
 import { requirePro } from "@/stores/license";
+import { type Progress, inSequence } from "@/lib/sequence";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -30,8 +32,9 @@ export function usePluginActions(client: PluginClient, label: string) {
       toast.error(message(error), { duration: 15_000 });
     },
   });
+  const [updateProgress, setUpdateProgress] = useState<Progress | null>(null);
   const update = useMutation({
-    mutationFn: (ids: string[]) => updatePlugins(client, ids),
+    mutationFn: (ids: string[]) => inSequence(ids, id => updatePlugins(client, [id]), (name, error) => ({ name, error, note: null }), setUpdateProgress),
     onSuccess: outcomes => {
       const failed = outcomes.filter(o => o.error);
       const ok = outcomes.filter(o => !o.error);
@@ -39,7 +42,7 @@ export function usePluginActions(client: PluginClient, label: string) {
       if (failed.length) toast.error(t("plugins.updateFailed", { count: failed.length }), { description: failed.map(o => `${o.name}: ${o.error}`).join("\n"), duration: 15_000 });
       // What was updated is no longer pending; the rest stays until the next check.
       const done = new Set(ok.map(o => o.name));
-      queryClient.setQueryData<PluginUpdateCheck>(["plugin-updates", client], old => old && { ...old, updates: old.updates.filter(u => !done.has(u.id)) });
+      queryClient.setQueryData<PluginUpdateCheck>(["plugin-updates", client], old => old && { ...old, updates: old.updates.filter(u => !done.has(u.id)) }, { updatedAt: queryClient.getQueryState(["plugin-updates", client])?.dataUpdatedAt });
       refresh();
     },
     onError: error => toast.error(message(error), { duration: 15_000 }),
@@ -83,5 +86,5 @@ export function usePluginActions(client: PluginClient, label: string) {
     manyPending: copyManyMutation.isPending,
     runMany: (ids: string[], onDone?: () => void) => requirePro("pluginSync") && copyManyMutation.mutate(ids, { onSuccess: onDone }),
   };
-  return { toggle, install, update, copy, refresh };
+  return { toggle, install, update, updateProgress, copy, refresh };
 }

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SearchToggle } from "@/components/common/SearchToggle";
 import { UpdateCard } from "@/components/common/UpdateCard";
+import { UpdateSection } from "@/components/common/UpdateSection";
 import { HomeNav } from "@/components/layout/HomeNav";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,7 +85,7 @@ export default function PluginsPage() {
   const [syncing, setSyncing] = useState(false);
 
   const catalog = useQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), retry: false });
-  const { toggle, install, update, refresh } = usePluginActions(client, labelOf(client));
+  const { toggle, install, update, updateProgress, refresh } = usePluginActions(client, labelOf(client));
   const updates = useQuery({ queryKey: ["plugin-updates", client], queryFn: () => checkPluginUpdates(client, true), enabled: false, retry: false });
   const all = catalog.data?.plugins ?? [];
   const selected = all.find(p => p.id === selectedId) ?? null;
@@ -139,7 +140,6 @@ export default function PluginsPage() {
     if (result.error) return void toast.error(message(result.error), { duration: 15_000 });
     const found = result.data?.updates.length ?? 0;
     toast.message(found ? t("plugins.updatesFound", { count: found }) : t("plugins.upToDate"));
-    if (result.data?.refreshError) toast.warning(t("plugins.refreshFailed"), { description: result.data.refreshError, duration: 15_000 });
   };
 
   const submit = () => {
@@ -195,27 +195,21 @@ export default function PluginsPage() {
               </Button>
             </HomeNav>
 
-            {!discovering && updates.data && updates.data.updates.length > 0 && (
-              <section className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h2 className="flex-1 text-sm font-semibold">{t("plugins.updatesFound", { count: updates.data.updates.length })}</h2>
-                  <Button variant="outline" size="sm" className="rounded-full" disabled={update.isPending} onClick={() => update.mutate(updates.data.updates.map(u => u.id))}>
-                    {t("plugins.updateAll")}
-                  </Button>
-                </div>
+            {!discovering && updates.data && (
+              <UpdateSection
+                title={t("plugins.updatesFound", { count: updates.data.updates.length })}
+                upToDate={t("plugins.upToDate")}
+                count={updates.data.updates.length}
+                checkedAt={updates.dataUpdatedAt}
+                failures={updates.data.refreshError ? [{ name: t("plugins.marketplacesRefresh"), error: updates.data.refreshError }] : []}
+                progress={updateProgress}
+                disabled={update.isPending}
+                onUpdateAll={() => update.mutate(updates.data.updates.map(u => u.id))}
+              >
                 {updates.data.updates.map(info => (
-                  <UpdateCard
-                    key={info.id}
-                    name={info.id}
-                    from={info.installed}
-                    to={info.latest}
-                    date={info.latestDate}
-                    disabled={update.isPending}
-                    pending={update.isPending && !!update.variables?.includes(info.id)}
-                    onUpdate={() => update.mutate([info.id])}
-                  />
+                  <UpdateCard key={info.id} name={info.id} from={info.installed} to={info.latest} date={info.latestDate} disabled={update.isPending} pending={updateProgress?.current === info.id} onUpdate={() => update.mutate([info.id])} />
                 ))}
-              </section>
+              </UpdateSection>
             )}
 
             {discovering && catalog.data && !packs && (

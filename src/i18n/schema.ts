@@ -268,6 +268,9 @@ export interface TranslationSchema {
     installedRef: string;
     updateRefs: string;
     whatsChanged: string;
+    checkedAt: string;
+    checkFailed: string;
+    updateProgress: string;
     updateAll: string;
     updateCommitted: string;
     updateFiles: string;
@@ -327,10 +330,9 @@ export interface TranslationSchema {
     checkUpdates: string;
     upToDate: string;
     updatesFound: string;
-    updateAll: string;
     updatedToast: string;
     updateFailed: string;
-    refreshFailed: string;
+    marketplacesRefresh: string;
     activityEmpty: string;
     location: string;
     add: string;

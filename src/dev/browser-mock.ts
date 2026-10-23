@@ -100,25 +100,28 @@ const ANSWERS: Record<string, unknown> = {
     ],
     refreshError: null,
   },
-  skill_check_updates: [
-    {
-      name: "pdf",
-      latestRef: "d41f2a9c0b7e4a1f8c3d5e6f708192a3b4c5d6e7",
-      installedRef: "3a9e1c7b5d2f4086a1b3c5d7e9f0123456789abc",
-      latestDate: new Date(Date.now() - 12 * 60_000).toISOString(),
-      changedFiles: ["SKILL.md", "scripts/extract_text.py", "scripts/fill_form.py", "reference/forms.md"],
-      changedTotal: 4,
-    },
-    {
-      name: "ios-simulator-build-run",
-      latestRef: "99aa11bb22cc33dd44ee55ff66778899aabbccdd",
-      installedRef: "0123456789abcdef0123456789abcdef01234567",
-      latestDate: new Date(Date.now() - 3 * 86_400_000).toISOString(),
-      changedFiles: Array.from({ length: 20 }, (_, i) => `references/section-${i + 1}/some-longer-file-name.md`),
-      changedTotal: 27,
-    },
-    { name: "my-notes", latestRef: "ffeeddccbbaa99887766554433221100ffeeddcc", installedRef: null, latestDate: null, changedFiles: [], changedTotal: 0 },
-  ],
+  skill_check_updates: {
+    updates: [
+        {
+          name: "pdf",
+          latestRef: "d41f2a9c0b7e4a1f8c3d5e6f708192a3b4c5d6e7",
+          installedRef: "3a9e1c7b5d2f4086a1b3c5d7e9f0123456789abc",
+          latestDate: new Date(Date.now() - 12 * 60_000).toISOString(),
+          changedFiles: ["SKILL.md", "scripts/extract_text.py", "scripts/fill_form.py", "reference/forms.md"],
+          changedTotal: 4,
+        },
+        {
+          name: "ios-simulator-build-run",
+          latestRef: "99aa11bb22cc33dd44ee55ff66778899aabbccdd",
+          installedRef: "0123456789abcdef0123456789abcdef01234567",
+          latestDate: new Date(Date.now() - 3 * 86_400_000).toISOString(),
+          changedFiles: Array.from({ length: 20 }, (_, i) => `references/section-${i + 1}/some-longer-file-name.md`),
+          changedTotal: 27,
+        },
+        { name: "my-notes", latestRef: "ffeeddccbbaa99887766554433221100ffeeddcc", installedRef: null, latestDate: null, changedFiles: [], changedTotal: 0 },
+      ],
+    failures: [{ source: "https://github.com/example/removed-skills", error: "repository not found" }],
+  },
 };
 
 export function installBrowserMock() {

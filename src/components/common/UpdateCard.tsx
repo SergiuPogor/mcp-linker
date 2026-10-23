@@ -1,18 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { timeAgo } from "@/lib/time";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-/** "5 minutes ago" in the app's language, so a commit minutes old reads as such. */
-const timeAgo = (iso: string, language: string) => {
-  const seconds = (new Date(iso).getTime() - Date.now()) / 1000;
-  if (Number.isNaN(seconds)) return iso;
-  const format = new Intl.RelativeTimeFormat(language, { numeric: "auto" });
-  for (const [unit, size] of [["day", 86400], ["hour", 3600], ["minute", 60]] as const) {
-    if (Math.abs(seconds) >= size) return format.format(Math.round(seconds / size), unit);
-  }
-  return format.format(Math.round(seconds), "second");
-};
 
 interface UpdateCardProps {
   name: string;
