@@ -119,7 +119,6 @@ pub async fn batch_delete_mcp_servers(
     path: Option<String>,
     server_names: Vec<String>,
 ) -> Result<Value, String> {
-    crate::license::require(crate::license::Tier::Plus, "Batch actions")?;
     let adapter = ClientAdapter::new(&client_name, path.as_deref());
     adapter.batch_delete(server_names).await
 }

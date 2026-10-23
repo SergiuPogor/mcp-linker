@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changes
+- Batch enable, disable and remove are free for every client — sync and tool inspection still need a license
+- The app checks for updates at every launch, and every 6 hours while it stays open
+
 ## [2.9.0] - 2026-10-22
 
 ### New Features

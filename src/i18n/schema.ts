@@ -170,7 +170,6 @@ export interface TranslationSchema {
     freeClients: string;
     features: {
       sync: string;
-      batch: string;
       inspection: string;
       toolPolicy: string;
       pluginSync: string;

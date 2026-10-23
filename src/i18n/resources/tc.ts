@@ -159,7 +159,7 @@ const tc: { translation: TranslationSchema } = {
       version: "版本 {{version}}",
       tagline: "在 Claude Code、Codex、Cursor 等 AI client 之間新增、管理和同步 MCP server 與外掛。",
       tier: { free: "免費版", plus: "Plus", pro: "Pro" },
-      freeNote: "所有 client 都可以免費新增和編輯 server。同步、批次操作和工具檢查需要授權碼。",
+      freeNote: "所有 client 都可以免費新增和編輯 server。批次啟用、停用和刪除也免費。同步和工具檢查需要授權碼。",
       manageLicense: "管理授權",
       links: { github: "GitHub", discord: "Discord", issues: "回報問題", changelog: "更新日誌", contact: "聯絡我們" },
       moreTitle: "milisp 的其他應用",
@@ -174,7 +174,6 @@ const tc: { translation: TranslationSchema } = {
       freeClients: "所有 client 都可以免費新增和編輯 server，Claude Desktop 和 Cursor 之間的同步也免費。",
       features: {
         sync: "本機同步",
-        batch: "批次操作",
         inspection: "MCP 工具即時檢查",
         toolPolicy: "工具策略",
         pluginSync: "在 Claude Code 和 Codex 之間複製外掛",

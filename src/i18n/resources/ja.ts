@@ -158,7 +158,7 @@ const ja: { translation: TranslationSchema } = {
       version: "バージョン {{version}}",
       tagline: "Claude Code、Codex、Cursor などの AI クライアント間で MCP サーバーとプラグインを追加・管理・同期します。",
       tier: { free: "無料", plus: "Plus", pro: "Pro" },
-      freeNote: "サーバーの追加と編集はすべてのクライアントで無料です。同期、一括操作、ツール検査にはライセンスが必要です。",
+      freeNote: "サーバーの追加と編集はすべてのクライアントで無料です。複数をまとめて有効化・無効化・削除するのも無料です。同期とツール検査にはライセンスが必要です。",
       manageLicense: "ライセンスを管理",
       links: { github: "GitHub", discord: "Discord", issues: "問題を報告", changelog: "変更履歴", contact: "お問い合わせ" },
       moreTitle: "milisp のその他のアプリ",
@@ -173,7 +173,6 @@ const ja: { translation: TranslationSchema } = {
       freeClients: "サーバーの追加と編集はすべてのクライアントで無料です。Claude Desktop と Cursor 間の同期も無料です。",
       features: {
         sync: "ローカル同期",
-        batch: "一括操作",
         inspection: "ライブツール検査",
         toolPolicy: "ツールポリシー",
         pluginSync: "Claude Code と Codex の間でプラグインをコピー",

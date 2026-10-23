@@ -13,20 +13,19 @@ Each client has a `tier` in `src-tauri/src/clients.rs` (`Tier` is in
 `license.rs`; `free < plus < pro`). Viewing every client's servers and
 Discover are always free.
 
-Adding, editing, enabling, disabling and removing servers one at a time is
-free for every client, Claude Code and Codex included. Licenses unlock working
+Adding, editing, enabling, disabling and removing servers, one at a time or
+several at once, is free for every client, Claude Code and Codex included. Licenses unlock working
 across clients and at scale.
 
 | Tier | Features |
 |---|---|
 | Free | Every client's basic management, sync between Claude Desktop and Cursor |
-| Plus | Sync between any clients except Claude Code and Codex, batch actions, live tool inspection |
+| Plus | Sync between any clients except Claude Code and Codex, live tool inspection |
 | Pro | Sync to or from Claude Code or Codex (including between Claude Code projects), Claude Code tool inspection, Codex tool policy |
 
 | Gate | UI | Command check |
 |---|---|---|
 | Local Sync (higher `tier` of its two clients in `clients.rs`) | `requireSync(from, to)` in `LocalSyncPanel` | none: sync is a series of ordinary writes |
-| Batch actions (Plus) | `LocalTable` batch handlers | `batch_delete_mcp_servers` |
 | Live tool inspection (Plus; Pro for Claude Code) | `ToolsPanel` | `mcp_inspector_connect`, `claude_mcp_tools` |
 | Codex tool policy (Pro) | `ToolsPanel` | `codex_set_tool_policy` |
 | Plugin sync between Claude Code and Codex (Pro) | `requirePro("pluginSync")` in `PluginsPage` | `plugins::copy` (`license::require_sync`) |
