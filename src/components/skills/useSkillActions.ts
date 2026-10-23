@@ -1,5 +1,5 @@
 import { PLUGIN_CLIENTS, type PluginClient } from "@/lib/plugins";
-import { type CatalogSkill, type Outcome, catalogSource, installSkills, setSkillClient, uninstallSkills, updateSkills } from "@/lib/skills";
+import { type CatalogSkill, type Outcome, type SkillUpdate, catalogSource, installSkills, setSkillClient, uninstallSkills, updateSkills } from "@/lib/skills";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -73,7 +73,9 @@ export function useSkillActions() {
     mutationFn: (names: string[]) => updateSkills(names),
     onSuccess: outcomes => {
       report(outcomes, count => t("skills.updatedToast", { count }));
-      queryClient.invalidateQueries({ queryKey: ["skill-updates"] });
+      // What was updated is no longer pending; the rest stays until the next check.
+      const done = new Set(outcomes.filter(o => !o.error).map(o => o.name));
+      queryClient.setQueryData<SkillUpdate[]>(["skill-updates"], old => old?.filter(u => !done.has(u.name)));
       refresh();
     },
     onError,

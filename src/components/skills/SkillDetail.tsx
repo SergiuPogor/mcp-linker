@@ -2,18 +2,19 @@ import { ClientIcon } from "@/components/ClientIcon";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { PLUGIN_CLIENTS } from "@/lib/plugins";
-import { type Skill, hasSkill, readSkill } from "@/lib/skills";
+import { type Skill, type SkillUpdate, hasSkill, readSkill } from "@/lib/skills";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, RefreshCcw } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Markdown } from "./Markdown";
+import { UpdateCard } from "./UpdateCard";
 import { clientLabel, useSkillActions } from "./useSkillActions";
 
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
 const clientIconId = (client: string) => (client === "claude-code" ? "claude_code" : "codex");
 
 /** One installed skill: its SKILL.md rendered, the files next to it, and the clients it is on. */
-export function SkillDetail({ skill, outdated, onBack, onUninstall }: { skill: Skill; outdated: boolean; onBack: () => void; onUninstall: () => void }) {
+export function SkillDetail({ skill, update: pendingUpdate, onBack, onUninstall }: { skill: Skill; update?: SkillUpdate; onBack: () => void; onUninstall: () => void }) {
   const { t } = useTranslation();
   const { setClient, update } = useSkillActions();
   const { data, error, isLoading } = useQuery({ queryKey: ["skills", "doc", skill.name], queryFn: () => readSkill(skill.name) });
@@ -29,6 +30,7 @@ export function SkillDetail({ skill, outdated, onBack, onUninstall }: { skill: S
         <div className="min-w-0 flex-1">
           <h2 className="truncate text-2xl font-semibold">{skill.name}</h2>
           <p className="truncate text-sm text-muted-foreground">{skill.source ?? t("skills.handMade")}</p>
+          {skill.installedRef && <p className="truncate font-mono text-xs text-muted-foreground">{t("skills.installedRef", { ref: skill.installedRef.slice(0, 7) })}</p>}
         </div>
         <div className="flex items-center gap-4">
           {PLUGIN_CLIENTS.map(client => (
@@ -46,12 +48,7 @@ export function SkillDetail({ skill, outdated, onBack, onUninstall }: { skill: S
         </div>
       </div>
 
-      {outdated && (
-        <Button variant="outline" disabled={update.isPending} onClick={() => update.mutate([skill.name])}>
-          <RefreshCcw className={`size-4 ${update.isPending ? "animate-spin" : ""}`} />
-          {t("skills.update")}
-        </Button>
-      )}
+      {pendingUpdate && <UpdateCard update={pendingUpdate} disabled={false} pending={update.isPending} onUpdate={() => update.mutate([skill.name])} />}
 
       {isLoading && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
       {error && <p className="text-sm text-destructive">{message(error)}</p>}

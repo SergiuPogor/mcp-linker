@@ -585,12 +585,35 @@ fn install_one(paths: &Paths, lock: &mut Value, source: &Source, checkout: &Chec
 pub struct Update {
     pub name: String,
     pub latest_ref: Option<String>,
+    /// The commit it was installed at.
+    pub installed_ref: Option<String>,
+    /// When the latest commit was made (ISO 8601), so a minutes-old change stands out.
+    pub latest_date: Option<String>,
+    /// Files of the skill that differ from the installed commit, capped at `MAX_CHANGED_FILES`; empty when that commit can't be fetched.
+    pub changed_files: Vec<String>,
+    /// How many files differ in all, when more than are listed.
+    pub changed_total: usize,
+}
+
+const MAX_CHANGED_FILES: usize = 20;
+
+/// Files under `folder` that differ between the installed commit and the checked-out one. Best effort: an old commit the server won't serve gives an empty list.
+fn changed_files(checkout: &Checkout, installed: Option<&str>, folder: &str) -> Vec<String> {
+    let Some(old) = installed.filter(|r| is_sha(r)) else { return Vec::new() };
+    if git(Some(&checkout.root), &["fetch", "-q", "--depth", "1", "origin", old]).is_err() {
+        return Vec::new();
+    }
+    let mut args = vec!["diff", "--name-only", old, "HEAD"];
+    if !folder.is_empty() {
+        args.extend(["--", folder]);
+    }
+    git(Some(&checkout.root), &args).map(|out| out.lines().map(str::to_string).collect()).unwrap_or_default()
 }
 
 /// Skills installed from Git whose folder changed upstream (compared by git tree hash, so unrelated commits don't count).
 pub fn check_updates(paths: &Paths) -> Result<Vec<Update>, String> {
     let lock = read_lock(paths);
-    let mut by_source: BTreeMap<String, Vec<(String, String, String)>> = BTreeMap::new();
+    let mut by_source: BTreeMap<String, Vec<(String, String, String, Option<String>)>> = BTreeMap::new();
     for (name, entry) in lock.get("skills").and_then(Value::as_object).into_iter().flatten() {
         let text = |key: &str| entry.get(key).and_then(Value::as_str).map(str::to_string);
         let (Some(url), Some(hash), Some(skill_path)) = (text("sourceUrl"), text("skillFolderHash"), text("skillPath")) else { continue };
@@ -598,18 +621,22 @@ pub fn check_updates(paths: &Paths) -> Result<Vec<Update>, String> {
             continue;
         }
         let folder = skill_path.trim_end_matches("SKILL.md").trim_end_matches('/').to_string();
-        by_source.entry(url).or_default().push((name.clone(), hash, folder));
+        by_source.entry(url).or_default().push((name.clone(), hash, folder, text("ref")));
     }
     let mut updates = Vec::new();
     for (url, skills) in by_source {
         let source = Source { url: url.clone(), label: url, subpath: None, git_ref: None, github: false };
         let Ok(checkout) = checkout(&source, None) else { continue };
-        for (name, hash, folder) in skills {
+        let latest_date = git(Some(&checkout.root), &["log", "-1", "--format=%cI"]).ok();
+        for (name, hash, folder, installed_ref) in skills {
             let spec = if folder.is_empty() { "HEAD^{tree}".to_string() } else { format!("HEAD:{folder}") };
             if let Ok(latest) = git(Some(&checkout.root), &["rev-parse", &spec])
                 && latest != hash
             {
-                updates.push(Update { name, latest_ref: checkout.commit.clone() });
+                let mut files = changed_files(&checkout, installed_ref.as_deref(), &folder);
+                let changed_total = files.len();
+                files.truncate(MAX_CHANGED_FILES);
+                updates.push(Update { name, latest_ref: checkout.commit.clone(), installed_ref, latest_date: latest_date.clone(), changed_files: files, changed_total });
             }
         }
     }
@@ -830,6 +857,9 @@ mod tests {
         run(repo.path(), &["commit", "-q", "-am", "second"]);
         let updates = check_updates(&paths).unwrap();
         assert_eq!(updates.iter().map(|u| u.name.as_str()).collect::<Vec<_>>(), ["one"]);
+        assert_eq!(updates[0].installed_ref.as_deref(), Some(first.as_str()));
+        assert!(updates[0].latest_date.is_some());
+        assert_eq!(updates[0].changed_files, ["skills/one/SKILL.md"]);
 
         // Pinned to the first commit it stays at the old text; updating moves it on and keeps the link.
         install(&paths, &url, Some(&first), &[], &[]).unwrap();

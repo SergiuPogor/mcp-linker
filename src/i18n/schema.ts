@@ -265,6 +265,14 @@ export interface TranslationSchema {
     upToDate: string;
     updatesFound: string;
     updatedToast: string;
+    installedRef: string;
+    updateRefs: string;
+    whatsChanged: string;
+    updateAll: string;
+    updateCommitted: string;
+    updateFiles: string;
+    updateMore: string;
+    updateNoDiff: string;
     uninstall: string;
     uninstallTitle: string;
     uninstallBody: string;

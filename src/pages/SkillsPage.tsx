@@ -3,6 +3,7 @@ import { PluginIcon } from "@/components/plugins/PluginIcon";
 import { ClientIcon } from "@/components/ClientIcon";
 import { AddSkillDialog } from "@/components/skills/AddSkillDialog";
 import { SkillDetail } from "@/components/skills/SkillDetail";
+import { UpdateCard } from "@/components/skills/UpdateCard";
 import { useSkillActions } from "@/components/skills/useSkillActions";
 import {
   AlertDialog,
@@ -213,10 +214,23 @@ export default function SkillsPage() {
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
       <div className={`mx-auto space-y-6 ${tab === "installed" || open ? "max-w-4xl" : "max-w-6xl"}`}>
         {open ? (
-          <SkillDetail skill={open} outdated={outdated.has(open.name)} onBack={() => setOpenName(null)} onUninstall={() => setRemoving([open.name])} />
+          <SkillDetail skill={open} update={updates.data?.find(u => u.name === open.name)} onBack={() => setOpenName(null)} onUninstall={() => setRemoving([open.name])} />
         ) : (
           <>
             {header}
+            {tab === "installed" && updates.data && updates.data.length > 0 && (
+              <section className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <h2 className="flex-1 text-sm font-semibold">{t("skills.updatesFound", { count: updates.data.length })}</h2>
+                  <Button variant="outline" size="sm" className="rounded-full" disabled={busy} onClick={() => update.mutate(updates.data.map(u => u.name))}>
+                    {t("skills.updateAll")}
+                  </Button>
+                </div>
+                {updates.data.map(info => (
+                  <UpdateCard key={info.name} update={info} disabled={busy} pending={update.isPending && !!update.variables?.includes(info.name)} onUpdate={() => update.mutate([info.name])} />
+                ))}
+              </section>
+            )}
             {batchBar}
             {tab === "installed" ? (
               skills.isLoading ? (

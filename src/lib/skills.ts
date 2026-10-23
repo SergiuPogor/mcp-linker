@@ -44,6 +44,14 @@ export interface Outcome {
 export interface SkillUpdate {
   name: string;
   latestRef: string | null;
+  /** The commit it was installed at. */
+  installedRef: string | null;
+  /** When the latest commit was made (ISO 8601). */
+  latestDate: string | null;
+  /** Files that differ from the installed commit; empty when that can't be worked out. */
+  changedFiles: string[];
+  /** How many files differ in all. */
+  changedTotal: number;
 }
 
 export const hasSkill = (skill: Skill, client: PluginClient) => (client === "claude-code" ? skill.claudeCode : skill.codex);
