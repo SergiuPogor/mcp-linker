@@ -11,6 +11,8 @@ export type ServerType = {
   websiteUrl?: string;
   repositoryUrl?: string;
   isOfficial: boolean;
+  /** YYYY-MM-DD the catalog first listed this server; drives the "New" badge. */
+  addedAt?: string;
   version?: string;
   isFavorited: boolean;
   tags?: string[];

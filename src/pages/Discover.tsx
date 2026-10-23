@@ -1,6 +1,7 @@
 import { CollectionCarousel } from "@/components/collection/CollectionCarousel";
 import { CATALOG_COLLECTIONS, CURATED_SERVER_IDS, FEATURED_SERVER_IDS } from "@/data/mcp-servers/catalog";
 import { ServerList } from "@/components/server";
+import { isNewServer } from "@/components/server/utils/isNewServer";
 import { useMcpServers } from "@/hooks/useMcpServers";
 import {
   useDeferredValue,
@@ -18,6 +19,8 @@ import { Cloud, Monitor, Star, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+const NEW_SERVERS_COLLAPSED = 10;
+
 type TransportFilter = "all" | "local" | "remote";
 
 const TRANSPORT_FILTERS: { value: TransportFilter; label: string; icon?: LucideIcon }[] = [
@@ -32,6 +35,7 @@ export default function Discovery() {
   const favorites = view === "favorites" || search.tab === "favorites";
   const [searchTerm, setSearchTerm] = useState("");
   const [transport, setTransport] = useState<TransportFilter>("all");
+  const [showAllNew, setShowAllNew] = useState(false);
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -56,11 +60,15 @@ export default function Discovery() {
     );
   }, [servers, transport, search.category]);
 
-  const featuredServers = filteredServers.filter(server => FEATURED_SERVER_IDS.has(server.id));
+  const newServers = filteredServers
+    .filter(server => CURATED_SERVER_IDS.has(server.id) && isNewServer(server))
+    .sort((a, b) => (b.addedAt ?? "").localeCompare(a.addedAt ?? ""));
+  const newServerIds = new Set(newServers.map(server => server.id));
+  const featuredServers = filteredServers.filter(server => FEATURED_SERVER_IDS.has(server.id) && !newServerIds.has(server.id));
   const registryServers = filteredServers.filter(server => !CURATED_SERVER_IDS.has(server.id));
   const categoryGroups = new Map<string, typeof filteredServers>();
   for (const server of filteredServers) {
-    if (!CURATED_SERVER_IDS.has(server.id) || FEATURED_SERVER_IDS.has(server.id)) continue;
+    if (!CURATED_SERVER_IDS.has(server.id) || FEATURED_SERVER_IDS.has(server.id) || newServerIds.has(server.id)) continue;
     const category = server.tags?.[0] ?? "Other";
     const group = categoryGroups.get(category) ?? [];
     group.push(server);
@@ -136,6 +144,18 @@ export default function Discovery() {
       {search.category && <div className="flex flex-wrap items-center gap-3 text-sm"><span>Category: {search.category}</span><button type="button" className="text-muted-foreground underline hover:text-foreground" onClick={() => navigate("/discover", { replace: true })}>Clear filter</button></div>}
       {!deferredSearchTerm && !search.category && transport === "all" && CATALOG_COLLECTIONS.length > 0 && (
         <CollectionCarousel collections={CATALOG_COLLECTIONS} />
+      )}
+
+      {newServers.length > 0 && (
+        <section className="space-y-4" aria-labelledby="new-servers-title">
+          <h2 id="new-servers-title" className="text-2xl font-bold">New servers</h2>
+          <ServerList mcpServers={showAllNew ? newServers : newServers.slice(0, NEW_SERVERS_COLLAPSED)} />
+          {newServers.length > NEW_SERVERS_COLLAPSED && (
+            <Button variant="ghost" size="sm" onClick={() => setShowAllNew(value => !value)}>
+              {showAllNew ? "Show less" : `Show all ${newServers.length}`}
+            </Button>
+          )}
+        </section>
       )}
 
       {featuredServers.length > 0 && (

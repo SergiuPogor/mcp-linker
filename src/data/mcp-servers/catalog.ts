@@ -2,6 +2,8 @@ import { entryToServerType } from "@/lib/registry";
 import type { ServerConfig, ServerType } from "@/types";
 import { MCP_COLLECTIONS, MCP_REGISTRY_SERVERS } from "./index";
 
+const ADDED_AT: Record<string, string> = typeof __CATALOG_ADDED__ === "undefined" ? {} : __CATALOG_ADDED__;
+
 export const CURATED_SERVERS: ServerType[] = MCP_REGISTRY_SERVERS.map(server => {
   const publisher = server._meta?.["io.modelcontextprotocol.registry/publisher-provided"] as
     Record<string, unknown> | undefined;
@@ -11,6 +13,7 @@ export const CURATED_SERVERS: ServerType[] = MCP_REGISTRY_SERVERS.map(server => 
     ...entryToServerType({ server }),
     developer: "MCP Linker catalog",
     isOfficial: metadata?.official === true,
+    addedAt: ADDED_AT[server.name.split("/").pop() ?? ""],
     description: metadata?.fullDescription ?? server.description,
     tags: metadata?.category ? [metadata.category] : [],
     // Catalog revisions are not upstream software versions.
