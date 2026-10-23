@@ -57,7 +57,7 @@ fn read_toml(path: &Path) -> Option<toml::Table> {
     std::fs::read_to_string(path).ok().and_then(|text| text.parse().ok())
 }
 
-fn text(value: Option<&Value>) -> Option<String> {
+pub(crate) fn text(value: Option<&Value>) -> Option<String> {
     value.and_then(Value::as_str).filter(|s| !s.is_empty()).map(str::to_string)
 }
 
@@ -189,7 +189,7 @@ fn codex_enabled(config: &toml::Table, id: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn manifest_of(dir: &Path) -> Option<Value> {
+pub(crate) fn manifest_of(dir: &Path) -> Option<Value> {
     read_json(&dir.join(".claude-plugin/plugin.json")).or_else(|| read_json(&dir.join(".codex-plugin/plugin.json")))
 }
 
@@ -212,7 +212,7 @@ fn is_local_source(source: Option<&Value>) -> bool {
 }
 
 /// The directory a marketplace row's `source` points at, when it is inside the marketplace.
-fn source_dir(root: &Path, source: Option<&Value>) -> Option<PathBuf> {
+pub(crate) fn source_dir(root: &Path, source: Option<&Value>) -> Option<PathBuf> {
     let rel = match source? {
         Value::String(path) => path.clone(),
         Value::Object(map) if map.get("source").and_then(Value::as_str) == Some("local") => map.get("path")?.as_str()?.to_string(),
@@ -221,7 +221,7 @@ fn source_dir(root: &Path, source: Option<&Value>) -> Option<PathBuf> {
     Some(root.join(rel.trim_start_matches("./"))).filter(|p| p.is_dir())
 }
 
-fn market_rows(client: PluginClient, root: &Path) -> Vec<Value> {
+pub(crate) fn market_rows(client: PluginClient, root: &Path) -> Vec<Value> {
     let paths = match client {
         PluginClient::ClaudeCode => [".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json"],
         PluginClient::Codex => [".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json"],
@@ -273,7 +273,7 @@ static REMOTE_CACHE: Mutex<Option<(SystemTime, Vec<CatalogEntry>)>> = Mutex::new
 /// Codex's ChatGPT-backed catalog (thousands of plugins), as `codex plugin list`
 /// last cached it in `~/.codex/cache/remote_plugin_catalog`. Empty until Codex
 /// has fetched it once while signed in with ChatGPT.
-fn codex_remote(home: &Path) -> Vec<CatalogEntry> {
+pub(crate) fn codex_remote(home: &Path) -> Vec<CatalogEntry> {
     let dir = home.join(".codex/cache/remote_plugin_catalog");
     let newest = std::fs::read_dir(dir)
         .into_iter()

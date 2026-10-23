@@ -1,6 +1,7 @@
 // Claude Code and Codex plugins, through mcpl-core's plugins module (src-tauri/crates/mcpl-core/src/plugins.rs).
 import { invoke } from "@tauri-apps/api/core";
 import packsMarketplace from "../../.claude-plugin/marketplace.json";
+import type { Outcome } from "./skills";
 
 export type PluginClient = "claude-code" | "codex";
 
@@ -93,6 +94,28 @@ export const addMarketplace = (client: PluginClient, source: string, gitRef?: st
   invoke<string>("plugin_add_marketplace", { client, source, gitRef: gitRef || null, sparse: sparse?.length ? sparse : null });
 export const copyPlugin = (from: PluginClient, to: PluginClient, id: string) => invoke<CopyReport>("plugin_copy", { from, to, id });
 export const copyPlugins = (from: PluginClient, to: PluginClient, ids: string[]) => invoke<CopyResult[]>("plugin_copy_many", { from, to, ids });
+/** An installed plugin whose marketplace now offers a newer version. */
+export interface PluginUpdate {
+  /** name@marketplace */
+  id: string;
+  name: string;
+  marketplace: string;
+  installed: string | null;
+  /** A version number, or the start of a commit for plugins that have none. */
+  latest: string;
+  /** When the latest commit was made (ISO 8601), when the marketplace is a git checkout. */
+  latestDate: string | null;
+}
+
+export interface PluginUpdateCheck {
+  updates: PluginUpdate[];
+  /** Why the marketplaces could not be refreshed first; the comparison then used what is on disk. */
+  refreshError: string | null;
+}
+
+/** With `refresh` the client fetches its marketplaces first, so the answer is today's. */
+export const checkPluginUpdates = (client: PluginClient, refresh: boolean) => invoke<PluginUpdateCheck>("plugin_check_updates", { client, refresh });
+export const updatePlugins = (client: PluginClient, ids: string[]) => invoke<Outcome[]>("plugin_update", { client, ids });
 export const pluginActivity = () => invoke<PluginActivity[]>("plugin_activity");
 
 /** A plugin offered by one of the client's marketplaces, installed or not. */

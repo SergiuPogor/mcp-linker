@@ -93,6 +93,13 @@ const ANSWERS: Record<string, unknown> = {
   plugin_activity: [],
   plugin_catalog: { marketplaces: [], plugins: PLUGINS },
   skill_list: SKILLS,
+  plugin_check_updates: {
+    updates: [
+      { id: "document-skills@anthropic-agent-skills", name: "document-skills", marketplace: "anthropic-agent-skills", installed: "dbd4588f9e10", latest: "5c0e7a21b9d3", latestDate: new Date(Date.now() - 2 * 3_600_000).toISOString() },
+      { id: "swift-lsp@claude-plugins-official", name: "swift-lsp", marketplace: "claude-plugins-official", installed: "1.0.0", latest: "1.1.0", latestDate: null },
+    ],
+    refreshError: null,
+  },
   skill_check_updates: [
     {
       name: "pdf",

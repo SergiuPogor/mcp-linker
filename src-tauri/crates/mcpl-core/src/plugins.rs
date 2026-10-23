@@ -151,7 +151,7 @@ fn record(entry: Activity) {
 /// Long enough for a first `git clone` of a marketplace.
 const RUN_TIMEOUT: Duration = Duration::from_secs(180);
 
-async fn run(client: PluginClient, args: &[&str]) -> Result<String, String> {
+pub(crate) async fn run(client: PluginClient, args: &[&str]) -> Result<String, String> {
     let command = format!("{} {}", client.program(), args.join(" "));
     let started = Instant::now();
     let result = run_inner(client, args).await;

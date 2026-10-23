@@ -104,10 +104,10 @@ pub struct Outcome {
 }
 
 impl Outcome {
-    fn done(name: &str) -> Self {
+    pub(crate) fn done(name: &str) -> Self {
         Self { name: name.into(), error: None, note: None }
     }
-    fn failed(name: &str, error: impl ToString) -> Self {
+    pub(crate) fn failed(name: &str, error: impl ToString) -> Self {
         Self { name: name.into(), error: Some(error.to_string()), note: None }
     }
 }
@@ -404,7 +404,7 @@ pub fn parse_source(input: &str) -> Result<Source, String> {
     }
 }
 
-fn git(dir: Option<&Path>, args: &[&str]) -> Result<String, String> {
+pub(crate) fn git(dir: Option<&Path>, args: &[&str]) -> Result<String, String> {
     let mut command = Command::new("git");
     command.args(args).env("GIT_TERMINAL_PROMPT", "0");
     if let Some(dir) = dir {

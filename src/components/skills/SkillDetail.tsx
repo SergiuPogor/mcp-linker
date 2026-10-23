@@ -1,4 +1,5 @@
 import { ClientIcon } from "@/components/ClientIcon";
+import { UpdateCard } from "@/components/common/UpdateCard";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { PLUGIN_CLIENTS } from "@/lib/plugins";
@@ -7,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Markdown } from "./Markdown";
-import { UpdateCard } from "./UpdateCard";
 import { clientLabel, useSkillActions } from "./useSkillActions";
 
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
@@ -48,7 +48,7 @@ export function SkillDetail({ skill, update: pendingUpdate, onBack, onUninstall 
         </div>
       </div>
 
-      {pendingUpdate && <UpdateCard update={pendingUpdate} disabled={false} pending={update.isPending} onUpdate={() => update.mutate([skill.name])} />}
+      {pendingUpdate && <UpdateCard name={pendingUpdate.name} from={pendingUpdate.installedRef?.slice(0, 7)} to={pendingUpdate.latestRef?.slice(0, 7)} date={pendingUpdate.latestDate} files={pendingUpdate.changedFiles} total={pendingUpdate.changedTotal} disabled={false} pending={update.isPending} onUpdate={() => update.mutate([skill.name])} />}
 
       {isLoading && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
       {error && <p className="text-sm text-destructive">{message(error)}</p>}

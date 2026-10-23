@@ -16,6 +16,7 @@ pub mod license;
 pub mod mcp_commands;
 pub mod mcp_crud;
 pub mod plugin_catalog;
+pub mod plugin_updates;
 pub mod plugins;
 pub mod skills;
 pub mod sync;

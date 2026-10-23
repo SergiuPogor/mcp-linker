@@ -324,6 +324,13 @@ export interface TranslationSchema {
     uninstallBody: string;
     back: string;
     activity: string;
+    checkUpdates: string;
+    upToDate: string;
+    updatesFound: string;
+    updateAll: string;
+    updatedToast: string;
+    updateFailed: string;
+    refreshFailed: string;
     activityEmpty: string;
     location: string;
     add: string;

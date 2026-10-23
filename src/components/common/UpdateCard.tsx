@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import type { SkillUpdate } from "@/lib/skills";
 import { ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -15,21 +14,34 @@ const timeAgo = (iso: string, language: string) => {
   return format.format(Math.round(seconds), "second");
 };
 
+interface UpdateCardProps {
+  name: string;
+  from?: string | null;
+  to?: string | null;
+  /** When the latest change was made (ISO 8601). */
+  date?: string | null;
+  /** Files that changed: omitted when the source cannot say, empty when it should have but could not. */
+  files?: string[];
+  /** How many files changed in all, when more than are listed. */
+  total?: number;
+  pending: boolean;
+  disabled: boolean;
+  onUpdate: () => void;
+}
+
 /** One pending update, App Store style: what it goes from and to, what changed on a click, and an Update button. */
-export function UpdateCard({ update, pending, disabled, onUpdate }: { update: SkillUpdate; pending: boolean; disabled: boolean; onUpdate: () => void }) {
+export function UpdateCard({ name, from, to, date, files, total, pending, disabled, onUpdate }: UpdateCardProps) {
   const { t, i18n } = useTranslation();
-  const from = update.installedRef?.slice(0, 7);
-  const to = update.latestRef?.slice(0, 7);
-  const hasFiles = update.changedFiles.length > 0;
+  const count = total ?? files?.length ?? 0;
   return (
     <div className="min-w-0 rounded-xl border p-4">
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
-          <div className="truncate font-medium">{update.name}</div>
+          <div className="truncate font-medium">{name}</div>
           <div className="truncate text-xs text-muted-foreground">
             {from && to && <span className="font-mono">{t("skills.updateRefs", { from, to })}</span>}
-            {from && to && update.latestDate && " · "}
-            {update.latestDate && t("skills.updateCommitted", { when: timeAgo(update.latestDate, i18n.language) })}
+            {from && to && date && " · "}
+            {date && t("skills.updateCommitted", { when: timeAgo(date, i18n.language) })}
           </div>
         </div>
         <Button size="sm" className="rounded-full" disabled={disabled || pending} onClick={onUpdate}>
@@ -37,20 +49,20 @@ export function UpdateCard({ update, pending, disabled, onUpdate }: { update: Sk
           {t("skills.update")}
         </Button>
       </div>
-      {hasFiles ? (
+      {files === undefined ? null : files.length > 0 ? (
         <Collapsible className="mt-2">
           <CollapsibleTrigger className="flex items-center gap-1 text-xs text-primary [&[data-state=open]>svg]:rotate-90">
             <ChevronRight className="size-3.5 transition-transform" />
-            {t("skills.whatsChanged")} · {t("skills.updateFiles", { count: update.changedTotal })}
+            {t("skills.whatsChanged")} · {t("skills.updateFiles", { count: count })}
           </CollapsibleTrigger>
           <CollapsibleContent>
             <ul className="mt-2 space-y-0.5 font-mono text-xs">
-              {update.changedFiles.map(file => (
+              {files.map(file => (
                 <li key={file} className="truncate" title={file}>
                   {file}
                 </li>
               ))}
-              {update.changedTotal > update.changedFiles.length && <li className="text-muted-foreground">{t("skills.updateMore", { count: update.changedTotal - update.changedFiles.length })}</li>}
+              {count > files.length && <li className="text-muted-foreground">{t("skills.updateMore", { count: count - files.length })}</li>}
             </ul>
           </CollapsibleContent>
         </Collapsible>

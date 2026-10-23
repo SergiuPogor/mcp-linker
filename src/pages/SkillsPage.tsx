@@ -3,7 +3,6 @@ import { PluginIcon } from "@/components/plugins/PluginIcon";
 import { ClientIcon } from "@/components/ClientIcon";
 import { AddSkillDialog } from "@/components/skills/AddSkillDialog";
 import { SkillDetail } from "@/components/skills/SkillDetail";
-import { UpdateCard } from "@/components/skills/UpdateCard";
 import { useSkillActions } from "@/components/skills/useSkillActions";
 import {
   AlertDialog,
@@ -15,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { UpdateCard } from "@/components/common/UpdateCard";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
@@ -227,7 +227,7 @@ export default function SkillsPage() {
                   </Button>
                 </div>
                 {updates.data.map(info => (
-                  <UpdateCard key={info.name} update={info} disabled={busy} pending={update.isPending && !!update.variables?.includes(info.name)} onUpdate={() => update.mutate([info.name])} />
+                  <UpdateCard key={info.name} name={info.name} from={info.installedRef?.slice(0, 7)} to={info.latestRef?.slice(0, 7)} date={info.latestDate} files={info.changedFiles} total={info.changedTotal} disabled={busy} pending={update.isPending && !!update.variables?.includes(info.name)} onUpdate={() => update.mutate([info.name])} />
                 ))}
               </section>
             )}
