@@ -158,7 +158,7 @@ const es: { translation: TranslationSchema } = {
       version: "Versión {{version}}",
       tagline: "Añade, gestiona y sincroniza servidores MCP y plugins entre Claude Code, Codex, Cursor y más clientes de IA.",
       tier: { free: "Gratis", plus: "Plus", pro: "Pro" },
-      freeNote: "Añadir y editar servidores es gratis en todos los clientes. La sincronización, las acciones por lotes y la inspección de herramientas requieren una licencia.",
+      freeNote: "Añadir y editar servidores es gratis en todos los clientes. Activar, desactivar y eliminar varios a la vez también es gratis. La sincronización y la inspección de herramientas requieren una licencia.",
       manageLicense: "Gestionar licencia",
       links: { github: "GitHub", discord: "Discord", issues: "Informar de un problema", changelog: "Registro de cambios", contact: "Contacto" },
       moreTitle: "Más de milisp",
@@ -173,7 +173,6 @@ const es: { translation: TranslationSchema } = {
       freeClients: "Añadir y editar servidores es gratis en todos los clientes, igual que sincronizar entre Claude Desktop y Cursor.",
       features: {
         sync: "Sincronización local",
-        batch: "Acciones por lotes",
         inspection: "Inspección de herramientas en vivo",
         toolPolicy: "Política de herramientas",
         pluginSync: "Copiar plugins entre Claude Code y Codex",

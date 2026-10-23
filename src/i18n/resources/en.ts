@@ -158,7 +158,7 @@ const en: { translation: TranslationSchema } = {
       version: "Version {{version}}",
       tagline: "Add, manage and sync MCP servers and plugins across Claude Code, Codex, Cursor and more AI clients.",
       tier: { free: "Free", plus: "Plus", pro: "Pro" },
-      freeNote: "Adding and editing servers is free for every client. Sync, batch actions and tool inspection need a license.",
+      freeNote: "Adding and editing servers is free for every client. Enabling, disabling and removing several at once is free too. Sync and tool inspection need a license.",
       manageLicense: "Manage license",
       links: { github: "GitHub", discord: "Discord", issues: "Report an issue", changelog: "Changelog", contact: "Contact" },
       moreTitle: "More from milisp",
@@ -173,7 +173,6 @@ const en: { translation: TranslationSchema } = {
       freeClients: "Adding and editing servers is free for every client, and so is syncing between Claude Desktop and Cursor.",
       features: {
         sync: "Local Sync",
-        batch: "Batch actions",
         inspection: "Live tool inspection",
         toolPolicy: "Tool policy",
         pluginSync: "Copy plugins between Claude Code and Codex",

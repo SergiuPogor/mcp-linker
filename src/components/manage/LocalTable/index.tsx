@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { useMcpConfig } from "@/hooks/useMcpConfig";
 import { useClientPathStore } from "@/stores/clientPathStore";
-import { requirePro } from "@/stores/license";
 import { RowSelectionState, Table } from "@tanstack/react-table";
 import { Monitor } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -38,7 +37,6 @@ export const LocalTable = ({ query }: { query?: string }) => {
 
   // Batch actions
   const handleBatchDelete = async () => {
-    if (!requirePro("batch")) return;
     try {
       const selectedIndices = Object.keys(rowSelection);
       const selectedNames = selectedIndices.map(
@@ -52,7 +50,6 @@ export const LocalTable = ({ query }: { query?: string }) => {
   };
 
   const handleBatchEnable = async () => {
-    if (!requirePro("batch")) return;
     const selectedIndices = Object.keys(rowSelection);
     const selectedNames = selectedIndices.map(
       (index) => serversData[parseInt(index)].name,
@@ -64,7 +61,6 @@ export const LocalTable = ({ query }: { query?: string }) => {
   };
 
   const handleBatchDisable = async () => {
-    if (!requirePro("batch")) return;
     const selectedIndices = Object.keys(rowSelection);
     const selectedNames = selectedIndices.map(
       (index) => serversData[parseInt(index)].name,

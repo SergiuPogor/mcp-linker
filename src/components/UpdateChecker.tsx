@@ -22,7 +22,7 @@ const STORAGE_KEYS = {
   REMIND_LATER_TIME: 'mcp-linker-remind-later'
 };
 
-const CHECK_INTERVAL_HOURS = 24; // Check for updates every 24 hours
+const CHECK_INTERVAL_HOURS = 6; // Check for updates every 6 hours
 const REMIND_LATER_HOURS = 24; // Remind later interval 24 hours
 
 // Emitted by the native "Check for Updates…" menu item (src-tauri/src/menu.rs)
@@ -148,14 +148,15 @@ export function UpdateChecker() {
     return hoursDiff >= CHECK_INTERVAL_HOURS;
   };
 
-  const checkForUpdates = async (isManual: boolean = false) => {
+  // `ignoreInterval` lets the launch check run even when the last check was recent
+  const checkForUpdates = async (isManual: boolean = false, ignoreInterval: boolean = false) => {
     const current = useUpdateStore.getState().status;
     // A download is already running or a check is in flight: just surface the dialog
     if (current === "downloading" || current === "installing" || current === "checking") {
       if (isManual) setShowDialog(true);
       return;
     }
-    if (!isManual && !shouldCheckForUpdates()) {
+    if (!isManual && !ignoreInterval && !shouldCheckForUpdates()) {
       return;
     }
 
@@ -220,9 +221,17 @@ export function UpdateChecker() {
     }
   };
 
-  // Check for updates on app startup
+  // Check on every launch, then while the app stays open: on a timer and when the
+  // window regains focus. Those two go through the CHECK_INTERVAL_HOURS gate.
   useEffect(() => {
-    checkForUpdates(false);
+    checkForUpdates(false, true);
+    const timer = window.setInterval(() => checkForUpdates(false), CHECK_INTERVAL_HOURS * 60 * 60 * 1000);
+    const onFocus = () => checkForUpdates(false);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
   // Listen for manual check triggers

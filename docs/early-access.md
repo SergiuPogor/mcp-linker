@@ -7,7 +7,7 @@ Plus and Pro are one-time purchases, each with a year of updates; the version
 you have keeps working forever.
 
 - Plus unlocks every other client (GitHub Copilot, OpenCode, Augment, Cline
-  and the rest), sync, batch actions, and live tool inspection.
+  and the rest), sync, and live tool inspection.
 - Pro adds Claude Code (every scope) and Codex, copying between Claude Code
   projects, and priority support.
 

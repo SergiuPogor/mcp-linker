@@ -158,7 +158,7 @@ const de: { translation: TranslationSchema } = {
       version: "Version {{version}}",
       tagline: "MCP-Server und Plugins für Claude Code, Codex, Cursor und weitere KI-Clients hinzufügen, verwalten und synchronisieren.",
       tier: { free: "Kostenlos", plus: "Plus", pro: "Pro" },
-      freeNote: "Server hinzufügen und bearbeiten ist für alle Clients kostenlos. Synchronisierung, Stapelaktionen und Tool-Prüfung brauchen eine Lizenz.",
+      freeNote: "Server hinzufügen und bearbeiten ist für alle Clients kostenlos. Auch mehrere auf einmal aktivieren, deaktivieren und entfernen ist kostenlos. Synchronisierung und Tool-Prüfung brauchen eine Lizenz.",
       manageLicense: "Lizenz verwalten",
       links: { github: "GitHub", discord: "Discord", issues: "Problem melden", changelog: "Änderungsprotokoll", contact: "Kontakt" },
       moreTitle: "Mehr von milisp",
@@ -173,7 +173,6 @@ const de: { translation: TranslationSchema } = {
       freeClients: "Server hinzufügen und bearbeiten ist für alle Clients kostenlos, ebenso die Synchronisierung zwischen Claude Desktop und Cursor.",
       features: {
         sync: "Lokale Synchronisierung",
-        batch: "Stapelaktionen",
         inspection: "Live-Tool-Prüfung",
         toolPolicy: "Tool-Richtlinie",
         pluginSync: "Plugins zwischen Claude Code und Codex kopieren",
