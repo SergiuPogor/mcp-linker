@@ -2,11 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.10.0] - 2026-10-23
+
+### New Features
+- **Batch actions are free** — enable, disable and remove several servers at once in every client. Sync and tool inspection still need a license
+- **Skill updates** — see the installed and latest version and what changed, then update one skill or all of them
+- **Plugin updates** — check Claude Code and Codex plugins against their marketplaces and update them
+- **New servers** — Discover lists servers added in the last two weeks above Featured
+- **Help menu** — feedback, contact and about in the sidebar; theme moves to Settings
+- Each project in the sidebar shows an icon
+- New server in the directory: MEDIAPRONET
 
 ### Changes
-- Batch enable, disable and remove are free for every client — sync and tool inspection still need a license
 - The app checks for updates at every launch, and every 6 hours while it stays open
+- Update lists show when they were checked and which sources could not be reached; Update all keeps going when one item fails
+- Logos are downloaded once and cached on disk instead of loaded from remote hosts in the app
+- Discover uses icons for local and remote servers, and the Official badge no longer shows a check mark
 
 ## [2.9.0] - 2026-10-22
 
