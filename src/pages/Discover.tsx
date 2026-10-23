@@ -14,14 +14,16 @@ import { useViewStore } from "@/stores/viewStore";
 import Favorites from "./favorites";
 import { SearchToggle } from "@/components/common/SearchToggle";
 import { HomeNav } from "@/components/layout/HomeNav";
+import { Cloud, Monitor, Star, type LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type TransportFilter = "all" | "local" | "remote";
 
-const TRANSPORT_FILTERS: { value: TransportFilter; label: string }[] = [
+const TRANSPORT_FILTERS: { value: TransportFilter; label: string; icon?: LucideIcon }[] = [
   { value: "all", label: "All" },
-  { value: "local", label: "Local (stdio)" },
-  { value: "remote", label: "Remote (HTTP/SSE)" },
+  { value: "local", label: "Local (stdio)", icon: Monitor },
+  { value: "remote", label: "Remote (HTTP/SSE)", icon: Cloud },
 ];
 
 export default function Discovery() {
@@ -108,19 +110,28 @@ export default function Discovery() {
     <div className="p-4 sm:p-6 space-y-6">
       <HomeNav kind="mcps" scope="discover">
         <SearchToggle value={searchTerm} onChange={setSearchTerm} placeholder="Search for MCP servers..." />
-      </HomeNav>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Tabs value={favorites ? "favorites" : "browse"} onValueChange={value => navigate(value === "favorites" ? "/discover?tab=favorites" : "/discover")}>
-          <TabsList><TabsTrigger value="browse">Browse</TabsTrigger><TabsTrigger value="favorites">{t("nav.favs")}</TabsTrigger></TabsList>
-        </Tabs>
+        <Button
+          variant={favorites ? "secondary" : "ghost"}
+          size="icon"
+          title={t("nav.favs")}
+          aria-label={t("nav.favs")}
+          aria-pressed={favorites}
+          onClick={() => navigate(favorites ? "/discover" : "/discover?tab=favorites")}
+        >
+          <Star className={favorites ? "fill-yellow-400 text-yellow-500" : ""} />
+        </Button>
         {!favorites && (
           <Tabs value={transport} onValueChange={value => setTransport(value as TransportFilter)}>
             <TabsList>
-              {TRANSPORT_FILTERS.map(({ value, label }) => <TabsTrigger key={value} value={value}>{label}</TabsTrigger>)}
+              {TRANSPORT_FILTERS.map(({ value, label, icon: Icon }) => (
+                <TabsTrigger key={value} value={value} title={label} aria-label={label}>
+                  {Icon ? <Icon aria-hidden="true" /> : label}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
         )}
-      </div>
+      </HomeNav>
       {favorites ? <Favorites embedded /> : <>
       {search.category && <div className="flex flex-wrap items-center gap-3 text-sm"><span>Category: {search.category}</span><button type="button" className="text-muted-foreground underline hover:text-foreground" onClick={() => navigate("/discover", { replace: true })}>Clear filter</button></div>}
       {!deferredSearchTerm && !search.category && transport === "all" && CATALOG_COLLECTIONS.length > 0 && (

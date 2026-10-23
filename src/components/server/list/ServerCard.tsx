@@ -1,7 +1,7 @@
 import { DeleteAlertDialog } from "@/components/common/DeleteAlertDialog";
 import { Button } from "@/components/ui/button";
 import type { ServerType } from "@/types";
-import { BadgeCheck, Check, Cloud, Loader2, Monitor, Plus, Server, Trash2 } from "lucide-react";
+import { Building2, Check, Cloud, Loader2, Monitor, Plus, Server, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useRemoteIcon } from "@/lib/useRemoteIcon";
 import { quickInstallConfig, serverTransportLabels } from "../utils/quickInstall";
@@ -56,15 +56,13 @@ export function ServerCard({ server, onOpenDetails, onQuickAdd, targetLabel, ins
           <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
             <span className="min-w-0 max-w-full truncate text-sm font-semibold" title={server.name}>{server.name}</span>
             {labels.map(label => (
-              <span key={label} className={`inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${label === "Remote" ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300" : "bg-muted text-muted-foreground"}`}>
-                {label === "Remote" ? <Cloud className="size-3" /> : label === "Local" ? <Monitor className="size-3" /> : null}
-                {label}
+              <span key={label} title={label} className={`inline-flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${label === "Remote" ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300" : "bg-muted text-muted-foreground"}`}>
+                {label === "Remote" ? <Cloud className="size-3" aria-label={label} /> : label === "Local" ? <Monitor className="size-3" aria-label={label} /> : label}
               </span>
             ))}
             {server.isOfficial && (
-              <span className="inline-flex shrink-0 items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" title="Published by the product's own vendor">
-                <BadgeCheck className="size-3" />
-                Official
+              <span className="inline-flex shrink-0 items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground" title="Official: published by the product's own vendor. Not a security review.">
+                <Building2 className="size-3" aria-label="Official" />
               </span>
             )}
           </span>
