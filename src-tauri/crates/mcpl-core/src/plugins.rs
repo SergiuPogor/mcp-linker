@@ -718,6 +718,12 @@ pub async fn plugin_catalog(client: String) -> Result<crate::plugin_catalog::Cat
     tokio::task::spawn_blocking(move || crate::plugin_catalog::catalog(client)).await.map_err(|e| e.to_string())?
 }
 
+/// A logo named by a remote catalog or registry, downloaded once into the cache folder; none unless it is a small picture from a listed host.
+#[cfg_attr(feature = "tauri", tauri::command)]
+pub async fn remote_icon(url: String) -> Option<String> {
+    crate::plugin_catalog::remote_icon_data_url(&url).await
+}
+
 /// A plugin's logo as a `data:` URL, or none when it has no readable one.
 #[cfg_attr(feature = "tauri", tauri::command)]
 pub async fn plugin_icon(path: String) -> Option<String> {

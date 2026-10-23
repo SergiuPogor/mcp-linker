@@ -98,6 +98,7 @@ pub fn run() {
             plugins::plugin_activity,
             plugins::plugin_catalog,
             plugins::plugin_icon,
+            plugins::remote_icon,
             skills::skill_list,
             skills::skill_read,
             skills::skill_set_client,

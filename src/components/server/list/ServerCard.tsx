@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { ServerType } from "@/types";
 import { BadgeCheck, Check, Cloud, Loader2, Monitor, Plus, Server, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { useRemoteIcon } from "@/lib/useRemoteIcon";
 import { quickInstallConfig, serverTransportLabels } from "../utils/quickInstall";
 
 interface ServerCardProps {
@@ -19,7 +20,7 @@ interface ServerCardProps {
 export function ServerCard({ server, onOpenDetails, onQuickAdd, targetLabel, installed, onRemove }: ServerCardProps) {
   const [isAdding, setIsAdding] = useState(false);
   const addingRef = useRef(false);
-  const [failedLogo, setFailedLogo] = useState<string | null>(null);
+  const logo = useRemoteIcon(server.logoUrl);
   const canQuickAdd = quickInstallConfig(server) !== null;
   const labels = serverTransportLabels(server);
   const showAddIcon = !installed && !isAdding;
@@ -48,10 +49,8 @@ export function ServerCard({ server, onOpenDetails, onQuickAdd, targetLabel, ins
         aria-label={`View details for ${server.name}`}
         className="flex min-w-0 flex-1 items-center gap-3 text-left rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground ${server.logoUrl && failedLogo !== server.logoUrl ? "border bg-white" : "bg-muted"}`}>
-          {server.logoUrl && failedLogo !== server.logoUrl ? (
-            <img src={server.logoUrl} alt="" loading="lazy" className="size-7 rounded object-contain" onError={() => setFailedLogo(server.logoUrl!)} />
-          ) : <Server className="size-5" />}
+        <span className={`flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground ${logo ? "border bg-white" : "bg-muted"}`}>
+          {logo ? <img src={logo} alt="" className="size-7 rounded object-contain" /> : <Server className="size-5" />}
         </span>
         <span className="min-w-0 flex-1">
           <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">

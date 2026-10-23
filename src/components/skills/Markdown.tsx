@@ -21,6 +21,8 @@ const components: Components = {
   ),
   th: props => <th className="border px-3 py-1.5 text-left font-medium" {...props} />,
   td: props => <td className="border px-3 py-1.5" {...props} />,
+  // A remote image would tell its host who opened this skill; show the alt text instead.
+  img: ({ alt }) => <span className="text-muted-foreground">{alt ? `[${alt}]` : ""}</span>,
   a: ({ href, children }) => (
     <a
       href={href}
@@ -35,7 +37,7 @@ const components: Components = {
   ),
 };
 
-/** A SKILL.md body. Links open in the browser; raw HTML is not rendered. */
+/** A SKILL.md body. Links open in the browser; raw HTML and images are not rendered. */
 export function Markdown({ children, className }: { children: string; className?: string }) {
   return (
     <div className={cn("text-sm", className)}>

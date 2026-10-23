@@ -425,9 +425,159 @@ pub fn icon_data_url(path: &Path) -> Option<String> {
     Some(format!("data:{mime};base64,{}", base64::engine::general_purpose::STANDARD.encode(bytes)))
 }
 
+/// Where logos are fetched from, as (host, path prefix): Codex's plugin catalog, GitHub, and this repo's own icons on jsDelivr. A logo anywhere else stays a letter tile.
+const ICON_SOURCES: [(&str, &str); 5] = [
+    ("files.openai.com", "/"),
+    ("chatgpt.com", "/"),
+    ("avatars.githubusercontent.com", "/"),
+    ("raw.githubusercontent.com", "/"),
+    ("cdn.jsdelivr.net", "/gh/milisp/mcp-linker@"),
+];
+const MAX_ICON_BYTES: usize = 256 * 1024;
+
+/// A few at a time, so a page of plugins doesn't open a page of connections.
+static ICON_FETCHES: tokio::sync::Semaphore = tokio::sync::Semaphore::const_new(4);
+
+/// `url` if logos may be fetched from it: https, a listed host and path, no credentials, no port.
+fn allowed_icon_url(url: &str) -> Option<url::Url> {
+    let parsed = url::Url::parse(url).ok()?;
+    let listed = parsed.host_str().is_some_and(|host| ICON_SOURCES.iter().any(|(h, prefix)| *h == host && parsed.path().starts_with(prefix)));
+    let ok = parsed.scheme() == "https" && parsed.username().is_empty() && parsed.password().is_none() && parsed.port().is_none() && listed;
+    ok.then_some(parsed)
+}
+
+/// Whether the bytes are a drawing and nothing else: no script, no embedded page or image, no event handlers, no outside references. It is shown in an `<img>`, where none of that runs anyway.
+fn plain_svg(bytes: &[u8]) -> bool {
+    let Ok(text) = std::str::from_utf8(bytes) else { return false };
+    let text = text.to_ascii_lowercase();
+    let body = text.trim_start_matches('\u{feff}').trim_start();
+    if !(body.starts_with("<svg") || body.starts_with("<?xml") || body.starts_with("<!--") || body.starts_with("<!doctype svg")) || !text.contains("<svg") {
+        return false;
+    }
+    const BANNED: [&str; 10] = ["<script", "<foreignobject", "<iframe", "<image", "<use", "<!entity", "javascript:", "@import", "url(http", "href=\"http"];
+    if BANNED.iter().any(|needle| text.contains(needle)) {
+        return false;
+    }
+    // An attribute such as ` onload=`.
+    let chars: Vec<char> = text.chars().collect();
+    !chars.windows(3).enumerate().any(|(i, w)| {
+        if !(w[0].is_whitespace() || w[0] == '"' || w[0] == '\'') || w[1] != 'o' || w[2] != 'n' {
+            return false;
+        }
+        let rest: String = chars[i + 3..].iter().take_while(|c| c.is_ascii_alphabetic()).collect();
+        let after = chars[i + 3 + rest.chars().count()..].iter().find(|c| !c.is_whitespace());
+        !rest.is_empty() && after == Some(&'=')
+    })
+}
+
+/// The extension for what the bytes really are: a raster picture or a plain SVG.
+fn image_extension(bytes: &[u8]) -> Option<&'static str> {
+    if bytes.starts_with(&[0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a]) {
+        Some("png")
+    } else if bytes.starts_with(&[0xff, 0xd8, 0xff]) {
+        Some("jpg")
+    } else if bytes.len() > 12 && &bytes[..4] == b"RIFF" && &bytes[8..12] == b"WEBP" {
+        Some("webp")
+    } else if plain_svg(bytes) {
+        Some("svg")
+    } else {
+        None
+    }
+}
+
+async fn download_icon(url: url::Url) -> Option<Vec<u8>> {
+    let _permit = ICON_FETCHES.acquire().await.ok()?;
+    let _ = rustls::crypto::ring::default_provider().install_default();
+    // No redirects: one could lead off the listed hosts.
+    let client = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::none())
+        .connect_timeout(std::time::Duration::from_secs(5))
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .ok()?;
+    let mut response = client.get(url).send().await.ok()?.error_for_status().ok()?;
+    if response.content_length().is_some_and(|len| len > MAX_ICON_BYTES as u64) {
+        return None;
+    }
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response.chunk().await.ok()? {
+        bytes.extend_from_slice(&chunk);
+        if bytes.len() > MAX_ICON_BYTES {
+            return None;
+        }
+    }
+    Some(bytes)
+}
+
+/// A logo from a remote catalog or registry as a `data:` URL, kept in the cache folder so each is downloaded once.
+pub async fn remote_icon_data_url(url: &str) -> Option<String> {
+    let url = allowed_icon_url(url)?;
+    let dir = dirs::cache_dir()?.join("mcp-linker/icons");
+    let key: String = ring::digest::digest(&ring::digest::SHA256, url.as_str().as_bytes()).as_ref().iter().map(|b| format!("{b:02x}")).collect();
+    for ext in ["png", "jpg", "webp", "svg"] {
+        let cached = dir.join(format!("{key}.{ext}"));
+        if cached.is_file() {
+            return icon_data_url(&cached);
+        }
+    }
+    let bytes = download_icon(url).await?;
+    let path = dir.join(format!("{key}.{}", image_extension(&bytes)?));
+    std::fs::create_dir_all(&dir).ok()?;
+    std::fs::write(&path, &bytes).ok()?;
+    icon_data_url(&path)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fetches_logos_only_from_listed_https_hosts() {
+        assert!(allowed_icon_url("https://files.openai.com/logo.png").is_some());
+        assert!(allowed_icon_url("https://chatgpt.com/a/b.png").is_some());
+        assert!(allowed_icon_url("https://avatars.githubusercontent.com/u/1?v=4").is_some());
+        assert!(allowed_icon_url("https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/a.svg").is_some());
+        assert!(allowed_icon_url("https://cdn.jsdelivr.net/gh/someone/else@main/a.svg").is_none());
+        assert!(allowed_icon_url("https://cdn.jsdelivr.net/npm/evil/a.svg").is_none());
+        for refused in ["http://files.openai.com/logo.png", "https://example.com/logo.png", "https://files.openai.com.evil.com/logo.png", "https://files.openai.com@evil.com/logo.png", "https://files.openai.com:8443/logo.png", "file:///etc/passwd", "not a url"] {
+            assert!(allowed_icon_url(refused).is_none(), "{refused}");
+        }
+    }
+
+    #[test]
+    fn trusts_the_bytes_not_the_name() {
+        assert_eq!(image_extension(&[0x89, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a, 0]), Some("png"));
+        assert_eq!(image_extension(&[0xff, 0xd8, 0xff, 0xe0]), Some("jpg"));
+        assert_eq!(image_extension(b"RIFF\0\0\0\0WEBPVP8 "), Some("webp"));
+        assert_eq!(image_extension(b"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 8 8\"><path d=\"M0 0h8v8z\"/></svg>"), Some("svg"));
+        assert_eq!(image_extension(b"<html>"), None);
+    }
+
+    #[test]
+    fn shows_the_registry_icons_this_repo_ships() {
+        let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../registry/icons");
+        let mut checked = 0;
+        for entry in std::fs::read_dir(dir).unwrap().flatten() {
+            let bytes = std::fs::read(entry.path()).unwrap();
+            assert!(plain_svg(&bytes), "{} would be refused", entry.path().display());
+            checked += 1;
+        }
+        assert!(checked > 0);
+    }
+
+    #[test]
+    fn refuses_svg_that_is_more_than_a_drawing() {
+        for bad in [
+            "<svg xmlns=\"http://www.w3.org/2000/svg\"><script>alert(1)</script></svg>",
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" onload=\"alert(1)\"></svg>",
+            "<svg xmlns=\"http://www.w3.org/2000/svg\"><foreignObject><div/></foreignObject></svg>",
+            "<svg xmlns=\"http://www.w3.org/2000/svg\"><image href=\"https://x.test/a.png\"/></svg>",
+            "<svg xmlns=\"http://www.w3.org/2000/svg\"><style>@import url(https://x.test/a.css);</style></svg>",
+            "<html><svg></svg></html>",
+        ] {
+            assert_eq!(image_extension(bad.as_bytes()), None, "{bad}");
+        }
+    }
 
     fn write(path: &Path, text: &str) {
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();

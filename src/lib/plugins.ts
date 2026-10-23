@@ -127,5 +127,8 @@ export interface Catalog {
 }
 
 export const pluginCatalog = (client: PluginClient) => invoke<Catalog>("plugin_catalog", { client });
+/** A logo named by a remote catalog or registry, downloaded once into the cache folder; null unless it is a small picture from a listed host. */
+export const remoteIcon = (url: string) => invoke<string | null>("remote_icon", { url });
+
 /** The logo file as a data: URL. */
 export const pluginIcon = (path: string) => invoke<string | null>("plugin_icon", { path });
