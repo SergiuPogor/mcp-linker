@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronRight, FolderPlus, Settings2 } from "lucide-react";
+import { ChevronRight, FileText, Folder, FolderPlus, Settings2 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -153,7 +153,7 @@ export function InstallationTarget({ allowClientChange = true, sidebar = false, 
       </div>
       <CollapsibleContent className="space-y-0.5">
         {choices.map(item => <Tooltip key={item}>
-          <TooltipTrigger asChild><Button type="button" variant="ghost" size="sm" className={`h-8 w-full justify-start pl-8 pr-2 text-xs ${path === item ? "bg-accent font-medium" : "text-muted-foreground"}`} aria-label={t("projects.selectProject", { path: item })} aria-pressed={path === item} onClick={() => choose(item)}><span className="truncate">{basename(item)}</span></Button></TooltipTrigger>
+          <TooltipTrigger asChild><Button type="button" variant="ghost" size="sm" className={`h-8 w-full justify-start gap-2 px-2 text-xs ${path === item ? "bg-accent font-medium" : "text-muted-foreground"}`} aria-label={t("projects.selectProject", { path: item })} aria-pressed={path === item} onClick={() => choose(item)}>{fileTarget ? <FileText className="size-4 shrink-0" /> : <Folder className="size-4 shrink-0" />}<span className="truncate">{basename(item)}</span></Button></TooltipTrigger>
           <TooltipContent side="right" className="max-w-sm break-all">{item}</TooltipContent>
         </Tooltip>)}
         {!choices.length && <p className="pl-8 pr-2 py-1 text-xs text-muted-foreground">{fileTarget ? t("projects.addConfigWithPlus") : t("projects.addWithPlus")}</p>}
