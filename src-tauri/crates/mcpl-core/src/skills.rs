@@ -104,10 +104,10 @@ pub struct Outcome {
 }
 
 impl Outcome {
-    fn done(name: &str) -> Self {
+    pub(crate) fn done(name: &str) -> Self {
         Self { name: name.into(), error: None, note: None }
     }
-    fn failed(name: &str, error: impl ToString) -> Self {
+    pub(crate) fn failed(name: &str, error: impl ToString) -> Self {
         Self { name: name.into(), error: Some(error.to_string()), note: None }
     }
 }
@@ -404,7 +404,7 @@ pub fn parse_source(input: &str) -> Result<Source, String> {
     }
 }
 
-fn git(dir: Option<&Path>, args: &[&str]) -> Result<String, String> {
+pub(crate) fn git(dir: Option<&Path>, args: &[&str]) -> Result<String, String> {
     let mut command = Command::new("git");
     command.args(args).env("GIT_TERMINAL_PROMPT", "0");
     if let Some(dir) = dir {
@@ -585,12 +585,51 @@ fn install_one(paths: &Paths, lock: &mut Value, source: &Source, checkout: &Chec
 pub struct Update {
     pub name: String,
     pub latest_ref: Option<String>,
+    /// The commit it was installed at.
+    pub installed_ref: Option<String>,
+    /// When the latest commit was made (ISO 8601), so a minutes-old change stands out.
+    pub latest_date: Option<String>,
+    /// Files of the skill that differ from the installed commit, capped at `MAX_CHANGED_FILES`; empty when that commit can't be fetched.
+    pub changed_files: Vec<String>,
+    /// How many files differ in all, when more than are listed.
+    pub changed_total: usize,
+}
+
+const MAX_CHANGED_FILES: usize = 20;
+
+/// A source that could not be checked.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Failure {
+    pub source: String,
+    pub error: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateReport {
+    pub updates: Vec<Update>,
+    /// Sources that could not be reached, so their skills were not checked.
+    pub failures: Vec<Failure>,
+}
+
+/// Files under `folder` that differ between the installed commit and the checked-out one. Best effort: an old commit the server won't serve gives an empty list.
+fn changed_files(checkout: &Checkout, installed: Option<&str>, folder: &str) -> Vec<String> {
+    let Some(old) = installed.filter(|r| is_sha(r)) else { return Vec::new() };
+    if git(Some(&checkout.root), &["fetch", "-q", "--depth", "1", "origin", old]).is_err() {
+        return Vec::new();
+    }
+    let mut args = vec!["diff", "--name-only", old, "HEAD"];
+    if !folder.is_empty() {
+        args.extend(["--", folder]);
+    }
+    git(Some(&checkout.root), &args).map(|out| out.lines().map(str::to_string).collect()).unwrap_or_default()
 }
 
 /// Skills installed from Git whose folder changed upstream (compared by git tree hash, so unrelated commits don't count).
-pub fn check_updates(paths: &Paths) -> Result<Vec<Update>, String> {
+pub fn check_updates(paths: &Paths) -> Result<UpdateReport, String> {
     let lock = read_lock(paths);
-    let mut by_source: BTreeMap<String, Vec<(String, String, String)>> = BTreeMap::new();
+    let mut by_source: BTreeMap<String, Vec<(String, String, String, Option<String>)>> = BTreeMap::new();
     for (name, entry) in lock.get("skills").and_then(Value::as_object).into_iter().flatten() {
         let text = |key: &str| entry.get(key).and_then(Value::as_str).map(str::to_string);
         let (Some(url), Some(hash), Some(skill_path)) = (text("sourceUrl"), text("skillFolderHash"), text("skillPath")) else { continue };
@@ -598,22 +637,33 @@ pub fn check_updates(paths: &Paths) -> Result<Vec<Update>, String> {
             continue;
         }
         let folder = skill_path.trim_end_matches("SKILL.md").trim_end_matches('/').to_string();
-        by_source.entry(url).or_default().push((name.clone(), hash, folder));
+        by_source.entry(url).or_default().push((name.clone(), hash, folder, text("ref")));
     }
     let mut updates = Vec::new();
+    let mut failures = Vec::new();
     for (url, skills) in by_source {
-        let source = Source { url: url.clone(), label: url, subpath: None, git_ref: None, github: false };
-        let Ok(checkout) = checkout(&source, None) else { continue };
-        for (name, hash, folder) in skills {
+        let source = Source { url: url.clone(), label: url.clone(), subpath: None, git_ref: None, github: false };
+        let checkout = match checkout(&source, None) {
+            Ok(checkout) => checkout,
+            Err(error) => {
+                failures.push(Failure { source: url, error });
+                continue;
+            }
+        };
+        let latest_date = git(Some(&checkout.root), &["log", "-1", "--format=%cI"]).ok();
+        for (name, hash, folder, installed_ref) in skills {
             let spec = if folder.is_empty() { "HEAD^{tree}".to_string() } else { format!("HEAD:{folder}") };
             if let Ok(latest) = git(Some(&checkout.root), &["rev-parse", &spec])
                 && latest != hash
             {
-                updates.push(Update { name, latest_ref: checkout.commit.clone() });
+                let mut files = changed_files(&checkout, installed_ref.as_deref(), &folder);
+                let changed_total = files.len();
+                files.truncate(MAX_CHANGED_FILES);
+                updates.push(Update { name, latest_ref: checkout.commit.clone(), installed_ref, latest_date: latest_date.clone(), changed_files: files, changed_total });
             }
         }
     }
-    Ok(updates)
+    Ok(UpdateReport { updates, failures })
 }
 
 /// Re-installs skills from where the lock file says they came from.
@@ -680,7 +730,7 @@ pub async fn skill_install(source: String, git_ref: Option<String>, names: Vec<S
 }
 
 #[cfg_attr(feature = "tauri", tauri::command)]
-pub async fn skill_check_updates() -> Result<Vec<Update>, String> {
+pub async fn skill_check_updates() -> Result<UpdateReport, String> {
     blocking(|| check_updates(&Paths::user()?)).await
 }
 
@@ -824,12 +874,15 @@ mod tests {
         assert_eq!(found.skills[0].name, "one");
         install(&paths, &url, None, &[], &[PluginClient::Codex]).unwrap();
         assert_eq!(list(&paths)[0].installed_ref.as_deref(), Some(first.as_str()));
-        assert!(check_updates(&paths).unwrap().is_empty());
+        assert!(check_updates(&paths).unwrap().updates.is_empty());
 
         write(&repo.path().join("skills/one/SKILL.md"), &format!("{}\nMore", skill_md("one")));
         run(repo.path(), &["commit", "-q", "-am", "second"]);
-        let updates = check_updates(&paths).unwrap();
+        let updates = check_updates(&paths).unwrap().updates;
         assert_eq!(updates.iter().map(|u| u.name.as_str()).collect::<Vec<_>>(), ["one"]);
+        assert_eq!(updates[0].installed_ref.as_deref(), Some(first.as_str()));
+        assert!(updates[0].latest_date.is_some());
+        assert_eq!(updates[0].changed_files, ["skills/one/SKILL.md"]);
 
         // Pinned to the first commit it stays at the old text; updating moves it on and keeps the link.
         install(&paths, &url, Some(&first), &[], &[]).unwrap();
@@ -838,6 +891,13 @@ mod tests {
         assert!(outcomes[0].error.is_none(), "{outcomes:?}");
         assert_ne!(list(&paths)[0].installed_ref.as_deref(), Some(first.as_str()));
         assert!(list(&paths)[0].codex);
-        assert!(check_updates(&paths).unwrap().is_empty());
+        assert!(check_updates(&paths).unwrap().updates.is_empty());
+
+        // A source that has gone is reported, not skipped in silence.
+        drop(repo);
+        let report = check_updates(&paths).unwrap();
+        assert!(report.updates.is_empty());
+        assert_eq!(report.failures.len(), 1);
+        assert_eq!(report.failures[0].source, url);
     }
 }

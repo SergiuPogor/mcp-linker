@@ -998,7 +998,12 @@ async fn skill_command(cli: &Cli, action: &SkillAction) -> Outcome {
         SkillAction::Update { names, check } => {
             let mut names = names.clone();
             if names.is_empty() || *check {
-                let updates = blocking(|| skills::check_updates(&skills::Paths::user()?)).await?;
+                let report = blocking(|| skills::check_updates(&skills::Paths::user()?)).await?;
+                // On stderr so `--json` output stays parseable; a source that can't be reached means its skills weren't checked.
+                for failure in &report.failures {
+                    eprintln!("could not check {}: {}", failure.source, failure.error);
+                }
+                let updates = report.updates;
                 if *check {
                     if cli.json {
                         print_json(&serde_json::to_value(&updates).unwrap_or_default());

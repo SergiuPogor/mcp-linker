@@ -17,14 +17,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SearchToggle } from "@/components/common/SearchToggle";
+import { UpdateCard } from "@/components/common/UpdateCard";
+import { UpdateSection } from "@/components/common/UpdateSection";
 import { HomeNav } from "@/components/layout/HomeNav";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, type CatalogEntry, type PluginClient, addMarketplace, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
+import { PACKS_MARKETPLACE, PLUGIN_CLIENTS, bundledPacks, fetchPacks, type CatalogEntry, type PluginClient, addMarketplace, checkPluginUpdates, pluginCatalog, uninstallPlugin } from "@/lib/plugins";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeftRight, ChevronRight, History, Plus, RefreshCcw } from "lucide-react";
+import { ArrowLeftRight, ChevronRight, Download, History, Loader2, Plus, RefreshCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -83,7 +85,8 @@ export default function PluginsPage() {
   const [syncing, setSyncing] = useState(false);
 
   const catalog = useQuery({ queryKey: ["plugin-catalog", client], queryFn: () => pluginCatalog(client), retry: false });
-  const { toggle, install, refresh } = usePluginActions(client, labelOf(client));
+  const { toggle, install, update, updateProgress, refresh } = usePluginActions(client, labelOf(client));
+  const updates = useQuery({ queryKey: ["plugin-updates", client], queryFn: () => checkPluginUpdates(client, true), enabled: false, retry: false });
   const all = catalog.data?.plugins ?? [];
   const selected = all.find(p => p.id === selectedId) ?? null;
   const packsPreview = useQuery({ queryKey: ["packs-preview"], queryFn: fetchPacks, retry: false, staleTime: 3_600_000 });
@@ -131,6 +134,14 @@ export default function PluginsPage() {
     onSettled: () => setRemoving(null),
   });
 
+  const checkUpdates = async () => {
+    const result = await updates.refetch();
+    queryClient.invalidateQueries({ queryKey: ["plugin-activity"] });
+    if (result.error) return void toast.error(message(result.error), { duration: 15_000 });
+    const found = result.data?.updates.length ?? 0;
+    toast.message(found ? t("plugins.updatesFound", { count: found }) : t("plugins.upToDate"));
+  };
+
   const submit = () => {
     const text = source.trim();
     if (!text) return;
@@ -168,6 +179,9 @@ export default function PluginsPage() {
               <Button variant="ghost" size="icon" aria-label={t("plugins.refresh")} title={t("plugins.refresh")} onClick={refresh}>
                 <RefreshCcw className={`size-4 ${catalog.isFetching ? "animate-spin" : ""}`} />
               </Button>
+              <Button variant="ghost" size="icon" aria-label={t("plugins.checkUpdates")} title={t("plugins.checkUpdates")} disabled={updates.isFetching} onClick={checkUpdates}>
+                {updates.isFetching ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+              </Button>
               <Button variant="ghost" size="icon" aria-label={t("plugins.activity")} title={t("plugins.activity")} onClick={() => setShowActivity(true)}>
                 <History className="size-4" />
               </Button>
@@ -180,6 +194,23 @@ export default function PluginsPage() {
                 {t("plugins.add")}
               </Button>
             </HomeNav>
+
+            {!discovering && updates.data && (
+              <UpdateSection
+                title={t("plugins.updatesFound", { count: updates.data.updates.length })}
+                upToDate={t("plugins.upToDate")}
+                count={updates.data.updates.length}
+                checkedAt={updates.dataUpdatedAt}
+                failures={updates.data.refreshError ? [{ name: t("plugins.marketplacesRefresh"), error: updates.data.refreshError }] : []}
+                progress={updateProgress}
+                disabled={update.isPending}
+                onUpdateAll={() => update.mutate(updates.data.updates.map(u => u.id))}
+              >
+                {updates.data.updates.map(info => (
+                  <UpdateCard key={info.id} name={info.id} from={info.installed} to={info.latest} date={info.latestDate} disabled={update.isPending} pending={updateProgress?.current === info.id} onUpdate={() => update.mutate([info.id])} />
+                ))}
+              </UpdateSection>
+            )}
 
             {discovering && catalog.data && !packs && (
               <div className="rounded-xl border p-4">

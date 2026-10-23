@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import type { CatalogCollection } from "@/data/mcp-servers/catalog";
+import { useRemoteIcon } from "@/lib/useRemoteIcon";
 import { useViewStore } from "@/stores/viewStore";
 import type { ServerType } from "@/types";
 import { ChevronLeft, ChevronRight, Server } from "lucide-react";
@@ -27,15 +28,15 @@ const TINTS = [
 ];
 
 function ServerTile({ server, index }: { server: ServerType; index: number }) {
-  const [failed, setFailed] = useState(false);
+  const logo = useRemoteIcon(server.logoUrl);
   const layout = TILE_LAYOUT[index % TILE_LAYOUT.length];
   return (
     <span
       title={server.name}
       className={`flex shrink-0 items-center justify-center rounded-2xl border bg-white text-muted-foreground shadow-sm ${layout.size} ${layout.offset}`}
     >
-      {server.logoUrl && !failed
-        ? <img src={server.logoUrl} alt="" loading="lazy" className={`${layout.icon} object-contain`} onError={() => setFailed(true)} />
+      {logo
+        ? <img src={logo} alt="" className={`${layout.icon} object-contain`} />
         : <Server className="size-5" />}
     </span>
   );

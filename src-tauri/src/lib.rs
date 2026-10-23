@@ -6,7 +6,7 @@
 use std::env;
 use std::sync::{Arc, Mutex};
 
-use mcpl_core::{claude_code_commands, claude_disabled, client, clients, codex, json_commands as cmd, license, mcp_commands, mcp_crud, plugins, skills};
+use mcpl_core::{claude_code_commands, claude_disabled, client, clients, codex, json_commands as cmd, license, mcp_commands, mcp_crud, plugin_updates, plugins, skills};
 
 mod app_settings;
 mod claude_tools;
@@ -98,6 +98,9 @@ pub fn run() {
             plugins::plugin_activity,
             plugins::plugin_catalog,
             plugins::plugin_icon,
+            plugin_updates::plugin_check_updates,
+            plugin_updates::plugin_update,
+            plugins::remote_icon,
             skills::skill_list,
             skills::skill_read,
             skills::skill_set_client,

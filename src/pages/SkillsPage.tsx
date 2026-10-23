@@ -14,6 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { UpdateCard } from "@/components/common/UpdateCard";
+import { UpdateSection } from "@/components/common/UpdateSection";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
@@ -48,7 +50,7 @@ export default function SkillsPage() {
   const [openName, setOpenName] = useState<string | null>(null);
   const [removing, setRemoving] = useState<string[] | null>(null);
   const [adding, setAdding] = useState(false);
-  const { setClient, installCatalog, uninstall, update, refresh } = useSkillActions();
+  const { setClient, installCatalog, uninstall, update, updateProgress, refresh } = useSkillActions();
 
   const skills = useQuery({ queryKey: ["skills"], queryFn: listSkills });
   const catalog = useQuery({ queryKey: ["skill-catalog"], queryFn: fetchCatalog, retry: false, staleTime: 3_600_000 });
@@ -56,7 +58,7 @@ export default function SkillsPage() {
 
   const installed = skills.data ?? [];
   const byName = useMemo(() => new Map(installed.map(s => [s.name, s])), [installed]);
-  const outdated = useMemo(() => new Set(updates.data?.map(u => u.name) ?? []), [updates.data]);
+  const outdated = useMemo(() => new Set(updates.data?.updates.map(u => u.name) ?? []), [updates.data]);
   const entries: CatalogSkill[] = catalog.data ?? bundledSkills;
   const needle = query.trim().toLowerCase();
 
@@ -84,7 +86,7 @@ export default function SkillsPage() {
   const checkUpdates = async () => {
     const result = await updates.refetch();
     if (result.error) toast.error(result.error instanceof Error ? result.error.message : String(result.error), { duration: 15_000 });
-    else toast.message(result.data?.length ? t("skills.updatesFound", { count: result.data.length }) : t("skills.upToDate"));
+    else toast.message(result.data?.updates.length ? t("skills.updatesFound", { count: result.data.updates.length }) : t("skills.upToDate"));
   };
 
   const client = PLUGIN_CLIENTS.find(c => c.id === clientId) ?? PLUGIN_CLIENTS[0];
@@ -213,10 +215,26 @@ export default function SkillsPage() {
     <div className="p-4 sm:p-6 bg-background text-foreground min-h-screen">
       <div className={`mx-auto space-y-6 ${tab === "installed" || open ? "max-w-4xl" : "max-w-6xl"}`}>
         {open ? (
-          <SkillDetail skill={open} outdated={outdated.has(open.name)} onBack={() => setOpenName(null)} onUninstall={() => setRemoving([open.name])} />
+          <SkillDetail skill={open} update={updates.data?.updates.find(u => u.name === open.name)} onBack={() => setOpenName(null)} onUninstall={() => setRemoving([open.name])} />
         ) : (
           <>
             {header}
+            {tab === "installed" && updates.data && (
+              <UpdateSection
+                title={t("skills.updatesFound", { count: updates.data.updates.length })}
+                upToDate={t("skills.upToDate")}
+                count={updates.data.updates.length}
+                checkedAt={updates.dataUpdatedAt}
+                failures={updates.data.failures.map(f => ({ name: f.source, error: f.error }))}
+                progress={updateProgress}
+                disabled={busy}
+                onUpdateAll={() => update.mutate(updates.data.updates.map(u => u.name))}
+              >
+                {updates.data.updates.map(info => (
+                  <UpdateCard key={info.name} name={info.name} from={info.installedRef?.slice(0, 7)} to={info.latestRef?.slice(0, 7)} date={info.latestDate} files={info.changedFiles} total={info.changedTotal} disabled={busy} pending={updateProgress?.current === info.name} onUpdate={() => update.mutate([info.name])} />
+                ))}
+              </UpdateSection>
+            )}
             {batchBar}
             {tab === "installed" ? (
               skills.isLoading ? (
