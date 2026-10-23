@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.milisp.mcp-linker/codetrendy",
+  "title": "CodeTrendy",
+  "description": "Search the CodeTrendy directory of new startups, SaaS and AI tools. Read-only, no API key.",
+  "version": "1.0.0",
+  "websiteUrl": "https://codetrendy.com/mcp",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/milisp/mcp-linker@main/registry/icons/codetrendy.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://codetrendy.com/api/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "io.github.milisp.mcp-linker": {
+        "configName": "codetrendy",
+        "category": "Sales & Marketing",
+        "official": true,
+        "fullDescription": "Public, read-only MCP server for CodeTrendy, a curated discovery directory of newly launched startups, SaaS products and AI tools. Seven read-only tools: search_listings (keyword search with optional category and pricing filters), get_listing (full listing profile by slug), find_alternatives (alternatives to a named product), browse_category, list_categories, get_trending and get_site_of_the_day. No API key, no account, no write access. Docs: https://codetrendy.com/mcp"
+      }
+    }
+  }
+}
